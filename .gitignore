@@ -1,0 +1,33 @@
+# Local machine files
+.DS_Store
+*.swp
+*.swo
+
+# Local configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Swift and Xcode build output and user state
+.build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+
+# Android and Gradle build output and user state
+.gradle/
+.kotlin/
+build/
+local.properties
+.idea/
+*.iml
+.cxx/
+.externalNativeBuild/
+
+# Shared generated output
+.cache/
+node_modules/
+
+# Keep application dependency locks, Gradle wrappers, Xcode projects,
+# source assets, and portable fixtures versioned.
