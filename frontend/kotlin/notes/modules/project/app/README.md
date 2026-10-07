@@ -1,98 +1,70 @@
-# Android starter walkthrough
+# Android catalog walkthrough
 
-The generated app separates data production, view-model state, and Compose
-rendering, while the added kernel module establishes a reusable build boundary.
+The app now navigates to an injected health example while retaining its generated starter data flow.
 
 ## Origin
 
-The Android CLI's generated starter and initialized Gradle modules, inspected
-2026-10-07. This note mirrors `project/app/` and records the starter's current
-behavior rather than adopting all of it as foundation policy.
-[Architecture](../../../../../../ARCHITECTURE.md) owns the proposed boundaries.
+Android starter initialized 2026-10-07; HTTP example added 2026-10-08 with
+Kotlin 2.3.20, Compose BOM 2026.03.01 and API 36. This note mirrors `project/app/`.
+[HTTP and health contract](../../../../../../contracts/behavior/http.md) controls the new service behavior; generated starter policy is separate.
 
 ## Reading order
 
-1. [App build](../../../../project/app/build.gradle.kts) and
-   [settings](../../../../project/settings.gradle.kts): app and kernel registration.
-2. [MainActivity.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/MainActivity.kt):
-   Compose content, theme, and navigation root.
-3. [Navigation.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/Navigation.kt):
-   back stack and the Main screen entry.
-4. [DataRepository.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/data/DataRepository.kt):
-   repository interface and the generated in-memory data flow.
-5. [MainScreenViewModel.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/main/MainScreenViewModel.kt):
-   state transformation and the three UI variants.
-6. [MainScreen.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/main/MainScreen.kt):
-   collection, state branches, and the data-only rendering overload.
-7. [Starter unit tests](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/main/MainScreenViewModelTest.kt)
-   and [instrumented screen test](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/main/MainScreenTest.kt).
+1. [App build](../../../../project/app/build.gradle.kts) registers kernel/services and the AndroidX instrumented test runner.
+2. [MainActivity](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/MainActivity.kt) supplies theme, surface and MainNavigation.
+3. [Navigation](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/Navigation.kt) and [Navigation keys](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/NavigationKeys.kt) define Main and HealthCatalog entries.
+4. [Main screen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/main/MainScreen.kt) renders an always-available HTTP health button and starter data.
+5. [HealthCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/health/HealthCatalogScreen.kt) owns selection, effect lifetime, phase and service composition.
+6. [Services walkthrough](../core/services/README.md) and [HTTP walkthrough](../core/http/README.md) explain the reusable operations.
+7. [Health UI tests](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/health/HealthCatalogScreenTest.kt) exercises health scenarios and request replacement on a device.
 
 ## Walkthrough
 
-`MainActivity` sets Compose content inside the generated theme and surface,
-then calls `MainNavigation`. Navigation begins with the Main key and supplies
-`MainScreen` with its navigation callback and layout modifier.
+The serializable HealthCatalog NavKey enters the Navigation3 back stack.
+The entry supplies a back callback and safe-drawing padding. The health screen
+remembers scenario, replay counter and phase; the selected keys own its
+LaunchedEffect coroutine. [Suspending ports](../../../language/kotlin-suspending-ports-and-cancellation.md) explains suspend/cancellation syntax and
+[Compose effect lifetime](../../../substrate/okhttp-and-compose-effect-lifetime.md) explains composition lifetime.
 
-The screen's default view-model factory creates `MainScreenViewModel` with
-`DefaultDataRepository`. The repository exposes `Flow<List<String>>`; its
-implementation emits a list containing `Android`. It has no storage or network
-adapter.
+Loading is followed by Success(Health) or Failed(Failure). The screen's injected
+transport creates six wire scenarios; the real client and health service still
+admit them. State publication checks coroutine activity. Cancellation is
+rethrown. Unexpected exceptions go to Log.e and a deliberate generic failure.
+Expected failure rendering uses publicInfo, category copy, admitted validation
+fields and optional retry timing. Standard Material controls are used; screen
+layout scrolls vertically and scenario chips scroll horizontally.
 
-The view model maps emitted lists to Success, converts caught upstream
-exceptions to Error, and calls `stateIn` with `viewModelScope`, Loading, and
-`SharingStarted.WhileSubscribed(5000)`. Under the documented sharing policy,
-the upstream starts when subscribed and waits five seconds after the last
-subscriber disappears before stopping. This is a framework configuration,
-not evidence of a five-second delay before displaying data. See the versioned
-[sharing note](../../../substrate/gradle-and-android-bootstrap.md#flow-sharing-in-the-generated-screen).
+## Retained starter
 
-The screen collects the state using `collectAsStateWithLifecycle`. Android's
-[Compose state guide](https://developer.android.com/develop/ui/compose/state#other-supported-types-of-state)
-describes this lifecycle-aware conversion from Flow to Compose State. The
-Kotlin [state type note](../../../language/kotlin-sealed-ui-states-and-data-classes.md)
-explains the variants and `by` syntax.
-
-Loading renders no content, Success passes its list into the data-only screen
-overload, and Error displays the Throwable's message. The data-only overload
-renders one greeting per list item. `onItemClick` is accepted but unused, so
-this screen has no item-driven navigation yet.
-
-## Gotchas
-
-The Error variant carries an arbitrary Throwable and the UI prints its message.
-The foundry's intended policy uses typed expected failures at owned boundaries;
-the starter needs a deliberate boundary before serving real dependencies.
-The current blank Loading state also needs a real catalog example later.
-
-The app depends on `:core:kernel`, but that module has no runtime types. A
-successful dependency build establishes wiring, not an implemented kernel.
+The Main screen's generated repository still emits `Android` in memory. Its
+view model maps Flow data to Success, catches upstream Throwable into Error,
+and uses WhileSubscribed(5000) with Loading. [Starter sharing configuration](../../../substrate/gradle-and-android-bootstrap.md) explains that subscription
+policy. Success renders greetings; its error message remains generated starter
+behavior. The kernel and health workflow do not adopt that arbitrary Throwable
+presentation. Main's navigation callback is now used by the health button.
 
 ## Verification and limits
 
-Initialization on 2026-10-07 ran the operations exposed by these root targets:
+`make android-build` and `make android-test` passed: debug APK, core modules,
+and host tests. The two existing starter tests still assert only Loading;
+they do not establish a later repository Success transition. The health
+instrumented tests require a local emulator/device and use the configured
+AndroidJUnitRunner. `make android-ui-test` passed three instrumented tests on API36_Test (Android
+16): the starter greeting test and two health checks covering healthy and all
+failure scenarios plus replacement of an in-flight request. These device
+checks also rebuilt the final app/test consumers.
 
-```sh
-make android-build
-make android-test
-```
-
-The kernel build, debug APK assembly, and two starter unit tests passed. Both
-unit tests assert the initial Loading state. Despite the second test's name,
-it does not exercise saving or observe Success. The instrumented test checks
-greetings from supplied data, but was not run; the app was not launched on an
-emulator or device. Repository collection and screen transitions still need
-meaningful runtime checks when this scaffold becomes the catalog.
+The injected health example does not establish persistence, native provider
+sessions, production network policy, background work, accessibility or graphics
+performance. Kernel and adapter host tests provide independent evidence below
+Compose; [Verification techniques](../../../../../../notes/techniques/shared-fixtures-and-native-adapters.md) explains the distinction.
 
 ## Questions for the next session
 
-- Why does observing Loading once fail to establish the later Success state?
-- Which UI behavior belongs in a data-only component, and which needs a
-  view model or feature boundary?
-- Where should a typed dependency failure be introduced before a real API
-  replaces the generated repository?
+- Why is composition lifetime different from viewModelScope?
+- Which layout/state behavior is ready to extract into a reusable UI component?
+- Why should generated raw Throwable rendering remain outside real dependencies?
 
 ## Related
 
-[Toolchain and sharing configuration](../../../substrate/gradle-and-android-bootstrap.md),
-[Kotlin reading order](../../../README.md), and
-[native setup](../../../../../../docs/SETUP.md).
+[State types](../../../language/kotlin-sealed-ui-states-and-data-classes.md), [Kotlin reading order](../../../README.md), and [Setup](../../../../../../docs/SETUP.md).

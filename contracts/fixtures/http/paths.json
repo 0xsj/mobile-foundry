@@ -1,0 +1,94 @@
+[
+  {
+    "path": "health/live",
+    "allowed": true
+  },
+  {
+    "path": "/health/ready",
+    "allowed": true
+  },
+  {
+    "path": "",
+    "allowed": true
+  },
+  {
+    "path": "things/a%20b",
+    "allowed": true
+  },
+  {
+    "path": "things/a+b",
+    "allowed": true
+  },
+  {
+    "path": "things/hello world",
+    "allowed": true
+  },
+  {
+    "path": "things/\u65e5\u672c\u8a9e",
+    "allowed": true
+  },
+  {
+    "path": "//elsewhere/path",
+    "allowed": false
+  },
+  {
+    "path": "https://elsewhere/path",
+    "allowed": false
+  },
+  {
+    "path": "../secret",
+    "allowed": false
+  },
+  {
+    "path": "a/./b",
+    "allowed": false
+  },
+  {
+    "path": "a/%2e%2e/b",
+    "allowed": false
+  },
+  {
+    "path": "a/%2Fb",
+    "allowed": false
+  },
+  {
+    "path": "a/%5Cb",
+    "allowed": false
+  },
+  {
+    "path": "a/%00b",
+    "allowed": false
+  },
+  {
+    "path": "a/%zz",
+    "allowed": false
+  },
+  {
+    "path": "a?b=1",
+    "allowed": false
+  },
+  {
+    "path": "a#fragment",
+    "allowed": false
+  },
+  {
+    "path": "a\\b",
+    "allowed": false
+  },
+  {
+    "path": " a",
+    "allowed": false
+  },
+  {
+    "path": "a\n",
+    "allowed": false
+  },
+  {
+    "path": "a/%FF",
+    "allowed": false
+  },
+  {
+    "path": "a/%C3%28",
+    "allowed": false
+  }
+]

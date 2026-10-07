@@ -62,9 +62,11 @@ proposed behavioral boundaries.
 The iOS SwiftUI catalog and Android Compose application are initialized, along
 with the Swift kernel package and Kotlin/JVM kernel module. The first kernel
 slice implements typed outcomes, failure payloads, and public projection, with
-[shared behavior and fixtures](contracts/behavior/kernel.md). HTTP adapters and
-the full component catalogs are next. Graphics
-engines and native storage libraries remain open decisions. The backend
+[shared behavior and fixtures](contracts/behavior/kernel.md). The
+[HTTP and health slice](contracts/behavior/http.md) adds URLSession/OkHttp,
+problem decoding, metadata, deadlines and live/ready services. Open **HTTP health**
+in either catalog for six injected scenarios without a backend. The full UI
+catalog, graphics engines, and native storage libraries remain future work. The backend
 profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is
 reserved for manual initialization, and both provider stacks have Compose setup.
 
@@ -76,6 +78,7 @@ bootstrap baselines when selecting graphics capabilities.
 ```sh
 make kernel-build
 make kernel-test
+make http-test
 make ios-build
 make android-build
 make android-test

@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import dev.mobilefoundry.catalog.ui.main.MainScreen
+import dev.mobilefoundry.catalog.ui.health.HealthCatalogScreen
 
 @Composable
 fun MainNavigation() {
@@ -19,6 +20,9 @@ fun MainNavigation() {
     onBack = { backStack.removeLastOrNull() },
     entryProvider =
       entryProvider {
+        entry<HealthCatalog> {
+          HealthCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
         entry<Main> {
           MainScreen(onItemClick = { navKey -> backStack.add(navKey) }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
         }

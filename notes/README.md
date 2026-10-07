@@ -14,7 +14,11 @@ concepts, patterns, and verification techniques live here.
 4. Read [expected failures and diagnostics](concepts/expected-failures-and-diagnostics.md),
    then each native kernel walkthrough to compare their common behavior and
    language differences.
-5. Read the backend setup notes for the profile you are exploring:
+5. Follow the new native HTTP and health walkthroughs, then compare
+   [transport/service/screen](patterns/transport-service-and-screen.md),
+   [deadline ownership](concepts/deadlines-and-owned-cancellation.md), and
+   [fixture versus native evidence](techniques/shared-fixtures-and-native-adapters.md).
+6. Read the backend setup notes for the profile you are exploring:
    [Go](../backend/go/notes/README.md),
    [Supabase](../backend/supabase/notes/README.md), or
    [Firebase](../backend/firebase/notes/README.md).
@@ -31,8 +35,13 @@ failure vocabulary, owned validation fields, retry timing, and public projection
 Both platforms consume one canonical fixture set. Their indexes and walkthroughs
 record tests, the Swift compiler example, and verification limits.
 
-Identity, account, transport, persistence,
-sync, reusable components, and GPU integration remain planned capabilities.
+The HTTP slice, completed 2026-10-08, implements native transports, request
+admission, problem decoding, cancellation/deadlines and health domain admission.
+Both catalogs expose six injected scenarios without a backend. Notebook indexes
+record host, build and runtime evidence. Follow their updated reading orders.
+
+Identity, account, persistence, sync, reusable UI components, and GPU integration
+remain planned capabilities.
 Their learning notes will arrive with actual implementation or investigation.
 
 Backend profiles were scaffolded 2026-10-08. Go has reserved module layers and
@@ -49,18 +58,18 @@ repository, or synchronization behavior.
 | `techniques/` | Methods for investigating or verifying shared behavior |
 
 Read [expected failures and private diagnostics](concepts/expected-failures-and-diagnostics.md)
-for the first shared finding. Patterns and techniques still reserve space.
+for the first shared finding, then [request ownership](concepts/deadlines-and-owned-cancellation.md),
+[service boundaries](patterns/transport-service-and-screen.md), and
+[parity verification](techniques/shared-fixtures-and-native-adapters.md).
 Add a linked entry and useful reading position when a shared note is written. Source contracts
 remain in [contracts](../contracts/README.md), and accepted boundaries remain in
 [Architecture](../ARCHITECTURE.md).
 
 ## Questions for the next slice
 
-- How should the first HTTP adapter admit response bodies and preserve the
-  kernel's failure, defect, and cancellation distinctions?
-- What can the current app builds establish, and which behaviors require
-  runtime examples or device checks?
-- Which shared HTTP fixtures can establish behavior before connecting a backend?
+- Which loading, empty, failure and validation UI patterns should become shared native components?
+- How should a feature own repeat/retry work and suppress obsolete results?
+- What evidence is required before a connected write can be safely replayed?
 
 Run `make notes-check` after changing learning notes. Complete code examples
 also need the execution commands described in their notes.

@@ -16,3 +16,8 @@ boundaries. The canonical specification and generator inputs live here.
 contract, with [canonical failure fixtures](fixtures/kernel/failures.tsv)
 consumed by both native test suites. HTTP specifications remain reserved for
 the first owned transport or API workflow.
+
+[HTTP and health behavior](behavior/http.md) owns request admission, native
+cancellation/deadlines, problem decoding, metadata and health admission. Its
+[response](fixtures/http/responses.json), [path](fixtures/http/paths.json), and
+[retry timing](fixtures/http/retry-after.json) fixtures are shared by both platforms.

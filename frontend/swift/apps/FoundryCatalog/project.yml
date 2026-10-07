@@ -9,6 +9,10 @@ settings:
 packages:
   FoundryKernel:
     path: ../../packages/FoundryKernel
+  FoundryHTTP:
+    path: ../../packages/FoundryHTTP
+  FoundryServices:
+    path: ../../packages/FoundryServices
 targets:
   FoundryCatalog:
     type: application
@@ -18,6 +22,8 @@ targets:
       - path: Resources
     dependencies:
       - package: FoundryKernel
+      - package: FoundryHTTP
+      - package: FoundryServices
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.mobilefoundry.catalog

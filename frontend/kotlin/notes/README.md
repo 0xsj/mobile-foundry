@@ -13,6 +13,11 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
 4. [Outcomes and owned payloads](language/kotlin-outcomes-and-owned-payloads.md),
    then [the kernel walkthrough](modules/project/core/kernel/README.md).
 
+5. [Async request mechanics](language/kotlin-suspending-ports-and-cancellation.md), then
+   [HTTP](modules/project/core/http/README.md) and [health services](modules/project/core/services/README.md).
+6. [Native request and screen lifetime](substrate/okhttp-and-compose-effect-lifetime.md), then revisit
+   the catalog walkthrough to trace its injected scenarios.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -39,13 +44,20 @@ The 2026-10-08 kernel slice implements typed outcomes, immutable failures, and
 public projection. Nine kernel host tests passed against shared fixtures,
 including callback exception identity and cancellation-exception propagation.
 Shared reasoning is in [expected failures and diagnostics](../../../notes/concepts/expected-failures-and-diagnostics.md).
-HTTP, async adapters, UI examples, and diagnostic reporting remain future slices.
+The HTTP slice on 2026-10-08 adds request admission, native transport,
+problem/JSON decoding, deadlines, health services and six interactive catalog
+scenarios. Both platforms consume the same response/path/retry fixtures.
+Twelve HTTP and two service host tests passed; the API 36 APK and existing app unit tests passed. Three instrumented tests passed on API36_Test (Android 16): the existing
+starter greeting check and two health checks covering all six scenarios and
+replacement of an in-flight request. The AndroidX runner is explicit in the
+app build.
+Diagnostic observers receive original dependency errors; durable reporting
+infrastructure remains separate. Session, persistence, sync and graphics are
+future capabilities.
 
 ## Questions for the next session
 
-- What information belongs in a UI state variant, and what belongs in a
-  foundation failure value?
-- Which part of the starter owns data production, and which part renders it?
-- What would a check need to observe to establish the Success transition?
-- Where should the first HTTP adapter classify known dependency failures while
-  preserving coroutine cancellation and unexpected defects?
+- Why can valid JSON still be invalid domain data?
+- How does a request deadline differ from a screen canceling its work?
+- Which layer should renew credentials and decide retries?
+- Which loading, failure and retry controls are ready for the first reusable UI slice?

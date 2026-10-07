@@ -1,74 +1,61 @@
-# Swift catalog shell walkthrough
+# Swift catalog walkthrough
 
-The app composes a static SwiftUI catalog screen and links a local kernel
-package, establishing the build boundary for future reusable capabilities.
+The catalog composes an injected health service and displays loading, admitted domain data, and public failures.
 
 ## Origin
 
-The initialized source and build configuration, inspected 2026-10-07 with
-Xcode 26.2 and Swift 6.2.3. This note mirrors `apps/FoundryCatalog/`.
-[Architecture](../../../../../../ARCHITECTURE.md) describes the intended
-capability boundaries; the app currently implements only its shell.
+Shell initialized 2026-10-07; HTTP example implemented and checked 2026-10-08
+with Xcode 26.2, Swift 6.2.3, and an iPhone 17 Pro simulator on iOS 26.2.
+This note mirrors `apps/FoundryCatalog/`. [HTTP and health contract](../../../../../../contracts/behavior/http.md) owns health behavior.
 
 ## Reading order
 
-1. [project.yml](../../../../apps/FoundryCatalog/project.yml): target, deployment
-   baseline, local package dependency, and shared scheme.
-2. [FoundryCatalogApp.swift](../../../../apps/FoundryCatalog/Sources/FoundryCatalogApp.swift):
-   application entry and root view composition.
-3. [CatalogView.swift](../../../../apps/FoundryCatalog/Sources/CatalogView.swift):
-   the list of planned foundation and graphics areas.
-4. [Kernel manifest](../../../../packages/FoundryKernel/Package.swift) and
-   [kernel outcome alias](../../../../packages/FoundryKernel/Sources/FoundryKernel/AppResult.swift):
-   the imported library product. Follow [the kernel walkthrough](../../packages/FoundryKernel/README.md)
-   for its implemented behavior.
+1. [project.yml](../../../../apps/FoundryCatalog/project.yml) registers the three local packages and application target.
+2. [App entry](../../../../apps/FoundryCatalog/Sources/FoundryCatalogApp.swift) supplies CatalogView through the @main app's WindowGroup.
+3. [CatalogView](../../../../apps/FoundryCatalog/Sources/CatalogView.swift) links the HTTP health destination from the Foundation section.
+4. [HealthCatalogView](../../../../apps/FoundryCatalog/Sources/HealthCatalogView.swift) owns selected scenario, request generation, phase and composition.
+5. [Services walkthrough](../../packages/FoundryServices/README.md) and [HTTP walkthrough](../../packages/FoundryHTTP/README.md) explain the reusable operations below the view.
 
 ## Walkthrough
 
-`FoundryCatalogApp` is the `@main` entry. Its `WindowGroup` supplies `CatalogView`
-as the window's content. The separate root view keeps application composition
-apart from the screen's layout.
+CatalogView puts a List inside NavigationStack. NavigationLink supplies a
+HealthCatalogView destination. Other foundation and graphics rows reserve
+future work; they do not implement those capabilities.
 
-`CatalogView` conforms to `View`. Its `body` returns `some View`, explained in
-[the opaque type note](../../../language/swift-protocols-and-opaque-return-types.md).
-The body places a `List` inside a `NavigationStack`, with Foundation and
-Graphics sections. The final section explains that examples will be added.
+The health view stores selection, a replay counter, and a phase with `@State`.
+Its body renders loading, success(Health), or failure(Failure). Picker chooses
+one of six injected responses. Run again increments the replay counter.
+[Async ports](../../../language/swift-async-ports-and-continuations.md) explains the Swift types, and [View task lifetime](../../../substrate/urlsession-and-view-task-lifetime.md) explains `.task(id:)`.
 
-The rows are `Label` values: there are no destination views, buttons, service
-calls, or rendering surfaces in this screen. The `#Preview` declaration creates
-the root view for previewing; a successful simulator build does not establish
-that an Xcode preview was executed.
+Each view task sets Loading, creates the client with the selected injected
+transport, and calls HealthService.ready. The transport waits briefly so loading
+can be visible. The result is checked for cancellation before state publication.
+Timeout uses a slow response and short budget. Replacement/removal cancellation
+is silent; an unexpected exception reaches OSLog and deliberate generic copy.
 
-The app imports `FoundryKernel`, and `project.yml` links its library product
-from `../../packages/FoundryKernel`. No kernel operations are called yet. This
-is the dependency direction future catalog examples should preserve: app
-composition consumes reusable packages.
+Failure rendering calls publicInfo. Malformed JSON therefore shows An unexpected
+error occurred without the internal message/code, while retaining request ID.
+Validation displays admitted field strings; rate limiting displays timing without
+automatically retrying. The View uses standard SwiftUI controls; no design system
+or global reusable async screen wrapper has been introduced yet.
 
 ## Verification and limits
 
-During initialization on 2026-10-07, the following root commands' underlying
-build operations passed:
-
-```sh
-make kernel-build
-make ios-build
-```
-
-The package compiled and the iOS simulator application was produced. This
-establishes build wiring, source compilation, and packaging. The app was not
-launched on a simulator or device, and no UI interaction or GPU behavior was
-verified. The 2026-10-08 kernel slice replaces its generated placeholder test
-with behavioral checks; this app shell still does not demonstrate those values.
+`make ios-generate` and `make ios-build` passed. Package HTTP/services tests
+passed. The app was launched on a dedicated iPhone 17 Pro simulator: navigation,
+Healthy with status/IDs/version, Malformed with redacted message, and Timeout
+with deadline copy were observed through accessibility state and screenshots.
+These are injected service examples. They do not establish backend connectivity,
+physical-device behavior, VoiceOver interaction, large text, GPU work or all
+lifecycle races. Shared and native adapter tests cover request cancellation below
+this view; [Verification techniques](../../../../../../notes/techniques/shared-fixtures-and-native-adapters.md) explains those evidence levels.
 
 ## Questions for the next session
 
-- Which file changes to add a destination, and which changes to add a reusable
-  package dependency?
-- Why is importing a package different from demonstrating its behavior?
-- What state and callbacks would the first interactive catalog example need?
+- Why does the task ID contain a replay counter as well as scenario?
+- Which data comes from the service, and which comes from presentation policy?
+- Which UI patterns are now concrete enough to extract for another screen?
 
 ## Related
 
-[Build wiring](../../../substrate/swift-package-and-xcode-project-wiring.md),
-[Swift reading order](../../../README.md), and
-[native setup](../../../../../../docs/SETUP.md).
+[View protocols](../../../language/swift-protocols-and-opaque-return-types.md), [Swift reading order](../../../README.md), and [Setup](../../../../../../docs/SETUP.md).

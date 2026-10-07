@@ -1,7 +1,9 @@
 # iOS catalog app
 
 This SwiftUI application hosts the native component catalog and future graphics
-examples. It links the local `FoundryKernel` package.
+examples. It links local `FoundryKernel`, `FoundryHTTP`, and `FoundryServices` packages.
+Open HTTP health to try Healthy, Unavailable, Malformed, Validation, Rate limited,
+and Timeout. Responses are injected; no backend is needed.
 
 `project.yml` is the source of truth for the Xcode project configuration.
 Regenerate after changing its targets, resources, settings, or package links:

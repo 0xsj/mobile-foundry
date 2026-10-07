@@ -13,6 +13,11 @@ linked language and tool notes to understand the choices. This notebook follows
 4. [Result and failure values](language/swift-result-and-failure-values.md), then
    [the kernel walkthrough](modules/packages/FoundryKernel/README.md).
 
+5. [Async request mechanics](language/swift-async-ports-and-continuations.md), then
+   [HTTP](modules/packages/FoundryHTTP/README.md) and [health services](modules/packages/FoundryServices/README.md).
+6. [Native request and screen lifetime](substrate/urlsession-and-view-task-lifetime.md), then revisit
+   the catalog walkthrough to trace its injected scenarios.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -38,13 +43,17 @@ The 2026-10-08 kernel slice implements typed outcomes, immutable failures, and
 public projection. Seven host tests passed against shared fixtures. The
 language note includes the verified rejection of a throwing Result.map callback.
 Shared reasoning is in [expected failures and diagnostics](../../../notes/concepts/expected-failures-and-diagnostics.md).
-HTTP, async adapters, UI examples, and diagnostic reporting remain future slices.
+The HTTP slice on 2026-10-08 adds request admission, native transport,
+problem/JSON decoding, deadlines, health services and six interactive catalog
+scenarios. Both platforms consume the same response/path/retry fixtures.
+Thirteen HTTP and two service host tests passed; the simulator app built, and Healthy, Malformed, and Timeout presentation were observed on iOS 26.2.
+Diagnostic observers receive original dependency errors; durable reporting
+infrastructure remains separate. Session, persistence, sync and graphics are
+future capabilities.
 
 ## Questions for the next session
 
-- Why can a view expose `some View` without naming the full composed type?
-- Where does the app choose its root view, and where does the local package
-  become a build dependency?
-- Which failure kinds and codes should the first HTTP operation admit?
-- Where will a native adapter distinguish dependency errors, defects, and
-  structured cancellation?
+- Why can valid JSON still be invalid domain data?
+- How does a request deadline differ from a screen canceling its work?
+- Which layer should renew credentials and decide retries?
+- Which loading, failure and retry controls are ready for the first reusable UI slice?

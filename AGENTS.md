@@ -3,7 +3,9 @@
 Follow [Architecture](ARCHITECTURE.md) and [Organization](docs/ORGANIZATION.md).
 Swift and Kotlin share behavioral contracts and fixtures while keeping native
 implementations idiomatic. Keep expected failures as values at owned boundaries.
-The apps are scaffolds; the kernels implement [outcomes and failures](contracts/behavior/kernel.md).
+The kernels implement [outcomes and failures](contracts/behavior/kernel.md);
+HTTP/services and catalog examples implement [HTTP and health](contracts/behavior/http.md).
+Other app areas remain scaffolds.
 Implement capabilities in reviewable slices rather than treating planned
 behavior as already available.
 

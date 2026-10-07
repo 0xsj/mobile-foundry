@@ -1,0 +1,341 @@
+[
+  {
+    "id": "healthy",
+    "status": 200,
+    "headers": {
+      "ETag": "\"v1\"",
+      "X-Request-ID": "req-health",
+      "X-Correlation-ID": "remote"
+    },
+    "body": "{\"status\":\"ok\",\"extra\":\"ignored\"}",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": true
+  },
+  {
+    "id": "array",
+    "status": 200,
+    "headers": {},
+    "body": "[]",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "missing-status",
+    "status": 200,
+    "headers": {},
+    "body": "{}",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "wrong-status",
+    "status": 200,
+    "headers": {},
+    "body": "{\"status\":\"bad\"}",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "numeric-status",
+    "status": 200,
+    "headers": {},
+    "body": "{\"status\":1}",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "literal-null",
+    "status": 200,
+    "headers": {},
+    "body": "null",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "empty",
+    "status": 200,
+    "headers": {},
+    "body": "  \n",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "no-content",
+    "status": 204,
+    "headers": {},
+    "body": "not json",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "reset-content",
+    "status": 205,
+    "headers": {},
+    "body": "not json",
+    "method": "GET",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "head",
+    "status": 200,
+    "headers": {},
+    "body": "not json",
+    "method": "HEAD",
+    "expectedKind": null,
+    "expectedHealthy": false
+  },
+  {
+    "id": "malformed-success",
+    "status": 200,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "internal",
+    "expectedCode": "http.invalid_response"
+  },
+  {
+    "id": "infinite-success",
+    "status": 200,
+    "headers": {},
+    "body": "{\"value\":1e999}",
+    "method": "GET",
+    "expectedKind": "internal",
+    "expectedCode": "http.invalid_response"
+  },
+  {
+    "id": "broken-success",
+    "status": 200,
+    "headers": {},
+    "body": null,
+    "method": "GET",
+    "expectedKind": "unavailable"
+  },
+  {
+    "id": "fallback-400",
+    "status": 400,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "invalid"
+  },
+  {
+    "id": "fallback-401",
+    "status": 401,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "unauthenticated"
+  },
+  {
+    "id": "fallback-403",
+    "status": 403,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "forbidden"
+  },
+  {
+    "id": "fallback-404",
+    "status": 404,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "not_found"
+  },
+  {
+    "id": "fallback-408",
+    "status": 408,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "timeout"
+  },
+  {
+    "id": "fallback-409",
+    "status": 409,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "conflict"
+  },
+  {
+    "id": "fallback-412",
+    "status": 412,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "conflict"
+  },
+  {
+    "id": "fallback-413",
+    "status": 413,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "invalid"
+  },
+  {
+    "id": "fallback-415",
+    "status": 415,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "invalid"
+  },
+  {
+    "id": "fallback-422",
+    "status": 422,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "invalid"
+  },
+  {
+    "id": "fallback-428",
+    "status": 428,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "invalid"
+  },
+  {
+    "id": "fallback-429",
+    "status": 429,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "rate_limited"
+  },
+  {
+    "id": "fallback-500",
+    "status": 500,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "internal"
+  },
+  {
+    "id": "fallback-502",
+    "status": 502,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "unavailable"
+  },
+  {
+    "id": "fallback-503",
+    "status": 503,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "unavailable"
+  },
+  {
+    "id": "fallback-504",
+    "status": 504,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "timeout"
+  },
+  {
+    "id": "fallback-302",
+    "status": 302,
+    "headers": {},
+    "body": "{",
+    "method": "GET",
+    "expectedKind": "internal"
+  },
+  {
+    "id": "broken-error",
+    "status": 503,
+    "headers": {},
+    "body": null,
+    "method": "GET",
+    "expectedKind": "unavailable"
+  },
+  {
+    "id": "unknown-kind",
+    "status": 404,
+    "headers": {},
+    "body": "{\"kind\":\"future\",\"title\":\"Missing\"}",
+    "method": "GET",
+    "expectedKind": "not_found",
+    "expectedMessage": "Missing"
+  },
+  {
+    "id": "override-status",
+    "status": 500,
+    "headers": {},
+    "body": "{\"kind\":\"conflict\",\"detail\":\"Changed\",\"code\":\"record.changed\"}",
+    "method": "GET",
+    "expectedKind": "conflict",
+    "expectedMessage": "Changed",
+    "expectedCode": "record.changed"
+  },
+  {
+    "id": "invalid-fields",
+    "status": 422,
+    "headers": {},
+    "body": "{\"kind\":\"invalid\",\"detail\":\"Check input\",\"fields\":{\"email\":\"Required\",\"count\":2,\"nested\":{},\"empty\":\"\"},\"request_id\":\"body-id\"}",
+    "method": "GET",
+    "expectedKind": "invalid",
+    "expectedFields": {
+      "email": "Required",
+      "empty": ""
+    },
+    "expectedRequestID": "body-id",
+    "expectedMessage": "Check input"
+  },
+  {
+    "id": "metadata-precedence",
+    "status": 400,
+    "headers": {
+      "X-Request-ID": "header-id",
+      "X-Correlation-ID": "remote"
+    },
+    "body": "{\"detail\":\" \",\"title\":\"Check input\",\"request_id\":\"body-id\",\"type\":\"urn:not-a-code\",\"code\":\" \"}",
+    "method": "GET",
+    "expectedKind": "invalid",
+    "expectedMessage": "Check input",
+    "expectedRequestID": "header-id",
+    "expectedCorrelationID": "local",
+    "correlationID": "local"
+  },
+  {
+    "id": "rate-limit",
+    "status": 429,
+    "headers": {
+      "Retry-After": "2"
+    },
+    "body": "{\"kind\":\"rate_limited\",\"detail\":\"Wait\"}",
+    "method": "GET",
+    "expectedKind": "rate_limited",
+    "expectedRetryMs": 2000
+  },
+  {
+    "id": "server-canceled",
+    "status": 400,
+    "headers": {},
+    "body": "{\"kind\":\"canceled\"}",
+    "method": "GET",
+    "expectedKind": "canceled"
+  },
+  {
+    "id": "problem-nonobject",
+    "status": 401,
+    "headers": {},
+    "body": "[]",
+    "method": "GET",
+    "expectedKind": "unauthenticated"
+  }
+]

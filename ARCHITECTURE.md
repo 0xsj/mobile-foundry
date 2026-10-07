@@ -44,8 +44,11 @@ signatures in the kernel construction specification.
 The first value-only slice is implemented under [the kernel contract](contracts/behavior/kernel.md)
 and [construction specification](docs/blueprints/kernel.md): standard Swift
 Result and a generic Kotlin Outcome, immutable failure payloads, retry timing,
-and explicit public projection. HTTP classification, exception reporting, and
-async cancellation adapters follow in their owning slices.
+and explicit public projection. The next implemented slice adds [HTTP and health](contracts/behavior/http.md):
+URLSession/OkHttp transports, problem and JSON admission, metadata, owned
+deadlines and cancellation, health services, and injected catalog scenarios.
+Diagnostic observers preserve known dependency causes outside public failures;
+full reporting infrastructure remains a separate capability.
 
 Preserve stable failure categories and operation-specific codes. Validation
 failures carry field information; throttling can carry retry timing. Public

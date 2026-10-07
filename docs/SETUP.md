@@ -1,7 +1,7 @@
 # Native project setup
 
-The SwiftUI iOS app, Compose Android app, Swift kernel package, and Kotlin/JVM
-kernel module are initialized. Do not rerun project initialization commands in
+The SwiftUI iOS app, Compose Android app, and native kernel, HTTP, and services
+packages/modules are initialized. Do not rerun project initialization commands in
 these existing directories.
 
 This machine has Xcode 26.2, Swift 6.2.3, Android Studio, the Android SDK, and
@@ -15,6 +15,8 @@ Run from the repository root:
 ```sh
 cd /Users/sj/Desktop/dev/builds/mobile-foundry
 make kernel-build
+make kernel-test
+make http-test
 make ios-build
 make android-build
 make android-test
@@ -42,22 +44,18 @@ cd /Users/sj/Desktop/dev/builds/mobile-foundry/frontend/swift/packages/FoundryKe
 swift build
 ```
 
-The package has source and test directories but no kernel behavior yet. Its
-generated example test is a placeholder; replace it with meaningful checks as
-behavior is implemented, then run `swift test` from this directory.
-
-Create additional packages only when their first implementation is ready. For
-example, from the Swift packages directory:
+The kernel implements outcomes and failures. HTTP and services are initialized
+local packages too; do not rerun `swift package init` in their directories.
 
 ```sh
-cd /Users/sj/Desktop/dev/builds/mobile-foundry/frontend/swift/packages
-mkdir FoundryHTTP
-cd FoundryHTTP
-swift package init --type library --name FoundryHTTP --enable-swift-testing
+cd /Users/sj/Desktop/dev/builds/mobile-foundry/frontend/swift/packages/FoundryHTTP
+swift test
+cd ../FoundryServices
+swift test
 ```
 
-See [Swift library initialization](https://www.swift.org/getting-started/library-swiftpm/)
-and the capability names in [Organization](ORGANIZATION.md).
+Use `make http-test` at the repository root to run both platforms' HTTP and
+health checks. See [Organization](ORGANIZATION.md) for reserved future capabilities.
 
 ## iOS catalog application
 
@@ -70,9 +68,9 @@ open FoundryCatalog.xcodeproj
 
 Select the shared `FoundryCatalog` scheme and an iOS simulator in Xcode, then
 run the app. Choose a development team in Signing & Capabilities to run on a
-physical device. The initial screen lists the planned catalog areas.
+physical device. Select HTTP health in the Foundation list to try the injected scenarios.
 
-The app imports the local `FoundryKernel` package. Its initial deployment
+The app links local `FoundryKernel`, `FoundryHTTP`, and `FoundryServices` packages. Its initial deployment
 target is iOS 17 and its bundle identifier is `dev.mobilefoundry.catalog`.
 The asset catalog contains accent color and app icon metadata; add icon artwork
 when the app's visual identity is defined.
@@ -110,8 +108,8 @@ open -a "Android Studio" .
 ```
 
 Select the `app` run configuration and an emulator or connected device. The
-app retains the generated Compose starter screen and examples; the full
-foundry catalog is a future implementation slice. The app already depends on
+app retains the generated starter and adds an HTTP health catalog destination.
+Its six injected scenarios need no backend. The app already depends on
 the Kotlin/JVM module `:core:kernel`, which implements typed outcomes and failures.
 
 For direct terminal builds on this Mac:
@@ -119,8 +117,8 @@ For direct terminal builds on this Mac:
 ```sh
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-./gradlew :core:kernel:build :app:assembleDebug
-./gradlew :app:testDebugUnitTest
+./gradlew :core:kernel:build :core:http:build :core:services:build :app:assembleDebug
+./gradlew :core:kernel:test :core:http:test :core:services:test :app:testDebugUnitTest
 ```
 
 The wrapper uses Gradle 9.1.0. The version catalog pins Android Gradle Plugin
@@ -130,7 +128,7 @@ API 36. Review these baselines when selecting graphics capabilities.
 
 The debug APK is `app/build/outputs/apk/debug/app-debug.apk`. Starter unit tests
 can run on the host; instrumented UI tests require an emulator or device and
-are not included in the build shortcuts.
+use `make android-ui-test` with a booted emulator or connected device.
 
 The original generator command is retained here for reference. Use it only for
 a new absent or empty project directory, not the initialized `project` folder:
@@ -156,9 +154,29 @@ make kernel-test
 This runs Swift package tests and Kotlin kernel host tests. Both read the
 canonical failure fixtures from `contracts/fixtures/kernel`; the runtime
 libraries do not load files from the checkout. `make android-test` also includes
-the Kotlin kernel tests alongside the starter app tests. See
+all Kotlin core tests alongside the starter app tests. See
 [the kernel contract](../contracts/behavior/kernel.md) and each platform's
 notebook for examples and evidence limits.
+
+## HTTP and health examples
+
+`make http-test` runs Swift HTTP/services and Kotlin HTTP/services host tests.
+Both use the canonical JSON cases under `contracts/fixtures/http`; native
+adapter tests additionally exercise cancellation, redirects and interrupted
+bodies. Swift loopback tests and Kotlin MockWebServer require local test sockets.
+
+Both catalogs offer Healthy, Unavailable, Malformed, Validation, Rate limited,
+and Timeout. Run again repeats the selected scenario. No backend or credentials
+are needed. The native transport implementations can be injected into a future
+connected workflow; the catalog uses deliberate fixtures.
+
+```sh
+make android-ui-test
+```
+
+This device-dependent target exercises Compose scenarios and request replacement.
+See the [HTTP contract](../contracts/behavior/http.md) and
+[learning notes](../notes/README.md) for ownership and evidence limits.
 
 ## Backend profiles
 

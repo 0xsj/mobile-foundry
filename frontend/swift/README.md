@@ -7,7 +7,8 @@ library products that future applications will use.
 `packages/FoundryKernel` and the `apps/FoundryCatalog` Xcode app are initialized
 and linked. The kernel implements typed outcomes, failures, and public
 projection under [its shared contract](../../contracts/behavior/kernel.md);
-the app shows planned catalog areas. Build and open them using
+HTTP/services implement [request and health behavior](../../contracts/behavior/http.md).
+The app exposes six injected HTTP health scenarios alongside planned areas. Build and open them using
 [Setup](../../docs/SETUP.md).
 
 The app's `project.yml` is its XcodeGen configuration. Regenerate the Xcode
