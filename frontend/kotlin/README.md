@@ -5,8 +5,9 @@ and a Kotlin/JVM kernel module. Build and open it using
 [Setup](../../docs/SETUP.md).
 
 `project/app` holds the Compose application scaffold and depends on
-`project/core/kernel`. The kernel module is empty; reusable behavior and catalog
-examples are added as capabilities are built. Use Kotlin/JVM libraries for
+`project/core/kernel`. The kernel implements typed outcomes, failures, and
+public projection under [its shared contract](../../contracts/behavior/kernel.md).
+Reusable behavior and catalog examples grow with each slice. Use Kotlin/JVM libraries for
 platform-independent code and Android libraries for Android APIs or Compose.
 
 Keep one Gradle build, its wrapper, and a shared version catalog. Features

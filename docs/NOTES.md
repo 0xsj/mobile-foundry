@@ -141,9 +141,9 @@ finish with a few questions that can be answered from the linked code or a
 small experiment. At the next session, bring those questions back into the
 slice and revise the notes with the resulting evidence.
 
-The initialized kernel libraries currently have no runtime behavior. The first
-substantive kernel slice should introduce its behavior, language explanations,
-and examples together. Category directories reserve a place for those findings;
+The first kernel slice introduces behavior, language explanations, and shared
+fixtures together; follow the native notebook indexes for that handoff.
+Use the same workflow for each subsequent capability. Category directories reserve a place for findings;
 they do not contain advance tutorials for unimplemented capabilities.
 
 ## Reference workflows

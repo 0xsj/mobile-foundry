@@ -5,8 +5,10 @@ holds reusable Swift Package Manager libraries. The catalog imports the same
 library products that future applications will use.
 
 `packages/FoundryKernel` and the `apps/FoundryCatalog` Xcode app are initialized
-and linked. The kernel package is an empty library scaffold; the app shows
-the planned catalog areas. Build and open them using [Setup](../../docs/SETUP.md).
+and linked. The kernel implements typed outcomes, failures, and public
+projection under [its shared contract](../../contracts/behavior/kernel.md);
+the app shows planned catalog areas. Build and open them using
+[Setup](../../docs/SETUP.md).
 
 The app's `project.yml` is its XcodeGen configuration. Regenerate the Xcode
 project after changing targets, package dependencies, or build settings; keep

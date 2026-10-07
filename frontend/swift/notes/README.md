@@ -10,6 +10,8 @@ linked language and tool notes to understand the choices. This notebook follows
 2. [Protocols and opaque return types](language/swift-protocols-and-opaque-return-types.md).
 3. [Catalog shell walkthrough](modules/apps/FoundryCatalog/README.md), following
    the source links from app composition to the displayed list.
+4. [Result and failure values](language/swift-result-and-failure-values.md), then
+   [the kernel walkthrough](modules/packages/FoundryKernel/README.md).
 
 ## Findings by lifespan
 
@@ -32,13 +34,17 @@ The 2026-10-07 bootstrap links a SwiftUI app to an empty Swift kernel library.
 The package and iOS simulator builds passed. The catalog shows planned areas;
 it has no feature navigation, service calls, or renderer yet.
 
-Patterns, concepts, and techniques have reserved directories but no findings.
-The first kernel implementation should add its behavioral walkthrough and the
-new language mechanics together.
+The 2026-10-08 kernel slice implements typed outcomes, immutable failures, and
+public projection. Seven host tests passed against shared fixtures. The
+language note includes the verified rejection of a throwing Result.map callback.
+Shared reasoning is in [expected failures and diagnostics](../../../notes/concepts/expected-failures-and-diagnostics.md).
+HTTP, async adapters, UI examples, and diagnostic reporting remain future slices.
 
 ## Questions for the next session
 
 - Why can a view expose `some View` without naming the full composed type?
 - Where does the app choose its root view, and where does the local package
   become a build dependency?
-- Which public kernel operations and fixtures should be introduced first?
+- Which failure kinds and codes should the first HTTP operation admit?
+- Where will a native adapter distinguish dependency errors, defects, and
+  structured cancellation?

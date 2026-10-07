@@ -1,0 +1,14 @@
+kind	message	code	request_id	correlation_id	field	field_message	retry_after_ms	public_message	public_code	case_id
+unauthenticated	Sign in to continue.	identity.session_required	req-1	interaction-1				Sign in to continue.	identity.session_required	session-required
+forbidden	You cannot edit this item.	account.edit_denied	req-2					You cannot edit this item.	account.edit_denied	edit-denied
+rate_limited	Please wait before trying again.	identity.too_many_attempts	req-3	interaction-3			1500	Please wait before trying again.	identity.too_many_attempts	known-retry-delay
+rate_limited	Retry timing is unknown.							Retry timing is unknown.		unknown-retry-delay
+rate_limited	The minimum wait is zero.						0	The minimum wait is zero.		zero-retry-delay
+unavailable	The service is unavailable.							The service is unavailable.		service-unavailable
+timeout	The operation took too long.							The operation took too long.		operation-timeout
+canceled	The operation was canceled.							The operation was canceled.		explicit-canceled-value
+internal	Private database detail.	database.connection_failed	req-9	interaction-9				An unexpected error occurred.		internal-redaction
+not_found	The item no longer exists.	item.not_found	req-10					The item no longer exists.	item.not_found	item-not-found
+invalid	Check the email address.	identity.invalid_email	req-11	interaction-11	email	Enter a valid email address.		Check the email address.	identity.invalid_email	validation-with-field
+invalid	The input is invalid.							The input is invalid.		validation-without-fields
+conflict	The item has changed.	item.version_conflict	req-12					The item has changed.	item.version_conflict	version-conflict

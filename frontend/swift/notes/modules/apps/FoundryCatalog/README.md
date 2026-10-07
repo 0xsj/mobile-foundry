@@ -19,8 +19,9 @@ capability boundaries; the app currently implements only its shell.
 3. [CatalogView.swift](../../../../apps/FoundryCatalog/Sources/CatalogView.swift):
    the list of planned foundation and graphics areas.
 4. [Kernel manifest](../../../../packages/FoundryKernel/Package.swift) and
-   [kernel source](../../../../packages/FoundryKernel/Sources/FoundryKernel/FoundryKernel.swift):
-   the imported library product and its empty source scaffold.
+   [kernel outcome alias](../../../../packages/FoundryKernel/Sources/FoundryKernel/AppResult.swift):
+   the imported library product. Follow [the kernel walkthrough](../../packages/FoundryKernel/README.md)
+   for its implemented behavior.
 
 ## Walkthrough
 
@@ -56,7 +57,8 @@ make ios-build
 The package compiled and the iOS simulator application was produced. This
 establishes build wiring, source compilation, and packaging. The app was not
 launched on a simulator or device, and no UI interaction or GPU behavior was
-verified. The kernel's generated test is still a placeholder.
+verified. The 2026-10-08 kernel slice replaces its generated placeholder test
+with behavioral checks; this app shell still does not demonstrate those values.
 
 ## Questions for the next session
 

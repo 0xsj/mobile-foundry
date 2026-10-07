@@ -62,7 +62,10 @@ collection or stop-timeout behavior.
 A version catalog entry alone is not a report of every resolved transitive
 dependency version. Recheck dependency resolution when investigating a
 framework-specific issue or changing libraries. The initialized Kotlin/JVM
-module is empty; its build does not verify kernel behavior.
+module was empty at bootstrap; that initial build did not verify kernel
+behavior. The 2026-10-08 slice adds JUnit tests and a Gradle system property
+pointing to canonical repository fixtures; see [the kernel walkthrough](../modules/project/core/kernel/README.md)
+for current verification. These fixtures are test inputs rather than app resources.
 
 ## Used in and related
 

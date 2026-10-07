@@ -112,7 +112,7 @@ open -a "Android Studio" .
 Select the `app` run configuration and an emulator or connected device. The
 app retains the generated Compose starter screen and examples; the full
 foundry catalog is a future implementation slice. The app already depends on
-the empty Kotlin/JVM module `:core:kernel`.
+the Kotlin/JVM module `:core:kernel`, which implements typed outcomes and failures.
 
 For direct terminal builds on this Mac:
 
@@ -144,6 +144,21 @@ android create --name=FoundryCatalog \
 
 See [Android project creation commands](https://developer.android.com/tools/agents/android-cli/commands/create)
 and [Compose setup](https://developer.android.com/develop/ui/compose/setup).
+
+## Kernel behavior checks
+
+From the repository root:
+
+```sh
+make kernel-test
+```
+
+This runs Swift package tests and Kotlin kernel host tests. Both read the
+canonical failure fixtures from `contracts/fixtures/kernel`; the runtime
+libraries do not load files from the checkout. `make android-test` also includes
+the Kotlin kernel tests alongside the starter app tests. See
+[the kernel contract](../contracts/behavior/kernel.md) and each platform's
+notebook for examples and evidence limits.
 
 ## Backend profiles
 

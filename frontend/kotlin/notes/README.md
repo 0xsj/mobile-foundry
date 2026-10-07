@@ -10,6 +10,8 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
 2. [Sealed UI states and data classes](language/kotlin-sealed-ui-states-and-data-classes.md).
 3. [Android starter walkthrough](modules/project/app/README.md), from the
    activity through navigation, repository, view model, and screen.
+4. [Outcomes and owned payloads](language/kotlin-outcomes-and-owned-payloads.md),
+   then [the kernel walkthrough](modules/project/core/kernel/README.md).
 
 ## Findings by lifespan
 
@@ -33,9 +35,11 @@ Kotlin/JVM kernel module. The debug APK and two starter unit tests passed.
 The generated app illustrates a repository/view-model/screen flow; its raw
 Throwable error state is starter code rather than the selected failure policy.
 
-Patterns, concepts, and techniques have reserved directories but no findings.
-The first kernel implementation should add its behavior and language
-explanations together.
+The 2026-10-08 kernel slice implements typed outcomes, immutable failures, and
+public projection. Nine kernel host tests passed against shared fixtures,
+including callback exception identity and cancellation-exception propagation.
+Shared reasoning is in [expected failures and diagnostics](../../../notes/concepts/expected-failures-and-diagnostics.md).
+HTTP, async adapters, UI examples, and diagnostic reporting remain future slices.
 
 ## Questions for the next session
 
@@ -43,3 +47,5 @@ explanations together.
   foundation failure value?
 - Which part of the starter owns data production, and which part renders it?
 - What would a check need to observe to establish the Success transition?
+- Where should the first HTTP adapter classify known dependency failures while
+  preserving coroutine cancellation and unexpected defects?

@@ -41,6 +41,12 @@ Use Swift outcome types with typed failures and a Kotlin sealed outcome type
 whose variants express the same behavior. Decide concrete type names and
 signatures in the kernel construction specification.
 
+The first value-only slice is implemented under [the kernel contract](contracts/behavior/kernel.md)
+and [construction specification](docs/blueprints/kernel.md): standard Swift
+Result and a generic Kotlin Outcome, immutable failure payloads, retry timing,
+and explicit public projection. HTTP classification, exception reporting, and
+async cancellation adapters follow in their owning slices.
+
 Preserve stable failure categories and operation-specific codes. Validation
 failures carry field information; throttling can carry retry timing. Public
 presentation selects deliberate copy by code or category. Diagnostic causes
