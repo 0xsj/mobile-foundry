@@ -159,9 +159,11 @@ Kotlin application baseline.
 
 ## Backend profiles
 
-Choose the first backend against a concrete connected workflow. A small owned
-API using Bento's Go conventions and a managed-service profile are candidates;
-neither is selected yet.
+The repository reserves three independent profiles: an owned Go API following
+Bento's module conventions, Supabase, and Firebase. Go has architecture
+placeholders; Supabase has a local self-hosted Compose stack; Firebase has a
+Compose wrapper around its Local Emulator Suite. Choose which profile the
+first native connected workflow exercises when that slice is specified.
 
 Owned APIs can share HTTP contracts. Managed SDK adapters must satisfy the
 application's session and repository behavior with their actual service

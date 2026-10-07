@@ -25,6 +25,9 @@ frontend/swift/notes/         # Swift notebook
   techniques/
   substrate/
 frontend/kotlin/notes/        # Kotlin notebook, same six categories
+backend/go/notes/             # Go notebook, same six categories
+backend/supabase/notes/       # Supabase notebook, same six categories
+backend/firebase/notes/       # Firebase notebook, same six categories
 ```
 
 Module paths are relative to the owning implementation root. For example,
@@ -35,8 +38,10 @@ Kotlin's `frontend/kotlin/project/core/kernel/` maps to
 
 Create a module directory when it has a finding or walkthrough. Notes can cover
 a whole package or app, or a narrower source directory, as long as the path
-matches that scope. Backend implementations adopt the same six categories in
-their own `notes` directory when work begins.
+matches that scope. Backend notebooks follow the same rule relative to their
+profile root, such as `backend/go/notes/modules/internal/identity/` for
+`backend/go/internal/identity/`. The provider notebooks start with substrate
+notes about actual configuration and observed local behavior.
 
 ## Classify findings by lifespan
 

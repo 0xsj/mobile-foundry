@@ -145,6 +145,52 @@ android create --name=FoundryCatalog \
 See [Android project creation commands](https://developer.android.com/tools/agents/android-cli/commands/create)
 and [Compose setup](https://developer.android.com/develop/ui/compose/setup).
 
+## Backend profiles
+
+The profiles are independent. Start whichever one the current experiment uses.
+Docker Desktop must be running for the two Compose profiles.
+
+```sh
+cd /Users/sj/Desktop/dev/builds/mobile-foundry/backend/go
+go mod init mobilefoundry/backend
+```
+
+Choose a repository import path instead if desired. This creates only `go.mod`;
+the reserved Go directories contain no executable or dependencies yet. See
+[Go layout](../backend/go/README.md).
+
+Supabase requires OpenSSL and Node.js on the host for one-time key generation:
+
+```sh
+cd /Users/sj/Desktop/dev/builds/mobile-foundry/backend/supabase
+make up
+make status
+make down
+```
+
+The first setup generates an ignored `.env`. Studio and the API use
+`http://localhost:56321`; email capture uses `http://localhost:56324`.
+Read [Supabase setup](../backend/supabase/README.md) for credentials and ports.
+
+Firebase builds its CLI and Java runtime into the emulator image:
+
+```sh
+cd /Users/sj/Desktop/dev/builds/mobile-foundry/backend/firebase
+make up
+make status
+make down
+```
+
+The emulator UI uses `http://localhost:4000`. Auth, Firestore, and Storage use
+9099, 8080, and 9199. `make down` allows graceful export; the next start imports
+the retained data volume. Read [Firebase setup](../backend/firebase/README.md)
+before connecting SDKs; the initial data rules deny client access.
+
+For native connections, iOS Simulator uses `127.0.0.1`, and Android Emulator
+uses `10.0.2.2`. Physical devices need a reachable host address and an explicit
+bind change. Native SDK adapters and development-only network settings will
+be added with the connected workflow.
+
 ## Version control
 
 Run Git commands from `mobile-foundry`, keeping both platforms and shared

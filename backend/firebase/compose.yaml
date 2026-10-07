@@ -1,0 +1,38 @@
+name: mobile-foundry-firebase
+
+services:
+  emulators:
+    build:
+      context: .
+    init: true
+    stop_grace_period: 60s
+    environment:
+      FIREBASE_PROJECT_ID: demo-mobile-foundry
+      JAVA_TOOL_OPTIONS: -Xmx1g
+    ports:
+      - ${FIREBASE_BIND_ADDRESS:-127.0.0.1}:4000:4000
+      - ${FIREBASE_BIND_ADDRESS:-127.0.0.1}:4400:4400
+      - ${FIREBASE_BIND_ADDRESS:-127.0.0.1}:4500:4500
+      - ${FIREBASE_BIND_ADDRESS:-127.0.0.1}:8080:8080
+      - ${FIREBASE_BIND_ADDRESS:-127.0.0.1}:9099:9099
+      - ${FIREBASE_BIND_ADDRESS:-127.0.0.1}:9199:9199
+    volumes:
+      - ./firebase.json:/workspace/firebase.json:ro
+      - ./firestore.rules:/workspace/firestore.rules:ro
+      - ./firestore.indexes.json:/workspace/firestore.indexes.json:ro
+      - ./storage.rules:/workspace/storage.rules:ro
+      - ./start.sh:/workspace/start.sh:ro
+      - emulator-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4400/emulators').then(async r => { const e = await r.json(); if (!r.ok || !e.auth || !e.firestore || !e.storage) process.exit(1); }).catch(() => process.exit(1))"
+      interval: 5s
+      timeout: 5s
+      start_period: 60s
+      retries: 12
+
+volumes:
+  emulator-data:

@@ -20,7 +20,8 @@ meaningful implementation or investigation slice.
 - Classify transferable findings into `language`, `patterns`, `concepts`,
   `techniques`, or `substrate`, following Bento's definitions. Shared mobile
   concepts, patterns, and techniques belong in root `notes`; backend notes live
-  with their implementation when one is selected.
+  in `backend/<profile>/notes`. Follow [backend rules](backend/AGENTS.md) for
+  Go boundaries and provider configuration.
 - Record a one-sentence claim, origin and evidence, what and why, a useful
   example, gotchas, actual use, and related notes. Explain new Swift or Kotlin
   mechanics when the first slice uses them, including the reason for the choice

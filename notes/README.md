@@ -1,7 +1,7 @@
 # Mobile Foundry learning notes
 
 Use this index to study the native foundation between implementation sessions.
-Swift and Kotlin each keep the six Bento note categories; shared mobile
+Swift, Kotlin, and each backend keep the six Bento note categories; shared mobile
 concepts, patterns, and verification techniques live here.
 
 ## Start here
@@ -12,6 +12,10 @@ concepts, patterns, and verification techniques live here.
 3. Follow [the Kotlin reading order](../frontend/kotlin/notes/README.md) through
    its toolchain, UI state types, and starter screen's data flow.
 4. Compare what each shell owns before implementing the first shared behavior.
+5. Read the backend setup notes for the profile you are exploring:
+   [Go](../backend/go/notes/README.md),
+   [Supabase](../backend/supabase/notes/README.md), or
+   [Firebase](../backend/firebase/notes/README.md).
 
 ## Current coverage
 
@@ -23,6 +27,11 @@ initialization. The walkthroughs state the limits of those checks.
 Both kernel libraries are empty. Identity, account, transport, persistence,
 sync, reusable components, and GPU integration remain planned capabilities.
 Their learning notes will arrive with actual implementation or investigation.
+
+Backend profiles were scaffolded 2026-10-08. Go has reserved module layers and
+no `go.mod`; the provider notebooks record local stack configuration and the
+checks performed. Provider setup alone does not establish native session,
+repository, or synchronization behavior.
 
 ## Shared findings
 

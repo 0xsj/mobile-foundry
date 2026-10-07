@@ -30,8 +30,9 @@ mobile-foundry/
       packages/      # Reusable Swift packages
     kotlin/project/  # Android catalog and reusable Gradle modules
   backend/
-    go/              # Candidate owned API profile
-    managed/         # Candidate managed service configuration
+    go/              # Owned API using Bento's Go architecture
+    supabase/        # Local self-hosted Supabase stack
+    firebase/        # Local Firebase Emulator Suite
   contracts/
     http/            # Owned API wire specifications
     behavior/        # Shared native behavioral specifications
@@ -61,7 +62,9 @@ proposed behavioral boundaries.
 The iOS SwiftUI catalog and Android Compose application are initialized, along
 with the Swift kernel package and Kotlin/JVM kernel module. Kernel behavior and
 the full component catalogs are the next implementation slices. Graphics
-engines, storage libraries, and backend profiles remain open decisions.
+engines and native storage libraries remain open decisions. The backend
+profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is
+reserved for manual initialization, and both provider stacks have Compose setup.
 
 The initial app deployment targets are iOS 17 and Android API 24. Review these
 bootstrap baselines when selecting graphics capabilities.
@@ -78,10 +81,24 @@ make android-test
 Run `make ios-generate` after editing the iOS application's `project.yml`.
 Use [Setup](docs/SETUP.md) for IDE paths and individual build commands.
 
+## Local backends
+
+Start the profile you want to explore from the repository root:
+
+```sh
+make -C backend/supabase up
+make -C backend/firebase up
+```
+
+Run the corresponding `make -C backend/<profile> down` to stop it while keeping
+data. Supabase setup generates private local credentials. Firebase runs Auth,
+Firestore, and Storage emulators with a demo project. Each profile documents
+its endpoints and native connection requirements.
+
 ## Learning notes
 
-Start at [the notes index](notes/README.md) for the Swift and Kotlin reading
-orders. Each platform follows Bento's split into modules, language, patterns,
+Start at [the notes index](notes/README.md) for native and backend reading
+orders. Each implementation follows Bento's split into modules, language, patterns,
 concepts, techniques, and substrate. Module walkthroughs mirror source paths;
 shared mobile findings live in root `notes`.
 

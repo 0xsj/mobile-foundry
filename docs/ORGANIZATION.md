@@ -105,7 +105,8 @@ Keep repository direction in `README.md`, architectural boundaries in
 `docs/decisions` and construction specifications under `docs/blueprints`.
 
 Keep learning in `frontend/swift/notes`, `frontend/kotlin/notes`, and the shared
-root `notes` directory. Module walkthroughs mirror paths from their owning
+root `notes` directory. Backend notebooks live in `backend/<profile>/notes`.
+Module walkthroughs mirror paths from their owning
 implementation root; transferable findings use Bento's lifespan categories.
 [The notes workflow](NOTES.md) defines ownership and reading handoffs.
 
@@ -113,6 +114,19 @@ Use `scripts` for executable checks, fixture processing, and asset conversion.
 Use `templates` for future generated-project overlays and setup material.
 Reusable runtime code remains in its native implementation directory.
 
-The placeholder backend directories reserve candidate profiles. Select a
-profile against the first connected workflow before adding dependencies or
-copying a backend implementation.
+## Backend ownership
+
+`backend/go` reserves Bento's `cmd/server`, reusable `pkg` packages, and
+`internal/<module>` layers: `domain`, `app/command`, `app/query`, adapters under
+`infra`, and versioned transports. Identity, Account, and Audit have placeholder
+directories; the user initializes `go.mod` when ready.
+
+`backend/supabase` owns its self-hosted Compose snapshot and support files.
+`backend/firebase` owns its emulator image, Compose configuration, rules, and
+indexes. Each owns setup commands and its notebook. Provider-specific native
+adapters belong in the corresponding Swift or Kotlin implementation.
+
+Put infrastructure shared by profiles in `infra`. Keep profile-specific local
+stacks beside their source so setup and configuration have one owner. Select
+the first connected workflow before introducing application adapters or backend
+business code.

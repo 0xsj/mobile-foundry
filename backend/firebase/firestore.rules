@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      // Introduce scoped permissions with the first connected data slice.
+      allow read, write: if false;
+    }
+  }
+}
