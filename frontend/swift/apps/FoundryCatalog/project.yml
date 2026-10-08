@@ -17,6 +17,8 @@ packages:
     path: ../../packages/FoundryQuery
   FoundryUI:
     path: ../../packages/FoundryUI
+  FoundryGraphics:
+    path: ../../packages/FoundryGraphics
 targets:
   FoundryCatalog:
     type: application
@@ -30,6 +32,7 @@ targets:
       - package: FoundryServices
       - package: FoundryQuery
       - package: FoundryUI
+      - package: FoundryGraphics
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.mobilefoundry.catalog
@@ -55,6 +58,7 @@ targets:
       - package: FoundryServices
       - package: FoundryQuery
       - package: FoundryUI
+      - package: FoundryGraphics
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.mobilefoundry.catalog.tests

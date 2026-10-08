@@ -60,5 +60,9 @@ memory and HTTP through the same state owner, refresh retention, error recovery,
 latest-result admission, cancellation and defect reporting. Device checks
 exercise both implementations through the same rendered screen.
 
-Writes, persistent storage, query caches, deduplication, account scoping,
+The separate [forms/mutations contract](forms-mutations.md) adds NoteCreator
+without broadening this read port. Its catalog write instance does not update
+this read gallery; shared data ownership and invalidation remain separate work.
+
+Persistent storage, query caches, deduplication, account scoping,
 credential renewal, provider SDK adapters and offline synchronization are deferred.

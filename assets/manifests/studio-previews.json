@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "studio-still-life",
+      "source": "studio-still-life.png",
+      "format": "PNG, opaque sRGB, 1536 × 1024",
+      "sha256": "d9f25fb5532a6277b09c072a2f121fa951fae2b757e0b1510b2fce59d816c828",
+      "provenance": "Generated for this repository using the built-in OpenAI imagegen tool, 2026-10-08; copied unchanged into both catalogs.",
+      "tool_mode": "image_gen.imagegen / generate; transparent_background=false; no reference images",
+      "generation_id": "01a117a9-1908-7d32-8c52-dc7c98152c7a",
+      "prompt": "Use case: photorealistic-natural\nAsset type: bundled sample photograph for a native image-adjustment editor, landscape 3:2 composition.\nPrimary request: a natural editorial still-life photograph of a small ochre ceramic vase holding olive branches, a cobalt-blue cup, and two ripe oranges on a pale limestone table beside a sunlit window. Warm plaster wall and soft garden greenery beyond the window.\nLighting: believable afternoon side light, gentle shadows, visible highlights and darker regions, rich but natural colors, detailed ceramic and citrus textures. Composition should make exposure, saturation and vignette adjustments easy to evaluate; no baked photographic filter.\nConstraints: no text, no logos, no watermark, no border, no people. This is a photographic content asset, not an interface mockup.",
+      "runtime_conversion": "Decode off main into owned opaque top-left sRGB RGBA8; upload once per renderer/context and asset identity."
+    },
+    {
+      "id": "studio-lamp",
+      "source": "studio-lamp.json",
+      "format": "JSON v1, position3-normal3-slot1, non-indexed triangles",
+      "sha256": "bbd41bcbb42f511c923452ac6791e80bcba65b0d5f0f7488693f9cfad78ba00d",
+      "provenance": "Repository-authored rotational profiles in scripts/sync_graphics_assets.py; no external model or texture.",
+      "generation": "64 radial segments per profile segment, coordinates rounded to six decimals, no runtime tessellation.",
+      "runtime_conversion": "Validate and copy finite float data off main; upload one interleaved vertex buffer per renderer/context and asset identity."
+    }
+  ]
+}

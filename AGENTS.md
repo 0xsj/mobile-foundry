@@ -7,6 +7,15 @@ The kernels implement [outcomes and failures](contracts/behavior/kernel.md);
 HTTP/services and catalog examples implement [HTTP and health](contracts/behavior/http.md).
 The read-only notes exemplar implements [service seams and query state](contracts/behavior/notes-query.md).
 Reusable query snapshots and async UI implement [query state and presentation](contracts/behavior/query-ui.md).
+Native command forms and write state implement [forms and mutations](contracts/behavior/forms-mutations.md).
+Native tokens and scoped themes implement [UI tokens](contracts/behavior/ui-tokens.md),
+with source placement in [Styles](STYLES.md).
+Optional native renderers and the procedural gallery implement
+[GPU effects](contracts/behavior/gpu-effects.md).
+Reusable image editing and mesh product examples implement
+[graphics previews](contracts/behavior/graphics-previews.md). Keep admitted CPU
+assets/edit values separate from native GPU resource ownership. Canonical assets
+and provenance live in `assets`; run `make assets-check` after changing copies.
 Other app areas remain scaffolds.
 Implement capabilities in reviewable slices rather than treating planned
 behavior as already available.

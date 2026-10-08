@@ -56,7 +56,8 @@ mobile-foundry/
 
 [Organization](docs/ORGANIZATION.md) explains ownership and native module
 placement. [Setup](docs/SETUP.md) provides commands and IDE steps for building
-the Swift and Kotlin projects. [Architecture](ARCHITECTURE.md) defines the
+the Swift and Kotlin projects. [Styles](STYLES.md) explains the Bento-style token,
+theme, and component directory splits. [Architecture](ARCHITECTURE.md) defines the
 proposed behavioral boundaries.
 
 The iOS SwiftUI catalog and Android Compose application are initialized, along
@@ -72,7 +73,33 @@ either catalog to exercise content, empty, failure, refresh and cancellation.
 The [query/UI slice](contracts/behavior/query-ui.md) extracts reusable generic
 state and async presentation into FoundryQuery/FoundryUI and core:query/core:ui.
 Open **Async UI patterns** to select states with a scalar payload; the notes
-example uses the same components. Broader UI controls, graphics engines, and
+example uses the same components. The [token slice](contracts/behavior/ui-tokens.md)
+adds the Foundry Studio V1 light/dark preset, native typography, spacing, shape and motion,
+plus scoped themes. Open **Tokens** to inspect the roles and try appearance,
+reduced motion, and native action samples. The home **Glass surfaces** switch
+selects a material theme; Tokens also offers local Solid/Glass selection,
+transparency reduction, and floating controls over a movable scene.
+Read [surface themes](STYLES.md#swappable-surface-themes) and the
+[learning handoff](notes/patterns/material-themes-and-backdrops.md).
+The [forms/mutation slice](contracts/behavior/forms-mutations.md) adds native
+fields, local/server validation, guarded submission and public write feedback.
+Open **Forms and mutations** to create a note through memory or injected HTTP,
+exercise failures, and reset after confirmation. The note is an exemplar;
+persistence and shared read/write coordination remain separate capabilities.
+The [GPU slice](contracts/behavior/gpu-effects.md) adds an optional FoundryGraphics/
+core:graphics boundary using Metal on iOS and OpenGL ES on Android. Open **GPU
+effects** to drag Ripple or a lit 3D Orbit, change strength/quality, pause and try
+reduced motion. The renderer owns frame scheduling and resource lifetime;
+[graphics notes](notes/patterns/renderer-frame-ownership.md) explain the seam and
+native execution evidence. Physical-device performance remains unmeasured.
+Open **Image studio** for before/after exposure, saturation, vignette and zoom/pan;
+open **Product studio** for an actual lamp mesh with orbit/pinch, three finishes
+and an optional turntable. These [preview foundations](contracts/behavior/graphics-previews.md)
+share admitted assets and bounded values through a native preview surface.
+Read [editable values and GPU resources](notes/patterns/editable-values-and-renderer-resources.md)
+to adapt them to other verticals. Import/export, general model loading and saved
+edits remain separate work.
+Broader UI controls, complete graphics engines, and
 native storage libraries remain future work. The backend
 profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is
 reserved for manual initialization, and both provider stacks have Compose setup.
@@ -87,10 +114,14 @@ make kernel-build
 make kernel-test
 make http-test
 make query-test
+make ui-test
+make graphics-test
+make assets-check
 make ios-build
 make ios-test
 make android-build
 make android-test
+make android-ui-test
 ```
 
 Run `make ios-generate` after editing the iOS application's `project.yml`.

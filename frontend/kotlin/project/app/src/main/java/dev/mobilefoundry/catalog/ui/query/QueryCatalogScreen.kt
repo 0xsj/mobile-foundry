@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
 import dev.mobilefoundry.kernel.Failure
 import dev.mobilefoundry.kernel.FailureMeta
 import dev.mobilefoundry.query.*
-import dev.mobilefoundry.ui.QueryContent
-import dev.mobilefoundry.ui.QueryCopy
+import dev.mobilefoundry.ui.components.feedback.query.QueryContent
+import dev.mobilefoundry.ui.components.feedback.query.QueryCopy
 
 private enum class QueryScenario(val label: String) {
     IDLE("Idle"), LOADING("Loading"), CONTENT("Content"), EMPTY("Empty"),

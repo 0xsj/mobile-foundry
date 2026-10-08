@@ -47,6 +47,27 @@ cases plus memory parity, domain bounds/owned snapshots, and defect/cancellation
 propagation. Five service tests pass in total. Feature state is checked separately
 by the catalog's ViewModel unit tests.
 
+## Create-note write seam
+
+The 2026-10-08 [forms contract](../../../../../../../contracts/behavior/forms-mutations.md)
+adds [CreateNote and NoteCreator](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/CreateNote.kt).
+The private constructor and companion factory admit raw text before provider
+work. The separate fun interface keeps read-only consumers independent of writes.
+
+[InMemoryNoteCreator](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/InMemoryNoteCreator.kt)
+implements both ports, with a mutex protecting append/list and an unmodifiable
+copy for each list snapshot. [HTTPNoteCreator](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/HTTPNoteCreator.kt)
+posts the admitted title and validates a note envelope. Invalid success shapes
+preserve response IDs in an internal failure; expected failures pass through.
+Server-normalized valid titles are accepted.
+
+[Create tests](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/CreateNoteTest.kt)
+add four passing host tests: ten shared title cases, thirteen responses/request
+shape, concurrent unique appends/owned snapshots, and cancellation/defects.
+Nine service tests pass in `make android-test`. This is instance-local memory
+and injected transport evidence, not server idempotency or persistence.
+See [constructor, mutex and IME mechanics](../../../../substrate/compose-form-focus-and-ime.md).
+
 ## Gotchas
 
 HTTP success is necessary but insufficient for a successful domain result.

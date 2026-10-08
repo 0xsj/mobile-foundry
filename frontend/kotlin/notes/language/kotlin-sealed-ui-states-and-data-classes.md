@@ -47,6 +47,30 @@ are expected, who owns asynchronous work, or how a screen should present an
 error. Carrying `Throwable` in generated UI state does not establish a typed
 failure contract or a safe user-facing message.
 
+## Admitted data and copy visibility
+
+The 2026-10-08 graphics previews add private-constructor data classes with bounded
+factories. A private constructor alone historically did not make generated copy
+private. [ConsistentCopyVisibility](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-consistent-copy-visibility/)
+opts into matching copy/constructor visibility. The initial Kotlin 2.3.20 build
+reported a migration warning; adding the annotation removed it. Init requirements
+also protect the stored invariants. An ordinary class with manually implemented
+equality is an alternative when generated data-class behavior is unsuitable.
+
+Excerpt from the graphics values:
+
+```kotlin
+// Excerpt
+@ConsistentCopyVisibility
+data class ImageViewport private constructor(val zoom: Float, val x: Float, val y: Float)
+```
+
+Asset classes deliberately use ordinary class identity rather than data-class
+array equality. Their constructors copy caller arrays and expose no mutable
+storage. A `val ByteArray` alone would only prevent reassigning the reference;
+it would not protect the elements. See the [graphics walkthrough](../modules/project/core/graphics/README.md#product-previews)
+for the actual factories, init checks and mutation-isolation tests.
+
 ## Used in and related
 
 Use variants when each state has a distinct shape and callers need explicit

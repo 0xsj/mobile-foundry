@@ -1,6 +1,6 @@
 # Native project setup
 
-The SwiftUI iOS app, Compose Android app, and native kernel, HTTP, services, query, and UI
+The SwiftUI iOS app, Compose Android app, and native kernel, HTTP, services, query, UI and graphics
 packages/modules are initialized. Do not rerun project initialization commands in
 these existing directories.
 
@@ -18,6 +18,8 @@ make kernel-build
 make kernel-test
 make http-test
 make query-test
+make ui-test
+make graphics-test
 make ios-build
 make ios-test
 make android-build
@@ -74,9 +76,11 @@ physical device. Select HTTP health in the Foundation list to try the injected s
 Select Notes service seam to run the same list screen against memory or an HTTP
 adapter with injected responses. Select Async UI patterns to explore generic
 loading, retained content/empty, failure, retry, and cancellation presentation.
+Select Tokens to inspect the V1 roles and scales. Its appearance and reduced-motion
+controls preview a scoped theme while keeping the catalog controls outside it.
 
 The app links local `FoundryKernel`, `FoundryHTTP`, `FoundryServices`,
-`FoundryQuery`, and `FoundryUI` packages. Its initial deployment
+`FoundryQuery`, `FoundryUI`, and `FoundryGraphics` packages. Its initial deployment
 target is iOS 17 and its bundle identifier is `dev.mobilefoundry.catalog`.
 The asset catalog contains accent color and app icon metadata; add icon artwork
 when the app's visual identity is defined.
@@ -120,7 +124,8 @@ open -a "Android Studio" .
 
 Select the `app` run configuration and an emulator or connected device. The
 app retains the generated starter and adds HTTP health, Notes service seam, and
-Async UI patterns destinations. Catalog scenarios need no backend. The app already depends on
+Async UI patterns, Tokens, Forms and mutations, and GPU effects destinations.
+Catalog scenarios need no backend. The app already depends on
 the Kotlin/JVM module `:core:kernel`, which implements typed outcomes and failures.
 
 For direct terminal builds on this Mac:
@@ -128,8 +133,8 @@ For direct terminal builds on this Mac:
 ```sh
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-./gradlew :core:kernel:build :core:http:build :core:services:build :core:query:build :core:ui:assembleDebug :app:assembleDebug
-./gradlew :core:kernel:test :core:http:test :core:services:test :core:query:test :app:testDebugUnitTest
+./gradlew :core:kernel:build :core:http:build :core:services:build :core:query:build :core:ui:assembleDebug :core:graphics:assembleDebug :app:assembleDebug
+./gradlew :core:kernel:test :core:http:test :core:services:test :core:query:test :core:ui:testDebugUnitTest :core:graphics:testDebugUnitTest :app:testDebugUnitTest
 ```
 
 The wrapper uses Gradle 9.1.0. The version catalog pins Android Gradle Plugin
@@ -168,6 +173,53 @@ libraries do not load files from the checkout. `make android-test` also includes
 all Kotlin core tests alongside the starter app tests. See
 [the kernel contract](../contracts/behavior/kernel.md) and each platform's
 notebook for examples and evidence limits.
+
+## Image and product previews
+
+Open **Image studio** in either catalog. Drag in Compare mode to move the
+original/edited divider; change exposure, saturation and vignette, then choose
+Move image to pan or pinch to zoom. Original/Edited, Zoom and Reset controls
+provide native alternatives. Open **Product studio** to orbit/pinch the lamp,
+choose Porcelain/Cobalt/Bronze, reset the camera or enable Turntable. Reduce motion
+suppresses the turntable while controls still redraw a static scene.
+
+Canonical assets and provenance are described in [assets](../assets/README.md).
+Run `make assets-sync` after changing the authored model or source photograph,
+then `make assets-check`. Regenerate the iOS project after adding resource files.
+The reusable graphics modules accept admitted data instead of catalog paths.
+Import/export, general model loading, saved edits and backend assets are future
+slices. The small internal triangle JSON is not glTF.
+
+`make graphics-test` now includes four value/policy checks per native platform
+and two actual Metal execution checks. `make ios-test` hosts both previews to
+verify drawable sizing/static updates/removal. `make android-ui-test` reads real
+surface pixels and exercises image tools, product material/camera/pinch, quality,
+motion reduction, context recreation and navigation. These are simulator/emulator
+checks; physical-device frame-time and thermal profiling remain open.
+
+## GPU effects
+
+Open **GPU effects** in either catalog. Drag Ripple to move the wave center;
+select Orbit to steer a lit sphere and ring. Change strength or Economy/Balanced,
+disable Animate, then interact again. Reduce motion preview keeps animation
+paused even with Animate enabled. Reset focus centers touch without resetting
+time. Background/resume and Back/reopen exercise native resource lifetime.
+No backend, external assets or credentials are required.
+
+`make graphics-test` runs two shared policy tests per platform and a native
+offscreen Metal shader/pixel test on a Metal-capable Mac. That test explicitly
+skips when no Metal device is available. `make ios-test` adds a hosted canvas
+dimension, automatic drawing, paused quality, resume and disposal check.
+`make android-ui-test` checks actual GL surface pixels, controls, quality,
+context recreation and removal on a booted emulator/device.
+
+The iOS adapter uses Metal/MTKView; Android uses OpenGL ES 2/GLSurfaceView at the
+existing API 24 floor. Shader text is bundled and compiled once per attachment
+or recreated context. No new third-party engine is installed. Counters report
+submissions and target pixels, not displayed FPS or GPU time. Profile physical
+devices before selecting sustained performance targets. Read the
+[contract](../contracts/behavior/gpu-effects.md) and
+[learning handoff](../notes/patterns/renderer-frame-ownership.md).
 
 ## HTTP and health examples
 
@@ -217,6 +269,35 @@ manually selects states and performs no service calls. Notes service seam
 exercises the same reusable UI with real feature-owned request lifetime.
 See [the query/UI contract](../contracts/behavior/query-ui.md).
 
+## Tokens and native themes
+
+`make ui-test` runs Swift FoundryUI and Kotlin core/ui token tests against the
+shared V1 light/dark palette and scales. `make android-test` also includes the
+Kotlin suite. `make android-ui-test` checks nested themes, Material mapping,
+font scaling, minimum touch bounds, catalog controls, and preserved sample state.
+
+Open Tokens and choose System, Light, or Dark; System follows the surrounding
+theme. Turn on Reduce motion preview and scroll to Motion: durations become
+0 / 0 / 0 ms, and Toggle position still changes the endpoint. The preview flag
+can request reduction but cannot override an operating-system request. Native
+widgets retain their own animation policy. Primary/Secondary action increments
+the counter, which survives appearance changes.
+
+On the catalog home, enable Glass surfaces, then open Tokens. Surface theme
+defaults to App theme; choose Solid or Glass for a local comparison. Move scene
+changes the backdrop, Select object increments the count, and Reduce transparency
+preview makes the floating panel opaque while retaining the selected style.
+The scene and count survive theme changes. Swift additionally respects system
+Reduce Transparency. Android requires API 31+ for backdrop blur and falls back
+to a solid surface on older supported versions. These choices last for the
+catalog session; there is no saved cross-launch theme preference in this slice.
+
+The deterministic Foundry Studio V1 preset uses porcelain/graphite surfaces and
+cobalt accents; it does not select Android wallpaper colors. The app
+theme delegates to the reusable FoundryTheme. Follow [Styles](../STYLES.md) for
+the token/preset/theme/component split and [the contract](../contracts/behavior/ui-tokens.md)
+for current behavior. Forms and mutation state remain subsequent slices.
+
 ## Backend profiles
 
 The profiles are independent. Start whichever one the current experiment uses.
@@ -262,6 +343,37 @@ For native connections, iOS Simulator uses `127.0.0.1`, and Android Emulator
 uses `10.0.2.2`. Physical devices need a reachable host address and an explicit
 bind change. Native SDK adapters and development-only network settings will
 be added with the connected workflow.
+
+## Forms and mutations catalog
+
+Open **Forms and mutations** in either native app. No backend is required;
+Memory uses an instance-local store and HTTP injects wire responses through
+the real client/service admission path. The notes domain is an example.
+
+1. Submit an empty title: the required error appears and Title receives focus.
+2. Enter a title, change provider, and confirm the draft stays present. Use the
+   keyboard Done/Return or Create note; both share guarded admission.
+3. Choose Field error and submit. The draft remains with a server title error.
+   Editing clears server feedback and revalidates the touched field.
+4. Choose Unavailable, Timeout or Malformed and submit to inspect public
+   feedback and missing-confirmation copy. Switch back to Success to recover.
+5. Choose Slow and submit. Field, submit, reset and provider/scenario controls
+   disable during the attempt. After confirmation, New note resets the form.
+6. Leave during Slow, reopen, and confirm a new form remains usable. Screen
+   exit suppresses old results; it does not promise a remote rollback.
+
+Try the home Glass surfaces switch: the form's outer panels adopt glass over a
+subtle cobalt backdrop. Solid returns them to opaque surfaces; transparency
+reduction and unsupported blur also retain an opaque fallback.
+The write gallery does not update the separate Notes service seam gallery;
+read/write composition and persistence are later capabilities. There is no
+automatic retry or server idempotency guarantee.
+
+`make http-test` includes command/provider fixtures; `make query-test` includes
+mutation values. `make ios-test` and `make android-test` cover feature execution;
+`make android-ui-test` covers actual Compose fields/IME/feedback. See
+[the contract](../contracts/behavior/forms-mutations.md) and
+[learning handoff](../notes/patterns/forms-and-mutation-ownership.md).
 
 ## Version control
 

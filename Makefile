@@ -5,13 +5,17 @@ FOUNDRY_ANDROID_SDK ?= $(HOME)/Library/Android/sdk
 FOUNDRY_PYTHON ?= python3
 FOUNDRY_IOS_TEST_DESTINATION ?= platform=iOS Simulator,name=iPhone 17 Pro
 
-.PHONY: help kernel-build kernel-test http-test query-test ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
+.PHONY: help kernel-build kernel-test http-test query-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
 
 help:
 	@echo 'make kernel-build    Build the Swift kernel package'
 	@echo 'make kernel-test     Run Swift and Kotlin kernel behavioral tests'
 	@echo 'make http-test       Run Swift and Kotlin HTTP and domain service tests'
-	@echo 'make query-test      Run Swift and Kotlin shared query-state tests'
+	@echo 'make query-test      Run Swift and Kotlin query/mutation value tests'
+	@echo 'make ui-test         Run Swift and Kotlin token/material contract tests'
+	@echo 'make graphics-test   Run graphics policies and native Metal shader tests'
+	@echo 'make assets-sync     Author the lamp and synchronize bundled graphics assets'
+	@echo 'make assets-check    Check asset hashes and both catalog copies'
 	@echo 'make ios-generate    Regenerate the iOS project from project.yml'
 	@echo 'make ios-build       Build the iOS catalog for the simulator'
 	@echo 'make ios-test        Run iOS catalog state-owner tests on a simulator'
@@ -42,6 +46,18 @@ query-test:
 		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
 		./gradlew :core:query:test
 
+ui-test:
+	swift test --package-path frontend/swift/packages/FoundryUI
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :core:ui:testDebugUnitTest
+
+graphics-test:
+	swift test --package-path frontend/swift/packages/FoundryGraphics
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :core:graphics:testDebugUnitTest
+
 ios-generate:
 	cd frontend/swift/apps/FoundryCatalog && xcodegen generate
 
@@ -58,17 +74,23 @@ ios-test:
 android-build:
 	cd frontend/kotlin/project && \
 		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
-		./gradlew :core:kernel:build :core:http:build :core:services:build :core:query:build :core:ui:assembleDebug :app:assembleDebug
+		./gradlew :core:kernel:build :core:http:build :core:services:build :core:query:build :core:ui:assembleDebug :core:graphics:assembleDebug :app:assembleDebug
 
 android-test:
 	cd frontend/kotlin/project && \
 		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
-		./gradlew :core:kernel:test :core:http:test :core:services:test :core:query:test :app:testDebugUnitTest
+		./gradlew :core:kernel:test :core:http:test :core:services:test :core:query:test :core:ui:testDebugUnitTest :core:graphics:testDebugUnitTest :app:testDebugUnitTest
 
 android-ui-test:
 	cd frontend/kotlin/project && \
 		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
 		./gradlew :app:connectedDebugAndroidTest
+
+assets-sync:
+	$(FOUNDRY_PYTHON) -B scripts/sync_graphics_assets.py
+
+assets-check:
+	$(FOUNDRY_PYTHON) -B scripts/sync_graphics_assets.py --check
 
 notes-check:
 	$(FOUNDRY_PYTHON) -B scripts/check_notes.py

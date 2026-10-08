@@ -1,0 +1,6 @@
+[
+  { "style": "solid", "reduceTransparency": false, "content": "solid", "floating": "solid" },
+  { "style": "solid", "reduceTransparency": true, "content": "solid", "floating": "solid" },
+  { "style": "glass", "reduceTransparency": false, "content": "solid", "floating": "glass" },
+  { "style": "glass", "reduceTransparency": true, "content": "solid", "floating": "solid" }
+]

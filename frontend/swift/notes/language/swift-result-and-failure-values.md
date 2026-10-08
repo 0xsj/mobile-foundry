@@ -72,6 +72,24 @@ Do not use `Result(catching:)` as a universal service wrapper: it converts throw
 errors into values and needs an explicit boundary contract, particularly for
 cancellation and defects.
 
+## Immutable references and asset identity
+
+The 2026-10-08 graphics previews need an asset's stable identity across small
+edit snapshots. A final class with immutable Sendable members can conform to
+Sendable with compiler checking; it does not need unchecked conformance. Data
+and Float arrays provide value semantics for their stored content. This differs
+from sharing an arbitrary mutable reference across Task boundaries.
+
+`===` and `!==` compare class object identity. Struct equality compares admitted
+edit values. Two assets with equal bytes can still have different identity and
+therefore deliberately trigger different uploads. Identity is not a persistent
+asset ID or content hash. An explicit versioned cache key is an alternative for
+a future feature-owned asset cache.
+
+The [graphics walkthrough](../modules/packages/FoundryGraphics/README.md#product-previews)
+links actual values, admission/mutation tests and renderer identity guards.
+Primary language reference: [classes and structures](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures/).
+
 ## Used in and related
 
 Use associated-value enums when cases require different data. Use standard

@@ -23,6 +23,25 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
    then [core/query](modules/project/core/query/README.md),
    [core/ui](modules/project/core/ui/README.md), and
    [query/rendering ownership](../../../notes/patterns/query-state-and-rendering.md).
+9. [Token theme and touch bounds](substrate/compose-token-theme-and-touch-bounds.md),
+   then revisit [core/ui](modules/project/core/ui/README.md) for token families,
+   V1 mapping, Material adaptation, tests, and catalog controls. Compare
+   [semantic token ownership](../../../notes/patterns/semantic-tokens-and-native-themes.md).
+10. [Material themes and backdrop ownership](../../../notes/patterns/material-themes-and-backdrops.md),
+    then [Compose backdrop layers](substrate/compose-backdrop-layers.md) and the
+    UI walkthrough's material slice.
+11. [Form focus and IME](substrate/compose-form-focus-and-ime.md), then the new
+    services/query/UI/app sections and
+    [shared mutation ownership](../../../notes/patterns/forms-and-mutation-ownership.md).
+    Compare command admission, mutex snapshots, native keyboard actions and coroutine guards.
+12. [GLSurfaceView and Compose lifetime](substrate/glsurfaceview-and-compose-lifetime.md),
+    then [core/graphics](modules/project/core/graphics/README.md) and the app's GPU
+    section. Trace immutable queued snapshots, GL handles, context recreation and
+    [shared frame ownership](../../../notes/patterns/renderer-frame-ownership.md).
+13. [GLES assets and gestures](substrate/gles-preview-assets-and-gestures.md),
+    then [the preview walkthrough](modules/project/core/graphics/README.md#product-previews)
+    and both app features. Compare asset identity, incremental state reads and
+    [editable values/resource ownership](../../../notes/patterns/editable-values-and-renderer-resources.md).
 
 ## Findings by lifespan
 
@@ -82,12 +101,84 @@ debug APK built. All ten device tests passed on API36_Test/Android 16, including
 four new presentation-matrix, callback, public-copy and gallery checks.
 The scalar gallery and notes list now consume the same reusable state/UI.
 
+The 2026-10-08 token slice adds V1 light/dark roles, native type/space/shape/motion,
+and a scoped theme that adapts Material and observes animator reduction.
+Three UI host tests pass for fixtures, contrast, and reduction. Both the library
+and app build; eight notes ViewModel and two starter regressions pass. All
+fourteen device tests pass on API36_Test/Android 16, adding nested scope, Material
+background mapping, fontScale 1/2, minimum touch bounds, and preview/state checks.
+The substrate note records the corrected visual-height assertion and pinned
+Compose UI 1.10.6 API inspection. Live OS preference changes, TalkBack, exhaustive
+large-text layouts, and physical-device behavior remain open.
+
+The same day's [Foundry Studio revision](../../../STYLES.md#design-direction-foundry-studio)
+establishes porcelain/graphite/cobalt styling, a four-point rhythm, semibold native
+headings, and decelerating motion. Three revised token tests pass, including muted
+and inverse contrast pairs; the UI walkthrough explains Material action mapping.
+The final full device rerun passes all fourteen checks. The walkthrough records
+an earlier transient loading-state timeout, its isolated pass, and emulator
+connection delays rather than treating the run history as uniformly clean.
+
+The same day's material slice adds app/local Solid/Glass selection, content/
+floating roles, a bounded Compose backdrop host, and transparency reduction.
+Four UI unit tests pass and the app builds. New device checks cover material
+scope, retained scene state, source placement and updates, and opaque fallback.
+All seventeen final device checks pass, including source-edge blur smoothing.
+The UI walkthrough records an earlier HTTP timing failure, its isolated pass,
+and slow emulator behavior in the final run. External renderer capture,
+device performance, and Android system transparency integration remain future work.
+
+The same day's forms/mutation slice adds CreateNote/NoteCreator, mutex-protected
+memory and HTTP adapters, MutationState, native controls and feature submission
+ownership. Nine service, three query, four UI and seventeen app host tests pass
+in `make android-test`; the debug app builds. All twenty-one device checks pass
+on API36_Test/Android 16, including four new form/feedback tests for IME, both
+providers, refusals/recovery, busy controls and reset. The first run passed
+nineteen checks: two new assertions could not find disabled fields through
+SetText, an action intentionally absent while disabled. Correcting the matcher
+to EditableText produced the complete pass without changing timing thresholds.
+TalkBack, exhaustive font/keyboard configurations and physical devices remain open.
+
+The Glass follow-up corrects the form outer panels' role and supplies the missing
+Compose backdrop source. All twenty-two device checks pass, including actual
+form pixels across style/reduction changes with title and confirmation retained;
+the app builds. See [material usage](../../../notes/patterns/material-themes-and-backdrops.md#gotchas)
+and the app walkthrough. Theme propagation alone had not established visible usage.
+
+The GPU slice adds core/graphics, OpenGL ES 2 shaders, a native surface and
+bounded resolution/time policies. Two host policy tests pass and both build/unit
+regression commands pass with the module included. All 25 device checks pass
+on API36_Test/Android 16, including actual framebuffer touch/effect differences,
+quality dimensions, pause/context recreation/disposal and navigation/reduction.
+Read [the graphics walkthrough](modules/project/core/graphics/README.md).
+Physical-device performance and accessibility remain unmeasured.
+
+## Product preview follow-up
+
+The product-preview follow-up adds Image studio and Product studio above a
+shared GPUPreviewSurface. Four host graphics checks cover admitted values and
+owned data; native checks exercise image tools, actual mesh material/camera/pinch,
+motion/quality, context recreation and navigation. Read [the preview walkthrough](modules/project/core/graphics/README.md#product-previews),
+[asset/gesture mechanics](substrate/gles-preview-assets-and-gestures.md), then
+[editable values/resource ownership](../../../notes/patterns/editable-values-and-renderer-resources.md).
+Import/export, general models, durable editing and device profiling remain open.
+All 29 device checks pass on API36_Test / Android 16, and the final four-check
+preview run and Android host regressions pass.
+
 ## Questions for the next session
 
+- Why must incremental callbacks read current primitives rather than the last composed camera?
+- Why is a successful submission event insufficient for the first PixelCopy read?
+- Why must GL handles stay on the render thread even when controls are on main?
+- Why does SurfaceView verification use PixelCopy instead of Compose capture?
+- What does pausing a frame scheduler fail to prove about queued callbacks?
 - Why can valid JSON still be invalid domain data?
 - How does a request deadline differ from a screen canceling its work?
 - Which layer should renew credentials and decide retries?
-- Which form and mutation behavior should accompany the next reusable controls?
+- How should a confirmed mutation reach the repository's read observers?
+- Why does a disabled text field retain EditableText but lose SetText?
+- Why can a Material control's visible height differ from its touch bounds?
 - How can editor dependency imports fail while the same source compiles in Gradle?
 - Why does a navigation entry need its own ViewModelStoreOwner?
 - Why do pure state transformations leave coroutine admission to the feature?
+- Why does blurring an overlay's own content fail to provide a sharp glass control?

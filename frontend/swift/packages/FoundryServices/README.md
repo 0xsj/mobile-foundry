@@ -7,3 +7,7 @@ adapters. See [HTTP and health](../../../../contracts/behavior/http.md) and
 
 Run `make http-test` from the repository root. Runtime libraries do not load
 checkout fixtures. The catalogs inject responses and need no running backend.
+
+CreateNote admits input before the separate NoteCreator write port.
+InMemoryNoteCreator provides instance-local append/list snapshots; HTTPNoteCreator
+maps POST notes to an admitted receipt. See [forms/mutations](../../../../contracts/behavior/forms-mutations.md).

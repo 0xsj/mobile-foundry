@@ -49,6 +49,7 @@ dependencies {
   implementation(project(":core:services"))
   implementation(project(":core:query"))
   implementation(project(":core:ui"))
+  implementation(project(":core:graphics"))
 
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)

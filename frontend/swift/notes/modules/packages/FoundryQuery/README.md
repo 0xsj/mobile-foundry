@@ -35,6 +35,23 @@ checking repeated refresh/failure after an empty success. Read
 on iPhone 17 Pro/iOS 26.2. Pure state tests alone prove neither cancellation nor
 latest-result admission; those remain feature checks.
 
+## Mutation values alongside read snapshots
+
+The 2026-10-08 [MutationState](../../../../packages/FoundryQuery/Sources/FoundryQuery/MutationState.swift)
+adds four write phases under the [forms contract](../../../../../../contracts/behavior/forms-mutations.md).
+Unlike QueryState, it retains no earlier success during a new attempt: a receipt
+belongs to one write. `starting` drops it, `settled` projects Result into success
+or failure, and `reset` returns idle. Draft, request handles and latest-result
+checks remain in the feature.
+
+The same Sendable generic/conditional Equatable mechanics apply as in
+[generic query values](../../../language/swift-generic-query-state-and-content-builders.md).
+[Mutation tests](../../../../packages/FoundryQuery/Tests/FoundryQueryTests/MutationStateTests.swift)
+consume the shared four-state matrix and verify receipt dropping/reset and
+success/failure settlement. All three query package tests pass. Pure transitions
+intentionally do not reject a stale completion; the store must admit it first.
+Read [shared form ownership](../../../../../../notes/patterns/forms-and-mutation-ownership.md).
+
 ## Questions and related reading
 
 Why must settlement happen after the generation guard? Why is an empty previous

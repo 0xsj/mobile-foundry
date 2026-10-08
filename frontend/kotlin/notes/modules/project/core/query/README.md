@@ -35,6 +35,23 @@ and repeated refresh/failure/restoration after empty success. Read
 starter tests after extraction. Query state alone does not cancel a coroutine
 or suppress an obsolete result; those checks remain in the feature tests.
 
+## Mutation values alongside read snapshots
+
+The 2026-10-08 [MutationState](../../../../../project/core/query/src/main/kotlin/dev/mobilefoundry/query/MutationState.kt)
+adds Idle, Submitting, Succeeded and Failed under the
+[forms contract](../../../../../../../contracts/behavior/forms-mutations.md).
+Starting drops an earlier receipt; settlement maps the outcome; reset returns
+idle. It deliberately retains no query snapshot or form draft.
+Covariance, Nothing for payload-free variants, and generic extension functions
+follow [the existing language explanation](../../../../language/kotlin-covariant-query-state-and-content-slots.md).
+
+[MutationStateTest](../../../../../project/core/query/src/test/kotlin/dev/mobilefoundry/query/MutationStateTest.kt)
+consumes the four-state shared matrix and checks receipt dropping/reset and
+settlement. All three query host tests pass in `make android-test`. An immutable
+phase value cannot establish remote rollback or suppress an obsolete coroutine;
+the feature checks lifetime before applying settlement.
+Read [shared form ownership](../../../../../../../notes/patterns/forms-and-mutation-ownership.md).
+
 ## Questions and related reading
 
 Why does Idle use Nothing? Why do generic extension functions make sense beside

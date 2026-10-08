@@ -1,0 +1,26 @@
+[
+  {
+    "phase": "idle",
+    "value": null,
+    "busy": false,
+    "failed": false
+  },
+  {
+    "phase": "submitting",
+    "value": null,
+    "busy": true,
+    "failed": false
+  },
+  {
+    "phase": "succeeded",
+    "value": "Receipt",
+    "busy": false,
+    "failed": false
+  },
+  {
+    "phase": "failed",
+    "value": null,
+    "busy": false,
+    "failed": true
+  }
+]

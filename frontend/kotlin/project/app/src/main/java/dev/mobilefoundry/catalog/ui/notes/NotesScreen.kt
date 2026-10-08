@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.mobilefoundry.services.Note
 import dev.mobilefoundry.query.QueryState
-import dev.mobilefoundry.ui.QueryContent
-import dev.mobilefoundry.ui.QueryCopy
+import dev.mobilefoundry.ui.components.feedback.query.QueryContent
+import dev.mobilefoundry.ui.components.feedback.query.QueryCopy
 
 /** The feature supplies domain copy, emptiness, and rows to reusable presentation. */
 @Composable

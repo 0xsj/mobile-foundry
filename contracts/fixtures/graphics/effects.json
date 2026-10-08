@@ -1,0 +1,24 @@
+{
+  "points": [
+    {"x":0.5,"y":0.5,"expectedX":0.5,"expectedY":0.5},
+    {"x":-3,"y":9,"expectedX":0,"expectedY":1},
+    {"x":0,"y":1,"expectedX":0,"expectedY":1}
+  ],
+  "sizes": [
+    {"quality":"economy","width":1200,"height":800,"expectedWidth":600,"expectedHeight":400},
+    {"quality":"balanced","width":1200,"height":800,"expectedWidth":900,"expectedHeight":600},
+    {"quality":"economy","width":4000,"height":2000,"expectedWidth":900,"expectedHeight":450},
+    {"quality":"balanced","width":4000,"height":2000,"expectedWidth":1600,"expectedHeight":800},
+    {"quality":"balanced","width":1,"height":1,"expectedWidth":1,"expectedHeight":1},
+    {"quality":"balanced","width":0,"height":800,"expectedWidth":null,"expectedHeight":null}
+  ],
+  "clock": [
+    {"now":10,"running":true,"elapsed":0},
+    {"now":10.04,"running":true,"elapsed":0.04},
+    {"now":12,"running":true,"elapsed":0.14},
+    {"now":20,"running":false,"elapsed":0.14},
+    {"now":30,"running":true,"elapsed":0.14},
+    {"now":30.02,"running":true,"elapsed":0.16},
+    {"now":29,"running":true,"elapsed":0.16}
+  ]
+}

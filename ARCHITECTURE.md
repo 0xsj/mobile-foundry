@@ -19,7 +19,7 @@ a graphics gallery will test rendering integration early.
 | Repositories | Application data, local observation, local and remote data coordination |
 | Sync | Durable pending commands, retry policy, confirmations, incoming changes, conflict handling |
 | Session | Credential restoration, renewal, expiry, revocation, current authentication scope |
-| Query state | Generic snapshots and pure transitions; no request runtime or cache |
+| Query and mutation state | Generic snapshots, write phases and pure transitions; no request runtime or cache |
 | Features | Use cases, screen state, presentation, feature-specific rules |
 | UI system | Semantic tokens, controls, composed patterns, accessibility, motion |
 | App composition | Dependency selection, startup, navigation, deep links, lifecycle wiring |
@@ -58,6 +58,23 @@ latest-result admission without adding a shared query cache or persistence.
 The subsequent [query/UI extraction](contracts/behavior/query-ui.md) adds
 FoundryQuery/core:query value state and FoundryUI/core:ui rendering. Notes and a
 scalar state gallery consume both; request orchestration remains feature-owned.
+The [token slice](contracts/behavior/ui-tokens.md) adds one native V1 preset,
+semantic colors and scales, scoped system-aware themes, and a Tokens catalog.
+[Styles](STYLES.md) separates token definitions, preset values, native theme
+adaptation, and component families following Bento's organization. UI remains
+independent of services and feature request lifetime.
+Solid/Glass material styles are independent of light/dark colors. Content panels
+remain opaque; floating surfaces use native glass or a bounded Compose backdrop
+with an opaque fallback. Renderer frame ownership and external GPU integration
+remain separate from theme resolution.
+
+The [forms/mutation slice](contracts/behavior/forms-mutations.md) adds an admitted
+CreateNote command, a separate NoteCreator write port, memory/HTTP adapters,
+pure MutationState and native field/submit/feedback components. Features own
+drafts, validation timing, write execution and result admission. Submitting is
+set before dispatch to prevent concurrent local duplicates. A missing response
+does not establish rollback or authorize replay; idempotency and reconciliation
+remain data/backend capabilities.
 
 Preserve stable failure categories and operation-specific codes. Validation
 failures carry field information; throttling can carry retry timing. Public
@@ -143,6 +160,24 @@ interaction behavior.
 
 ## Graphics integration
 
+The first [GPU slice](contracts/behavior/gpu-effects.md) implements optional
+FoundryGraphics/core:graphics modules with bounded settings, pure resolution/time
+policies and native surfaces. Metal/MTKView and OpenGL ES 2/GLSurfaceView render
+Ripple and a ray-marched Orbit without external assets or an engine dependency.
+The catalog owns controls; renderers own GPU handles, attachment/context lifetime
+and frame submission. Shared policies, native shader pixels, Android lifecycle
+and iOS hosted drawable checks are exercised. Physical-device performance remains
+unmeasured, so the broader graphics proof below is still incomplete.
+
+The [preview follow-up](contracts/behavior/graphics-previews.md) adds two concrete
+consumers: an image adjustment editor and a mesh product viewer. Owned opaque
+sRGB pixels or validated triangles enter the renderer alongside bounded edit,
+viewport, camera and finish values. Asset reference identity retains uploads
+across ordinary edits; context recreation rebuilds from CPU input. Catalogs own
+asset decoding and feature state. The internal triangle format is an exemplar,
+not a universal engine schema or general importer. Persistence, import/export
+and product-specific variant rules remain above this seam.
+
 Keep rendering integration optional for ordinary applications. Establish the
 boundary early with an interactive scene rather than introducing a complete
 engine abstraction before a renderer has been exercised.
@@ -171,7 +206,8 @@ Explore effects, interactive 3D scenes, and custom rendering separately.
 [RealityKit](https://developer.apple.com/documentation/realitykit),
 [AGSL](https://developer.android.com/develop/ui/views/graphics/agsl), and
 [Filament](https://github.com/google/filament) are candidates to evaluate.
-Select the first renderer from the exemplar's needs. Record any shader,
+The first exemplar selects Metal and OpenGL ES 2; evaluate other renderers when
+their scene or platform requirements apply. Record any shader,
 native-library, or asset-toolchain requirements separately from the Swift and
 Kotlin application baseline.
 

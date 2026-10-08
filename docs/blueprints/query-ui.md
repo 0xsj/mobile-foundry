@@ -12,7 +12,7 @@ rendering, keeping orchestration in the existing notes state owners.
 | Swift root | Kotlin root | Responsibility |
 | --- | --- | --- |
 | packages/FoundryQuery/Sources/FoundryQuery/QueryState.swift | project/core/query/src/main/kotlin/dev/mobilefoundry/query/QueryState.kt | Generic state, projections, pure transitions |
-| packages/FoundryUI/Sources/FoundryUI/QueryContent.swift | project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/QueryContent.kt | Copy, native async presentation, content slot |
+| packages/FoundryUI/Sources/FoundryUI/Components/Feedback/Query/QueryContent.swift | project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/query/QueryContent.kt | Copy, native async presentation, content slot |
 | apps/FoundryCatalog/Sources/Query/QueryCatalogView.swift | project/app/src/main/java/dev/mobilefoundry/catalog/ui/query/QueryCatalogScreen.kt | Deterministic state gallery with scalar payload |
 
 Query depends only on kernel. UI depends on query/kernel and its native UI
@@ -37,6 +37,11 @@ existing notes store/ViewModel races, both app builds and native presentation
 checks. Run notes-check and diff checks. Record observed checks in the notebook.
 No new generic request runtime is justified by the two consumers: one owns
 asynchronous reads, while the other is a pure presentation gallery.
+
+The later [token slice](ui-tokens.md) places QueryContent and QueryCopy together
+under the feedback/query component family. Swift public names remain unchanged;
+Kotlin imports follow the new component package. Token/theme code stays in the
+UI library, leaving query values independent of native UI frameworks.
 
 ## Completion evidence
 

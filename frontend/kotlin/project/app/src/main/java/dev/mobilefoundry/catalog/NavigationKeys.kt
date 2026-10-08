@@ -10,3 +10,11 @@ import kotlinx.serialization.Serializable
 @Serializable data object NotesCatalog : NavKey
 
 @Serializable data object QueryCatalog : NavKey
+
+@Serializable data object TokensCatalog : NavKey
+
+@Serializable data object FormsCatalog : NavKey
+
+@Serializable data object GPUEffectsCatalog : NavKey
+@Serializable data object ImageStudioCatalog : NavKey
+@Serializable data object ProductStudioCatalog : NavKey

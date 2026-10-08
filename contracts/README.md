@@ -30,3 +30,25 @@ refresh/cancellation behavior. Both service suites consume its [admission fixtur
 pure transformations and native rendering. Both query suites consume its
 [state matrix](fixtures/query/states.json). Feature orchestration stays outside
 the query and UI libraries.
+
+[Native UI tokens and theme](behavior/ui-tokens.md) defines the V1 semantic
+roles, native scales, scoped appearance, and reduced motion. Both UI suites
+consume the same [token fixtures](fixtures/ui/tokens.json); the fixture is test
+input rather than a runtime theme file.
+
+[Forms and mutations](behavior/forms-mutations.md) owns admitted create commands,
+the narrow write port, pure mutation phases and feature draft/lifetime rules.
+Both native suites consume [title](fixtures/notes/create-titles.json),
+[response](fixtures/notes/create-responses.json), and
+[mutation-state](fixtures/query/mutations.json) fixtures.
+
+[GPU effects](behavior/gpu-effects.md) owns bounded native settings, quality,
+active animation time, surface/context lifetime and honest submission statistics.
+Both policy suites consume [graphics fixtures](fixtures/graphics/effects.json).
+
+[Graphics previews](behavior/graphics-previews.md) adds owned opaque raster/mesh
+admission, bounded editing/camera values, comparison/filtering and a mesh product
+viewer. Both native suites consume [preview fixtures](fixtures/graphics/previews.json);
+Metal execution and Android Surface readback check real output and interaction.
+Native Metal execution and Android Surface pixel/lifecycle tests supplement the
+fixtures; cross-platform pixel identity and device performance are not promised.

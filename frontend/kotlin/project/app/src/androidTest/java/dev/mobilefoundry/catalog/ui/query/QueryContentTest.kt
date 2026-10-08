@@ -14,8 +14,8 @@ import dev.mobilefoundry.catalog.theme.FoundryCatalogTheme
 import dev.mobilefoundry.kernel.Failure
 import dev.mobilefoundry.kernel.FailureMeta
 import dev.mobilefoundry.query.QueryState
-import dev.mobilefoundry.ui.QueryContent
-import dev.mobilefoundry.ui.QueryCopy
+import dev.mobilefoundry.ui.components.feedback.query.QueryContent
+import dev.mobilefoundry.ui.components.feedback.query.QueryCopy
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

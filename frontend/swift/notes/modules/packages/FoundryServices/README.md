@@ -47,6 +47,30 @@ admission cases plus memory parity, domain bounds/owned snapshots, and defect/
 cancellation propagation. Five service package tests pass in total. Feature
 state is checked separately in the catalog's iOS test target.
 
+## Create-note write seam
+
+The 2026-10-08 [forms contract](../../../../../../contracts/behavior/forms-mutations.md)
+adds [CreateNote and NoteCreator](../../../../packages/FoundryServices/Sources/FoundryServices/CreateNote.swift).
+The private command initializer forces raw text through admission before a
+provider sees it. The separate write protocol leaves the existing read-only
+port source-compatible; a read consumer need not implement writes.
+
+[InMemoryNoteCreator](../../../../packages/FoundryServices/Sources/FoundryServices/InMemoryNoteCreator.swift)
+is an actor implementing both ports. Its cancellation check precedes a
+non-suspending append, and list returns an array value snapshot.
+[HTTPNoteCreator](../../../../packages/FoundryServices/Sources/FoundryServices/HTTPNoteCreator.swift)
+maps the admitted title to POST notes and admits the returned note envelope.
+HTTP success with a missing/invalid note is internal with IDs retained;
+expected HTTP failures pass through. A valid server-normalized title is accepted.
+
+[Create tests](../../../../packages/FoundryServices/Tests/FoundryServicesTests/CreateNoteTests.swift)
+add four passing tests: ten shared title cases, thirteen shared responses plus
+request shape, concurrent unique creates/snapshots, and cancellation/defects.
+Nine service tests now pass through `swift test --package-path
+frontend/swift/packages/FoundryServices`. This proves instance-local behavior
+and injected wire admission, not deployed writes or safe replay.
+See [command/actor and focus mechanics](../../../substrate/swiftui-form-focus-and-submit.md).
+
 ## Gotchas
 
 HTTP success is necessary but insufficient for a successful domain result.

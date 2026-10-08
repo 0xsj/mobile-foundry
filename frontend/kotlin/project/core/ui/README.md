@@ -1,12 +1,21 @@
 # UI core
 
 Android Compose `QueryContent` renders generic query state with caller copy,
-emptiness, a content slot, and callbacks. Its host owns scrolling, MaterialTheme,
-observation, and work. Initial scope is async presentation; tokens, forms, and
-a broader control system remain future slices.
+emptiness, a content slot, and callbacks. Its host owns scrolling, observation,
+and work. FoundryTheme supplies V1 tokens and maps them into MaterialTheme.
+Sources follow styles/tokens, styles/presets, theme, and
+components/feedback/query; see [Styles](../../../../../STYLES.md).
+Forms/TextField and Forms/SubmitButton wrap native controls; Feedback/Mutation
+renders write progress, public failures and caller success content. Features own
+validation, focus policy and execution. See [forms behavior](../../../../../contracts/behavior/forms-mutations.md).
 
 See [the contract](../../../../../contracts/behavior/query-ui.md) and
 [walkthrough](../../../notes/modules/project/core/ui/README.md).
 Build with `make android-build`; `make android-ui-test` includes its instrumented
-presentation checks in the catalog app. Open **Async UI patterns** or **Notes
-service seam**.
+presentation checks in the catalog app. `make ui-test` checks shared token
+fixtures, contrast, and reduction. See [the token contract](../../../../../contracts/behavior/ui-tokens.md).
+Open **Tokens**, **Async UI patterns**, **Notes service seam**, or **Forms and mutations**.
+
+FoundryTheme also selects Solid/Glass surface styles. `FoundrySurface` keeps
+content panels opaque; floating controls sample the host's `FoundryBackdrop`
+on API 31+, with an opaque fallback. See [surface themes](../../../../../STYLES.md#swappable-surface-themes).

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "created",
+    "status": 201,
+    "body": "{\"note\":{\"id\":\"n-new\",\"title\":\"  Idea  \"}}",
+    "expected": {
+      "id": "n-new",
+      "title": "  Idea  "
+    }
+  },
+  {
+    "id": "normalized",
+    "status": 200,
+    "body": "{\"note\":{\"id\":\"normalized\",\"title\":\"Idea\"},\"extra\":true}",
+    "expected": {
+      "id": "normalized",
+      "title": "Idea"
+    }
+  },
+  {
+    "id": "field_error",
+    "status": 422,
+    "body": "{\"detail\":\"Check the highlighted field.\",\"code\":\"notes.title_reserved\",\"fields\":{\"title\":\"This title is reserved.\"}}",
+    "kind": "invalid",
+    "code": "notes.title_reserved",
+    "fields": {
+      "title": "This title is reserved."
+    }
+  },
+  {
+    "id": "unknown_field",
+    "status": 422,
+    "body": "{\"detail\":\"This note cannot be created.\",\"fields\":{\"other\":\"Not accepted.\"}}",
+    "kind": "invalid",
+    "fields": {
+      "other": "Not accepted."
+    }
+  },
+  {
+    "id": "unavailable",
+    "status": 503,
+    "body": "{\"detail\":\"Notes are temporarily unavailable.\",\"code\":\"notes.unavailable\"}",
+    "kind": "unavailable",
+    "code": "notes.unavailable"
+  },
+  {
+    "id": "timeout",
+    "status": 504,
+    "body": "{\"detail\":\"No confirmation was received.\",\"code\":\"notes.create_timeout\"}",
+    "kind": "timeout",
+    "code": "notes.create_timeout"
+  },
+  {
+    "id": "missing_note",
+    "status": 201,
+    "body": "{}",
+    "kind": "internal",
+    "code": "notes.invalid_create_response"
+  },
+  {
+    "id": "blank_id",
+    "status": 201,
+    "body": "{\"note\":{\"id\":\"\",\"title\":\"Idea\"}}",
+    "kind": "internal",
+    "code": "notes.invalid_create_response"
+  },
+  {
+    "id": "blank_title",
+    "status": 201,
+    "body": "{\"note\":{\"id\":\"n\",\"title\":\" \\t\\r\\n\"}}",
+    "kind": "internal",
+    "code": "notes.invalid_create_response"
+  },
+  {
+    "id": "numeric_title",
+    "status": 201,
+    "body": "{\"note\":{\"id\":\"n\",\"title\":123}}",
+    "kind": "internal",
+    "code": "notes.invalid_create_response"
+  },
+  {
+    "id": "array_note",
+    "status": 201,
+    "body": "{\"note\":[]}",
+    "kind": "internal",
+    "code": "notes.invalid_create_response"
+  },
+  {
+    "id": "empty_body",
+    "status": 201,
+    "body": "",
+    "kind": "internal",
+    "code": "notes.invalid_create_response"
+  },
+  {
+    "id": "invalid_json",
+    "status": 201,
+    "body": "{",
+    "kind": "internal",
+    "code": "http.invalid_response"
+  }
+]
