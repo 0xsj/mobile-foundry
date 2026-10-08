@@ -6,3 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable data object Main : NavKey
 
 @Serializable data object HealthCatalog : NavKey
+
+@Serializable data object NotesCatalog : NavKey
+
+@Serializable data object QueryCatalog : NavKey

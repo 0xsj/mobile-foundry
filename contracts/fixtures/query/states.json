@@ -1,0 +1,11 @@
+[
+  {"id":"idle","phase":"idle","snapshot":null,"expectedValue":null,"loading":false,"failed":false,"restoredPhase":"idle"},
+  {"id":"initial-loading","phase":"loading","snapshot":null,"expectedValue":null,"loading":true,"failed":false,"restoredPhase":"idle"},
+  {"id":"content","phase":"loaded","snapshot":"Workspace","expectedValue":"Workspace","loading":false,"failed":false,"restoredPhase":"loaded"},
+  {"id":"empty","phase":"loaded","snapshot":"","expectedValue":"","loading":false,"failed":false,"restoredPhase":"loaded"},
+  {"id":"refresh-content","phase":"loading","snapshot":"Workspace","expectedValue":"Workspace","loading":true,"failed":false,"restoredPhase":"loaded"},
+  {"id":"refresh-empty","phase":"loading","snapshot":"","expectedValue":"","loading":true,"failed":false,"restoredPhase":"loaded"},
+  {"id":"initial-failure","phase":"failed","snapshot":null,"expectedValue":null,"loading":false,"failed":true,"restoredPhase":"idle"},
+  {"id":"failure-content","phase":"failed","snapshot":"Workspace","expectedValue":"Workspace","loading":false,"failed":true,"restoredPhase":"loaded"},
+  {"id":"failure-empty","phase":"failed","snapshot":"","expectedValue":"","loading":false,"failed":true,"restoredPhase":"loaded"}
+]

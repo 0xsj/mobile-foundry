@@ -1,0 +1,14 @@
+[
+  {"id":"content","status":200,"body":"{\"notes\":[{\"id\":\"n-1\",\"title\":\"First idea\",\"extra\":true},{\"id\":\"n_2\",\"title\":\"  Keep spacing  \"}],\"extra\":1}","expected":[{"id":"n-1","title":"First idea"},{"id":"n_2","title":"  Keep spacing  "}]},
+  {"id":"empty","status":200,"body":"{\"notes\":[]}","expected":[]},
+  {"id":"missing-list","status":200,"body":"{}","kind":"internal"},
+  {"id":"null-list","status":200,"body":"{\"notes\":null}","kind":"internal"},
+  {"id":"wrong-root","status":200,"body":"[]","kind":"internal"},
+  {"id":"wrong-item","status":200,"body":"{\"notes\":[false]}","kind":"internal"},
+  {"id":"missing-title","status":200,"body":"{\"notes\":[{\"id\":\"n1\"}]}","kind":"internal"},
+  {"id":"numeric-title","status":200,"body":"{\"notes\":[{\"id\":\"n1\",\"title\":7}]}","kind":"internal"},
+  {"id":"blank-title","status":200,"body":"{\"notes\":[{\"id\":\"n1\",\"title\":\" \\t\\r\\n\"}]}","kind":"internal"},
+  {"id":"invalid-id","status":200,"body":"{\"notes\":[{\"id\":\"../n1\",\"title\":\"Idea\"}]}","kind":"internal"},
+  {"id":"duplicate-id","status":200,"body":"{\"notes\":[{\"id\":\"n1\",\"title\":\"A\"},{\"id\":\"n1\",\"title\":\"B\"}]}","kind":"internal"},
+  {"id":"unavailable","status":503,"body":"{\"detail\":\"Notes are temporarily unavailable.\",\"code\":\"notes.unavailable\"}","kind":"unavailable"}
+]

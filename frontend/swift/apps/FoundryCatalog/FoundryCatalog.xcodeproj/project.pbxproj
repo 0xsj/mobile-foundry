@@ -7,24 +7,56 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04BCD47A5D08C16986A6B62E /* FoundryUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1A737434799860443019A63 /* FoundryUI */; };
+		0A2C3E2DC4D9A91E14DD8223 /* NotesComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E784B27B4205BDA4FFE798BD /* NotesComposition.swift */; };
 		120C4DB01E72A49F7CCB9556 /* HealthCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DAE6D9AADB9AA62C622D8B2 /* HealthCatalogView.swift */; };
+		180D7832EF120A997EB99B5E /* FoundryHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = 9F44DD67CDE0931B06E40B05 /* FoundryHTTP */; };
 		1E6D0C74E29F56A8F2120078 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3EB954749F1379D17AE77B /* CatalogView.swift */; };
+		1EF33C13BBFCD225FB5E5386 /* FoundryKernel in Frameworks */ = {isa = PBXBuildFile; productRef = 619529803C6383405803E0ED /* FoundryKernel */; };
+		559DE65AD115A911FCD42A53 /* FoundryQuery in Frameworks */ = {isa = PBXBuildFile; productRef = EEDCFAA5930D5674E2566506 /* FoundryQuery */; };
+		79C1E5BE911D1FDDFAB7D64B /* QueryCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB23E3EAA218C303DF84B88 /* QueryCatalogView.swift */; };
 		92091EACE37742B2F01E04EA /* FoundryServices in Frameworks */ = {isa = PBXBuildFile; productRef = 47942B830AC07089D9343A35 /* FoundryServices */; };
+		A6C1F0E45B8A863DA7EB753A /* NotesStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2907BEFDBEA3CBBE2F2258BF /* NotesStoreTests.swift */; };
+		AEDA7C079C307841840CEC4A /* NotesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6C282CFA7C57B4C447015D /* NotesStore.swift */; };
 		B07624B712B8ADD0901AD8A4 /* FoundryHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = 8EE1E9A28CA77E2831AD4BF9 /* FoundryHTTP */; };
+		BABF3D7388699A3B278F99DA /* NotesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB905669A7AF0ED319B64BC4 /* NotesScreen.swift */; };
+		D156AC959BB44FDB98E28C3B /* FoundryQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 16C19CACBB66D76F97451678 /* FoundryQuery */; };
 		DA5B385521098E12FD9487D8 /* FoundryKernel in Frameworks */ = {isa = PBXBuildFile; productRef = F95F6F2A0A4D2AF4010B9260 /* FoundryKernel */; };
+		E4C1AB31594B223673AE39DD /* NotesCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB62C49554AEEEC9CB8F05 /* NotesCatalogView.swift */; };
 		E98234AE407310713E71D648 /* FoundryCatalogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295E214EE1EE440683DDC840 /* FoundryCatalogApp.swift */; };
+		ECC8CBC99972C50F32FFC656 /* FoundryServices in Frameworks */ = {isa = PBXBuildFile; productRef = 4CFDB5A043CE0953AE29BC8D /* FoundryServices */; };
 		F381707ECEE1B9B1E7BFF772 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAF7D3CA82A100B8614083D9 /* Assets.xcassets */; };
+		F6C0E3EC51B15D38857A80AB /* FoundryUI in Frameworks */ = {isa = PBXBuildFile; productRef = AB41BD4AA36D98037815FFE0 /* FoundryUI */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0BFCB9DC45565203791285A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6BFA918D548512556F4C2A05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AF4F35A0DE8EFAEDBFB7EA37;
+			remoteInfo = FoundryCatalog;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		08451FB653963C8C88B9057E /* FoundryCatalogTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FoundryCatalogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F3EB954749F1379D17AE77B /* CatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogView.swift; sourceTree = "<group>"; };
+		2907BEFDBEA3CBBE2F2258BF /* NotesStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStoreTests.swift; sourceTree = "<group>"; };
 		295E214EE1EE440683DDC840 /* FoundryCatalogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundryCatalogApp.swift; sourceTree = "<group>"; };
+		37EB62C49554AEEEC9CB8F05 /* NotesCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesCatalogView.swift; sourceTree = "<group>"; };
+		3C6C282CFA7C57B4C447015D /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
 		5B35C9C0FC423494A97924CC /* FoundryKernel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryKernel; path = ../../packages/FoundryKernel; sourceTree = SOURCE_ROOT; };
+		6028460C6299E3CB3D674EAD /* FoundryUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryUI; path = ../../packages/FoundryUI; sourceTree = SOURCE_ROOT; };
 		61388B56400187260E2BF836 /* FoundryHTTP */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryHTTP; path = ../../packages/FoundryHTTP; sourceTree = SOURCE_ROOT; };
+		88FB6A145AA9640DC01ABAE4 /* FoundryQuery */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryQuery; path = ../../packages/FoundryQuery; sourceTree = SOURCE_ROOT; };
 		9DAE6D9AADB9AA62C622D8B2 /* HealthCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCatalogView.swift; sourceTree = "<group>"; };
 		A34BB54EA8911BACBC581A72 /* FoundryCatalog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FoundryCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AFD3998C549DF9B61D7222 /* FoundryServices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryServices; path = ../../packages/FoundryServices; sourceTree = SOURCE_ROOT; };
+		BAB23E3EAA218C303DF84B88 /* QueryCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryCatalogView.swift; sourceTree = "<group>"; };
 		CAF7D3CA82A100B8614083D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E784B27B4205BDA4FFE798BD /* NotesComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesComposition.swift; sourceTree = "<group>"; };
+		EB905669A7AF0ED319B64BC4 /* NotesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,18 +67,43 @@
 				DA5B385521098E12FD9487D8 /* FoundryKernel in Frameworks */,
 				B07624B712B8ADD0901AD8A4 /* FoundryHTTP in Frameworks */,
 				92091EACE37742B2F01E04EA /* FoundryServices in Frameworks */,
+				D156AC959BB44FDB98E28C3B /* FoundryQuery in Frameworks */,
+				F6C0E3EC51B15D38857A80AB /* FoundryUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54C17826584155D924BEDBCB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EF33C13BBFCD225FB5E5386 /* FoundryKernel in Frameworks */,
+				180D7832EF120A997EB99B5E /* FoundryHTTP in Frameworks */,
+				ECC8CBC99972C50F32FFC656 /* FoundryServices in Frameworks */,
+				559DE65AD115A911FCD42A53 /* FoundryQuery in Frameworks */,
+				04BCD47A5D08C16986A6B62E /* FoundryUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		11C9882861A8B901FCF362EB /* Notes */ = {
+			isa = PBXGroup;
+			children = (
+				37EB62C49554AEEEC9CB8F05 /* NotesCatalogView.swift */,
+				EB905669A7AF0ED319B64BC4 /* NotesScreen.swift */,
+				3C6C282CFA7C57B4C447015D /* NotesStore.swift */,
+			);
+			path = Notes;
+			sourceTree = "<group>";
+		};
 		29D0D1C9B0088387C0AF0359 = {
 			isa = PBXGroup;
 			children = (
 				568734FE84EE6D3C96A6E88E /* Packages */,
 				C15DC0C20CCC43727C74B9D5 /* Resources */,
 				685D9382CBB846E7DF3DFB7B /* Sources */,
+				EE4B540289A5101C2E1A96E2 /* Tests */,
 				61BC2CF851F9916767F49848 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,7 +113,9 @@
 			children = (
 				61388B56400187260E2BF836 /* FoundryHTTP */,
 				5B35C9C0FC423494A97924CC /* FoundryKernel */,
+				88FB6A145AA9640DC01ABAE4 /* FoundryQuery */,
 				A5AFD3998C549DF9B61D7222 /* FoundryServices */,
+				6028460C6299E3CB3D674EAD /* FoundryUI */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -65,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				A34BB54EA8911BACBC581A72 /* FoundryCatalog.app */,
+				08451FB653963C8C88B9057E /* FoundryCatalogTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -75,8 +135,27 @@
 				0F3EB954749F1379D17AE77B /* CatalogView.swift */,
 				295E214EE1EE440683DDC840 /* FoundryCatalogApp.swift */,
 				9DAE6D9AADB9AA62C622D8B2 /* HealthCatalogView.swift */,
+				A8CEECBFED58958D8CFBCCEA /* Composition */,
+				11C9882861A8B901FCF362EB /* Notes */,
+				852C8FFF8D79366A5070B7F9 /* Query */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		852C8FFF8D79366A5070B7F9 /* Query */ = {
+			isa = PBXGroup;
+			children = (
+				BAB23E3EAA218C303DF84B88 /* QueryCatalogView.swift */,
+			);
+			path = Query;
+			sourceTree = "<group>";
+		};
+		A8CEECBFED58958D8CFBCCEA /* Composition */ = {
+			isa = PBXGroup;
+			children = (
+				E784B27B4205BDA4FFE798BD /* NotesComposition.swift */,
+			);
+			path = Composition;
 			sourceTree = "<group>";
 		};
 		C15DC0C20CCC43727C74B9D5 /* Resources */ = {
@@ -87,9 +166,41 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		EE4B540289A5101C2E1A96E2 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				2907BEFDBEA3CBBE2F2258BF /* NotesStoreTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		28154FD46245A24790649200 /* FoundryCatalogTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 87B0914B751FEFAF15420449 /* Build configuration list for PBXNativeTarget "FoundryCatalogTests" */;
+			buildPhases = (
+				3222A6D9A1C0A5B8A3401B97 /* Sources */,
+				54C17826584155D924BEDBCB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D2BD6EA93EFFFA50AE5BAC0D /* PBXTargetDependency */,
+			);
+			name = FoundryCatalogTests;
+			packageProductDependencies = (
+				619529803C6383405803E0ED /* FoundryKernel */,
+				9F44DD67CDE0931B06E40B05 /* FoundryHTTP */,
+				4CFDB5A043CE0953AE29BC8D /* FoundryServices */,
+				EEDCFAA5930D5674E2566506 /* FoundryQuery */,
+				B1A737434799860443019A63 /* FoundryUI */,
+			);
+			productName = FoundryCatalogTests;
+			productReference = 08451FB653963C8C88B9057E /* FoundryCatalogTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		AF4F35A0DE8EFAEDBFB7EA37 /* FoundryCatalog */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12D1B61E7FE9E373E6E50536 /* Build configuration list for PBXNativeTarget "FoundryCatalog" */;
@@ -107,6 +218,8 @@
 				F95F6F2A0A4D2AF4010B9260 /* FoundryKernel */,
 				8EE1E9A28CA77E2831AD4BF9 /* FoundryHTTP */,
 				47942B830AC07089D9343A35 /* FoundryServices */,
+				16C19CACBB66D76F97451678 /* FoundryQuery */,
+				AB41BD4AA36D98037815FFE0 /* FoundryUI */,
 			);
 			productName = FoundryCatalog;
 			productReference = A34BB54EA8911BACBC581A72 /* FoundryCatalog.app */;
@@ -135,7 +248,9 @@
 			packageReferences = (
 				C3B16DF76E326041EF0A07F3 /* XCLocalSwiftPackageReference "../../packages/FoundryHTTP" */,
 				DECBC59FA26D3884C6ED3903 /* XCLocalSwiftPackageReference "../../packages/FoundryKernel" */,
+				873318D2081470BCBCC50519 /* XCLocalSwiftPackageReference "../../packages/FoundryQuery" */,
 				F022B51E94DE86811D291D4B /* XCLocalSwiftPackageReference "../../packages/FoundryServices" */,
+				986576C0A6B573D3250DCDA5 /* XCLocalSwiftPackageReference "../../packages/FoundryUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 61BC2CF851F9916767F49848 /* Products */;
@@ -143,6 +258,7 @@
 			projectRoot = "";
 			targets = (
 				AF4F35A0DE8EFAEDBFB7EA37 /* FoundryCatalog */,
+				28154FD46245A24790649200 /* FoundryCatalogTests */,
 			);
 		};
 /* End PBXProject section */
@@ -159,6 +275,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3222A6D9A1C0A5B8A3401B97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6C1F0E45B8A863DA7EB753A /* NotesStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DBB69BE835B912C9D77A5DCE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -166,10 +290,23 @@
 				1E6D0C74E29F56A8F2120078 /* CatalogView.swift in Sources */,
 				E98234AE407310713E71D648 /* FoundryCatalogApp.swift in Sources */,
 				120C4DB01E72A49F7CCB9556 /* HealthCatalogView.swift in Sources */,
+				E4C1AB31594B223673AE39DD /* NotesCatalogView.swift in Sources */,
+				0A2C3E2DC4D9A91E14DD8223 /* NotesComposition.swift in Sources */,
+				BABF3D7388699A3B278F99DA /* NotesScreen.swift in Sources */,
+				AEDA7C079C307841840CEC4A /* NotesStore.swift in Sources */,
+				79C1E5BE911D1FDDFAB7D64B /* QueryCatalogView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D2BD6EA93EFFFA50AE5BAC0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AF4F35A0DE8EFAEDBFB7EA37 /* FoundryCatalog */;
+			targetProxy = 0BFCB9DC45565203791285A3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3A158A6460FA4153CEDB221A /* Debug */ = {
@@ -257,6 +394,40 @@
 				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
+		};
+		732225C9B100954C52F579FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.mobilefoundry.catalog.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FoundryCatalog.app/FoundryCatalog";
+			};
+			name = Debug;
+		};
+		7F467281E6D4BF8184B04C7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.mobilefoundry.catalog.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FoundryCatalog.app/FoundryCatalog";
+			};
+			name = Release;
 		};
 		9D381AE810F24468E55EE9A8 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -358,9 +529,26 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		87B0914B751FEFAF15420449 /* Build configuration list for PBXNativeTarget "FoundryCatalogTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				732225C9B100954C52F579FF /* Debug */,
+				7F467281E6D4BF8184B04C7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		873318D2081470BCBCC50519 /* XCLocalSwiftPackageReference "../../packages/FoundryQuery" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/FoundryQuery;
+		};
+		986576C0A6B573D3250DCDA5 /* XCLocalSwiftPackageReference "../../packages/FoundryUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/FoundryUI;
+		};
 		C3B16DF76E326041EF0A07F3 /* XCLocalSwiftPackageReference "../../packages/FoundryHTTP" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../packages/FoundryHTTP;
@@ -376,13 +564,41 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		16C19CACBB66D76F97451678 /* FoundryQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryQuery;
+		};
 		47942B830AC07089D9343A35 /* FoundryServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FoundryServices;
 		};
+		4CFDB5A043CE0953AE29BC8D /* FoundryServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryServices;
+		};
+		619529803C6383405803E0ED /* FoundryKernel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryKernel;
+		};
 		8EE1E9A28CA77E2831AD4BF9 /* FoundryHTTP */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FoundryHTTP;
+		};
+		9F44DD67CDE0931B06E40B05 /* FoundryHTTP */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryHTTP;
+		};
+		AB41BD4AA36D98037815FFE0 /* FoundryUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryUI;
+		};
+		B1A737434799860443019A63 /* FoundryUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryUI;
+		};
+		EEDCFAA5930D5674E2566506 /* FoundryQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundryQuery;
 		};
 		F95F6F2A0A4D2AF4010B9260 /* FoundryKernel */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -22,6 +22,11 @@ concepts, patterns, and verification techniques live here.
    [Go](../backend/go/notes/README.md),
    [Supabase](../backend/supabase/notes/README.md), or
    [Firebase](../backend/firebase/notes/README.md).
+7. Follow the native notes feature walkthroughs and [provider seams](patterns/transport-service-and-screen.md#provider-seams-and-query-state)
+   to trace screen → state owner → domain port → memory/HTTP adapter.
+8. Read [query state and rendering ownership](patterns/query-state-and-rendering.md),
+   then each native query/UI walkthrough to compare generic snapshots, native
+   content slots, and the feature orchestration that remains outside them.
 
 ## Current coverage
 
@@ -40,7 +45,19 @@ admission, problem decoding, cancellation/deadlines and health domain admission.
 Both catalogs expose six injected scenarios without a backend. Notebook indexes
 record host, build and runtime evidence. Follow their updated reading orders.
 
-Identity, account, persistence, sync, reusable UI components, and GPU integration
+The 2026-10-08 [provider seam review](patterns/transport-service-and-screen.md#provider-seams-and-query-state)
+separates implemented transport injection from the planned domain service and
+query-state boundaries. The subsequent notes/query slice implements those
+boundaries for a read-only list with memory and HTTP adapters. Platform indexes
+record shared admission, state-owner and device evidence; managed SDK adapters,
+shared caching, writes and persistence remain separate work.
+
+The 2026-10-08 query/UI slice extracts generic value state and native async
+presentation, used by notes and a scalar state gallery. Both platforms pass
+shared state fixtures and existing feature regressions. Platform indexes record
+the ten Android device tests and manual iOS state/action/layout checks.
+
+Identity, account, persistence, sync, broader UI controls, and GPU integration
 remain planned capabilities.
 Their learning notes will arrive with actual implementation or investigation.
 
@@ -67,8 +84,11 @@ remain in [contracts](../contracts/README.md), and accepted boundaries remain in
 
 ## Questions for the next slice
 
-- Which loading, empty, failure and validation UI patterns should become shared native components?
+- Which additional controls should exercise keyboard, focus and validation behavior?
+- Which form and mutation should exercise field validation and submission state next?
+- What additional contract is needed before the notes feature can safely write or persist data?
 - How should a feature own repeat/retry work and suppress obsolete results?
+- Which second asynchronous feature would justify extracting request orchestration?
 - What evidence is required before a connected write can be safely replayed?
 
 Run `make notes-check` after changing learning notes. Complete code examples

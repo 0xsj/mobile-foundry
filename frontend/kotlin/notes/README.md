@@ -17,6 +17,12 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
    [HTTP](modules/project/core/http/README.md) and [health services](modules/project/core/services/README.md).
 6. [Native request and screen lifetime](substrate/okhttp-and-compose-effect-lifetime.md), then revisit
    the catalog walkthrough to trace its injected scenarios.
+7. [Service interfaces and StateFlow](language/kotlin-service-interfaces-and-stateflow.md),
+   then the services/catalog walkthroughs' notes sections and [provider seams](../../../notes/patterns/transport-service-and-screen.md#provider-seams-and-query-state).
+8. [Covariant state and content slots](language/kotlin-covariant-query-state-and-content-slots.md),
+   then [core/query](modules/project/core/query/README.md),
+   [core/ui](modules/project/core/ui/README.md), and
+   [query/rendering ownership](../../../notes/patterns/query-state-and-rendering.md).
 
 ## Findings by lifespan
 
@@ -55,9 +61,33 @@ Diagnostic observers receive original dependency errors; durable reporting
 infrastructure remains separate. Session, persistence, sync and graphics are
 future capabilities.
 
+The 2026-10-08 editor investigation in [Gradle bootstrap](substrate/gradle-and-android-bootstrap.md#editor-dependency-imports)
+explains why valid build dependencies appeared unresolved in VSCodium. A task-specific
+configuration-cache workaround restored the health service's editor classpath;
+the editor showed zero problems after reloading, and normal build checks still
+stored their configuration cache.
+
+The 2026-10-08 notes/query slice adds a provider-independent NotesService port,
+memory and HTTP adapters, an injected ViewModel, and one list renderer. Five
+service tests (three new), eight notes ViewModel tests and the two starter tests
+passed. Both providers run the same feature-state scenarios. All six device
+tests passed on API36_Test/Android 16, including three new notes tests for provider
+switching, content/empty/failure, retry, cancel and navigation-entry reopening. HTTP is injected; persistence
+and real provider SDK integration remain deferred.
+
+The 2026-10-08 query/UI extraction adds a pure Kotlin query module and an
+Android Compose UI library. Two query tests passed against nine shared cases;
+eight notes ViewModel and two starter regressions still pass. The modules and
+debug APK built. All ten device tests passed on API36_Test/Android 16, including
+four new presentation-matrix, callback, public-copy and gallery checks.
+The scalar gallery and notes list now consume the same reusable state/UI.
+
 ## Questions for the next session
 
 - Why can valid JSON still be invalid domain data?
 - How does a request deadline differ from a screen canceling its work?
 - Which layer should renew credentials and decide retries?
-- Which loading, failure and retry controls are ready for the first reusable UI slice?
+- Which form and mutation behavior should accompany the next reusable controls?
+- How can editor dependency imports fail while the same source compiles in Gradle?
+- Why does a navigation entry need its own ViewModelStoreOwner?
+- Why do pure state transformations leave coroutine admission to the feature?

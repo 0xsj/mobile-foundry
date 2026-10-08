@@ -67,6 +67,39 @@ behavior. The 2026-10-08 slice adds JUnit tests and a Gradle system property
 pointing to canonical repository fixtures; see [the kernel walkthrough](../modules/project/core/kernel/README.md)
 for current verification. These fixtures are test inputs rather than app resources.
 
+## Editor dependency imports
+
+Observed on 2026-10-08 with VSCodium's `fwcd.kotlin` extension 0.2.36,
+Kotlin Language Server 1.3.13, and Gradle 9.1.0: the editor reported unresolved
+`kotlinx.serialization` imports in `HealthService.kt` while Gradle compiled it.
+The service compile classpath already contained serialization JSON 1.9.0 via
+the HTTP module's `api` dependency. An editor diagnostic alone does not establish
+that a build dependency is missing.
+
+The server's logs showed failed configuration-cache serialization in its
+injected Gradle tasks and an incomplete source classpath. Its
+[Gradle resolver](https://github.com/fwcd/kotlin-language-server/blob/1.3.13/shared/src/main/kotlin/org/javacs/kt/classpath/GradleClassPathResolver.kt)
+runs temporary init scripts that add `kotlinLSP*` tasks. Inspection of the
+installed scripts showed task actions reading live `Project` state. Replaying
+the service dependency task with `--no-configuration-cache` produced the JSON,
+coroutines, and other dependency paths.
+
+The [root build](../../project/build.gradle.kts) now marks only those injected
+tasks with `notCompatibleWithConfigurationCache`. Gradle's
+[task opt-out documentation](https://docs.gradle.org/current/userguide/configuration_cache_debugging.html#config_cache:task_opt_out)
+explains why incompatible task runs can succeed while discarding their cache
+entry. The observed import run completed with the expected dependency paths
+and discarded its entry with reported compatibility problems. Normal compiler
+and HTTP/service test checks succeeded with up-to-date outputs and stored their
+configuration cache entry.
+
+After **Developer: Reload Window**, the server logged no diagnostics for
+`HealthService.kt`, and VSCodium showed zero errors and zero warnings. Diagnostics
+remain enabled. This verifies the reported service imports, not every Android
+or Compose editor capability. Revisit this workaround when changing the editor
+extension, language server, or Gradle version; it can be removed when the
+injected tasks become compatible or are no longer used.
+
 ## Used in and related
 
 Use one wrapper and version catalog for the catalog's growing native modules.

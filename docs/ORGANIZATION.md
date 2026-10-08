@@ -17,7 +17,9 @@ frontend/swift/
   apps/FoundryCatalog/          # Xcode iOS application
   packages/FoundryKernel/       # First Swift package
   packages/FoundryHTTP/         # Added when transport is implemented
-  packages/FoundryUI/           # Added with the UI catalog
+  packages/FoundryServices/     # Domain ports and provider adapters
+  packages/FoundryQuery/        # Pure query snapshots and transformations
+  packages/FoundryUI/           # Native async presentation
 ```
 
 Use Swift Package Manager for reusable capability libraries and an Xcode
@@ -31,6 +33,8 @@ frontend/kotlin/project/
   app/                         # Compose catalog application
   core/kernel/                 # Initialized pure Kotlin library
   core/http/                   # Transport library when implemented
+  core/services/               # Domain ports and provider adapters
+  core/query/                  # Pure Kotlin query state
   core/ui/                     # Android library with Compose components
   gradle/                      # Wrapper and shared version catalog
   settings.gradle.kts
@@ -47,7 +51,8 @@ catalog and keep its wrapper versioned.
 | --- | --- | --- |
 | Outcomes and failures | FoundryKernel | core/kernel |
 | HTTP transport | FoundryHTTP | core/http |
-| Typed remote services | FoundryServices | core/services |
+| Domain service ports and provider adapters | FoundryServices | core/services |
+| Query snapshots and pure transitions | FoundryQuery | core/query |
 | Local repositories and storage | FoundryData | core/data |
 | Session lifecycle | FoundrySession | core/session |
 | Synchronization | FoundrySync | core/sync |
@@ -65,6 +70,14 @@ Kernel code stays independent of UI, HTTP, storage, and renderers. HTTP depends
 on kernel contracts. Services use the transport interface and own response
 decoding. Repositories own application data access. Session and sync define
 the interfaces they consume and receive concrete adapters through composition.
+
+Services also expose domain ports that memory or SDK adapters can implement
+without HTTP. The notes exemplar keeps its store/ViewModel and rendering in
+the catalog's feature folder, with adapter selection in app composition.
+FoundryQuery/core:query now owns the generic snapshot vocabulary and pure
+transitions; it depends only on kernel. FoundryUI/core:ui renders that state
+with native controls and content slots. Neither owns a service or request
+lifetime. A shared query runtime/cache remains separate work.
 
 UI components receive values and callbacks; app features connect components
 to services and repositories. Graphics receives scene values and interaction

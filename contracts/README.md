@@ -21,3 +21,12 @@ the first owned transport or API workflow.
 cancellation/deadlines, problem decoding, metadata and health admission. Its
 [response](fixtures/http/responses.json), [path](fixtures/http/paths.json), and
 [retry timing](fixtures/http/retry-after.json) fixtures are shared by both platforms.
+
+[Notes service and query state](behavior/notes-query.md) defines the first
+provider-independent domain port, memory/HTTP implementations, and feature
+refresh/cancellation behavior. Both service suites consume its [admission fixtures](fixtures/notes/responses.json).
+
+[Query state and async presentation](behavior/query-ui.md) owns reusable snapshots,
+pure transformations and native rendering. Both query suites consume its
+[state matrix](fixtures/query/states.json). Feature orchestration stays outside
+the query and UI libraries.

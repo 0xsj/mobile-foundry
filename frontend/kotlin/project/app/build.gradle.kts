@@ -47,6 +47,8 @@ kotlin {
 dependencies {
   implementation(project(":core:kernel"))
   implementation(project(":core:services"))
+  implementation(project(":core:query"))
+  implementation(project(":core:ui"))
 
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)

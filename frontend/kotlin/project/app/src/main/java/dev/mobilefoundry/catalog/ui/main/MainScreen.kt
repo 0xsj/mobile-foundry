@@ -11,6 +11,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import dev.mobilefoundry.catalog.HealthCatalog
+import dev.mobilefoundry.catalog.NotesCatalog
+import dev.mobilefoundry.catalog.QueryCatalog
 import dev.mobilefoundry.catalog.data.DefaultDataRepository
 import dev.mobilefoundry.catalog.theme.FoundryCatalogTheme
 
@@ -24,6 +26,8 @@ fun MainScreen(
   Column(modifier) {
     Text("Mobile Foundry")
     Button(onClick = { onItemClick(HealthCatalog) }) { Text("HTTP health") }
+    Button(onClick = { onItemClick(NotesCatalog) }) { Text("Notes service seam") }
+    Button(onClick = { onItemClick(QueryCatalog) }) { Text("Async UI patterns") }
     when (state) {
       MainScreenUiState.Loading -> {
         // Blank

@@ -6,7 +6,8 @@ struct CatalogView: View {
             List {
                 Section("Foundation") {
                     NavigationLink { HealthCatalogView() } label: { Label("HTTP health", systemImage: "network") }
-                    Label("Components and patterns", systemImage: "square.grid.2x2")
+                    NavigationLink { NotesCatalogView() } label: { Label("Notes service seam", systemImage: "note.text") }
+                    NavigationLink { QueryCatalogView() } label: { Label("Async UI patterns", systemImage: "square.grid.2x2") }
                     Label("Identity and account", systemImage: "person.crop.circle")
                     Label("Offline and sync", systemImage: "arrow.triangle.2.circlepath")
                 }

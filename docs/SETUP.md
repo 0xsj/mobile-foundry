@@ -1,6 +1,6 @@
 # Native project setup
 
-The SwiftUI iOS app, Compose Android app, and native kernel, HTTP, and services
+The SwiftUI iOS app, Compose Android app, and native kernel, HTTP, services, query, and UI
 packages/modules are initialized. Do not rerun project initialization commands in
 these existing directories.
 
@@ -17,7 +17,9 @@ cd /Users/sj/Desktop/dev/builds/mobile-foundry
 make kernel-build
 make kernel-test
 make http-test
+make query-test
 make ios-build
+make ios-test
 make android-build
 make android-test
 make notes-check
@@ -69,8 +71,12 @@ open FoundryCatalog.xcodeproj
 Select the shared `FoundryCatalog` scheme and an iOS simulator in Xcode, then
 run the app. Choose a development team in Signing & Capabilities to run on a
 physical device. Select HTTP health in the Foundation list to try the injected scenarios.
+Select Notes service seam to run the same list screen against memory or an HTTP
+adapter with injected responses. Select Async UI patterns to explore generic
+loading, retained content/empty, failure, retry, and cancellation presentation.
 
-The app links local `FoundryKernel`, `FoundryHTTP`, and `FoundryServices` packages. Its initial deployment
+The app links local `FoundryKernel`, `FoundryHTTP`, `FoundryServices`,
+`FoundryQuery`, and `FoundryUI` packages. Its initial deployment
 target is iOS 17 and its bundle identifier is `dev.mobilefoundry.catalog`.
 The asset catalog contains accent color and app icon metadata; add icon artwork
 when the app's visual identity is defined.
@@ -98,6 +104,11 @@ The simulator application is written to
 `.cache/ios/Build/Products/Debug-iphonesimulator/FoundryCatalog.app` under the
 repository root.
 
+`make ios-test` runs the catalog's store tests on iPhone 17 Pro by default.
+Choose another installed simulator with
+`make ios-test FOUNDRY_IOS_TEST_DESTINATION='platform=iOS Simulator,name=YOUR_DEVICE'`.
+The unit-test target is defined in `project.yml` and the shared scheme.
+
 ## Kotlin Android application
 
 Open the Gradle project in Android Studio:
@@ -108,8 +119,8 @@ open -a "Android Studio" .
 ```
 
 Select the `app` run configuration and an emulator or connected device. The
-app retains the generated starter and adds an HTTP health catalog destination.
-Its six injected scenarios need no backend. The app already depends on
+app retains the generated starter and adds HTTP health, Notes service seam, and
+Async UI patterns destinations. Catalog scenarios need no backend. The app already depends on
 the Kotlin/JVM module `:core:kernel`, which implements typed outcomes and failures.
 
 For direct terminal builds on this Mac:
@@ -117,8 +128,8 @@ For direct terminal builds on this Mac:
 ```sh
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-./gradlew :core:kernel:build :core:http:build :core:services:build :app:assembleDebug
-./gradlew :core:kernel:test :core:http:test :core:services:test :app:testDebugUnitTest
+./gradlew :core:kernel:build :core:http:build :core:services:build :core:query:build :core:ui:assembleDebug :app:assembleDebug
+./gradlew :core:kernel:test :core:http:test :core:services:test :core:query:test :app:testDebugUnitTest
 ```
 
 The wrapper uses Gradle 9.1.0. The version catalog pins Android Gradle Plugin
@@ -177,6 +188,34 @@ make android-ui-test
 This device-dependent target exercises Compose scenarios and request replacement.
 See the [HTTP contract](../contracts/behavior/http.md) and
 [learning notes](../notes/README.md) for ownership and evidence limits.
+
+## Notes service and query example
+
+Notes service seam offers Memory/HTTP and Content/Empty/Unavailable/Slow.
+The HTTP option still uses the real HTTP client and notes response admission,
+with catalog-only wire responses. Refresh keeps prior content while loading;
+Cancel loading stops owned work. The list renderer receives domain state and
+callbacks and constructs no service.
+
+`make http-test` includes both platforms' notes service tests against shared
+fixtures. `make ios-test` and `make android-test` exercise the store/ViewModel;
+`make android-ui-test` also exercises provider switching and notes states.
+See [the notes/query contract](../contracts/behavior/notes-query.md). No backend,
+provider account, persistent storage or credentials are needed for this example.
+
+## Reusable query state and async UI
+
+`make query-test` runs Swift and Kotlin pure query-state tests against
+`contracts/fixtures/query`. `make ios-test` and `make android-test` retain the
+notes state-owner regression checks. `make android-ui-test` also checks the
+generic presentation matrix, callback routing, and gallery navigation.
+
+Open Async UI patterns in either catalog to choose idle, initial loading,
+content, empty, refresh/failure retaining either snapshot, or internal failure.
+Refresh/Retry enters loading; Cancel restores content or idle. This gallery
+manually selects states and performs no service calls. Notes service seam
+exercises the same reusable UI with real feature-owned request lifetime.
+See [the query/UI contract](../contracts/behavior/query-ui.md).
 
 ## Backend profiles
 

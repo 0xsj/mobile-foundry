@@ -65,8 +65,15 @@ slice implements typed outcomes, failure payloads, and public projection, with
 [shared behavior and fixtures](contracts/behavior/kernel.md). The
 [HTTP and health slice](contracts/behavior/http.md) adds URLSession/OkHttp,
 problem decoding, metadata, deadlines and live/ready services. Open **HTTP health**
-in either catalog for six injected scenarios without a backend. The full UI
-catalog, graphics engines, and native storage libraries remain future work. The backend
+in either catalog for six injected scenarios without a backend.
+The [notes/query slice](contracts/behavior/notes-query.md) adds interchangeable
+memory/HTTP services and native state owners. Open **Notes service seam** in
+either catalog to exercise content, empty, failure, refresh and cancellation.
+The [query/UI slice](contracts/behavior/query-ui.md) extracts reusable generic
+state and async presentation into FoundryQuery/FoundryUI and core:query/core:ui.
+Open **Async UI patterns** to select states with a scalar payload; the notes
+example uses the same components. Broader UI controls, graphics engines, and
+native storage libraries remain future work. The backend
 profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is
 reserved for manual initialization, and both provider stacks have Compose setup.
 
@@ -79,7 +86,9 @@ bootstrap baselines when selecting graphics capabilities.
 make kernel-build
 make kernel-test
 make http-test
+make query-test
 make ios-build
+make ios-test
 make android-build
 make android-test
 ```

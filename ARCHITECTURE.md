@@ -19,6 +19,7 @@ a graphics gallery will test rendering integration early.
 | Repositories | Application data, local observation, local and remote data coordination |
 | Sync | Durable pending commands, retry policy, confirmations, incoming changes, conflict handling |
 | Session | Credential restoration, renewal, expiry, revocation, current authentication scope |
+| Query state | Generic snapshots and pure transitions; no request runtime or cache |
 | Features | Use cases, screen state, presentation, feature-specific rules |
 | UI system | Semantic tokens, controls, composed patterns, accessibility, motion |
 | App composition | Dependency selection, startup, navigation, deep links, lifecycle wiring |
@@ -49,6 +50,14 @@ URLSession/OkHttp transports, problem and JSON admission, metadata, owned
 deadlines and cancellation, health services, and injected catalog scenarios.
 Diagnostic observers preserve known dependency causes outside public failures;
 full reporting infrastructure remains a separate capability.
+
+The [notes/query slice](contracts/behavior/notes-query.md) implements a domain
+service port with memory and HTTP adapters, injected feature state owners, and
+provider-independent list rendering. It establishes refresh retention and
+latest-result admission without adding a shared query cache or persistence.
+The subsequent [query/UI extraction](contracts/behavior/query-ui.md) adds
+FoundryQuery/core:query value state and FoundryUI/core:ui rendering. Notes and a
+scalar state gallery consume both; request orchestration remains feature-owned.
 
 Preserve stable failure categories and operation-specific codes. Validation
 failures carry field information; throttling can carry retry timing. Public

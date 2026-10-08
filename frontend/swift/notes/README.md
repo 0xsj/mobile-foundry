@@ -17,6 +17,12 @@ linked language and tool notes to understand the choices. This notebook follows
    [HTTP](modules/packages/FoundryHTTP/README.md) and [health services](modules/packages/FoundryServices/README.md).
 6. [Native request and screen lifetime](substrate/urlsession-and-view-task-lifetime.md), then revisit
    the catalog walkthrough to trace its injected scenarios.
+7. [Observable stores and service protocols](language/swift-observable-stores-and-service-protocols.md),
+   then the services/catalog walkthroughs' notes sections and [provider seams](../../../notes/patterns/transport-service-and-screen.md#provider-seams-and-query-state).
+8. [Generic state and content builders](language/swift-generic-query-state-and-content-builders.md),
+   then [FoundryQuery](modules/packages/FoundryQuery/README.md),
+   [FoundryUI](modules/packages/FoundryUI/README.md), and
+   [query/rendering ownership](../../../notes/patterns/query-state-and-rendering.md).
 
 ## Findings by lifespan
 
@@ -51,9 +57,26 @@ Diagnostic observers receive original dependency errors; durable reporting
 infrastructure remains separate. Session, persistence, sync and graphics are
 future capabilities.
 
+The 2026-10-08 notes/query slice adds a provider-independent NotesService port,
+memory and HTTP adapters, an observable main-actor store, and one list renderer.
+Five service package tests (three new) and seven iOS store tests passed. The
+simulator accessibility state confirmed memory/HTTP content and HTTP empty/
+unavailable presentation. HTTP remains injected; screenshots were blank in this
+session, so visual layout and assistive-technology quality remain unverified.
+
+The 2026-10-08 query/UI extraction adds generic value state and native async
+presentation. Two query package tests passed against nine shared cases, and
+all seven iOS store regressions still pass. The app and UI package compiled
+through `make ios-test`. Simulator interactions confirmed initial/retained
+states, empty retention, public failure copy, Retry and Cancel. A current
+screenshot showed the populated gallery's native layout; comprehensive
+accessibility, text-size and appearance checks remain future work.
+
 ## Questions for the next session
 
 - Why can valid JSON still be invalid domain data?
 - How does a request deadline differ from a screen canceling its work?
 - Which layer should renew credentials and decide retries?
-- Which loading, failure and retry controls are ready for the first reusable UI slice?
+- Which form and mutation behavior should accompany the next reusable controls?
+- Which query behaviors require a shared cache, and which belong to one feature's store?
+- What does pure settlement omit that a feature must check before publishing?
