@@ -5,13 +5,17 @@ native platforms. [Behavior](../../contracts/behavior/ui-components.md) defines
 the boundaries; [the component map](../COMPONENTS.md) lists source placement.
 No new package/module or third-party UI dependency is introduced.
 
+The catalog currently contains seven batches with 51 building blocks. Activity
+adds feed composition, native refresh and explicit pagination examples.
+
 ## Construction
 
 Swift source stays in FoundryUI/Components; Kotlin mirrors the family/component
 folders in core/ui. Component names and filenames have no Foundry prefix.
 `ActionButton` and `LabeledTextField` avoid collisions with native Button/TextField.
 Component helper types use ButtonVariant, MessageTone, SurfaceRole, TabItem,
-CheckState, AvatarShape, SkeletonShape and explicit action values.
+CheckState, AvatarShape, SkeletonShape, PasswordPurpose, ValidationItem, StepItem,
+StepStatus, LoadMorePhase and explicit action values.
 Theme, package and app names retain their existing identities.
 
 Button styles and status tones resolve existing theme roles. Native buttons
@@ -22,7 +26,7 @@ Keep slot content interactive only where its host is not already a control.
 
 The app owns ComponentCatalogView / ComponentCatalogScreen and all preview
 state. A catalog route opens it. Actions, Content, Patterns, Controls, Overlays,
-Display, Feedback, Collections, Context and Layout organize examples;
+Display, Feedback, Collections, Context, Layout, Details, Journeys and Activity organize examples;
 Dark/Glass controls scope the theme without recreating the state owner. Android
 provides a bounded Backdrop; Swift supplies native surface sampling. Native
 sheet and confirmation flags remain app-owned and use shared native wrappers.
@@ -239,6 +243,81 @@ Use LazyVGrid/LazyVerticalGrid with appropriate app scroll ownership for long
 collections. MediaFrame controls bounds and clipping; native image fitting and
 accessibility labels remain caller policy.
 
+## Choices, disclosure and detail screens
+
+```swift
+// Conceptual: bindings, copy and callbacks belong to the feature.
+ChoiceChip("Compact", selected: format == "Compact") { format = "Compact" }
+ValueStepper("Copies", value: $copies, valueLabel: "\(copies) copies",
+             decreaseLabel: "Fewer copies", increaseLabel: "More copies", range: 0...5, step: 2)
+DisclosureSection("Delivery note", isExpanded: $expanded,
+                  stateDescription: expanded ? "Expanded" : "Collapsed") {
+    LabeledTextField("Note", text: $note, focus: $noteFocused)
+}
+KeyValueRow("Destination", value: "Personal collection on this device")
+```
+
+```kotlin
+// Conceptual: the host controls choice, expansion and the retained draft.
+ChoiceChip("Compact", format == "Compact", { format = "Compact" })
+ValueStepper("Copies", copies, onCopies, "$copies copies", "Fewer copies", "More copies", range = 0..5, step = 2)
+DisclosureSection("Delivery note", expanded, onExpanded,
+    stateDescription = if (expanded) "Expanded" else "Collapsed") {
+    LabeledTextField("Note", note, onNote)
+}
+KeyValueRow("Destination", "Personal collection on this device")
+```
+
+A chip does not decide whether another chip becomes unselected. ValueStepper
+uses independent native buttons with caller labels and disables unavailable
+changes. An endpoint can be reached with a partial final step: 0, 2, 4, 5.
+It does not create a repeated timer or call a service. DisclosureSection's content
+can contain fields/buttons because the header is the only expansion control.
+Keep important drafts above that conditional content; collapsing never implies
+discarding or committing a draft. KeyValueRow is passive and combines its copy
+for accessibility; use a separate explicit action if copying is needed.
+
+```swift
+// Conceptual: place at a bounded screen root, outside an existing ScrollView.
+DetailShell {
+    ContentContainer { PageHeader("Delivery", subtitle: "Review your choices") }
+} content: {
+    ScrollView { ContentContainer { detailCards } }
+} actions: {
+    ContentContainer {
+        ActionBar(summary: summary) {
+            ActionButton("Apply", enabled: canApply, action: apply)
+        }
+    }
+}
+```
+
+```kotlin
+// Conceptual: body scrolling and app/system insets remain with the screen.
+DetailShell(header = {
+    ContentContainer { PageHeader("Delivery", "Review your choices") }
+}, content = {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        ContentContainer { DetailCards() }
+    }
+}, actions = {
+    ContentContainer {
+        ActionBar(summary = summary) {
+            ActionButton(apply, enabled = canApply) { Text("Apply") }
+        }
+    }
+})
+```
+
+The shell reserves header/action space and gives the body remaining height.
+ActionBar alone does not pin itself. Use readable insets once per region, and
+keep header/footer copy concise enough for the viewport and text settings. Supply
+native scrolling for long body content and app-owned safe-area/keyboard policy.
+The example passes the same app-owned draft to its gallery and detail route;
+Reset resets only draft values, and Apply changes a local counter. Scoped Swift
+detail themes also set native navigation-bar color scheme/background at the app
+boundary so the bar remains readable. DetailShell itself never styles a router.
+
 ## Verification
 
 Run `make ios-generate`, native builds, iOS app checks and the focused Android
@@ -247,3 +326,143 @@ simulator, including the composed content, theme toggles and native sheet.
 Run `make notes-check` after learning handoffs and source-link renames.
 Record actual outcomes and remaining accessibility/device limits in the native
 UI and app walkthroughs.
+
+## Rich input and onboarding
+
+PasswordField uses native obscured entry. The consumer supplies validation and
+keyboard submission; PasswordPurpose chooses current/new autofill metadata.
+MultilineField bounds visible lines, not stored characters. Newlines remain
+editable text; provide an explicit Done action when the host wants to clear focus.
+In the iOS Simulator hardware-keyboard check, Return ended field editing and
+Option-Return inserted a newline. Keep native keyboard differences in mind rather
+than promising one Return behavior across every platform/input device.
+
+```swift
+// Conceptual: bindings and focus are owned by the enclosing feature view.
+PasswordField("Password", text: $password, error: passwordError,
+              purpose: .new, focus: $passwordFocused, submitLabel: .next,
+              onSubmit: { passwordFocused = false; noteFocused = true })
+MultilineField("Introduction", text: $introduction, help: "A little about you.",
+               lines: 3...6, focus: $noteFocused)
+```
+
+```kotlin
+// Conceptual: inside Compose. Choose each draft's native lifetime deliberately.
+val password = remember { TextFieldState() }
+val introduction = rememberTextFieldState()
+PasswordField("Password", password, error = passwordError, purpose = PasswordPurpose.NEW,
+    onKeyboardAction = { focusManager.clearFocus() })
+MultilineField("Introduction", introduction, lines = 3..6)
+```
+
+Kotlin's state-based fields retain native selection/composition in TextFieldState;
+read its text for feature validation and use its edit methods for programmatic
+changes. This differs from existing value/callback LabeledTextField. PasswordField
+wraps Material's native secure field, rather than manually masking ordinary text.
+The gallery keeps its password state above routes with remember, without saving it.
+The note uses native save/restore. Swift bindings remain view-local State. These
+are draft-lifetime choices, not an authentication/session architecture.
+
+ValidationChecklist receives unique ValidationItem IDs, supplied satisfaction and
+localized state copy. It is passive; tapping a requirement does not toggle it.
+StepIndicator similarly receives StepItem/StepStatus values and summary copy.
+Neither component computes readiness or chooses the next screen. Supply stable
+IDs across updates, and expose progress through copy as well as color.
+
+```swift
+// Conceptual: the feature projects its own readiness and step status.
+ValidationChecklist([
+    ValidationItem(id: "note", title: "Introduction added", satisfied: hasNote,
+                   stateDescription: hasNote ? "Satisfied" : "Needed")
+])
+StepIndicator("Step 2 of 3", steps: [
+    StepItem(id: "profile", title: "Profile", status: .completed, stateDescription: "Completed"),
+    StepItem(id: "preferences", title: "Preferences", status: .current, stateDescription: "Current"),
+    StepItem(id: "review", title: "Review", status: .upcoming, stateDescription: "Upcoming")
+])
+```
+
+AuthShell owns vertical scrolling around readable header/form/footer slots,
+including the footer. It is useful for account screens without a routing or auth
+runtime. OnboardingPage instead puts actions outside its scrolling artwork/copy/
+content using DetailShell. Give it a bounded screen root, keep action content
+concise and let the host handle system insets/navigation/keyboard behavior.
+
+```kotlin
+// Conceptual: one screen root; draft and callbacks belong to the feature.
+AuthShell(header = { PageHeader("Welcome back") }, content = {
+    PasswordField("Password", password)
+}, footer = {
+    ActionButton(onClick = submit, enabled = ready) { Text("Continue") }
+})
+// In a separate bounded destination:
+OnboardingPage("Make it yours", "Build your profile.", artwork = { hero() }, content = {
+    MultilineField("Introduction", introduction)
+}, actions = {
+    ActionBar { ActionButton(onClick = next, enabled = hasNote) { Text("Next") } }
+})
+```
+
+Open Components → Journeys, then Open account preview or Open onboarding preview.
+The three steps share one profile note and update preference. Next is disabled
+for a blank initial note; Previous and Restart preserve edits. Finish only changes
+an explicit local count. Page identity changes reset scroll placement, while the
+important draft stays above that identity. The examples set native destination
+appearance and dismiss input focus before moving between steps.
+
+## Activity feeds and pagination
+
+SectionHeader is a smaller section heading with optional actions. AvatarGroup
+accepts keyed passive slots: use Avatar for initials/admitted artwork, supply a
+summary for all collaborators and a localized overflow label. TimelineItem
+supplies only the marker and reading structure; your records provide title/time
+and your content slot provides copy, media or actions. ExpandableText exposes a
+separate native toggle for known long copy. Keep its flag keyed by record ID.
+
+RefreshContainer adapts native scrolling rather than creating it. Give it a
+bounded List on Swift or LazyColumn on Kotlin. Swift's refresh action must await
+the real work; spawning a detached task would end the spinner early. Kotlin's
+host owns the refreshing flag for the same lifetime. Neither wrapper owns data,
+a coroutine/task or failure policy. LoadMoreFooter accepts a presentation phase,
+copy and callback; it never loads on appearance. Keep current rows visible while
+loading another page or showing a retry.
+
+```swift
+// Conceptual: inside a bounded screen with a caller-owned feed model.
+RefreshContainer(onRefresh: { await model.refresh() }) {
+    List {
+        ForEach(model.records) { record in
+            TimelineItem(record.title, timestamp: record.displayTime) {
+                ExpandableText(record.body, expanded: expansionBinding(record.id),
+                               moreLabel: "Read update", lessLabel: "Collapse update")
+            }
+        }
+        LoadMoreFooter(model.pagePhase, message: model.pageMessage, actionLabel: model.pageAction,
+                       enabled: !model.refreshing, onLoad: model.requestNextPage)
+    }
+}
+```
+
+```kotlin
+// Conceptual: inside a bounded screen; the host coordinates refresh and page jobs.
+RefreshContainer(model.refreshing, model::refresh, Modifier.fillMaxSize()) {
+    LazyColumn {
+        items(model.records, key = { it.id }) { record ->
+            TimelineItem(record.title, record.displayTime) {
+                ExpandableText(record.body, record.id in expanded, { setExpanded(record.id, it) },
+                    moreLabel = "Read update", lessLabel = "Collapse update")
+            }
+        }
+        item { LoadMoreFooter(model.pagePhase, model.pageMessage, model.pageAction,
+            model::nextPage, enabled = !model.refreshing) }
+    }
+}
+```
+
+Open Components → Activity → Open activity preview. Expand a row, enable Fail
+next page, load, retry, then load to the end. Pull down or use Refresh updates to
+reset to three rows. Existing expansion survives for those three identities.
+The example serializes work, cancels/invalidates pending work on leaving and
+uses a 450 ms local delay. It implements no feed provider, automatic paging or
+durable cache. Read [the ownership note](../../notes/patterns/refresh-and-pagination-ownership.md)
+and native module walkthroughs for actual checks and limits.

@@ -21,7 +21,7 @@ content panels opaque and adapts floating controls to native glass/material,
 with transparency reduction. See [surface themes](../../../../STYLES.md#swappable-surface-themes).
 
 See [the component map](../../../../docs/COMPONENTS.md) for implemented and reserved
-catalog folders. Four reusable component batches add 33 controls and compositions,
-including native selection, overlays, contextual help and adaptive layouts; see [usage](../../../../docs/blueprints/ui-components.md).
+catalog folders. Seven reusable component batches add 51 controls and compositions,
+including native selection, overlays, contextual help, adaptive layouts, detail compositions, onboarding and activity feeds; see [usage](../../../../docs/blueprints/ui-components.md).
 The five-tab prototype lives in app
 composition and uses native TabView rather than a reusable routing wrapper.

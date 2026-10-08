@@ -75,6 +75,24 @@ linked language and tool notes to understand the choices. This notebook follows
     measurement, stable child identity, text scaling, anchored dismissal and
     caller-owned navigation/restoration.
 
+21. Read [disclosure and bounded detail regions](substrate/swiftui-layout-and-contextual-presentation.md#disclosure-and-bounded-detail-regions--2026-10-08)
+    and [bounded integer arithmetic](language/swift-bounded-integer-arithmetic.md),
+    then the [UI composition walkthrough](modules/packages/FoundryUI/README.md#choices-disclosure-and-detail-composition)
+    and [delivery preview](modules/apps/FoundryCatalog/README.md#details-and-delivery-preview-gallery).
+    Compare draft lifetime, endpoint saturation, native fitting and a scrolling
+    body with persistent actions.
+
+22. Read [rich input and journey pages](substrate/swiftui-rich-input-and-journey-pages.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#rich-input-and-journey-pages)
+    and [Journeys gallery](modules/apps/FoundryCatalog/README.md#journeys-gallery).
+    Compare native obscured/growing input, draft lifetime, passive readiness,
+    page identity and explicit advancement.
+
+23. Read [refresh and lazy activity](substrate/swiftui-refresh-and-lazy-activity.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#activity-and-paged-collections)
+    and [Activity gallery](modules/apps/FoundryCatalog/README.md#activity-gallery).
+    Compare awaited refresh, explicit paging, stable row identity and cancellation.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -91,6 +109,26 @@ Paths mirror the Swift root: `apps/FoundryCatalog/` maps to
 transferable notes describe the mechanism without local source paths.
 
 ## Current coverage
+
+The seventh UI batch adds six activity/feed building blocks (51 total), a
+native scrolling destination and explicit refresh/page fixture. Reading step 23
+links source, checks, native differences and limits.
+
+Rich input/journey batch, 2026-10-08/09: six APIs bring the six component batches
+to 45 building blocks. Both apps build; 22 iOS app checks, nineteen focused
+Android checks and four UI package checks per platform pass. The new native iOS
+case inspects secure input and measures multiline growth/capping/larger text.
+Manual input/navigation and dark-screen captures are recorded separately, along
+with hardware Return/Option-Return differences. Read step 22 for source, the
+geometry-probe correction and remaining keyboard/accessibility/device limits.
+
+Choices/disclosure/detail batch, 2026-10-08: six APIs bring the five component
+batches to 39 building blocks. Both apps build; 21 iOS app checks, nineteen
+focused Android checks and four UI package checks per platform pass. Native
+geometry checks exercise body scrolling and larger text while preserving the
+action region. Android additionally executes edited-draft retention and Int
+boundary buttons. Read step 21 for actual sources, manual iOS interactions,
+the subsequent dark-toolbar build/capture correction and remaining device limits.
 
 Context/navigation/layout batch, 2026-10-08: six APIs bring the four component
 batches to 33 building blocks. Both apps build; twenty iOS app checks, fourteen
@@ -324,3 +362,9 @@ link select a tab before navigating within it?
 Shell evidence: simulator build and sixteen existing app/layout checks pass;
 manual iOS execution covers all tabs, material selection and catalog return.
 The app walkthrough records the native capture and restoration limits.
+
+Activity batch verification, 2026-10-09: native consumers build; 27 iOS checks,
+four Android activity checks, nineteen existing Android component regressions,
+and four UI unit checks per platform pass. Notes validation passes. Module
+walkthroughs distinguish scoped reruns, native control/gesture observations and
+remaining coverage limits.

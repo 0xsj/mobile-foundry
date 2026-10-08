@@ -67,3 +67,40 @@ Read [content receiver mechanics](../language/kotlin-covariant-query-state-and-c
 and [shared reasoning](../../../../notes/patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08).
 Next: which real navigation stack needs entry-specific saved state and ViewModels,
 and which collection should own a lazy grid rather than this eager composition?
+
+## Disclosure and bounded detail regions — 2026-10-08
+
+The fifth batch uses a full-row native clickable header with a supplied expanded
+state description. AnimatedVisibility expands/fades the content and removes it
+after exit. Reduced motion selects a direct conditional-content branch instead.
+Important draft state therefore stays above the section; the app clears focus
+before collapsing so an inactive note does not keep the keyboard focused.
+Primary references: [visibility lifetime](https://developer.android.com/develop/ui/compose/animation/composables-modifiers)
+and [chips](https://developer.android.com/develop/ui/compose/components/chip).
+
+ChoiceChip wraps Material FilterChip with selected/disabled state and optional
+passive leading artwork. It owns no choice set. ValueStepper uses separately
+labeled action buttons with decorative plus/minus copy hidden from semantics.
+Read [widening arithmetic](../language/kotlin-widen-before-integer-arithmetic.md)
+for the Int overflow-before-clamp reason and actual extreme-value execution.
+KeyValueRow uses native FlowRow to wrap label/value, switches to a Column at
+fontScale >= 1.5 and merges passive copy. It never merges interactive children.
+
+DetailShell is a bounded Column: header, a weighted body Box, then actions.
+The consumer supplies verticalScroll inside the body. This avoids putting the
+footer inside the scroll range or nesting an unbounded whole screen in a scroll.
+ActionBar is floating Card composition with ColumnScope actions, not automatic
+sticky positioning. A native measurement check scrolls to the twentieth row,
+compares actual footer bounds, increases fontScale to 2 and checks growing
+KeyValueRow height and nonoverlapping body/footer/viewport bounds.
+
+The delivery example retains primitive rememberSaveable values above route
+replacement. It assembles an immutable DeliveryValues snapshot and accepts copy
+updates from both consumers. This uses ordinary data-class copying without a
+second domain store or a custom object Saver. Collapsing a note removes its UI,
+not the parent's edited string. Applying and resetting remain separate callbacks;
+Reset preserves the local apply counter.
+
+Follow the UI/app walkthroughs' choices/disclosure/detail sections from reading
+step 21. Next: which real command needs domain admission and a feature ViewModel,
+and which large-screen detail needs panes rather than a single bounded body?

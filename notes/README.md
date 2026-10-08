@@ -58,6 +58,19 @@ concepts, patterns, and verification techniques live here.
 
 ## Current coverage
 
+The seventh UI batch adds activity/feed compositions, for 51 building blocks.
+Start at reading step 23 in each native notebook and
+[refresh/page ownership](patterns/refresh-and-pagination-ownership.md).
+
+The sixth UI batch adds rich input, passive readiness and account/onboarding
+layouts, for 45 building blocks. Start at reading step 22 in each native notebook;
+the [batch summary](#rich-input-and-journey-batch) links reasoning and evidence.
+
+The fifth UI component batch adds choices, disclosure and detail compositions,
+for 39 building blocks. Start at reading step 21 in the native notebooks; the
+[batch summary](#choices-disclosure-and-detail-batch) links the shared reasoning
+and records exercised behavior.
+
 Everyday UI batch, 2026-10-08: twelve reusable components and a native Components
 gallery extend the existing family directories. Components and component-local
 types now have descriptive names without the Foundry prefix. Read
@@ -210,6 +223,43 @@ build; twenty iOS app checks, fourteen focused Android checks and four UI packag
 checks per platform pass. Native walkthroughs separate geometry, interaction and remaining device
 limits. Layouts do not add routing, durable storage or a lazy data pipeline.
 
+## Choices disclosure and detail batch
+
+The fifth UI batch, 2026-10-08, adds ChoiceChip, ValueStepper, DisclosureSection,
+KeyValueRow, ActionBar and DetailShell on both platforms, for 39 building blocks.
+Details and a separate delivery preview exercise caller-owned choices/drafts and
+a bounded screen with scrolling content and persistent actions. Read
+[collapsed drafts and detail viewports](patterns/component-slots-and-caller-owned-state.md#collapsed-drafts-and-detail-viewports--2026-10-08),
+then step 21 in each native notebook for source, native mechanics and arithmetic.
+
+Both apps build; 21 iOS app checks, nineteen focused Android checks and four UI
+package checks per platform pass. New checks measure actual scroll/footer and
+larger-text geometry; Android additionally executes edited-note retention,
+saved state, local Apply/Reset and extreme-Int button changes. iOS manual checks
+cover ordinary endpoints, disclosure and pinned actions. An inspected fresh
+build/capture verifies the subsequent app-only native dark-toolbar correction.
+The walkthroughs distinguish this evidence from broad accessibility, keyboard
+and hardware coverage. The example has no export or persistence implementation.
+
+## Rich input and journey batch
+
+The sixth UI batch, 2026-10-08/09, adds PasswordField, MultilineField,
+ValidationChecklist, StepIndicator, OnboardingPage and AuthShell, for 45 building
+blocks. Journeys exercises native input, passive readiness and caller-owned step
+actions through account and three-step onboarding previews. Read
+[input drafts and journey steps](patterns/component-slots-and-caller-owned-state.md#input-drafts-and-journey-steps--2026-10-08),
+then step 22 in each native notebook for source and framework mechanics.
+
+Both apps build; 22 iOS app checks, nineteen focused Android component checks and
+four UI package checks per platform pass. New iOS evidence inspects native secure
+input and measures growing/capped multiline geometry and larger text. Android
+executes real editing, readiness, disabled inputs, progression and saved-state
+restoration, including clearing the ephemeral password while retaining the note.
+Manual iOS input/navigation and CLI screenshots were inspected; hardware keyboard
+behavior and corrected test assumptions are documented beside their limits.
+The previews change local counts and drafts, without implementing sessions or
+durable profile/credential storage.
+
 ## Shared findings
 
 | Directory | Responsibility |
@@ -345,3 +395,20 @@ observed with a seeded photograph. Android tests inject picker results and then
 exercise actual URI I/O, EXIF-aware decoding, cancellation/failure UI and GPU
 filters. Cloud providers, broad accessibility and device memory/performance
 remain open. The preceding sample checks record the original camera slice.
+
+## Activity and paged collections batch
+
+Added 2026-10-09: SectionHeader, AvatarGroup, TimelineItem, ExpandableText,
+RefreshContainer and LoadMoreFooter on both platforms. Activity opens a native
+List/LazyColumn fixture with explicit load/retry/exhausted states and refresh.
+Read [shared reasoning](patterns/refresh-and-pagination-ownership.md),
+[Swift mechanics](../frontend/swift/notes/substrate/swiftui-refresh-and-lazy-activity.md)
+and [Compose mechanics](../frontend/kotlin/notes/substrate/compose-refresh-and-lazy-activity.md).
+Native app walkthroughs record execution evidence and separate unsupported
+claims, including remote paging, durable storage and physical-device behavior.
+
+Activity batch verification, 2026-10-09: native consumers build; 27 iOS checks,
+four Android activity checks, nineteen existing Android component regressions,
+and four UI unit checks per platform pass. Notes validation passes. Module
+walkthroughs distinguish scoped reruns, native control/gesture observations and
+remaining coverage limits.

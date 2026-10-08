@@ -1,6 +1,6 @@
 # Reusable UI components
 
-Status: Implemented four batches on SwiftUI and Compose. Other component leaves
+Status: Implemented seven batches on SwiftUI and Compose. Other component leaves
 in the directory map remain reserved.
 
 ## Ownership and customization
@@ -96,10 +96,70 @@ column at the leading edge. MediaFrame does not add a label for unknown imagery.
 Popover content must not contain another unbounded vertically scrolling list
 inside Android's menu. Use a sheet/detail page for substantial content.
 
+## Choices and detail composition
+
+| API | Behavior |
+| --- | --- |
+| ChoiceChip | Compact selected/unselected native action with optional passive leading artwork and disabled state. Caller coordinates single/multiple choices. Swift exposes selected button traits; Kotlin uses Material FilterChip selection semantics. No internal selected set or filtering. |
+| ValueStepper | Controlled native integer value within an inclusive range and a positive step. Increase/decrease clamp to endpoints, including a final partial step; bounds/disabled state prevent dispatch. Arithmetic handles native integer extremes. Caller supplies value text and accessible button labels. No hold-to-repeat, parsing or operation execution. |
+| DisclosureSection | Controlled expanded flag, title/subtitle, caller state description and interactive content slot. The entire header toggles expansion; content controls remain separate targets. Token motion/reduction govern reveal. Hoist important drafts above the section: collapsed child state has no promised lifetime. No validation or discard policy. |
+| KeyValueRow | Passive supplied label/value/detail, combined into one accessible reading unit. Long values wrap; native larger text uses stacked presentation. No implicit copy action, formatting or domain model. |
+| ActionBar | Floating Card with optional supplied summary and caller action slot. Native action layout, busy/disabled values and effects remain caller-owned. The host determines placement; the bar alone is not sticky. |
+| DetailShell | Bounded header/body/action regions. Header and actions remain outside the flexible body slot. Caller supplies body scrolling, safe areas/system insets, keyboard behavior and routing. No implicit scroll, navigation bar or feature state. |
+
+ValueStepper requires a valid current value inside the range and a positive
+step. For 0...5 with step 2, increasing yields 0 → 2 → 4 → 5; decreasing from 5
+yields 5 → 3 → 1 → 0. Swift Int and Kotlin Int retain native widths rather than
+claiming a shared storage encoding. Business admission belongs at the feature
+boundary, beyond these UI preconditions.
+
+Keep header/action content short enough for the viewport and text settings;
+substantial content belongs in the caller's scrolling body. A shell must receive
+bounded height and must not be placed inside another unbounded vertical scroll.
+ActionBar slots preserve independent native controls. Disclosure hides content,
+not its caller-owned draft or validation outcome.
+
+## Rich input and journeys
+
+| API | Behavior |
+| --- | --- |
+| PasswordField | Native obscured input with supplied label/help/error, disabled state, current/new password autofill purpose and keyboard submission policy. Swift takes a binding and focus binding; Kotlin takes caller-owned TextFieldState and native keyboard options/action handler. Error takes precedence over help. No validation, reveal switch, session or credential storage. |
+| MultilineField | Native wrapping/growing editor with a positive inclusive visible-line range, default 3...6. The field scrolls beyond the visible limit without discarding text. Caller owns draft, error/help and keyboard/focus policy. Swift takes a binding; Kotlin takes TextFieldState. No character cap or feature command execution. Native hardware/software return-key behavior can differ. |
+| ValidationChecklist | Passive uniquely identified ValidationItem values: title, satisfied flag and supplied accessible state description. Empty lists are allowed. Symbols convey supplied state and are decorative to accessibility; rows expose title/state without checkbox actions. No built-in rules or aggregate validity. |
+| StepIndicator | Passive ordered uniquely identified StepItem values, each with title, StepStatus and supplied accessible state description, plus summary copy. Current/completed/upcoming are caller projections; zero current steps is allowed. No tap navigation, timer or automatic advancement. |
+| OnboardingPage | Bounded page with caller artwork, title/message, content and action slots. Body scrolls; actions sit outside it using DetailShell. Consumer owns page identity, draft lifetime, focus, transitions and navigation. Artwork semantics remain caller-owned. |
+| AuthShell | Scrolling header/form/footer slots inside a capped readable container, default maximum width 480 native units including insets. Footer scrolls with the form. No identity/auth behavior, system bar or persistence. Do not nest inside an unbounded vertical scroller. |
+
+Native autofill purpose supplies metadata; these components do not establish an
+associated domain, provider session or end-to-end autofill integration. A text
+field's display obfuscation does not choose the draft's storage lifetime. Keep
+secret state ownership explicit. Kotlin callers may use ephemeral remember for
+password TextFieldState and rememberTextFieldState for saveable nonsecret drafts.
+Do not recreate a state holder from its current text on every composition.
+
+## Activity and paged collections
+
+| API | Behavior |
+| --- | --- |
+| SectionHeader | Compact heading, optional supporting copy and independent action slot. Vertical layout allows long labels to grow. No implied navigation or selection. |
+| AvatarGroup | Caller-supplied stable identities and passive avatar slots. Positive maximum visible count and finite positive size. Overlapping artwork, optional overflow circle when count exceeds the maximum, and one supplied accessible summary replacing child identities. Caller supplies localized overflow copy; no image loading, member model or implicit action. |
+| TimelineItem | Decorative marker and optional connector beside supplied title, timestamp and interactive content slot. The caller owns ordering, timestamp formatting, status meaning and the final connector. Child actions remain independent. |
+| ExpandableText | Supplied text, controlled expanded flag, positive collapsed line count (default 3), and caller-provided expand/collapse labels. Native text and a separate toggle action. No overflow measurement or internal expansion lifetime; use for known long copy. Full text remains available to accessibility even when visually collapsed. |
+| RefreshContainer | Native refresh behavior around a supported scrolling child with bounded layout. Swift applies refreshable and directly awaits the supplied async action; Kotlin wraps PullToRefreshBox with caller isRefreshing/onRefresh. Native gesture state is local; work, busy admission, errors and cancellation policy remain with the host. No implicit scroll view, request or spinner timer. |
+| LoadMoreFooter / LoadMorePhase | Idle/failed show supplied message and explicit action; loading shows native labeled progress; exhausted shows passive supplied copy. Busy/exhausted cannot dispatch. An enabled flag gates available actions. No request on appearance, page cursor, automatic retry or collection mutation. |
+
+The host must keep avatar slots passive and supply a meaningful summary for all
+members, including hidden ones. Size/count must fit the host's available width.
+Expansion is keyed by caller identity, rather than row position. Refresh and
+pagination are separate operations; their coordination is app policy. Native
+refresh availability differs by platform/container, so use List on Swift and a
+bounded LazyColumn within the Kotlin adapter, not another unbounded vertical
+scroll inside the catalog.
+
 ## Catalog
 
 Studio → Open catalog → Components exposes Actions, Content, Patterns, Controls
-and Overlays, plus Display, Feedback, Collections, Context and Layout.
+and Overlays, plus Display, Feedback, Collections, Context, Layout, Details, Journeys and Activity.
 Local Dark/Glass previews retain example state. Examples include search → empty
 → clear recovery, busy/disabled actions, status rows, feedback, progress, settings
 and single-choice cards. Controls adds mixed aggregate selection, choice groups,
@@ -123,6 +183,32 @@ across that route using an app-owned SaveableStateHolder. Presentation flags are
 transient and not replayed on restoration. Layout demonstrates narrow/readable
 bounds, three keyed cards, 4:3 previews and caller-owned selection. Preview themes
 and family changes retain picked values. No destination data or storage is added.
+
+Details adds compact export choices, disabled Print, a bounded quantity, optional
+editable note and long passive detail copy. Open delivery preview presents a
+separate DetailShell with scrolling cards and a persistent ActionBar. Both views
+share app-owned values. Apply preview increments a local example counter only
+when copies are nonzero; Reset delivery resets the draft without applying again.
+Android retains the draft above route replacement; Swift passes a binding through
+the native link. No actual export, delivery or storage operation is implemented.
+
+Journeys demonstrates obscured input, a multiline profile note, passive completion
+requirements, an account-form layout and a three-step onboarding preview. Password
+and note values remain above family/route replacement. Android's password is
+ephemeral; its note and progress survive saved-instance restoration. Swift keeps
+both only in the current view's state. The account action requires an enabled,
+nonempty password and increments a local counter. The first onboarding step
+requires a nonblank note; Previous and Restart retain the draft/preferences.
+Finish increments once per explicit completion and disables until back/restart.
+These examples do not create accounts, save credentials or persist a profile.
+
+Activity composes a collaborator group and long update, then opens a separate
+native lazy/list destination. Its local fixture starts with three rows, loads
+three at a time up to nine, and supports Fail next page → Retry page without
+losing rows/expansion. Pull-to-refresh and the accessible Refresh updates action
+reset to the first page, retain expansion for surviving IDs and increment a
+local counter. Refresh and page work cannot overlap. Leaving cancels/invalidates
+pending work while retaining loaded rows and expansion above the route; these ephemeral examples do not persist a feed or contact a service.
 
 ## Evidence boundary
 

@@ -19,7 +19,7 @@ struct ComponentCatalogView: View {
 
 private enum ComponentGroup: String, CaseIterable {
     case actions = "Actions", content = "Content", patterns = "Patterns", controls = "Controls", overlays = "Overlays"
-    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout"
+    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout", details = "Details", journeys = "Journeys", activity = "Activity"
 }
 
 private struct ComponentExamples: View {
@@ -41,12 +41,15 @@ private struct ComponentExamples: View {
     @State private var fields = FieldGroupValues()
     @State private var context = ContextValues()
     @State private var layout = LayoutValues()
+    @State private var delivery = DeliveryValues()
+    @State private var journey = JourneyValues()
+    @State private var activity = ActivityPreviewValues()
     private let projects = ["Atlas workspace", "Orbit study", "Field notes"]
 
     var body: some View {
         VStack(alignment: .leading, spacing: t.space.section) {
             PageHeader("Everyday interfaces", subtitle: "Simple controls, useful compositions, and room for your own content.") {
-                Badge("33 building blocks", tone: .info)
+                Badge("51 building blocks", tone: .info)
             }
             Tabs("Component families", selection: $group, options: ComponentGroup.allCases, label: { $0.rawValue })
             switch group {
@@ -62,6 +65,9 @@ private struct ComponentExamples: View {
             case .collections: CollectionExamples(values: $collection)
             case .context: ContextExamples(values: $context)
             case .layout: LayoutExamples(values: $layout)
+            case .details: DetailsExamples(values: $delivery)
+            case .journeys: JourneyExamples(values: $journey)
+            case .activity: ActivityExamples(values: activity)
             }
         }
         .padding(t.space.page)

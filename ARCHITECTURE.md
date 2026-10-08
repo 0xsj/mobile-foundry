@@ -70,7 +70,13 @@ gallery exercises composed patterns and native overlays. Display, loading,
 grouped fields and collection composition keep image admission, validation,
 selected IDs and transient notice lifetime with their caller. Contextual help
 and navigation retain caller-owned presentation/routes; small adaptive layouts
-measure native children without adding scroll or collection state.
+measure native children without adding scroll or collection state. DetailShell
+reserves header/body/action regions while screens supply scrolling and routes.
+Compact choices, bounded quantities and disclosure keep committed drafts with
+their caller; a floating ActionBar does not create operation state.
+Rich input keeps native editing state separate from draft storage. Passive
+requirements/progress project feature readiness; AuthShell and OnboardingPage
+provide layout slots while the app owns focus, step transitions and submission.
 Solid/Glass material styles are independent of light/dark colors. Content panels
 remain opaque; floating surfaces use native glass or a bounded Compose backdrop
 with an opaque fallback. Renderer frame ownership and external GPU integration
@@ -278,3 +284,9 @@ minimum OS versions, UI toolkits, storage libraries, renderer, and backend as
 the relevant increments become concrete. Use the repository's
 [implementation blueprint protocol](../IMPLEMENTATION-BLUEPRINT-PROTOCOL.md)
 for file and symbol specifications after those slice contracts are established.
+
+Activity UI follows the same boundary: SectionHeader, AvatarGroup, TimelineItem,
+ExpandableText, RefreshContainer and LoadMoreFooter receive supplied content,
+state and actions. Native list/refresh gestures stay in UI; feed records, stable
+IDs, refresh/page coordination, failures and task lifetime stay in the app.
+The catalog uses a local paged fixture, not another service/query abstraction.

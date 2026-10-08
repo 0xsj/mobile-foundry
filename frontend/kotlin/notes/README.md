@@ -75,6 +75,24 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
     measurement, stable child identity, text scaling, anchored dismissal and
     caller-owned navigation/restoration.
 
+21. Read [disclosure and bounded detail regions](substrate/compose-layout-and-contextual-presentation.md#disclosure-and-bounded-detail-regions--2026-10-08)
+    and [widening before integer arithmetic](language/kotlin-widen-before-integer-arithmetic.md),
+    then the [UI composition walkthrough](modules/project/core/ui/README.md#choices-disclosure-and-detail-composition)
+    and [delivery preview](modules/project/app/README.md#details-and-delivery-preview-gallery).
+    Compare draft lifetime, endpoint saturation, native fitting and a scrolling
+    body with persistent actions.
+
+22. Read [rich input and journey pages](substrate/compose-rich-input-and-journey-pages.md),
+    then the [UI walkthrough](modules/project/core/ui/README.md#rich-input-and-journey-pages)
+    and [Journeys gallery](modules/project/app/README.md#journeys-gallery).
+    Compare native state-based input, ephemeral/saveable drafts, passive
+    readiness, keyed pages and explicit advancement.
+
+23. Read [refresh and lazy activity](substrate/compose-refresh-and-lazy-activity.md),
+    then the [UI walkthrough](modules/project/core/ui/README.md#activity-and-paged-collections)
+    and [Activity gallery](modules/project/app/README.md#activity-gallery).
+    Compare awaited refresh, explicit paging, stable row identity and cancellation.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -91,6 +109,26 @@ Paths mirror the Kotlin root, including `project/`: `project/app/` maps to
 paths; module walkthroughs link their actual use.
 
 ## Current coverage
+
+The seventh UI batch adds six activity/feed building blocks (51 total), a
+native scrolling destination and explicit refresh/page fixture. Reading step 23
+links source, checks, native differences and limits.
+
+Rich input/journey batch, 2026-10-08/09: six APIs bring the six component batches
+to 45 building blocks. Both apps build; 22 iOS app checks, nineteen focused
+Android checks and four UI package checks per platform pass. Four new Android
+cases exercise secure/multiline input, passive requirements, disabled controls,
+step actions and saved-state ownership. Note/progress/counts restore while the
+ephemeral password clears. Read step 22 for sources, the corrected disabled-field
+selector and remaining keyboard/accessibility/device limits.
+
+Choices/disclosure/detail batch, 2026-10-08: six APIs bring the five component
+batches to 39 building blocks. Both apps build; 21 iOS app checks, nineteen
+focused Android checks and four UI package checks per platform pass. Native
+geometry checks exercise body scrolling and larger text while preserving the
+action region. Android additionally executes edited-draft retention and Int
+boundary buttons. Read step 21 for actual sources, manual iOS interactions,
+the subsequent dark-toolbar build/capture correction and remaining device limits.
 
 Context/navigation/layout batch, 2026-10-08: six APIs bring the four component
 batches to 33 building blocks. Both apps build; twenty iOS app checks, fourteen
@@ -318,3 +356,9 @@ Shell evidence: native build and host regressions pass. The complete device
 run passed 35/36 checks; after correcting an old catalog-entry assumption,
 the final eight focused shell/theme checks pass. The app walkthrough records
 the correction, saved-state coverage and remaining device limits.
+
+Activity batch verification, 2026-10-09: native consumers build; 27 iOS checks,
+four Android activity checks, nineteen existing Android component regressions,
+and four UI unit checks per platform pass. Notes validation passes. Module
+walkthroughs distinguish scoped reruns, native control/gesture observations and
+remaining coverage limits.

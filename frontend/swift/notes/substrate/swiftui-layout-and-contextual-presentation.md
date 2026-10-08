@@ -69,3 +69,42 @@ Read [the UI walkthrough](../modules/packages/FoundryUI/README.md#context-naviga
 and [shared reasoning](../../../../notes/patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08).
 Next: what measured collection size justifies a lazy grid, and which help copy
 requires moving from an anchored panel to a scrolling detail destination?
+
+## Disclosure and bounded detail regions — 2026-10-08
+
+The fifth batch uses a native Button header with controlled expansion rather
+than depending on platform-specific DisclosureGroup styling. The full header
+is one action; fields/buttons in the revealed slot keep independent targets.
+Conditional content has no promised retained lifetime. Hoisted bindings preserve
+drafts across collapse; the app explicitly clears note focus on collapse.
+Token motion drives expansion and a reduced transaction disables animations.
+[DisclosureGroup](https://developer.apple.com/documentation/swiftui/disclosuregroup)
+remains a native alternative when its platform styling suits the consumer.
+
+ChoiceChip uses a native button with selected traits and a token Capsule.
+ValueStepper composes separate native action buttons so each operation has a
+caller-provided label and disabled state. This is not a native adjustable Stepper
+role. Read [bounded arithmetic](../language/swift-bounded-integer-arithmetic.md)
+for the overflow-before-clamp reason. KeyValueRow uses ViewThatFits for short
+inline copy and a wrapping stack otherwise; accessibility sizes choose the stack
+explicitly. Its supplied strings combine into one passive reading unit.
+
+DetailShell reserves intrinsically sized header/actions around a flexible body.
+The consumer supplies ScrollView; putting the shell inside an unbounded outer
+scroll defeats its viewport contract. ActionBar is floating Card composition,
+not a positioning primitive. The native hosted check records header/body/footer
+CGRects before and after scrolling to the twentieth row, then grows Dynamic Type
+to accessibility3 and checks that footer/body bounds still do not overlap.
+
+A scoped theme on the detail body does not necessarily style the enclosing
+native navigation bar. The first dark screenshot exposed black navigation/status
+text over the dark screen. The app now sets token toolbar background, visible
+background and toolbarColorScheme at its destination boundary. Read
+[toolbarColorScheme](https://developer.apple.com/documentation/swiftui/view/toolbarcolorscheme(_:for:))
+and [toolbarBackground](https://developer.apple.com/documentation/swiftui/view/toolbarbackground(_:for:)).
+This policy belongs to the app route, not DetailShell. The app walkthrough records
+final build/capture evidence separately from the preceding automated suite.
+
+Follow the UI/app walkthroughs' choices/disclosure/detail sections from reading
+step 21. Next: which products need a collapsing header, large-screen pane layout
+or explicit keyboard inset policy instead of this simple bounded composition?

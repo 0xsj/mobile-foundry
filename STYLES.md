@@ -41,7 +41,10 @@ component helper types follow the same rule. Package, token/theme and app names
 retain their identities. The [component batches](contracts/behavior/ui-components.md)
 add native slots, semantic variants, reduced-motion loading and caller-owned
 selection/feedback examples. Contextual help, native navigation affordances and
-small adaptive layouts reuse the same tokens and native content slots. See
+small adaptive layouts reuse the same tokens and native content slots. Choice,
+disclosure, passive details and bounded detail screens retain the same naming
+and caller-owned state. Password/multiline input, passive requirement/progress
+rows and account/onboarding layouts reuse these roles without a new palette. See
 [usage examples](docs/blueprints/ui-components.md#using-the-apis).
 
 ## Design direction: Foundry Studio
@@ -182,3 +185,9 @@ Android device tests also cover nested scope, font scaling, minimum touch bounds
 and preview controls. The [learning handoff](notes/patterns/semantic-tokens-and-native-themes.md)
 explains the decisions and verification limits. See [Setup](docs/SETUP.md) for
 toolchain and emulator prerequisites.
+
+Activity compositions resolve existing text, accent, line and spacing roles.
+Timeline markers/connectors are decorative; avatar groups expose a supplied
+summary. Native refresh/progress controls follow the scoped theme. Expansion
+uses immediate native layout rather than adding animation to long text. Screen
+scrolling and refresh/page work remain caller-owned.

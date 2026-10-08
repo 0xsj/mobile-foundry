@@ -531,3 +531,130 @@ existing ComponentCatalogTest regressions. Both apps build and four UI unit test
 per platform pass. This does not rerun unrelated GPU/camera tests or establish
 complete TalkBack/keyboard/localization/hardware coverage. Next: which real route
 needs an entry-owned ViewModel and which collection needs a lazy data pipeline?
+
+## Details and delivery preview gallery
+
+Added 2026-10-08. [ComponentCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+adds Details, for eleven families and 39 building blocks. Format, copies, note,
+expansion, enabled and applied count are saveable primitives above route
+replacement. DeliveryValues is an immutable snapshot whose callback updates
+those fields; rememberSaveable does not automatically save a custom data class.
+[DetailsExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/DetailsExamples.kt)
+composes chips, bounded quantity, disclosure editing and passive detail rows.
+The feature clears focus on collapse or Done editing note.
+
+[DeliveryPreviewScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/DeliveryPreviewScreen.kt)
+composes DetailShell with an explicitly scrolling body and ActionBar outside it.
+BackHandler and visible back return to the existing gallery. Apply requires a
+positive quantity and increments only a local count; Reset restores draft
+defaults while retaining the count. No export/storage behavior is implied.
+Read [UI mechanics](../core/ui/README.md#choices-disclosure-and-detail-composition),
+[native disclosure/layout](../../../substrate/compose-layout-and-contextual-presentation.md#disclosure-and-bounded-detail-regions--2026-10-08),
+and [bounded arithmetic](../../../language/kotlin-widen-before-integer-arithmetic.md).
+
+The focused API 36 emulator run passes nineteen checks: three
+[DetailsCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DetailsCatalogTest.kt)
+checks, one [ValueStepperTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ValueStepperTest.kt),
+one [DetailShellLayoutTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DetailShellLayoutTest.kt),
+and fourteen prior component/context/layout regressions. New checks execute
+disabled/selected chips, both step endpoints and disabled quantity controls,
+real note editing with collapse/reopen, family/theme/saved-state retention,
+navigation return, Apply/Reset and fixed footer bounds after body scrolling.
+The extreme-integer check activates native buttons across Int.MAX_VALUE and
+Int.MIN_VALUE. The shell check changes fontScale to two and measures actual
+nonoverlapping header/body/footer geometry and larger rows.
+
+Both native consumers build; 21 iOS app checks and four UI token/material checks
+per platform pass. The Swift walkthrough records separate manual navigation and
+dark-toolbar evidence. This focused Android run does not rerun unrelated
+camera/GPU suites or establish comprehensive TalkBack, IME/keyboard avoidance,
+localization, rotation or hardware coverage. Next: which real screen needs a
+route-owned ViewModel and a draft that survives beyond saved-instance restoration?
+
+## Journeys gallery
+
+Added 2026-10-08. [ComponentCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+adds Journeys, for twelve families and 45 building blocks. It holds password
+TextFieldState with plain remember, profile TextFieldState with
+rememberTextFieldState, and progress/preferences/counters with rememberSaveable,
+all above route replacement. Route/family restoration does not deliberately save
+the password. [JourneyExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/JourneyExamples.kt)
+reads the native draft to project passive requirement/step rows and owns all
+local readiness and navigation actions.
+
+The account destination uses AuthShell and increments only a local preview
+counter. OnboardingPage shares the profile note through three steps; the first
+requires a nonblank note. Previous/Restart retain edits/preferences. Explicit
+Finish increments once and disables until navigation/restart. A keyed page resets
+native scrolling, while the draft stays above that key. Focus clears before
+step changes. BackHandler and visible Back return to the gallery.
+
+Read [the UI walkthrough](../core/ui/README.md#rich-input-and-journey-pages),
+[native mechanics](../../../substrate/compose-rich-input-and-journey-pages.md)
+and [shared ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#input-drafts-and-journey-steps--2026-10-08).
+[JourneyCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/JourneyCatalogTest.kt)
+adds three interaction/restoration cases, while
+[JourneyFieldTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/JourneyFieldTest.kt)
+executes long multiline input and error/help precedence. These do not implement
+sessions, credential storage or a durable profile. Next: which entry-owned state
+holder should coordinate a real form mutation and server-side readiness?
+
+Final evidence, 2026-10-08: all nineteen focused API 36 emulator checks pass:
+three JourneyCatalogTest cases, one JourneyFieldTest case, three DetailsCatalogTest
+cases, two ContextCatalogTest cases and ten ComponentCatalogTest regressions.
+New checks cover native password semantics, real multiline editing, passive
+requirement states, error/help precedence, disabled inputs, first-step gating,
+Previous/Restart retention, explicit finish count, body scrolling with fixed
+actions, family/theme changes and saved-state restoration. Restoration retains
+note/progress/counts while clearing the ephemeral password and disabling the
+account action. The first run's disabled-field selector incorrectly required
+SetText; a label/disabled assertion corrects that test assumption.
+
+Both apps build; all 22 iOS app checks and four UI token/material checks per
+platform pass. This focused run does not rerun unrelated GPU/camera suites or
+establish full TalkBack, software keyboard/inset, localization, rotation,
+provider autofill or physical-device coverage. Swift's walkthrough records
+separate native geometry and manual input/navigation evidence.
+
+## Activity gallery
+
+Added 2026-10-09. Activity is the thirteenth family, with 51 building blocks.
+[Catalog ownership](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt) retains preview values through family/route
+changes. [ActivityExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ActivityExamples.kt) contains passive collaborator artwork,
+an expandable summary and the separate bounded native List/LazyColumn screen.
+The app model is remembered above route replacement in ComponentCatalogScreen.
+A request generation drives a destination LaunchedEffect; delay is cancellable,
+finally restores busy/loading, and disposal also clears requests not yet started.
+BackHandler and visible Back return to the gallery without discarding feed values.
+
+The local fixture starts with three rows, admits pages of three up to nine,
+retains rows/expansion on failure, consumes Fail next page once and retries only
+on action. Refresh resets to the first page and retains surviving expanded IDs.
+Refresh/page work cannot overlap. Its 450 ms delay is a visibility aid, not
+network evidence. No persistence, cache or domain paging port is added.
+
+Read [UI mechanics](../core/ui/README.md#activity-and-paged-collections),
+[native lifetime](../../../substrate/compose-refresh-and-lazy-activity.md)
+and [shared reasoning](../../../../../../notes/patterns/refresh-and-pagination-ownership.md).
+[Native activity checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ActivityCatalogTest.kt) cover the actual fixture boundaries.
+
+Final evidence, 2026-10-09: all four ActivityCatalogTest checks pass in the final
+focused API 36 emulator run. They execute a native pull gesture, duplicate
+admission, failed-page retry, retained rows/expansion, exhaustion, refresh,
+destination disposal/retry and Back/family/theme retention. The broader run
+passes nineteen existing ComponentCatalogTest, ContextCatalogTest,
+DetailsCatalogTest, JourneyCatalogTest and JourneyFieldTest regressions.
+
+The broader run's only failure was the new retention test waiting for an
+unrealized footer after a page moved it offscreen. The corrected check scrolls
+the list to its status and waits for the updated count before navigating. The
+four activity tests then pass; no implementation change followed that regression
+run. An earlier helper also needed performScrollToNode rather than finding
+unrealized lazy descendants directly. These are test assumptions, not pagination
+or state-retention failures.
+
+Both native consumers build; all 27 iOS app checks and four UI token/material
+unit checks per platform pass. Notes validation passes. This focused coverage
+does not rerun unrelated GPU/camera checks or establish comprehensive TalkBack,
+localization, process-restored feeds, real-network or physical-device behavior.
+Next: choose a domain paging contract and route-owned state holder for a real feed.

@@ -343,3 +343,116 @@ measures actual bounds after width/font/RTL changes, retains a remembered child
 counter and checks container insets/media ratio. Four existing UI token/material
 unit checks pass. App interaction results and limits live in its walkthrough.
 Next: which consumer needs native lazy-grid ownership instead of eager layout?
+
+## Choices disclosure and detail composition
+
+Added 2026-10-08. Six APIs bring the five component batches to 39 building blocks.
+Read [ChoiceChip](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/chip/ChoiceChip.kt),
+[ValueStepper](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/stepper/ValueStepper.kt),
+[DisclosureSection](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/disclosure/DisclosureSection.kt),
+[KeyValueRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/keyvalue/KeyValueRow.kt),
+[ActionBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/actionbar/ActionBar.kt),
+and [DetailShell](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/shells/detailshell/DetailShell.kt).
+All names remain unprefixed; slots and modifiers support native composition.
+
+ChoiceChip delegates selection/disabled behavior to Material FilterChip. Its
+caller decides single or multiple selection. ValueStepper receives a value and
+callback, validates the range/current value/positive step, widens to Long before
+arithmetic, clamps and only then narrows. Native minus/plus buttons have supplied
+accessible labels. Read [widening before arithmetic](../../../../language/kotlin-widen-before-integer-arithmetic.md).
+The endpoint policy allows 0, 2, 4, 5 in 0..5 with step two; it is not a domain
+quantity model or a promise of equal integer widths across platforms.
+
+DisclosureSection uses a clickable button-role header and AnimatedVisibility,
+or a direct conditional branch under reduction. Removed content cannot own a
+durable draft. KeyValueRow combines passive copy, using FlowRow or a large-font
+Column. ActionBar supplies a floating surface, not a sticky-layout mechanism.
+DetailShell's bounded Column gives its body remaining height via weight; the
+consumer installs scrolling inside that body and owns system insets/navigation.
+Read [native mechanisms](../../../../substrate/compose-layout-and-contextual-presentation.md#disclosure-and-bounded-detail-regions--2026-10-08),
+[shared ownership](../../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#collapsed-drafts-and-detail-viewports--2026-10-08),
+and [usage](../../../../../../../docs/blueprints/ui-components.md#choices-disclosure-and-detail-screens).
+
+[ValueStepperTest](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ValueStepperTest.kt)
+executes actual native buttons across Int bounds; four accepted changes reach
+both endpoints without wrapping. [DetailShellLayoutTest](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DetailShellLayoutTest.kt)
+measures actual scrolling/header/footer bounds and changes fontScale to two.
+All nineteen focused emulator checks and four existing UI unit checks pass.
+The app walkthrough records the interaction coverage and limits. Next: which
+feature needs repeating presses, a fixed step lattice or entry-owned draft state?
+
+## Rich input and journey pages
+
+Added 2026-10-08. Six components bring the catalog batches to 45 building blocks.
+Read [PasswordField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/password/PasswordField.kt),
+[MultilineField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/multiline/MultilineField.kt),
+[ValidationChecklist](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/validationchecklist/ValidationChecklist.kt),
+[StepIndicator](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/stepindicator/StepIndicator.kt),
+[OnboardingPage](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/onboardingpage/OnboardingPage.kt)
+and [AuthShell](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/shells/authshell/AuthShell.kt).
+
+PasswordField wraps native OutlinedSecureTextField with hidden text and autofill
+purpose; the wrapper contains its experimental Material opt-in. MultilineField
+uses state-based OutlinedTextField with native TextFieldLineLimits. Both receive
+caller-owned TextFieldState rather than creating a mirrored String internally.
+The feature chooses save/restore and validates state.text. Error replaces help;
+keyboard and modifier-based focus policy remain native caller customization.
+
+Requirement/progress models carry unique IDs and supplied accessible states.
+The rows are passive, with hidden symbol semantics. Step state is not a route.
+AuthShell scrolls its footer with the form; OnboardingPage composes DetailShell
+with body-only scrolling and a separate action slot. Neither supplies an identity
+provider, saved draft store or reusable router. Read
+[native input and identity](../../../../substrate/compose-rich-input-and-journey-pages.md),
+[shared ownership](../../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#input-drafts-and-journey-steps--2026-10-08)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#rich-input-and-onboarding).
+
+[JourneyFieldTest](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/JourneyFieldTest.kt)
+executes native long multiline editing without truncation and checks error/help
+precedence and input error semantics. The catalog checks separately exercise
+secure-input semantics, state ownership and flow actions. Final evidence and
+limits are in the app walkthrough. Next: which input needs a native transformation,
+and which draft belongs in an entry-owned ViewModel?
+
+The final focused consumer run passes all nineteen emulator checks, including
+four new journey/field cases and fifteen existing component regressions. All
+four UI token/material unit checks pass. The app walkthrough distinguishes
+native input/restoration evidence from remaining keyboard/accessibility and
+provider-autofill coverage.
+
+## Activity and paged collections
+
+Added 2026-10-09 for the seventh batch. New component leaves:
+
+- [SectionHeader](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/sectionheader/SectionHeader.kt).
+- [AvatarGroup](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/avatargroup/AvatarGroup.kt).
+- [TimelineItem](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/timelineitem/TimelineItem.kt).
+- [ExpandableText](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/expandabletext/ExpandableText.kt).
+- [RefreshContainer](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/refreshcontainer/RefreshContainer.kt).
+- [LoadMoreFooter](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/loadmore/LoadMoreFooter.kt).
+
+SectionHeader supplies compact reading structure and independent actions.
+AvatarGroup receives stable identities and passive slots, limits visible artwork
+and exposes one complete supplied summary. TimelineItem draws only a decorative
+marker/connector; supplied content can contain native controls. ExpandableText
+receives the expanded flag and explicit labels for known long copy. It changes
+native text limits without guessing overflow or storing important row state.
+LoadMoreFooter projects idle/loading/failed/exhausted phases; only enabled
+idle/failed actions dispatch. It never loads on appearance.
+
+RefreshContainer wraps Material3 PullToRefreshBox; its refreshing flag and
+callback are caller-owned. It creates no coroutine. The catalog supplies a
+bounded LazyColumn; native gesture state stays inside the native adapter.
+
+Read [native mechanics](../../../../substrate/compose-refresh-and-lazy-activity.md),
+[shared ownership](../../../../../../../notes/patterns/refresh-and-pagination-ownership.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#activity-feeds-and-pagination).
+[Native consumer checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ActivityCatalogTest.kt) exercise the operation/lifetime and disclosure
+boundaries; the app walkthrough records final evidence and limits. Next: what
+real feed needs a domain paging contract rather than more UI abstraction?
+
+Final evidence for this batch, 2026-10-09: both consumers build, 27 iOS app
+checks pass, four new Android activity checks pass, and nineteen existing Android
+component regressions pass. Four UI unit checks per platform and notes validation
+pass. The app walkthrough separates native refresh-control/gesture evidence,
+manual visual observations, test-helper corrections and coverage limits.

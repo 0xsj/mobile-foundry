@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,7 +40,7 @@ import dev.mobilefoundry.ui.theme.FoundryTheme
 
 private enum class ComponentGroup(val label: String) {
     ACTIONS("Actions"), CONTENT("Content"), PATTERNS("Patterns"), CONTROLS("Controls"), OVERLAYS("Overlays"),
-    DISPLAY("Display"), FEEDBACK("Feedback"), COLLECTIONS("Collections"), CONTEXT("Context"), LAYOUT("Layout")
+    DISPLAY("Display"), FEEDBACK("Feedback"), COLLECTIONS("Collections"), CONTEXT("Context"), LAYOUT("Layout"), DETAILS("Details"), JOURNEYS("Journeys"), ACTIVITY("Activity")
 }
 
 @Composable
@@ -46,7 +48,57 @@ fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     var dark by rememberSaveable { mutableStateOf(false) }
     var glass by rememberSaveable { mutableStateOf(true) }
     var details by rememberSaveable { mutableStateOf(false) }
+    var deliveryPreview by rememberSaveable { mutableStateOf(false) }
+    var journeyRoute by rememberSaveable { mutableIntStateOf(0) }
+    val journeyPassword = remember { TextFieldState() }
+    val journeyBio = rememberTextFieldState()
+    var journeyStep by rememberSaveable { mutableIntStateOf(0) }
+    var journeyEnabled by rememberSaveable { mutableStateOf(true) }
+    var journeyUpdates by rememberSaveable { mutableStateOf(true) }
+    var journeyFinished by rememberSaveable { mutableStateOf(false) }
+    var accountPreviews by rememberSaveable { mutableIntStateOf(0) }
+    var finishedPreviews by rememberSaveable { mutableIntStateOf(0) }
+    val journey = JourneyValues(journeyPassword, journeyBio, journeyStep, journeyEnabled, journeyUpdates,
+        journeyFinished, accountPreviews, finishedPreviews)
+    val onJourney: (JourneyValues) -> Unit = {
+        journeyStep = it.step; journeyEnabled = it.enabled; journeyUpdates = it.updates
+        journeyFinished = it.finished; accountPreviews = it.accountPreviews; finishedPreviews = it.finishedPreviews
+    }
+    var deliveryFormat by rememberSaveable { mutableStateOf("Full size") }
+    var deliveryCopies by rememberSaveable { mutableIntStateOf(0) }
+    var deliveryNote by rememberSaveable { mutableStateOf("Handle with care.") }
+    var deliveryExpanded by rememberSaveable { mutableStateOf(false) }
+    var deliveryEnabled by rememberSaveable { mutableStateOf(true) }
+    var deliveryApplied by rememberSaveable { mutableIntStateOf(0) }
+    val delivery = DeliveryValues(deliveryFormat, deliveryCopies, deliveryNote, deliveryExpanded, deliveryEnabled, deliveryApplied)
+    val onDelivery: (DeliveryValues) -> Unit = {
+        deliveryFormat = it.format; deliveryCopies = it.copies; deliveryNote = it.note
+        deliveryExpanded = it.expanded; deliveryEnabled = it.enabled; deliveryApplied = it.applied
+    }
+    val activity = remember { ActivityPreviewValues() }
+    var activityPreview by rememberSaveable { mutableStateOf(false) }
     val stateHolder = rememberSaveableStateHolder()
+    if (activityPreview) {
+        FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
+            style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
+            ActivityPreviewScreen(activity, onBack = { activityPreview = false })
+        }
+        return
+    }
+    if (journeyRoute != 0) {
+        FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
+            style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
+            JourneyDestination(journey, onJourney, account = journeyRoute == 1, onBack = { journeyRoute = 0 })
+        }
+        return
+    }
+    if (deliveryPreview) {
+        FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
+            style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
+            DeliveryPreviewScreen(delivery, onDelivery, onBack = { deliveryPreview = false })
+        }
+        return
+    }
     if (details) {
         FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
             style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
@@ -65,7 +117,9 @@ fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             }
             FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
                 style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
-                ComponentExamples(onNavigate = { details = true }, modifier = Modifier.weight(1f))
+                ComponentExamples(onNavigate = { details = true }, delivery, onDelivery,
+                    onDeliveryPreview = { deliveryPreview = true }, journey, onJourney,
+                    onJourneyRoute = { journeyRoute = it }, activity = activity, onActivityPreview = { activityPreview = true }, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -73,7 +127,9 @@ fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ComponentExamples(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
+private fun ComponentExamples(onNavigate: () -> Unit, delivery: DeliveryValues, onDelivery: (DeliveryValues) -> Unit,
+    onDeliveryPreview: () -> Unit, journey: JourneyValues, onJourney: (JourneyValues) -> Unit,
+    onJourneyRoute: (Int) -> Unit, activity: ActivityPreviewValues, onActivityPreview: () -> Unit, modifier: Modifier = Modifier) {
     val t = FoundryTheme.tokens
     var group by rememberSaveable { mutableStateOf(ComponentGroup.ACTIONS) }
     var count by rememberSaveable { mutableIntStateOf(0) }
@@ -121,7 +177,7 @@ private fun ComponentExamples(onNavigate: () -> Unit, modifier: Modifier = Modif
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(t.space.page),
             verticalArrangement = Arrangement.spacedBy(t.space.section)) {
             PageHeader("Everyday interfaces", "Simple controls, useful compositions, and room for your own content.") {
-                Badge("33 building blocks", tone = MessageTone.INFO)
+                Badge("51 building blocks", tone = MessageTone.INFO)
             }
             Tabs("Component families", ComponentGroup.entries, group,
                 { group = it; notice = 0; help = false; options = false }, label = { it.label })
@@ -218,6 +274,9 @@ private fun ComponentExamples(onNavigate: () -> Unit, modifier: Modifier = Modif
                 ComponentGroup.CONTEXT -> ContextExamples(help, { help = it }, options, { options = it }, choices,
                     { choices++ }, { help = false; options = false; onNavigate() })
                 ComponentGroup.LAYOUT -> LayoutExamples(narrow, { narrow = it }, picked, { picked = it })
+                ComponentGroup.DETAILS -> DetailsExamples(delivery, onDelivery, onDeliveryPreview)
+                ComponentGroup.JOURNEYS -> JourneyExamples(journey, onJourney, onJourneyRoute)
+                ComponentGroup.ACTIVITY -> ActivityExamples(activity, onActivityPreview)
             }
         }
     }

@@ -139,3 +139,72 @@ not evidence of persisted storage or an implemented account feature.
 The native UI/app walkthroughs from reading step 20 link actual implementations
 and checks. Next: which product needs a lazy collection, which needs an app rail,
 and which detail route needs independent saved state instead of a simple example?
+
+## Collapsed drafts and detail viewports — 2026-10-08
+
+A disclosure controls visibility, not the lifetime of important edits. Place the
+note draft above its revealed content, pass native values/bindings down, and let
+collapse change only expansion. Native visibility animations may remove child
+composition after exit. Retaining edits by accident inside a hidden widget is
+not a cross-platform state policy. Focus also needs a caller decision when a
+field leaves the active interface.
+
+A bounded detail composition separates header, flexible body and action region.
+The body can scroll while actions remain outside its scroll range. The action
+bar supplies surface/copy/slots; it does not pin itself or start operations.
+Viewport and draft ownership are separate: a different route can consume the
+same parent-owned draft without moving that draft into a reusable shell.
+
+Example: choose Compact, increase copies from 0 to 2, edit a delivery note and
+collapse it. Reopen and the note remains. Open the detail preview and the same
+values appear with persistent actions. Apply changes one local counter; Reset
+returns the draft to defaults while preserving that counter. Neither action
+proves an export or network write happened. Actual native tests cover retained
+editing, explicit actions and footer geometry; comprehensive accessibility and
+physical-device behavior remain separate.
+
+Numeric UI controls need explicit endpoint policy. A positive step can overshoot
+an endpoint or overflow its native integer before clamping. Saturating to the
+endpoint supports a partial final step, while native checked/widened arithmetic
+keeps the intermediate result valid. A domain with a fixed quantity lattice must
+validate that policy separately. Read native language notes from reading step 21.
+Next: which draft should be discarded on exit, and which real command needs a
+confirmed receipt before its action region can show success?
+
+## Input drafts and journey steps — 2026-10-08
+
+Claim: a field's editing mechanism, a draft's lifetime and a journey's completion
+policy need separate owners even when they appear on the same screen.
+
+Origin: the sixth component batch adds native password/multiline input, passive
+requirements/progress and account/onboarding layouts. Native module walkthroughs
+link source and executed checks; this section explains the boundary.
+
+A masked field changes presentation without removing its underlying value.
+The component should not choose credential storage or save every draft. The
+Android exemplar deliberately keeps password state ephemeral and profile text
+saveable; Swift uses view-local bindings. Neither is durable account state.
+Draft lifetime is a feature choice independent of keyboard or validation copy.
+
+A requirement list receives evaluated values; a step indicator receives statuses.
+Both remain passive. The feature owns whether an empty note blocks Next, whether
+Previous preserves edits, and when Finish becomes disabled. This permits the
+same components to serve profile setup, checkout, permissions or a device setup
+flow with different admission and command policies.
+
+For example, the gallery shares one introduction across its form and three
+onboarding steps. Changing page identity resets scrolling; the introduction
+survives because it lives above the page. Previous/Restart preserve preferences.
+Finish changes a local count only after an explicit action; passive progress
+never dispatches the action itself. A real write would need the existing
+mutation boundary rather than treating a completed visual step as persistence.
+
+AuthShell scrolls the whole account composition, including its footer.
+OnboardingPage reserves a concise action region outside its scroll. These are
+layout choices, not routing or identity providers. Both require sensible native
+insets and viewport constraints from the host. Next: which workflow needs a
+resumable draft, and which step needs remote admission before advancement?
+
+Read [Swift native mechanisms](../../frontend/swift/notes/substrate/swiftui-rich-input-and-journey-pages.md)
+and [Compose native mechanisms](../../frontend/kotlin/notes/substrate/compose-rich-input-and-journey-pages.md),
+then [usage](../../docs/blueprints/ui-components.md#rich-input-and-onboarding).

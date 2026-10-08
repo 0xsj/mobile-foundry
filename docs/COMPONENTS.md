@@ -58,13 +58,31 @@ families stay within the existing UI package/module.
 | `Layout/Container` / `layout/container` | ContentContainer: centered readable bounds including configurable insets. |
 | `Layout/Grid` / `layout/grid` | AdaptiveGrid: small eager compositions reflowing with width and text size. |
 | `Layout/AspectRatio` / `layout/aspectratio` | MediaFrame: ratio-controlled clipped media slot. |
+| `Forms/Chip` / `forms/chip` | ChoiceChip: compact caller-controlled selection and disabled state. |
+| `Forms/Stepper` / `forms/stepper` | ValueStepper: bounded integer controls, supplied copy and explicit endpoint clamping. |
+| `Patterns/Disclosure` / `patterns/disclosure` | DisclosureSection: full-header expansion and interactive content slot. |
+| `Display/KeyValue` / `display/keyvalue` | KeyValueRow: adaptive passive label/value/detail copy. |
+| `Patterns/ActionBar` / `patterns/actionbar` | ActionBar: floating summary/action composition; host owns placement. |
+| `Shells/DetailShell` / `shells/detailshell` | DetailShell: bounded header, flexible body and persistent action regions. |
+| `Forms/Password` / `forms/password` | PasswordField / PasswordPurpose: native obscured input and current/new autofill purpose. |
+| `Forms/Multiline` / `forms/multiline` | MultilineField: native growing text input with bounded visible lines. |
+| `Feedback/ValidationChecklist` / `feedback/validationchecklist` | ValidationChecklist / ValidationItem: passive caller-evaluated requirements. |
+| `Navigation/StepIndicator` / `navigation/stepindicator` | StepIndicator / StepItem / StepStatus: passive ordered progress with supplied statuses. |
+| `Patterns/OnboardingPage` / `patterns/onboardingpage` | OnboardingPage: scrolling artwork/copy/content and separate actions. |
+| `Shells/AuthShell` / `shells/authshell` | AuthShell: readable scrolling header/form/footer layout. |
+| `Patterns/SectionHeader` / `patterns/sectionheader` | SectionHeader: compact heading, supporting copy and independent action slot. |
+| `Display/AvatarGroup` / `display/avatargroup` | AvatarGroup: bounded passive avatar slots, supplied overflow copy and one accessible summary. |
+| `Display/TimelineItem` / `display/timelineitem` | TimelineItem: decorative marker/connector beside supplied update content. |
+| `Display/ExpandableText` / `display/expandabletext` | ExpandableText: caller-controlled long-copy disclosure. |
+| `Patterns/RefreshContainer` / `patterns/refreshcontainer` | RefreshContainer: native refresh adapter around caller-supplied scrolling content. |
+| `Feedback/LoadMore` / `feedback/loadmore` | LoadMoreFooter / LoadMorePhase: explicit idle/loading/failed/exhausted pagination projection. |
 
 Component APIs and their helper types have no Foundry prefix. Existing controls
 are LabeledTextField, SubmitButton, Surface, Backdrop, TabBar and TabItem.
 See [usage examples](blueprints/ui-components.md#using-the-apis) and
 [behavior](../contracts/behavior/ui-components.md). Open Studio → Open catalog →
 Components for interactive Actions, Content, Patterns, Controls and Overlays
-previews, with Display, Feedback, Collections, Context and Layout examples.
+previews, with Display, Feedback, Collections, Context, Layout, Details, Journeys and Activity examples.
 Details and removal examples reuse the shared overlay wrappers.
 
 ## Reserved leaves
@@ -76,8 +94,6 @@ Details and removal examples reuse the shared overlay wrappers.
 | `Navigation/TabBar` | `navigation/tabbar` | Top-level destination items and selected state. Kotlin is implemented in this slice; Swift uses native app chrome. |
 | `Navigation/NavigationRail` | `navigation/navigationrail` | Future larger-screen destination rail. |
 | `Shells/AppShell` | `shells/appshell` | Reusable layout slots after another app needs the shell. |
-| `Shells/AuthShell` | `shells/authshell` | Future sign-in/onboarding layout; no auth implementation. |
-| `Shells/DetailShell` | `shells/detailshell` | Detail header, content and action regions. |
 
 ## Ownership
 

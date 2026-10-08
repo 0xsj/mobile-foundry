@@ -580,3 +580,136 @@ also exercises accessibility3 and RTL; this does not establish a complete galler
 VoiceOver, localization, keyboard, iPad/rotation or physical-device audit.
 Android independently passes fourteen focused component/geometry checks. Both
 native consumers build and four UI package tests pass per platform.
+
+## Details and delivery preview gallery
+
+Added 2026-10-08. [ComponentCatalogView](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+adds Details, for eleven families and 39 building blocks. Its DeliveryValues
+binding stays above the family switch and native destination.
+[DetailsExamples](../../../../apps/FoundryCatalog/Sources/Components/DetailsExamples.swift)
+composes format chips, a bounded copy count, disclosure editing and passive
+detail rows. The disabled Print choice is illustrative; the controls update a
+local preview. A feature-owned FocusState clears when the note collapses or
+Done editing note is activated.
+
+[DeliveryPreviewView](../../../../apps/FoundryCatalog/Sources/Components/DeliveryPreviewView.swift)
+uses DetailShell with a concise header, an explicitly scrolling body and an
+ActionBar outside the scroll. Apply requires copies greater than zero and only
+increments a local count. Reset restores the draft while retaining that count.
+The route shares the same binding, so collapsing a note or returning to the
+gallery does not intentionally discard the draft. No export or persistence is
+implemented by these examples.
+
+Read [UI mechanics](../../packages/FoundryUI/README.md#choices-disclosure-and-detail-composition),
+[native disclosure/layout](../../../substrate/swiftui-layout-and-contextual-presentation.md#disclosure-and-bounded-detail-regions--2026-10-08),
+and [bounded arithmetic](../../../language/swift-bounded-integer-arithmetic.md).
+[DetailShellLayoutTests](../../../../apps/FoundryCatalog/Tests/DetailShellLayoutTests.swift)
+adds one native hosted geometry check: scrolling moves body records while the
+action region stays fixed, and accessibility3 grows rows without overlapping
+header/footer. All 21 iOS app checks pass on iPhone 17 Pro/iOS 26.2; four macOS
+UI token/material checks pass. Android independently passes nineteen focused
+component checks, including actual edited-note retention and extreme integers.
+
+Manual iOS execution confirms selected/disabled chips, 0 → 2 → 4 → 5 clamping
+with More disabled at five, disclosure expansion/collapse, detail navigation,
+body scrolling with visible footer, Apply increment and Reset retaining the
+count while disabling Apply at zero. This did not include manual typed-note or
+extreme-Int execution on iOS. A CLI screenshot initially exposed black native
+navigation/status text above the dark themed body. The destination now sets
+native toolbar background/visibility/color scheme explicitly. A fresh build,
+install and inspected CLI capture confirm readable light navigation/status
+text on the dark destination. This app-only styling correction follows the
+21-check run; those tests measure the shell rather than toolbar appearance.
+
+These observations do not establish complete VoiceOver, keyboard avoidance,
+iPad/rotation or physical-device coverage. Next: how should a real delivery
+command validate copies and own pending/confirmed state beyond this local preview?
+
+## Journeys gallery
+
+Added 2026-10-08. [ComponentCatalogView](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+adds Journeys, for twelve families and 45 building blocks.
+[JourneyExamples](../../../../apps/FoundryCatalog/Sources/Components/JourneyExamples.swift)
+hoists password, introduction, enabled/preference values, step/completion and
+local counts above the family/destination. Password and note fields are native;
+checklist values derive from nonempty password/nonblank note, without claiming
+real account validation. Continue account preview only increments a local count.
+
+The account destination uses AuthShell, with native navigation appearance scoped
+to the preview theme. OnboardingPage displays three caller-projected progress
+rows and profile/preferences/review content. A blank note blocks Next at step
+zero. Previous/Restart preserve draft/preferences; explicit Finish increments
+once and disables itself until navigation/restart. Focus clears before changing
+steps. The page id changes with the step to reset body scrolling, while values
+remain above that identity. Native Back returns to the gallery.
+
+Read [the UI walkthrough](../../packages/FoundryUI/README.md#rich-input-and-journey-pages),
+[native mechanics](../../../substrate/swiftui-rich-input-and-journey-pages.md)
+and [shared ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#input-drafts-and-journey-steps--2026-10-08).
+[JourneyFieldTests](../../../../apps/FoundryCatalog/Tests/JourneyFieldTests.swift)
+adds hosted native-input/geometry evidence; Android independently executes
+keyboard editing, step actions and saved-state behavior. This gallery does not
+implement credential storage, sessions or a durable profile. Next: which real
+mutation should govern advancement beyond local readiness?
+
+Final evidence, 2026-10-08/09: both consumers build, all 22 iOS app checks and
+nineteen focused Android component checks pass, with four UI token/material
+checks per platform. The new Swift probe initially reported zero height because
+its preference reduction overwrote the measurement with default contributions.
+Using max retains the one measured height. The passing case inspects a native
+secure UITextField, observes growth from two to four visible lines, verifies a
+30-line draft keeps a capped viewport, and observes larger accessibility3 text.
+This correction changes the test probe, not production input behavior.
+
+Manual iPhone 17 Pro/iOS 26.2 checks confirm obscured example input and passive
+requirement changes, a three-line native draft retained across route changes,
+Previous/Restart retaining values, update preference retention, explicit Finish
+with disabled repeat, returned finish count one, and account count one after
+Continue. CLI screenshots were inspected for dark native navigation, native
+obscured input, readable account composition and onboarding actions outside the
+scrolling body. Hardware Return/Option-Return and clipboard/AX limitations are
+recorded in the substrate note. Full VoiceOver, software-keyboard/IME avoidance,
+iPad/rotation, provider autofill and physical-device coverage remain open.
+
+## Activity gallery
+
+Added 2026-10-09. Activity is the thirteenth family, with 51 building blocks.
+[Catalog ownership](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift) retains preview values through family/route
+changes. [ActivityExamples](../../../../apps/FoundryCatalog/Sources/Components/ActivityExamples.swift) contains passive collaborator artwork,
+an expandable summary and the separate bounded native List/LazyColumn screen.
+The observable app model stays above NavigationLink in ComponentExamples.
+A page request generation drives a native view task; refresh awaits the model.
+Cancellation checks and a revision guard prevent stale completion after leaving.
+An explicit refresh button owns a second view task with the same admission.
+
+The local fixture starts with three rows, admits pages of three up to nine,
+retains rows/expansion on failure, consumes Fail next page once and retries only
+on action. Refresh resets to the first page and retains surviving expanded IDs.
+Refresh/page work cannot overlap. Its 450 ms delay is a visibility aid, not
+network evidence. No persistence, cache or domain paging port is added.
+
+Read [UI mechanics](../../packages/FoundryUI/README.md#activity-and-paged-collections),
+[native lifetime](../../../substrate/swiftui-refresh-and-lazy-activity.md)
+and [shared reasoning](../../../../../../notes/patterns/refresh-and-pagination-ownership.md).
+[Native activity checks](../../../../apps/FoundryCatalog/Tests/ActivityPreviewTests.swift) cover the actual fixture boundaries.
+
+Final evidence, 2026-10-09: all 27 iOS app checks pass, including five new
+ActivityPreviewTests. They execute failure/retry/exhaustion, duplicate admission,
+refresh expansion retention, cancelled refresh/page work and late completion
+invalidation. A hosted native Text check measures expansion/collapse and
+accessibility3 geometry. A hosted UIRefreshControl check holds the async action
+at a gate, verifies the spinner remains active, releases work and verifies the
+spinner stops. This is programmatic native control activation, not a pull-gesture
+assertion. The first test build needed the app module's testable import.
+
+Manual simulator inspection confirms light/dark feed layout and dark toolbar,
+full collapsed-copy accessibility text, one collaborator summary, explicit
+refresh count, expansion and Back/reopen retention. CUA drag attempts did not
+advance refresh and are not counted as gesture evidence. The native control
+lifetime test passes; physical pull behavior remains outside the Swift manual
+observation. Android separately executes a pull gesture on its native adapter.
+
+Both native consumers build. Four UI token/material unit checks per platform
+pass, and the notes checker passes. No complete VoiceOver, localization,
+physical-device, real-network or macOS runtime audit is claimed. Next: choose a
+real feed's cursor/merge and cached-window contract before introducing a provider.

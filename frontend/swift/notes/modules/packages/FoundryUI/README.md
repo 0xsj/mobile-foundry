@@ -321,3 +321,119 @@ mirrors custom Layout positions, so no explicit reversal is retained. This is a
 native execution finding supported by the framework reference, not an inferred
 promise from a passing formula test. Manual gallery evidence stays in the app
 walkthrough; broad device/accessibility coverage remains open.
+
+## Choices disclosure and detail composition
+
+Added 2026-10-08. The fifth component batch adds six APIs, bringing the total to
+39. Read [ChoiceChip](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/Chip/ChoiceChip.swift),
+[ValueStepper](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/Stepper/ValueStepper.swift),
+[DisclosureSection](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/Disclosure/DisclosureSection.swift),
+[KeyValueRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/KeyValue/KeyValueRow.swift),
+[ActionBar](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/ActionBar/ActionBar.swift),
+and [DetailShell](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Shells/DetailShell/DetailShell.swift).
+The components keep values, formatted copy, routes and effects with their caller.
+
+ChoiceChip is a native button with selected semantics and a passive optional
+leading slot. ValueStepper uses independently labeled native buttons, validates
+its range/current value/positive step, and checks integer overflow before
+clamping. Its endpoint policy permits a shorter final step: 0...5 by two becomes
+0, 2, 4, 5. Read [bounded integer arithmetic](../../../language/swift-bounded-integer-arithmetic.md)
+for why clamping the result of ordinary addition is insufficient.
+
+DisclosureSection controls a native button header and conditional content. The
+caller hoists an editable draft above that conditional branch. Motion reduction
+disables its animation; focus dismissal remains feature policy. KeyValueRow is
+passive combined copy, using native fitting or stacked text rather than truncating
+a long value. ActionBar is a floating surface with supplied summary/actions;
+its placement determines whether it stays visible.
+
+DetailShell reserves header and action regions around a flexible body inside a
+bounded screen. The consumer supplies body scrolling, native navigation and
+insets. Do not place the whole shell in an unbounded vertical scroller. Read
+[native layout and disclosure](../../../substrate/swiftui-layout-and-contextual-presentation.md#disclosure-and-bounded-detail-regions--2026-10-08),
+[shared ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#collapsed-drafts-and-detail-viewports--2026-10-08),
+and [usage examples](../../../../../../docs/blueprints/ui-components.md#choices-disclosure-and-detail-screens).
+
+[DetailShellLayoutTests](../../../../apps/FoundryCatalog/Tests/DetailShellLayoutTests.swift)
+measures actual hosted header/body/footer bounds before and after native scrolling
+and accessibility3 text. All 21 iOS app checks pass; the macOS package compiles
+and its four existing token/material tests pass. App interaction and navigation
+appearance evidence is recorded in the catalog walkthrough. Next: which feature
+needs step values on a fixed lattice, and when should large header/actions move
+into the scrolling region instead of staying pinned?
+
+## Rich input and journey pages
+
+Added 2026-10-08. Six components bring the catalog batches to 45 building blocks.
+Read [PasswordField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/Password/PasswordField.swift),
+[MultilineField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/Multiline/MultilineField.swift),
+[ValidationChecklist](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Feedback/ValidationChecklist/ValidationChecklist.swift),
+[StepIndicator](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/StepIndicator/StepIndicator.swift),
+[OnboardingPage](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/OnboardingPage/OnboardingPage.swift)
+and [AuthShell](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Shells/AuthShell/AuthShell.swift).
+
+PasswordField wraps SecureField, with iOS current/new content-type metadata and
+caller bindings/focus/submit. MultilineField uses a vertical native TextField and
+positive visible line range. Neither owns validation or character truncation.
+ValidationChecklist and StepIndicator receive unique IDs, supplied states and
+accessible descriptions. Their symbols are decorative; rows are passive, not
+checkboxes or navigable tabs. Empty lists and an entirely completed journey are
+valid projections. No automatic action follows a changed status.
+
+AuthShell scrolls readable header/form/footer slots together. OnboardingPage
+reuses DetailShell to scroll artwork/copy/content while reserving actions. Its
+caller controls page identity, safe areas, focus and routing. Read
+[native input and identity](../../../substrate/swiftui-rich-input-and-journey-pages.md),
+[shared ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#input-drafts-and-journey-steps--2026-10-08)
+and [usage](../../../../../../docs/blueprints/ui-components.md#rich-input-and-onboarding).
+
+[JourneyFieldTests](../../../../apps/FoundryCatalog/Tests/JourneyFieldTests.swift)
+inspects the actual hosted native secure-input trait and measures multiline
+viewport growth, its line cap and larger text without changing the retained
+long draft. The catalog walkthrough records final execution and manual limits.
+Next: which real editor needs TextEditor instead of a growing field, and which
+account screen needs a different footer placement?
+
+The final native consumer run passes all 22 iOS checks, including the added input
+case; macOS package compilation and its four existing UI tests pass. The app
+walkthrough explains the probe correction, manual keyboard differences and
+limits. Passing layout checks do not establish complete keyboard/accessibility
+or real provider autofill behavior.
+
+## Activity and paged collections
+
+Added 2026-10-09 for the seventh batch. New component leaves:
+
+- [SectionHeader](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/SectionHeader/SectionHeader.swift).
+- [AvatarGroup](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/AvatarGroup/AvatarGroup.swift).
+- [TimelineItem](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/TimelineItem/TimelineItem.swift).
+- [ExpandableText](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/ExpandableText/ExpandableText.swift).
+- [RefreshContainer](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/RefreshContainer/RefreshContainer.swift).
+- [LoadMoreFooter](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Feedback/LoadMore/LoadMoreFooter.swift).
+
+SectionHeader supplies compact reading structure and independent actions.
+AvatarGroup receives stable identities and passive slots, limits visible artwork
+and exposes one complete supplied summary. TimelineItem draws only a decorative
+marker/connector; supplied content can contain native controls. ExpandableText
+receives the expanded flag and explicit labels for known long copy. It changes
+native text limits without guessing overflow or storing important row state.
+LoadMoreFooter projects idle/loading/failed/exhausted phases; only enabled
+idle/failed actions dispatch. It never loads on appearance.
+
+RefreshContainer attaches native refreshable and directly awaits the supplied
+async callback. It creates neither a scrolling container nor a request/task.
+The caller must supply supported scrolling content, bounded layout, admission,
+failure presentation and cancellation policy. The catalog supplies List.
+
+Read [native mechanics](../../../substrate/swiftui-refresh-and-lazy-activity.md),
+[shared ownership](../../../../../../notes/patterns/refresh-and-pagination-ownership.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#activity-feeds-and-pagination).
+[Native consumer checks](../../../../apps/FoundryCatalog/Tests/ActivityPreviewTests.swift) exercise the operation/lifetime and disclosure
+boundaries; the app walkthrough records final evidence and limits. Next: what
+real feed needs a domain paging contract rather than more UI abstraction?
+
+Final evidence for this batch, 2026-10-09: both consumers build, 27 iOS app
+checks pass, four new Android activity checks pass, and nineteen existing Android
+component regressions pass. Four UI unit checks per platform and notes validation
+pass. The app walkthrough separates native refresh-control/gesture evidence,
+manual visual observations, test-helper corrections and coverage limits.
