@@ -3,7 +3,7 @@
   import MetalKit
   import SwiftUI
 
-  /// Native attachment shared by image and mesh previews. GPU assets stay private.
+  /// Native attachment shared by image, mesh and compositor previews. GPU assets stay private.
   public struct MetalPreviewSurface: UIViewRepresentable {
     public let content: PreviewContent
     public let quality: EffectQuality
@@ -11,10 +11,12 @@
     public let onGesture: (CanvasGesture) -> Void
     public let onEvent: (EffectEvent) -> Void
     public let onUnexpectedError: (any Error) -> Void
+    public let onProfile: (GraphicsProfile) -> Void
     public init(
       content: PreviewContent, quality: EffectQuality = .balanced, running: Bool = false,
       onGesture: @escaping (CanvasGesture) -> Void, onEvent: @escaping (EffectEvent) -> Void,
-      onUnexpectedError: @escaping (any Error) -> Void
+      onUnexpectedError: @escaping (any Error) -> Void,
+      onProfile: @escaping (GraphicsProfile) -> Void = { _ in }
     ) {
       self.content = content
       self.quality = quality
@@ -22,6 +24,7 @@
       self.onGesture = onGesture
       self.onEvent = onEvent
       self.onUnexpectedError = onUnexpectedError
+      self.onProfile = onProfile
     }
     public func makeCoordinator() -> Coordinator { Coordinator() }
     public func sizeThatFits(_ proposal: ProposedViewSize, uiView: MTKView, context: Context)
@@ -45,6 +48,7 @@
       let owner = context.coordinator
       owner.onEvent = onEvent
       owner.onUnexpectedError = onUnexpectedError
+      owner.onProfile = onProfile
       guard let device = view.device else {
         owner.publish(
           .failed(
@@ -66,6 +70,7 @@
     public func updateUIView(_ view: MTKView, context: Context) {
       context.coordinator.onEvent = onEvent
       context.coordinator.onUnexpectedError = onUnexpectedError
+      context.coordinator.onProfile = onProfile
       (view as? PreviewMetalView)?.onGesture = onGesture
       context.coordinator.renderer?.update(
         view, content: content, quality: quality, running: running)
@@ -84,6 +89,7 @@
       fileprivate var disposed = false
       fileprivate var onEvent: (EffectEvent) -> Void = { _ in }
       fileprivate var onUnexpectedError: (any Error) -> Void = { _ in }
+      fileprivate var onProfile: (GraphicsProfile) -> Void = { _ in }
       fileprivate func publish(_ event: EffectEvent) {
         Task { @MainActor [weak self] in
           guard let self, !disposed else { return }
@@ -210,18 +216,60 @@
       guard !failed, let owner, !owner.disposed, let content, view.bounds.width > 0,
         view.bounds.height > 0,
         let pass = view.currentRenderPassDescriptor, let drawable = view.currentDrawable,
-        let command = queue.makeCommandBuffer(),
-        let encoder = command.makeRenderCommandEncoder(descriptor: pass)
+        let command = queue.makeCommandBuffer()
       else { return }
       let now = CACurrentMediaTime()
+      do {
+        try pipeline.preprocess(
+          command, width: drawable.texture.width, height: drawable.texture.height, content: content)
+      } catch {
+        failed = true
+        owner.fail(error)
+        return
+      }
+      guard let encoder = command.makeRenderCommandEncoder(descriptor: pass) else { return }
       pipeline.encode(
         encoder, width: drawable.texture.width, height: drawable.texture.height,
         time: clock.frame(at: now, running: running), content: content)
       encoder.endEncoding()
+      let report = !running || now - reportTime >= 1
+      if let compositor = pipeline.compositor {
+        let width = drawable.texture.width
+        let height = drawable.texture.height
+        let frame = frames + 1
+        let uploads = compositor.uploads
+        let allocations = compositor.targetAllocations
+        let inputBytes = compositor.inputBytes
+        let targetBytes = compositor.targetBytes
+        let cpuMs = (CACurrentMediaTime() - now) * 1000
+        command.addCompletedHandler { [weak owner] buffer in
+          let milliseconds =
+            buffer.status == .completed && buffer.gpuStartTime > 0
+              && buffer.gpuEndTime > buffer.gpuStartTime
+            ? (buffer.gpuEndTime - buffer.gpuStartTime) * 1000 : nil
+          let error = buffer.error
+          Task { @MainActor [weak owner] in
+            guard let owner, !owner.disposed else { return }
+            if let error {
+              owner.fail(error)
+              return
+            }
+            guard report else { return }
+            owner.onProfile(
+              .init(
+                frame: frame, width: width, height: height, uploads: uploads,
+                targetAllocations: allocations, inputTextureBytes: inputBytes,
+                offscreenTextureBytes: targetBytes,
+                cpuEncodeMilliseconds: cpuMs, gpuMilliseconds: milliseconds,
+                gpuTiming: milliseconds == nil
+                  ? "GPU timestamps unavailable" : "Metal command buffer"))
+          }
+        }
+      }
       command.present(drawable)
       command.commit()
       frames += 1
-      if !running || now - reportTime >= 1 {
+      if report {
         owner.publish(
           .statistics(
             .init(

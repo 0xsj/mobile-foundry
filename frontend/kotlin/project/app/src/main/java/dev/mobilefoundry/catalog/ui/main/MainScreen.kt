@@ -1,5 +1,7 @@
 package dev.mobilefoundry.catalog.ui.main
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Switch
@@ -20,6 +22,7 @@ import dev.mobilefoundry.catalog.QueryCatalog
 import dev.mobilefoundry.catalog.TokensCatalog
 import dev.mobilefoundry.catalog.FormsCatalog
 import dev.mobilefoundry.catalog.GPUEffectsCatalog
+import dev.mobilefoundry.catalog.CompositorStudioCatalog
 import dev.mobilefoundry.catalog.ImageStudioCatalog
 import dev.mobilefoundry.catalog.ProductStudioCatalog
 import dev.mobilefoundry.catalog.data.DefaultDataRepository
@@ -32,9 +35,11 @@ fun MainScreen(
   viewModel: MainScreenViewModel = viewModel { MainScreenViewModel(DefaultDataRepository()) },
   glassTheme: Boolean = false,
   onGlassThemeChange: (Boolean) -> Unit = {},
+  onExit: (() -> Unit)? = null,
 ) {
   val state by viewModel.uiState.collectAsStateWithLifecycle()
-  Column(modifier) {
+  Column(modifier.verticalScroll(rememberScrollState())) {
+    if (onExit != null) Button(onClick = onExit) { Text("Close catalog") }
     Text("Mobile Foundry")
     Row {
       Text("Glass surfaces")
@@ -44,6 +49,7 @@ fun MainScreen(
     Button(onClick = { onItemClick(TokensCatalog) }) { Text("Tokens") }
     Button(onClick = { onItemClick(FormsCatalog) }) { Text("Forms and mutations") }
     Button(onClick = { onItemClick(GPUEffectsCatalog) }) { Text("GPU effects") }
+    Button(onClick = { onItemClick(CompositorStudioCatalog) }) { Text("Compositor studio") }
     Button(onClick = { onItemClick(ImageStudioCatalog) }) { Text("Image studio") }
     Button(onClick = { onItemClick(ProductStudioCatalog) }) { Text("Product studio") }
     Button(onClick = { onItemClick(HealthCatalog) }) { Text("HTTP health") }

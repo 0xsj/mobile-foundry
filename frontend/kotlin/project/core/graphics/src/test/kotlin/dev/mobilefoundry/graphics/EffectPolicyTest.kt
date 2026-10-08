@@ -6,6 +6,31 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class EffectPolicyTest {
+    @Test fun suppliedContentIsBoundedAndOwned() {
+        val fixture = fixture()
+        fixture.getValue("kinds").jsonObject.forEach { (name, index) ->
+            assertEquals(index.jsonPrimitive.float, EffectKind.valueOf(name.uppercase()).shaderIndex, 0f)
+        }
+        fixture.getValue("progress").jsonArray.forEach { entry ->
+            val row = entry.jsonObject
+            assertEquals(row.getValue("expected").jsonPrimitive.float, EffectSettings.make(progress = row.getValue("input").jsonPrimitive.float).progress, 0f)
+        }
+        assertEquals(.5f, EffectSettings.make(progress = Float.NaN).progress, 0f)
+        fixture.getValue("samples").jsonArray.forEach { entry ->
+            val row = entry.jsonObject
+            val sample = EffectFieldSample.make(EffectPoint.make(), row.getValue("weight").jsonPrimitive.float, row.getValue("radius").jsonPrimitive.float)
+            assertEquals(row.getValue("expectedWeight").jsonPrimitive.float, sample.weight, 0f)
+            assertEquals(row.getValue("expectedRadius").jsonPrimitive.float, sample.radius, 0f)
+        }
+        val invalid = EffectFieldSample.make(EffectPoint.make(), Float.POSITIVE_INFINITY, Float.NaN)
+        assertEquals(0f, invalid.weight, 0f); assertEquals(.18f, invalid.radius, 0f)
+        val source = MutableList(20) { EffectFieldSample.make(EffectPoint.make()) }
+        val settings = EffectSettings.make(samples = source)
+        source.clear()
+        assertEquals(12, settings.samples.size)
+        assertThrows(UnsupportedOperationException::class.java) { (settings.samples as MutableList).clear() }
+        assertTrue(EffectSettings.make().samples.isEmpty())
+    }
     private fun fixture() = Json.parseToJsonElement(File(System.getProperty("foundry.graphics.fixtures"), "effects.json").readText()).jsonObject
     @Test fun sharedInputAndResolutionBudgetsAreBounded() {
         for (entry in fixture().getValue("points").jsonArray) {

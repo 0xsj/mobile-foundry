@@ -8,6 +8,7 @@ private fun bounded(value: Float, lower: Float, upper: Float, fallback: Float) =
 
 /** Owned opaque top-left sRGB RGBA8 pixels. Reference identity is the texture cache key. */
 class RasterImage private constructor(val width: Int, val height: Int, private val rgba: ByteArray) {
+    internal fun linearBuffer() = linearBuffer(rgba)
     internal fun buffer(): ByteBuffer = ByteBuffer.allocateDirect(rgba.size).put(rgba).apply { position(0) }
     companion object {
         fun create(width: Int, height: Int, rgba: ByteArray): RasterImage? =
@@ -66,6 +67,7 @@ sealed interface CanvasGesture {
     data class Zoom(val factor: Float) : CanvasGesture
 }
 sealed interface PreviewContent {
+    data class Composite(val base: RasterImage, val overlay: AlphaImage, val settings: CompositeSettings = CompositeSettings.make()) : PreviewContent
     data class Image(val image: RasterImage, val adjustments: ImageAdjustments = ImageAdjustments.make(), val viewport: ImageViewport = ImageViewport.make(), val comparison: Float = .5f) : PreviewContent
     data class Product(val mesh: PreviewMesh, val camera: OrbitCamera = OrbitCamera.make(), val finish: ProductFinish = ProductFinish.PORCELAIN) : PreviewContent
 }

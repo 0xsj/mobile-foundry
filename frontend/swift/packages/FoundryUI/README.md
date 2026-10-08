@@ -19,3 +19,7 @@ Open **Tokens**, **Async UI patterns**, **Notes service seam**, or **Forms and m
 FoundryTheme also selects Solid/Glass surface styles. `FoundrySurface` keeps
 content panels opaque and adapts floating controls to native glass/material,
 with transparency reduction. See [surface themes](../../../../STYLES.md#swappable-surface-themes).
+
+See [the component map](../../../../docs/COMPONENTS.md) for the reserved empty
+catalog folders and intended contents. The four-tab prototype lives in app
+composition and uses native TabView rather than a reusable routing wrapper.

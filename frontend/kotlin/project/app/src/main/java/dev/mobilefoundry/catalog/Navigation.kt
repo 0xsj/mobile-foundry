@@ -1,5 +1,6 @@
 package dev.mobilefoundry.catalog
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
@@ -17,19 +18,23 @@ import dev.mobilefoundry.catalog.ui.query.QueryCatalogScreen
 import dev.mobilefoundry.catalog.ui.tokens.TokenCatalogScreen
 import dev.mobilefoundry.catalog.ui.forms.FormsCatalogScreen
 import dev.mobilefoundry.catalog.ui.graphics.GPUEffectsScreen
+import dev.mobilefoundry.catalog.ui.graphics.CompositorStudioScreen
 import dev.mobilefoundry.catalog.ui.graphics.ImageStudioScreen
 import dev.mobilefoundry.catalog.ui.graphics.ProductStudioScreen
 
 @Composable
-fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) -> Unit = {}) {
+fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) -> Unit = {}, onExit: (() -> Unit)? = null) {
   val backStack = rememberNavBackStack(Main)
 
   NavDisplay(
     backStack = backStack,
     entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator(), rememberViewModelStoreNavEntryDecorator()),
-    onBack = { backStack.removeLastOrNull() },
+    onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
     entryProvider =
       entryProvider {
+        entry<CompositorStudioCatalog> {
+          CompositorStudioScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
         entry<ImageStudioCatalog> {
           ImageStudioScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
         }
@@ -56,8 +61,9 @@ fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) ->
         }
         entry<Main> {
           MainScreen(onItemClick = { navKey -> backStack.add(navKey) }, modifier = Modifier.safeDrawingPadding().padding(16.dp),
-            glassTheme = glassTheme, onGlassThemeChange = onGlassThemeChange)
+            glassTheme = glassTheme, onGlassThemeChange = onGlassThemeChange, onExit = onExit)
         }
       },
   )
+  BackHandler(enabled = backStack.size == 1 && onExit != null) { onExit?.invoke() }
 }

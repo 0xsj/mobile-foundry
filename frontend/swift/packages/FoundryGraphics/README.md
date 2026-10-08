@@ -23,3 +23,18 @@ Read the [contract](../../../../contracts/behavior/gpu-effects.md),
 [walkthrough](../../notes/modules/packages/FoundryGraphics/README.md), and
 [Metal mechanics](../../notes/substrate/metalkit-surface-and-shader-lifetime.md).
 Submission counters are not GPU timings; physical-device profiling remains open.
+
+The **GPU effects** gallery also includes Flow (ambient), Material (reflective
+card), Liquid (supplied progress), Particles (finite replay/scrub), and Field
+(supplied density samples). EffectSettings admits progress and up to twelve
+owned EffectFieldSample values. Product meaning and Replay timing stay in the
+catalog; the graphics module owns drawing and GPU resources.
+
+**Compositor studio** adds AlphaImage and CompositeSettings to PreviewContent.
+Straight sRGB RGBA uploads convert to linear premultiplied pixels before masking,
+separable blur and final Normal/Multiply/Screen blend/glow. Three offscreen targets
+reuse their dimensions; edits reuse source uploads. The optional onProfile callback
+reports payload estimates and CPU encoding, plus completed Metal GPU intervals
+when available; GLES 2 explicitly has no GPU timing adapter. See the
+[contract](../../../../contracts/behavior/compositor.md) and
+[profiling protocol](../../../../docs/GRAPHICS-PROFILING.md).

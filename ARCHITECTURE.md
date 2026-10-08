@@ -169,6 +169,12 @@ and frame submission. Shared policies, native shader pixels, Android lifecycle
 and iOS hosted drawable checks are exercised. Physical-device performance remains
 unmeasured, so the broader graphics proof below is still incomplete.
 
+The [procedural expansion](contracts/behavior/gpu-effects.md#product-use-cases)
+also exercises ambient flow, a reflective material card, supplied liquid progress,
+a finite celebration playhead and a supplied scalar field. The feature owns
+completion/data/event meaning; shader time owns only decorative phase. These
+inputs reuse the existing native surface and bounded uniform upload.
+
 The [preview follow-up](contracts/behavior/graphics-previews.md) adds two concrete
 consumers: an image adjustment editor and a mesh product viewer. Owned opaque
 sRGB pixels or validated triangles enter the renderer alongside bounded edit,
@@ -177,6 +183,14 @@ across ordinary edits; context recreation rebuilds from CPU input. Catalogs own
 asset decoding and feature state. The internal triangle format is an exemplar,
 not a universal engine schema or general importer. Persistence, import/export
 and product-specific variant rules remain above this seam.
+
+The [compositor](contracts/behavior/compositor.md) extends the retained preview
+surface with straight RGBA admission, linear premultiplied upload, masking, blend
+modes and three offscreen targets for blur/glow. Renderers retain pass resources;
+features retain editable values. Optional profiles separate CPU encoding, completed
+Metal GPU intervals (when available), and estimated texture payload. GLES 2 GPU
+timing remains unavailable. The [device protocol](docs/GRAPHICS-PROFILING.md)
+defines future sustained measurements; no physical-device budget is established.
 
 Keep rendering integration optional for ordinary applications. Establish the
 boundary early with an interactive scene rather than introducing a complete

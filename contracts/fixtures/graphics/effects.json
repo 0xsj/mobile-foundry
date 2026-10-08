@@ -1,4 +1,11 @@
 {
+  "kinds": {"ripple":0,"orbit":1,"flow":2,"material":3,"liquid":4,"particles":5,"field":6},
+  "progress": [{"input":-2,"expected":0},{"input":0.42,"expected":0.42},{"input":3,"expected":1}],
+  "samples": [
+    {"weight":-1,"radius":0,"expectedWeight":0,"expectedRadius":0.03},
+    {"weight":2,"radius":1,"expectedWeight":1,"expectedRadius":0.5},
+    {"weight":0.7,"radius":0.2,"expectedWeight":0.7,"expectedRadius":0.2}
+  ],
   "points": [
     {"x":0.5,"y":0.5,"expectedX":0.5,"expectedY":0.5},
     {"x":-3,"y":9,"expectedX":0,"expectedY":1},

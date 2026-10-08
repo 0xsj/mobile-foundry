@@ -74,12 +74,20 @@ Components/Forms/SubmitButton/     components/forms/submitbutton/
 Components/Layout/Surface/        components/layout/surface/
 ```
 
-The [style guide](../STYLES.md) explains ownership and consumption. Add forms,
-display, layout, navigation, overlays, and shells as component families when
-their implementations arrive. Keep variants/configuration beside their component;
+The [style guide](../STYLES.md) explains ownership and consumption. The
+[component map](COMPONENTS.md) now reserves mirrored empty component leaves
+with .gitkeep across Forms, Display, Layout, Feedback, Navigation, Overlays,
+Shells and Patterns. Reserved directories have no implementation. Kotlin's
+Navigation/TabBar counterpart is implemented; Swift uses native app TabView.
+Keep variants/configuration beside their component;
 do not create a build module per family. App-owned token and component galleries
 live under `Sources/Tokens` on Swift and `ui/tokens` on Kotlin. Domain state,
 service selection, and asynchronous orchestration remain outside these folders.
+
+The four-tab prototype lives in Swift app `Sources/Shell` and Kotlin app
+`ui/shell`. Studio opens the existing catalog separately; Account exposes the
+app material choice. Route/presentation ownership stays in the app even though
+the future reusable AppShell component folder is reserved.
 
 ## Capability names
 

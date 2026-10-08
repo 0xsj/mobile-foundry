@@ -6,7 +6,29 @@ private struct Cases: Decodable {
     struct Point: Decodable { let x, y, expectedX, expectedY: Float }
     struct Size: Decodable { let quality: String; let width, height: Double; let expectedWidth, expectedHeight: Int? }
     struct Frame: Decodable { let now, elapsed: Double; let running: Bool }
+    struct Progress: Decodable { let input, expected: Float }
+    struct Sample: Decodable { let weight, radius, expectedWeight, expectedRadius: Float }
+    let kinds: [String: Float]; let progress: [Progress]; let samples: [Sample]
     let points: [Point]; let sizes: [Size]; let clock: [Frame]
+}
+
+@Test func suppliedContentIsBoundedAndOwned() throws {
+    let fixture = try cases()
+    for (name, index) in fixture.kinds { #expect(EffectKind(rawValue: name)?.shaderIndex == index) }
+    for row in fixture.progress { #expect(EffectSettings(progress: row.input).progress == row.expected) }
+    #expect(EffectSettings(progress: .nan).progress == 0.5)
+    for row in fixture.samples {
+        let sample = EffectFieldSample(point: .init(), weight: row.weight, radius: row.radius)
+        #expect(sample.weight == row.expectedWeight && sample.radius == row.expectedRadius)
+    }
+    let sample = EffectFieldSample(point: .init(), weight: .infinity, radius: .nan)
+    #expect(sample.weight == 0 && sample.radius == 0.18)
+    var source = [EffectFieldSample](repeating: .init(point: .init()), count: 20)
+    let settings = EffectSettings(samples: source)
+    source.removeAll()
+    #expect(settings.samples.count == 12)
+    #expect(settings.samples.first?.weight == 1)
+    #expect(EffectSettings().samples.isEmpty)
 }
 private func cases() throws -> Cases {
     var root = URL(fileURLWithPath: #filePath)

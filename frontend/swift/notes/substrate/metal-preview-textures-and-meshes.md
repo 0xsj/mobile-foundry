@@ -68,3 +68,26 @@ Primary references: [Metal texture sRGB option](https://developer.apple.com/docu
 [Model I/O](https://developer.apple.com/documentation/modelio), and
 [glTF material specification](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html).
 Model I/O is a future import option; this implementation reads the internal JSON.
+
+## Compositor passes and completed timing
+
+Observed 2026-10-08 with Swift 6 and Xcode/iOS Simulator SDK 26.2; deployment stays
+iOS 17. CompositorPipeline compiles lazily in the retained preview pipeline.
+Its first three render encoders write separate RGBA8Unorm shader-readable targets;
+the final encoder writes BGRA8Unorm with the preview's existing depth attachment.
+Every pass fills its target, so intermediate loadAction is dontCare and storeAction
+is store. Sampling uses a linear clamp sampler; all textures follow top-left UVs.
+Input bytes are explicitly decoded to linear premultiplied values, so textures
+use Unorm rather than an sRGB format that would decode them a second time.
+
+Metal command-buffer completion can run off the main actor. The callback extracts
+immutable timing/error values, then a Task on MainActor checks coordinator lifetime
+before delivering. Weak capture prevents the completion closure from keeping an
+otherwise removed surface alive. See the existing [actor/continuation mechanics](../language/swift-async-ports-and-continuations.md).
+A nil GPU duration means unavailable, not zero cost. Do not waitUntilCompleted
+inside the app draw loop; tests wait only to read deterministic pixels.
+
+Primary reference: [MTLCommandBuffer GPU start time](https://developer.apple.com/documentation/metal/mtlcommandbuffer/gpustarttime).
+The [graphics walkthrough](../modules/packages/FoundryGraphics/README.md#compositor-studio)
+links exact source/tests. Read [measurement limits](../../../../notes/techniques/graphics-profiling-and-measurement.md).
+Physical-device timestamp availability and sustained cost still require measurement.

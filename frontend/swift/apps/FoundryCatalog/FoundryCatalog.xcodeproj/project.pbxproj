@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E1FC36489890136AEFEE45 /* CreateNoteStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19963958EE394C6DD6A448DF /* CreateNoteStoreTests.swift */; };
 		04BCD47A5D08C16986A6B62E /* FoundryUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1A737434799860443019A63 /* FoundryUI */; };
+		08C15E4DE5EBAF8F2CDC4360 /* CompositorLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F9D043676A7E1E3D94FE /* CompositorLayoutTests.swift */; };
 		0A2C3E2DC4D9A91E14DD8223 /* NotesComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E784B27B4205BDA4FFE798BD /* NotesComposition.swift */; };
 		120C4DB01E72A49F7CCB9556 /* HealthCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DAE6D9AADB9AA62C622D8B2 /* HealthCatalogView.swift */; };
 		14EB84422D941C9622990312 /* ProductStudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3134D294A0BD18530C10B4 /* ProductStudioView.swift */; };
@@ -22,8 +23,10 @@
 		3B6C37FB3E139E25AD0619A3 /* CreateNoteComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593B5F86ADD13BAF61074D1D /* CreateNoteComposition.swift */; };
 		4D18A3770912754021424F03 /* GPUEffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F41FE763A66734C87388FAB /* GPUEffectsView.swift */; };
 		559DE65AD115A911FCD42A53 /* FoundryQuery in Frameworks */ = {isa = PBXBuildFile; productRef = EEDCFAA5930D5674E2566506 /* FoundryQuery */; };
+		65EFE8527E543BFEC88C0C28 /* CompositorStudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FD53A8BF7B9A45772455A5 /* CompositorStudioView.swift */; };
 		6ACA4CC5D94FAEBAC8A776AE /* GPUEffectsLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D9A8E2F23AF5A8239D6E70 /* GPUEffectsLayoutTests.swift */; };
 		79C1E5BE911D1FDDFAB7D64B /* QueryCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB23E3EAA218C303DF84B88 /* QueryCatalogView.swift */; };
+		7E13CB5FB09844441CC54C27 /* AppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FA8302F646E377746CBD02 /* AppShellView.swift */; };
 		92091EACE37742B2F01E04EA /* FoundryServices in Frameworks */ = {isa = PBXBuildFile; productRef = 47942B830AC07089D9343A35 /* FoundryServices */; };
 		A6C1F0E45B8A863DA7EB753A /* NotesStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2907BEFDBEA3CBBE2F2258BF /* NotesStoreTests.swift */; };
 		A810155D515BC494BED7AFB0 /* TokenCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316808FCFC93C4F9EA75DBB4 /* TokenCatalogView.swift */; };
@@ -65,7 +68,9 @@
 		316808FCFC93C4F9EA75DBB4 /* TokenCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenCatalogView.swift; sourceTree = "<group>"; };
 		37EB62C49554AEEEC9CB8F05 /* NotesCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesCatalogView.swift; sourceTree = "<group>"; };
 		3C6C282CFA7C57B4C447015D /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
+		44FA8302F646E377746CBD02 /* AppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShellView.swift; sourceTree = "<group>"; };
 		53DB4C812DE407345299FE6F /* PreviewLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewLayoutTests.swift; sourceTree = "<group>"; };
+		54FD53A8BF7B9A45772455A5 /* CompositorStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositorStudioView.swift; sourceTree = "<group>"; };
 		593B5F86ADD13BAF61074D1D /* CreateNoteComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteComposition.swift; sourceTree = "<group>"; };
 		5B35C9C0FC423494A97924CC /* FoundryKernel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryKernel; path = ../../packages/FoundryKernel; sourceTree = SOURCE_ROOT; };
 		6028460C6299E3CB3D674EAD /* FoundryUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryUI; path = ../../packages/FoundryUI; sourceTree = SOURCE_ROOT; };
@@ -75,6 +80,7 @@
 		7F41FE763A66734C87388FAB /* GPUEffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPUEffectsView.swift; sourceTree = "<group>"; };
 		877005512415629806FAB129 /* CreateNoteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteScreen.swift; sourceTree = "<group>"; };
 		88FB6A145AA9640DC01ABAE4 /* FoundryQuery */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryQuery; path = ../../packages/FoundryQuery; sourceTree = SOURCE_ROOT; };
+		8931F9D043676A7E1E3D94FE /* CompositorLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositorLayoutTests.swift; sourceTree = "<group>"; };
 		8A3134D294A0BD18530C10B4 /* ProductStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStudioView.swift; sourceTree = "<group>"; };
 		9DAE6D9AADB9AA62C622D8B2 /* HealthCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCatalogView.swift; sourceTree = "<group>"; };
 		A34BB54EA8911BACBC581A72 /* FoundryCatalog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FoundryCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,6 +167,7 @@
 		44B06377CE943A7E4FC88EE4 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				54FD53A8BF7B9A45772455A5 /* CompositorStudioView.swift */,
 				7F41FE763A66734C87388FAB /* GPUEffectsView.swift */,
 				E3BAAE164A90794BA454FBB2 /* ImageStudioView.swift */,
 				CECC406FADD827EEF55BC9C2 /* PreviewAssets.swift */,
@@ -202,6 +209,7 @@
 				44B06377CE943A7E4FC88EE4 /* Graphics */,
 				11C9882861A8B901FCF362EB /* Notes */,
 				852C8FFF8D79366A5070B7F9 /* Query */,
+				FF20CA30FF83E50C8A02B83C /* Shell */,
 				10A87767632F7FE1278F57F2 /* Tokens */,
 			);
 			path = Sources;
@@ -246,12 +254,21 @@
 		EE4B540289A5101C2E1A96E2 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				8931F9D043676A7E1E3D94FE /* CompositorLayoutTests.swift */,
 				19963958EE394C6DD6A448DF /* CreateNoteStoreTests.swift */,
 				72D9A8E2F23AF5A8239D6E70 /* GPUEffectsLayoutTests.swift */,
 				2907BEFDBEA3CBBE2F2258BF /* NotesStoreTests.swift */,
 				53DB4C812DE407345299FE6F /* PreviewLayoutTests.swift */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		FF20CA30FF83E50C8A02B83C /* Shell */ = {
+			isa = PBXGroup;
+			children = (
+				44FA8302F646E377746CBD02 /* AppShellView.swift */,
+			);
+			path = Shell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -364,6 +381,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08C15E4DE5EBAF8F2CDC4360 /* CompositorLayoutTests.swift in Sources */,
 				00E1FC36489890136AEFEE45 /* CreateNoteStoreTests.swift in Sources */,
 				6ACA4CC5D94FAEBAC8A776AE /* GPUEffectsLayoutTests.swift in Sources */,
 				A6C1F0E45B8A863DA7EB753A /* NotesStoreTests.swift in Sources */,
@@ -375,7 +393,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E13CB5FB09844441CC54C27 /* AppShellView.swift in Sources */,
 				1E6D0C74E29F56A8F2120078 /* CatalogView.swift in Sources */,
+				65EFE8527E543BFEC88C0C28 /* CompositorStudioView.swift in Sources */,
 				3B6C37FB3E139E25AD0619A3 /* CreateNoteComposition.swift in Sources */,
 				252AE23FB10DC3A674C7F4B0 /* CreateNoteScreen.swift in Sources */,
 				31D9B1308D8506891461483A /* CreateNoteStore.swift in Sources */,

@@ -19,3 +19,8 @@ Open **Tokens**, **Async UI patterns**, **Notes service seam**, or **Forms and m
 FoundryTheme also selects Solid/Glass surface styles. `FoundrySurface` keeps
 content panels opaque; floating controls sample the host's `FoundryBackdrop`
 on API 31+, with an opaque fallback. See [surface themes](../../../../../STYLES.md#swappable-surface-themes).
+
+See [the component map](../../../../../docs/COMPONENTS.md) for reserved empty
+catalog folders and intended contents. Navigation/TabBar's Kotlin counterpart
+is implemented as FoundryTabBar: items, selection and a callback over the
+floating surface. Route identity and presentation lifetime stay in the app.

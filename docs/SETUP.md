@@ -190,12 +190,35 @@ The reusable graphics modules accept admitted data instead of catalog paths.
 Import/export, general model loading, saved edits and backend assets are future
 slices. The small internal triangle JSON is not glTF.
 
-`make graphics-test` now includes four value/policy checks per native platform
+`make graphics-test` now includes five value/policy checks per native platform
 and two actual Metal execution checks. `make ios-test` hosts both previews to
 verify drawable sizing/static updates/removal. `make android-ui-test` reads real
 surface pixels and exercises image tools, product material/camera/pinch, quality,
 motion reduction, context recreation and navigation. These are simulator/emulator
 checks; physical-device frame-time and thermal profiling remain open.
+
+## Compositor studio
+
+Open **Compositor studio** in either catalog. The photograph and transparent
+code-authored disc/ring load locally. Select Layer, Mask or Compare before dragging;
+pinch scales the layer. All edits also have labeled native sliders. Try Multiply
+and Screen, mask off/on, feather, blur and glow, Original/Composed, then Reset
+composition. Comparison 0 is fully composed; 1 is original.
+
+Balanced/Economy change target resolution and submission budget. **Profile redraws**
+is opt-in; Reduce motion preview pauses it while static edits remain available.
+Background/removal stops repeated work. Profiles show four passes, upload/target
+allocation counts, estimated texture payload and CPU encode duration. Metal can
+supply a completed GPU interval; GLES 2 explicitly reports unavailable. These
+numbers are not displayed FPS or measured total VRAM.
+
+The graphics-test target includes seven graphics value checks per platform and
+three actual Metal render checks. The ios-test target includes hosted compositor
+sizing, cache/resize/profile/removal checks; android-ui-test includes real pixels,
+controls/gestures/reset, profile/cache/resize, context recreation and reopening.
+Read [the contract](../contracts/behavior/compositor.md), [learning notes](../notes/patterns/premultiplied-compositing-and-render-passes.md),
+and [device protocol](GRAPHICS-PROFILING.md). Import/export, arbitrary layer stacks,
+HDR and sustained physical-device budgets remain separate capabilities.
 
 ## GPU effects
 
@@ -206,8 +229,18 @@ paused even with Animate enabled. Reset focus centers touch without resetting
 time. Background/resume and Back/reopen exercise native resource lifetime.
 No backend, external assets or credentials are required.
 
-`make graphics-test` runs two shared policy tests per platform and a native
-offscreen Metal shader/pixel test on a Metal-capable Mac. That test explicitly
+The Effect menu/chips also expose **Flow**, **Material**, **Liquid**, **Particles**
+and **Field**. Drag Flow/Material to steer ribbons/reflection. Liquid has a
+supplied-progress slider and Empty/Half/Full. Particles has a playhead scrubber
+and Replay celebration: one finite 2.4-second burst, paused by motion/lifecycle
+controls. Replay is disabled with reduced motion; explicit scrubbing still works.
+Field starts with illustrative samples; try Clusters/Trail, Clear data, drag
+to set the focus, then Add at focus (maximum twelve). Field redraws on input
+changes and does not animate invented data. Progress/sample/playhead captions
+provide native text alternatives alongside the visual canvas.
+
+`make graphics-test` runs shared policy/content tests and native
+offscreen Metal shader/pixel checks on a Metal-capable Mac. Metal tests explicitly
 skips when no Metal device is available. `make ios-test` adds a hosted canvas
 dimension, automatic drawing, paused quality, resume and disposal check.
 `make android-ui-test` checks actual GL surface pixels, controls, quality,
@@ -220,6 +253,8 @@ submissions and target pixels, not displayed FPS or GPU time. Profile physical
 devices before selecting sustained performance targets. Read the
 [contract](../contracts/behavior/gpu-effects.md) and
 [learning handoff](../notes/patterns/renderer-frame-ownership.md).
+Read [graphics inputs and event time](../notes/patterns/graphics-inputs-and-event-time.md)
+to reuse these use cases with real feature data.
 
 ## HTTP and health examples
 

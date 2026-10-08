@@ -21,6 +21,9 @@ internal class EffectRenderer(private val assets: AssetManager, private val even
     private var position = 0
     private var viewport = 0
     private var interaction = 0
+    private var content = 0
+    private var samples = 0
+    private val sampleUniforms = FloatArray(EffectSettings.MAXIMUM_FIELD_SAMPLES * 4)
     private var width = 1
     private var height = 1
     private var frames = 0
@@ -47,6 +50,8 @@ internal class EffectRenderer(private val assets: AssetManager, private val even
             position = glGetAttribLocation(program, "position")
             viewport = glGetUniformLocation(program, "viewport")
             interaction = glGetUniformLocation(program, "interaction")
+            content = glGetUniformLocation(program, "content")
+            samples = glGetUniformLocation(program, "samples[0]")
             event(EffectEvent.Ready("OpenGL ES · ${glGetString(GL_RENDERER)}"))
         } catch (error: Exception) {
             diagnostic(error)
@@ -76,7 +81,15 @@ internal class EffectRenderer(private val assets: AssetManager, private val even
         val time = clock.frame(now, running)
         glUseProgram(program)
         glUniform4f(viewport, width.toFloat(), height.toFloat(), time.toFloat(), settings.strength)
-        glUniform4f(interaction, settings.point.x, settings.point.y, if (settings.effect == EffectKind.RIPPLE) 0f else 1f, settings.quality.steps.toFloat())
+        glUniform4f(interaction, settings.point.x, settings.point.y, settings.effect.shaderIndex, settings.quality.steps.toFloat())
+        glUniform4f(content, settings.progress, settings.samples.size.toFloat(), 0f, 0f)
+        sampleUniforms.fill(0f)
+        settings.samples.forEachIndexed { index, sample ->
+            val offset = index * 4
+            sampleUniforms[offset] = sample.point.x; sampleUniforms[offset + 1] = sample.point.y
+            sampleUniforms[offset + 2] = sample.weight; sampleUniforms[offset + 3] = sample.radius
+        }
+        glUniform4fv(samples, EffectSettings.MAXIMUM_FIELD_SAMPLES, sampleUniforms, 0)
         glEnableVertexAttribArray(position)
         glVertexAttribPointer(position, 2, GL_FLOAT, false, 0, vertices)
         glDrawArrays(GL_TRIANGLES, 0, 3); glDisableVertexAttribArray(position)

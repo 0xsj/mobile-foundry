@@ -20,12 +20,14 @@ import dev.mobilefoundry.kernel.*
 /** View lifecycle owns scheduling/context. App state supplies only bounded snapshots. */
 @Composable
 fun GPUPreviewSurface(content: PreviewContent, quality: EffectQuality = EffectQuality.BALANCED, running: Boolean = false, modifier: Modifier = Modifier,
-                     onGesture: (CanvasGesture) -> Unit, onEvent: (EffectEvent) -> Unit, onUnexpectedError: (Exception) -> Unit) {
+                     onGesture: (CanvasGesture) -> Unit, onEvent: (EffectEvent) -> Unit, onUnexpectedError: (Exception) -> Unit,
+                     onProfile: (GraphicsProfile) -> Unit = {}) {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
     val currentGesture by rememberUpdatedState(onGesture)
     val currentEvent by rememberUpdatedState(onEvent)
     val currentDiagnostic by rememberUpdatedState(onUnexpectedError)
+    val currentProfile by rememberUpdatedState(onProfile)
     val capable = remember(context) { context.getSystemService(ActivityManager::class.java).deviceConfigurationInfo.reqGlEsVersion >= 0x20000 }
     if (!capable) {
         LaunchedEffect(Unit) { currentEvent(EffectEvent.Failed(Failure.Unavailable(FailureMeta("GPU rendering is unavailable on this device.", "graphics.unavailable")))) }
@@ -33,7 +35,7 @@ fun GPUPreviewSurface(content: PreviewContent, quality: EffectQuality = EffectQu
     }
     var native by remember { mutableStateOf<PreviewGLView?>(null) }
     AndroidView(modifier = modifier.testTag("preview-canvas"), factory = {
-        PreviewGLView(it, { currentGesture(it) }, { currentEvent(it) }, { currentDiagnostic(it) }).also { view -> native = view }
+        PreviewGLView(it, { currentGesture(it) }, { currentEvent(it) }, { currentDiagnostic(it) }, { currentProfile(it) }).also { view -> native = view }
     }, update = { it.update(content, quality, running) }, onRelease = { it.dispose(); native = null })
     DisposableEffect(native, owner) {
         val view = native
@@ -46,7 +48,8 @@ fun GPUPreviewSurface(content: PreviewContent, quality: EffectQuality = EffectQu
 
 /** Choreographer runs on main; queued updates and GL handles run on the GL thread. */
 class PreviewGLView internal constructor(context: Context, private val gesture: (CanvasGesture) -> Unit,
-                                       event: (EffectEvent) -> Unit, diagnostic: (Exception) -> Unit) : GLSurfaceView(context), Choreographer.FrameCallback {
+                                       event: (EffectEvent) -> Unit, diagnostic: (Exception) -> Unit,
+                                       profile: (GraphicsProfile) -> Unit = {}) : GLSurfaceView(context), Choreographer.FrameCallback {
     private var disposed = false
     private var foreground = false
     private var paused = false
@@ -58,7 +61,8 @@ class PreviewGLView internal constructor(context: Context, private val gesture: 
     private val scheduler = Choreographer.getInstance()
     private val renderer = PreviewRenderer(context.assets,
         { value -> post { if (!disposed) event(value) } },
-        { error -> post { if (!disposed) diagnostic(error) } })
+        { error -> post { if (!disposed) diagnostic(error) } },
+        { value -> post { if (!disposed) profile(value) } })
 
     init {
         contentDescription = "Interactive preview canvas"

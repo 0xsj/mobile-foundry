@@ -101,3 +101,57 @@ and [editable values/resource ownership](../../../../../../notes/patterns/editab
 
 Read [shared frame ownership](../../../../../../notes/patterns/renderer-frame-ownership.md)
 and [MetalKit mechanisms](../../../substrate/metalkit-surface-and-shader-lifetime.md).
+
+## Expanded GPU use cases
+
+The 2026-10-08 expansion adds Flow, Material, Liquid, Particles and Field to
+the existing GPU effects destination. Read the updated EffectSettings and shader
+before the catalog controls. Liquid takes supplied completion; Particles takes
+a finite playhead; Field takes up to twelve owned point/weight/radius samples.
+Field and particle canvases draw on input changes. Only the catalog owns Replay
+event timing, with pause/reduction/lifecycle gates and a restart generation.
+See [graphics inputs and event time](../../../../../../notes/patterns/graphics-inputs-and-event-time.md) for the cross-platform
+reasoning, reusable product examples, upload budget and next questions.
+
+Five graphics value/policy checks and two actual Metal execution tests pass.
+The expanded effect test executes all seven branches, tests liquid endpoints,
+particle playhead/time independence and changed/empty/zero-weight field data.
+All fifteen iOS app regressions pass on iPhone 17 Pro/iOS 26.2 and the app builds.
+Manual native checks confirm the seven-option menu, Liquid Empty/Half/Full,
+Particles finite completion/reduction, and Field clear/add/trail (0/1/6 samples).
+CLI screenshots show Flow, the material card, the half-full gauge and the trail.
+An accessibility setValue attempt changed the exposed slider value without
+driving SwiftUI state; it is not evidence of a successful iOS scrub interaction.
+Actual fixed-playhead pixels are covered by Metal tests, and Android device
+tests cover scrub cancellation. VoiceOver and physical-device cost remain open.
+
+## Compositor studio
+
+Claim: a third preview consumer adds transparency and multiple passes without
+moving native GPU ownership into feature state.
+
+Origin: the 2026-10-08 batch needed an editor foundation that extends beyond a
+single fragment effect. Read [the contract](../../../../../../contracts/behavior/compositor.md), then [admitted values](../../../../packages/FoundryGraphics/Sources/FoundryGraphics/CompositorValues.swift), [pass ownership](../../../../packages/FoundryGraphics/Sources/FoundryGraphics/Metal/CompositorPipeline.swift), and [the reused native bridge](../../../../packages/FoundryGraphics/Sources/FoundryGraphics/Metal/MetalPreviewSurface.swift). AlphaImage copies straight sRGB RGBA8 input;
+conversion to linear premultiplied bytes happens before upload/filtering. The
+four passes retain two source textures and three target textures. Settings changes
+reuse both; quality/size changes replace targets; new image identity replaces only
+that upload. Switching to image/mesh releases compositor resources.
+
+Metal uses RGBA8 intermediates, an opaque BGRA8 final drawable and command-buffer
+completion timestamps. The completion handler reads timing on the completion
+thread, captures immutable observations and hops to MainActor before publishing.
+The coordinator is weakly captured and its disposed flag gates late delivery.
+No production frame waits for GPU completion. Static edits also report profiles.
+
+[Shared CPU checks](../../../../packages/FoundryGraphics/Tests/FoundryGraphicsTests/CompositorValuesTests.swift) consume [compositor fixtures](../../../../../../contracts/fixtures/graphics/compositor.json). [Native pixel checks](../../../../packages/FoundryGraphics/Tests/FoundryGraphicsTests/MetalCompositorTests.swift) exercise actual output rather than merely compiling shaders.
+Checks cover bounds/ownership, linear-light blend and orientation, target reuse,
+resizing and callback lifetime. Metal additionally checks zero opacity and hidden
+RGB at zero alpha through blur/glow. Read the platform index for final run evidence.
+
+The first resource assertion caught counters that counted target sets rather than
+textures. Both adapters now report three allocations per size change. Estimates
+are payload only; first-frame CPU timing includes different preparation boundaries
+on the two platforms. No cross-platform performance claim follows from them.
+
+Read [compositing reasoning](../../../../../../notes/patterns/premultiplied-compositing-and-render-passes.md), [measurement limits](../../../../../../notes/techniques/graphics-profiling-and-measurement.md), and [the device protocol](../../../../../../docs/GRAPHICS-PROFILING.md). Next: which measured cost would justify pass elimination, half-float
+intermediates or a GPU timer adapter? General layers, HDR and export remain open.

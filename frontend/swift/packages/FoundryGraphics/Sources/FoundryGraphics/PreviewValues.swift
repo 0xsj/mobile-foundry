@@ -92,12 +92,15 @@ public enum CanvasGesture: Sendable {
 public enum PreviewContent: Equatable, Sendable {
   case image(RasterImage, ImageAdjustments, ImageViewport, comparison: Float)
   case product(PreviewMesh, OrbitCamera, ProductFinish)
+  case composite(RasterImage, AlphaImage, CompositeSettings)
   public static func == (lhs: Self, rhs: Self) -> Bool {
     switch (lhs, rhs) {
     case (.image(let a, let ae, let av, let ac), .image(let b, let be, let bv, let bc)):
       a === b && ae == be && av == bv && ac == bc
     case (.product(let a, let ac, let af), .product(let b, let bc, let bf)):
       a === b && ac == bc && af == bf
+    case (.composite(let a, let al, let ae), .composite(let b, let bl, let be)):
+      a === b && al === bl && ae == be
     default: false
     }
   }

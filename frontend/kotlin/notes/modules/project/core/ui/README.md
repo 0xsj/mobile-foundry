@@ -189,3 +189,16 @@ Primary references: [AGP 9 built-in Kotlin](https://developer.android.com/build/
 and [native progress indicators](https://developer.android.com/develop/ui/compose/components/progress).
 How should a renderer expose a source while retaining frame ownership? What
 device evidence would justify applying backdrop effects beyond bounded panels?
+
+## Reserved component catalog and tab bar
+
+The 2026-10-08 [component map](../../../../../../../docs/COMPONENTS.md) reserves
+.gitkeep-only planned leaf directories grouped like Bento. These are not
+implemented APIs. The new
+[FoundryTabBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/tabbar/FoundryTabBar.kt)
+is implemented: it receives item IDs, labels, icon slots, selected ID and a
+selection callback. A transparent Material NavigationBar renders over the
+floating FoundrySurface. The app supplies a bounded backdrop and safe-area
+padding; the internal bar adds zero insets. No routes, screens or feature models
+enter core/ui. See [the app shell](../../app/README.md#four-tab-placeholder-shell)
+and [backdrop mechanics](../../../../substrate/compose-backdrop-layers.md).

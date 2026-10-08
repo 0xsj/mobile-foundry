@@ -1,6 +1,7 @@
 {
   "images": [
     {
+      "filename": "mobile-foundry-icon-v1.png",
       "idiom": "universal",
       "platform": "ios",
       "size": "1024x1024"

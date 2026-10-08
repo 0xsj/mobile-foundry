@@ -17,6 +17,32 @@ equivalent behavior, not identical pixels. Both canvases accept top-left normali
 coordinates clamped to [0,1], defaulting to the center. Nonfinite input is rejected
 to the default. Strength is clamped to [0,1], default 0.65 for nonfinite values.
 
+## Product use cases
+
+The gallery also exposes Flow (ambient backdrop), Material (reflective card),
+Liquid (progress gauge), Particles (finite celebration), and Field (scalar density).
+Shader indices are explicit: Ripple 0, Orbit 1, Flow 2, Material 3, Liquid 4,
+Particles 5 and Field 6. Enum declaration order is not an upload protocol.
+
+Flow and Material accept the normalized focus. Material is a bounded procedural
+surface, not a mesh/PBR asset. Liquid takes feature-supplied `progress` in [0,1]
+(default 0.5, including nonfinite input); its clock animates waves only. Empty
+and full progress have no waves that imply progress outside those endpoints.
+Particles use that same bounded input as a deterministic finite playhead: zero
+and one are clear, intermediate values show an analytic 48-particle burst.
+There is no automatic loop. The catalog owns Replay, a 2.4-second foreground,
+pause-aware event that advances the playhead. Scrubbing cancels Replay. Reduced
+motion disables automatic playback but permits explicit static scrubbing.
+
+Field takes an owned snapshot of at most 12 samples (first 12 retained), each
+with a normalized point, weight clamped to [0,1] (nonfinite defaults to 0), and
+radius clamped to [0.03,0.5] (nonfinite defaults to 0.18). Empty/zero-weight data
+renders a neutral grid. Samples are supplied data, not random shader noise.
+Catalog Clusters/Trail fixtures, Add at focus and Clear data demonstrate this
+input boundary; no measurements, geospatial accuracy, or physical simulation
+are claimed. Field uses static redraws only. All examples use bounded shader
+loops and existing resolution budgets; no new engine dependency is required.
+
 ## Resolution and time
 
 Economy targets 30 submissions/second at half native pixel resolution, with a

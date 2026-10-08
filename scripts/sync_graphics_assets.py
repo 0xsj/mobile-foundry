@@ -1,15 +1,46 @@
 #!/usr/bin/env python3
-"""Author the tiny lamp mesh, and synchronize canonical preview assets to apps."""
+"""Author the tiny lamp mesh and synchronize canonical preview/icon assets."""
 import argparse
 import hashlib
 import json
 import math
+import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets/source"
 DESTINATIONS = [ROOT / "frontend/swift/apps/FoundryCatalog/Resources/Graphics",
                 ROOT / "frontend/kotlin/project/app/src/main/assets/graphics"]
+
+
+def app_icon(check):
+    """Check generated provenance/PNG shape, and sync the selected iOS derivative."""
+    manifest = json.loads((ROOT / "assets/manifests/mobile-foundry-icon.json").read_text())
+    for key in ("master", "ios"):
+        asset = manifest[key]
+        data = (SOURCE / asset["source"]).read_bytes()
+        if hashlib.sha256(data).hexdigest() != asset["sha256"]:
+            raise SystemExit(f"app icon manifest hash differs for {asset['source']}")
+        if data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+            raise SystemExit(f"app icon is not a PNG: {asset['source']}")
+        width, height, bits, color = struct.unpack(">IIBB", data[16:26])
+        if (width, height, bits, color) != (asset["width"], asset["height"], 8, 2):
+            raise SystemExit(f"app icon requires expected dimensions and opaque RGB8: {asset['source']}")
+    icon = manifest["ios"]
+    if (icon["width"], icon["height"]) != (1024, 1024):
+        raise SystemExit("iOS app icon must be 1024 square")
+    source = SOURCE / icon["source"]
+    target = ROOT / icon["destination"]
+    if not check:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(source.read_bytes())
+    if not target.exists() or target.read_bytes() != source.read_bytes():
+        raise SystemExit("bundled iOS app icon differs from canonical derivative")
+    contents = json.loads((target.parent / "Contents.json").read_text())
+    if not any(row.get("filename") == target.name and row.get("size") == "1024x1024"
+               and row.get("idiom") == "universal" and row.get("platform") == "ios"
+               for row in contents["images"]):
+        raise SystemExit("iOS app icon asset catalog does not select the derivative")
 
 
 def lamp():
@@ -81,7 +112,9 @@ def main():
         raise SystemExit("\n".join(failures))
     if not args.check:
         manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+    app_icon(args.check)
     print("graphics assets: canonical mesh, manifest hashes and both app copies match")
+    print("app icon: original/derivative hashes, opaque RGB dimensions and iOS catalog match")
 
 
 if __name__ == "__main__":

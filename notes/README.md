@@ -45,6 +45,14 @@ concepts, patterns, and verification techniques live here.
     then the native graphics/product-preview walkthroughs and texture/mesh/gesture
     notes. Trace decoded asset identity separately from edits and context handles.
 
+14. Read [graphics inputs and finite event time](patterns/graphics-inputs-and-event-time.md), then revisit
+    the graphics and catalog walkthroughs. Compare decorative phase, supplied
+    progress/data and a finite feature-owned celebration playhead.
+
+15. Read [premultiplied compositing and render passes](patterns/premultiplied-compositing-and-render-passes.md),
+    then [graphics profiling and measurement](techniques/graphics-profiling-and-measurement.md).
+    Follow the native compositor walkthroughs and [device protocol](../docs/GRAPHICS-PROFILING.md).
+
 ## Current coverage
 
 Started 2026-10-07 after native initialization. The current notes explain the
@@ -177,3 +185,68 @@ remain in [contracts](../contracts/README.md), and accepted boundaries remain in
 
 Run `make notes-check` after changing learning notes. Complete code examples
 also need the execution commands described in their notes.
+
+## GPU use-case expansion
+
+The same day's expansion adds five procedural consumers: Flow, Material, Liquid,
+Particles and Field. Read [graphics inputs and event time](patterns/graphics-inputs-and-event-time.md).
+Five value/policy checks pass per platform plus two actual Metal execution tests.
+Both apps build, Android host regressions and fifteen iOS app checks pass.
+The corrected complete Android device suite passes all thirty-one checks; native
+walkthroughs record the queued-frame scrub race and iOS manual evidence/limits.
+The examples keep decorative time separate from supplied completion/data and a
+finite feature-owned event. Physical-device budgets remain unmeasured.
+
+## Compositor batch evidence
+
+Completed 2026-10-08. Compositor studio extends the retained preview surface with
+owned straight RGBA input, linear premultiplied upload, feathered masking,
+Normal/Multiply/Screen blending, separable blur/glow, comparison and reset.
+Optional profiles separate CPU encoding, available completed Metal GPU intervals
+and estimated texture payload. GLES 2 GPU timing is explicitly unavailable.
+
+Seven graphics value/fixture checks pass per platform, plus three actual Metal
+render tests. Both native builds pass; all sixteen iOS app checks, seventeen
+Android app host checks and the complete thirty-four-check Android device suite
+pass. The final three focused compositor checks also pass after tightening GL
+error classification. Hosted iOS checks cover actual studio layout and retained
+surface/cache/resize/profile/pause/removal. Android checks additionally exercise
+native editing, gestures, reset, context recreation and reopening with PixelCopy.
+
+Manual iOS checks confirm Original/Composed, mask bypass with disabled mask
+controls, repeated profiling, reduced-motion pause and reset to defaults. A
+simulator CLI screenshot was inspected for the actual photograph, transparent
+layer, comparison divider and native control layout. CUA screenshot capture is
+still blank; the CLI image supplies visual evidence. iOS slider/VoiceOver and
+physical-device thermal/energy budgets remain unmeasured. The profiling document
+is a repeatable protocol, not a completed device benchmark.
+
+Next questions: when do measured costs justify skipping passes, using half-float
+targets or adding GPU timer queries; and how should a saved recipe version its
+CPU assets/settings without storing native handles?
+
+## App icon handoff
+
+The 2026-10-08 asset slice adds a generic cobalt ribbon icon to the iOS catalog.
+Read [asset ownership and provenance](../assets/README.md#mobile-foundry-app-icon)
+and [native packaging](../frontend/swift/notes/substrate/swift-package-and-xcode-project-wiring.md#generated-app-icon).
+The original and opaque 1024-square derivative are retained with exact prompt
+and hashes. The simulator build and asset checks pass; release remains pending
+other pre-TestFlight slices.
+
+## Placeholder navigation shell
+
+The 2026-10-08 shell slice reserves mirrored component leaves for visualization
+and adds Home, Library, Studio and Account. Read
+[tabs and feature lifetime](patterns/tabs-and-feature-lifetime.md), then the
+native app walkthroughs and framework notes. Studio opens the existing catalog;
+Account controls the shared material choice. The
+[component map](../docs/COMPONENTS.md) lists intended contents and distinguishes
+reserved leaves from implemented controls. Feature stacks, deep links and
+identity remain future slices.
+
+Both native builds, sixteen iOS app/layout checks and Android host regressions
+pass. Manual iOS navigation and both Home screenshots were inspected. Android's
+complete run passed 35/36 checks; after updating an old theme test for the shell
+entry point, the final eight shell/theme checks pass. Native walkthroughs record
+saved-state coverage and the remaining device/accessibility limits.

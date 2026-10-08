@@ -88,10 +88,14 @@ exercise failures, and reset after confirmation. The note is an exemplar;
 persistence and shared read/write coordination remain separate capabilities.
 The [GPU slice](contracts/behavior/gpu-effects.md) adds an optional FoundryGraphics/
 core:graphics boundary using Metal on iOS and OpenGL ES on Android. Open **GPU
-effects** to drag Ripple or a lit 3D Orbit, change strength/quality, pause and try
-reduced motion. The renderer owns frame scheduling and resource lifetime;
+effects** to explore Ripple, Orbit, ambient Flow, a reflective Material card,
+Liquid progress, replayable Particles and a supplied density Field. Change
+strength/quality, pause and try reduced motion. The renderer owns GPU scheduling and resource lifetime;
 [graphics notes](notes/patterns/renderer-frame-ownership.md) explain the seam and
 native execution evidence. Physical-device performance remains unmeasured.
+The [expanded use cases](notes/patterns/graphics-inputs-and-event-time.md) explain
+how feature-owned progress, finite event playheads and bounded data enter the
+same native drawing seam.
 Open **Image studio** for before/after exposure, saturation, vignette and zoom/pan;
 open **Product studio** for an actual lamp mesh with orbit/pinch, three finishes
 and an optional turntable. These [preview foundations](contracts/behavior/graphics-previews.md)
@@ -99,6 +103,12 @@ share admitted assets and bounded values through a native preview surface.
 Read [editable values and GPU resources](notes/patterns/editable-values-and-renderer-resources.md)
 to adapt them to other verticals. Import/export, general model loading and saved
 edits remain separate work.
+**Compositor studio** extends the same preview surface with a transparent layer,
+movable feathered mask, Normal/Multiply/Screen blending, blur/glow and comparison.
+Its performance panel separates texture payload, CPU encoding and available Metal
+GPU timing; GLES 2 timing is unavailable. Start with [the compositor notes](notes/patterns/premultiplied-compositing-and-render-passes.md)
+and [physical-device profiling protocol](docs/GRAPHICS-PROFILING.md).
+
 Broader UI controls, complete graphics engines, and
 native storage libraries remain future work. The backend
 profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is

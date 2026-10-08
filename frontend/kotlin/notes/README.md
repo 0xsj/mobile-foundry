@@ -43,6 +43,10 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
     and both app features. Compare asset identity, incremental state reads and
     [editable values/resource ownership](../../../notes/patterns/editable-values-and-renderer-resources.md).
 
+14. Read [graphics inputs and finite event time](../../../notes/patterns/graphics-inputs-and-event-time.md), then revisit
+    the graphics and catalog walkthroughs. Compare decorative phase, supplied
+    progress/data and a finite feature-owned celebration playhead.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -57,6 +61,9 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
 Paths mirror the Kotlin root, including `project/`: `project/app/` maps to
 `notes/modules/project/app/`. Reusable explanations stay independent of source
 paths; module walkthroughs link their actual use.
+
+15. Read [compositing and pass ownership](../../../notes/patterns/premultiplied-compositing-and-render-passes.md), then [graphics measurement](../../../notes/techniques/graphics-profiling-and-measurement.md). Revisit the graphics/catalog walkthroughs and native texture notes for
+    transparent input, linear premultiplication, framebuffer passes and completion.
 
 ## Current coverage
 
@@ -182,3 +189,56 @@ preview run and Android host regressions pass.
 - Why does a navigation entry need its own ViewModelStoreOwner?
 - Why do pure state transformations leave coroutine admission to the feature?
 - Why does blurring an overlay's own content fail to provide a sharp glass control?
+
+## GPU use-case expansion
+
+The same day's expansion adds five procedural consumers: Flow, Material, Liquid,
+Particles and Field. Read [graphics inputs and event time](../../../notes/patterns/graphics-inputs-and-event-time.md).
+Five value/policy checks pass per platform plus two actual Metal execution tests.
+Both apps build, Android host regressions and fifteen iOS app checks pass.
+The corrected complete Android device suite passes all thirty-one checks; native
+walkthroughs record the queued-frame scrub race and iOS manual evidence/limits.
+The examples keep decorative time separate from supplied completion/data and a
+finite feature-owned event. Physical-device budgets remain unmeasured.
+
+## Compositor batch evidence
+
+Completed 2026-10-08. Compositor studio extends the retained preview surface with
+owned straight RGBA input, linear premultiplied upload, feathered masking,
+Normal/Multiply/Screen blending, separable blur/glow, comparison and reset.
+Optional profiles separate CPU encoding, available completed Metal GPU intervals
+and estimated texture payload. GLES 2 GPU timing is explicitly unavailable.
+
+Seven graphics value/fixture checks pass per platform, plus three actual Metal
+render tests. Both native builds pass; all sixteen iOS app checks, seventeen
+Android app host checks and the complete thirty-four-check Android device suite
+pass. The final three focused compositor checks also pass after tightening GL
+error classification. Hosted iOS checks cover actual studio layout and retained
+surface/cache/resize/profile/pause/removal. Android checks additionally exercise
+native editing, gestures, reset, context recreation and reopening with PixelCopy.
+
+Manual iOS checks confirm Original/Composed, mask bypass with disabled mask
+controls, repeated profiling, reduced-motion pause and reset to defaults. A
+simulator CLI screenshot was inspected for the actual photograph, transparent
+layer, comparison divider and native control layout. CUA screenshot capture is
+still blank; the CLI image supplies visual evidence. iOS slider/VoiceOver and
+physical-device thermal/energy budgets remain unmeasured. The profiling document
+is a repeatable protocol, not a completed device benchmark.
+
+Next questions: when do measured costs justify skipping passes, using half-float
+targets or adding GPU timer queries; and how should a saved recipe version its
+CPU assets/settings without storing native handles?
+
+## Placeholder shell reading order
+
+Read [Compose tabs and presentation owners](substrate/compose-tabs-and-presentation-owners.md),
+then [the app shell](modules/project/app/README.md#four-tab-placeholder-shell)
+and [shared lifetime ownership](../../../notes/patterns/tabs-and-feature-lifetime.md).
+The component map is a directory sketch, not completed UI coverage. Next:
+when should each destination own a stack, and which feature state should
+survive Activity recreation versus closing a presentation?
+
+Shell evidence: native build and host regressions pass. The complete device
+run passed 35/36 checks; after correcting an old catalog-entry assumption,
+the final eight focused shell/theme checks pass. The app walkthrough records
+the correction, saved-state coverage and remaining device limits.

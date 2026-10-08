@@ -11,6 +11,24 @@ import java.io.IOException
 
 /** Catalog-only decoding. Reusable graphics accepts already admitted CPU assets. */
 object PreviewAssets {
+    /** Code-authored straight-alpha disc and orbit ring; no external asset provenance. */
+    fun overlay(): AlphaImage {
+        val size = 256
+        val bytes = ByteArray(size * size * 4)
+        for (y in 0 until size) for (x in 0 until size) {
+            val u = (x + .5) / size; val v = (y + .5) / size
+            val distance = kotlin.math.hypot(u - .5, v - .5)
+            val ring = (1 - kotlin.math.abs(distance - .37) / .035).coerceAtLeast(0.0)
+            val disc = ((.26 - kotlin.math.hypot(u - .43, v - .43)) / .018).coerceIn(0.0, 1.0) * .82
+            val satellite = ((.09 - kotlin.math.hypot(u - .77, v - .72)) / .012).coerceIn(0.0, 1.0)
+            val alpha = maxOf(ring, disc, satellite); val i = (y * size + x) * 4
+            bytes[i] = kotlin.math.round(70 + 175 * v).toInt().toByte()
+            bytes[i + 1] = kotlin.math.round(120 + 55 * v).toInt().toByte()
+            bytes[i + 2] = kotlin.math.round(245 - 100 * v).toInt().toByte()
+            bytes[i + 3] = kotlin.math.round(alpha * 255).toInt().toByte()
+        }
+        return checkNotNull(AlphaImage.create(size, size, bytes))
+    }
     suspend fun image(context: Context): AppResult<RasterImage> = withContext(Dispatchers.IO) {
         try {
             val bitmap=context.assets.open("graphics/studio-still-life.png").use { BitmapFactory.decodeStream(it) } ?: return@withContext Outcome.Err(invalid)

@@ -158,3 +158,12 @@ layout choices belong to the host rather than QueryContent? Read
 [the shared pattern](../../../../../../notes/patterns/query-state-and-rendering.md).
 How should a rendered scene provide its backdrop without moving frame ownership
 into the UI theme? Which floating controls need material interaction or grouping?
+
+## Reserved component catalog
+
+The 2026-10-08 [component map](../../../../../../docs/COMPONENTS.md) adds
+.gitkeep-only planned leaf directories grouped like Bento. These do not add
+public APIs, variants, tests or module dependencies. The native TabView shell
+belongs to app composition; Swift's Navigation/TabBar and Shells/AppShell are
+reserved for a later justified reusable consumer. See
+[tabs and feature lifetime](../../../../../../notes/patterns/tabs-and-feature-lifetime.md).

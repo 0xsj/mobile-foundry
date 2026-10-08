@@ -102,3 +102,57 @@ and [editable values/resource ownership](../../../../../../../notes/patterns/edi
 
 Read [GL/Compose mechanics](../../../../substrate/glsurfaceview-and-compose-lifetime.md)
 and [shared frame ownership](../../../../../../../notes/patterns/renderer-frame-ownership.md).
+
+## Expanded GPU use cases
+
+The 2026-10-08 expansion adds Flow, Material, Liquid, Particles and Field to
+the existing GPU effects destination. Read the updated EffectSettings and shader
+before the catalog controls. Liquid takes supplied completion; Particles takes
+a finite playhead; Field takes up to twelve owned point/weight/radius samples.
+Field and particle canvases draw on input changes. Only the catalog owns Replay
+event timing, with pause/reduction/lifecycle gates and a restart generation.
+See [graphics inputs and event time](../../../../../../../notes/patterns/graphics-inputs-and-event-time.md) for the cross-platform
+reasoning, reusable product examples, upload budget and next questions.
+
+Five graphics host checks pass, including new content admission/owned snapshots.
+The app builds and host regressions pass. The first device run passed thirty
+of thirty-one checks: a queued Replay frame overwrote a just-scrubbed input.
+Checking current playback/generation before publication corrected that race.
+All five focused GPU tests and the final complete thirty-one-check device suite
+pass on API36_Test/Android 16. New checks use actual PixelCopy output for the
+five additions and retain the same surface, then exercise progress/data controls,
+reduced motion, finite completion/restart, pause/background and scrub cancellation.
+The input-driven canvas caption avoids displaying the ambient scheduler's zero
+rate as if it measured Replay redraws. Physical-device profiling remains open.
+
+## Compositor studio
+
+Claim: a third preview consumer adds transparency and multiple passes without
+moving native GPU ownership into feature state.
+
+Origin: the 2026-10-08 batch needed an editor foundation that extends beyond a
+single fragment effect. Read [the contract](../../../../../../../contracts/behavior/compositor.md), then [admitted values](../../../../../project/core/graphics/src/main/kotlin/dev/mobilefoundry/graphics/CompositorValues.kt), [pass ownership](../../../../../project/core/graphics/src/main/kotlin/dev/mobilefoundry/graphics/gl/CompositorRenderer.kt), and [the reused native bridge](../../../../../project/core/graphics/src/main/kotlin/dev/mobilefoundry/graphics/gl/GPUPreviewSurface.kt). AlphaImage copies straight sRGB RGBA8 input;
+conversion to linear premultiplied bytes happens before upload/filtering. The
+four passes retain two source textures and three target textures. Settings changes
+reuse both; quality/size changes replace targets; new image identity replaces only
+that upload. Switching to image/mesh releases compositor resources.
+
+GLES 2 uses framebuffer attachments for intermediate RGBA8 targets, restores the
+original framebuffer for the final pass and flips target sampling Y. Every sampler
+is rebound before drawing to avoid accidental feedback from a prior output.
+GL calls and counters stay on the GL thread; immutable profiles post to the UI
+thread with a disposed guard. Context loss rebuilds handles from admitted inputs.
+The Java GLES 2 path deliberately reports GPU timing unavailable.
+
+[Shared CPU checks](../../../../../project/core/graphics/src/test/kotlin/dev/mobilefoundry/graphics/CompositorValuesTest.kt) consume [compositor fixtures](../../../../../../../contracts/fixtures/graphics/compositor.json). [Native pixel checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/graphics/CompositorStudioTest.kt) exercise actual output rather than merely compiling shaders.
+Checks cover bounds/ownership, linear-light blend and orientation, target reuse,
+resizing and callback lifetime. Metal additionally checks zero opacity and hidden
+RGB at zero alpha through blur/glow. Read the platform index for final run evidence.
+
+The first resource assertion caught counters that counted target sets rather than
+textures. Both adapters now report three allocations per size change. Estimates
+are payload only; first-frame CPU timing includes different preparation boundaries
+on the two platforms. No cross-platform performance claim follows from them.
+
+Read [compositing reasoning](../../../../../../../notes/patterns/premultiplied-compositing-and-render-passes.md), [measurement limits](../../../../../../../notes/techniques/graphics-profiling-and-measurement.md), and [the device protocol](../../../../../../../docs/GRAPHICS-PROFILING.md). Next: which measured cost would justify pass elimination, half-float
+intermediates or a GPU timer adapter? General layers, HDR and export remain open.

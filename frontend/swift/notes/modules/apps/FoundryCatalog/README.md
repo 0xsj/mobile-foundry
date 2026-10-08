@@ -232,3 +232,87 @@ Read [preview substrate](../../../substrate/metal-preview-textures-and-meshes.md
 ## Related
 
 [View protocols](../../../language/swift-protocols-and-opaque-return-types.md), [Swift reading order](../../../README.md), and [Setup](../../../../../../docs/SETUP.md).
+
+## Expanded GPU use cases
+
+The 2026-10-08 expansion adds Flow, Material, Liquid, Particles and Field to
+the existing GPU effects destination. Read the updated EffectSettings and shader
+before the catalog controls. Liquid takes supplied completion; Particles takes
+a finite playhead; Field takes up to twelve owned point/weight/radius samples.
+Field and particle canvases draw on input changes. Only the catalog owns Replay
+event timing, with pause/reduction/lifecycle gates and a restart generation.
+See [graphics inputs and event time](../../../../../../notes/patterns/graphics-inputs-and-event-time.md) for the cross-platform
+reasoning, reusable product examples, upload budget and next questions.
+
+Five graphics value/policy checks and two actual Metal execution tests pass.
+The expanded effect test executes all seven branches, tests liquid endpoints,
+particle playhead/time independence and changed/empty/zero-weight field data.
+All fifteen iOS app regressions pass on iPhone 17 Pro/iOS 26.2 and the app builds.
+Manual native checks confirm the seven-option menu, Liquid Empty/Half/Full,
+Particles finite completion/reduction, and Field clear/add/trail (0/1/6 samples).
+CLI screenshots show Flow, the material card, the half-full gauge and the trail.
+An accessibility setValue attempt changed the exposed slider value without
+driving SwiftUI state; it is not evidence of a successful iOS scrub interaction.
+Actual fixed-playhead pixels are covered by Metal tests, and Android device
+tests cover scrub cancellation. VoiceOver and physical-device cost remain open.
+
+## Compositor studio
+
+Claim: the catalog owns one transient composition and the renderer owns its
+textures/passes; performance observations do not control rendering policy.
+
+Added 2026-10-08. Read [the studio](../../../../apps/FoundryCatalog/Sources/Graphics/CompositorStudioView.swift) → [asset creation](../../../../apps/FoundryCatalog/Sources/Graphics/PreviewAssets.swift) → [graphics walkthrough](../../packages/FoundryGraphics/README.md). The existing opaque photograph loads off main; the small RGBA disc/ring is
+code-authored locally and retained by feature identity. Layer/Mask/Compare tools
+change placement or the divider, pinch scales, and labeled sliders provide native
+alternatives for every edit. Reset restores composition defaults. Persistence,
+import/export, arbitrary layers and product rules are outside this example.
+
+Profile redraws defaults off. Reduced motion stops the repeated workload while
+static controls still draw. Visibility/scene phase gate the iOS request.
+The panel labels target dimensions, four passes, input/target payload, uploads,
+individual target allocations, CPU encoding and available GPU timing separately.
+The latest snapshot is not a statistical recorder or displayed FPS.
+
+[Native integration checks](../../../../apps/FoundryCatalog/Tests/CompositorLayoutTests.swift) exercise retained canvas identity, static redraw, resizing, profile reporting,
+continuous pause and removal. Hosted layout checks include the actual studio view; actual blend pixels run in the graphics package. Native slider/VoiceOver behavior still needs manual iOS coverage.
+Read the platform index for final execution evidence; physical-device budgets
+remain unmeasured. Follow [the profiling protocol](../../../../../../docs/GRAPHICS-PROFILING.md) and [the shared pattern](../../../../../../notes/patterns/premultiplied-compositing-and-render-passes.md). Next: how should a feature save a versioned
+composition recipe without persisting native GPU handles?
+
+## App icon asset
+
+The 2026-10-08 icon slice fills the existing AppIcon asset-catalog slot with an
+opaque 1024-square cobalt ribbon generated using the built-in imagegen tool.
+The canonical original, derivative, full prompt and hashes live in shared assets.
+Read [icon packaging](../../../substrate/swift-package-and-xcode-project-wiring.md#generated-app-icon)
+and [the manifest](../../../../../../assets/manifests/mobile-foundry-icon.json).
+The simulator build and asset checks pass; no new runtime code, signing or beta
+upload is introduced. Next: complete the user's remaining pre-release slices,
+then validate a signed device archive and App Store Connect distribution.
+
+## Four-tab placeholder shell
+
+Added 2026-10-08. Read
+[AppShellView](../../../../apps/FoundryCatalog/Sources/Shell/AppShellView.swift),
+then [app composition](../../../../apps/FoundryCatalog/Sources/FoundryCatalogApp.swift)
+and [CatalogView](../../../../apps/FoundryCatalog/Sources/CatalogView.swift).
+AppShellView owns a scene-stored String selection and an in-memory full-screen
+presentation flag. Each destination has a native NavigationStack and empty
+placeholder; Studio opens CatalogView, which keeps its own detail stack and
+accepts an optional close callback. Closing returns to the selected Studio tab.
+Account and catalog receive the same material Binding from app composition.
+
+The app starts in Glass for visualization; FoundryTheme's default is still
+Solid. Native TabView supplies tab semantics, safe areas and system glass,
+independent of the Foundry surface switch. The static accent wash requires no
+render loop. Read [framework mechanics](../../../substrate/swiftui-tab-selection-and-presentation.md)
+and [shared ownership](../../../../../../notes/patterns/tabs-and-feature-lifetime.md).
+The simulator build and all sixteen existing app/state-owner/native-layout
+tests pass. Manual iPhone 17 Pro/iOS 26.2 execution covers all four tabs, both
+material choices, Studio → catalog → Tokens → back → close, and restored
+Studio selection after closing. A simulator CLI screenshot was inspected for
+the empty Home layout and floating tab bar. Native CUA screenshot capture
+became blank after modal dismissal; accessibility state and the CLI capture
+provide the recorded evidence. Process/scene restoration, older iOS versions,
+tablet adaptation and physical-device accessibility/performance are unverified.
+Future destination features/stacks, deep links and authentication are absent.

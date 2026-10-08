@@ -24,3 +24,18 @@ Read the [contract](../../../../../contracts/behavior/gpu-effects.md),
 [walkthrough](../../../notes/modules/project/core/graphics/README.md), and
 [GL/Compose mechanics](../../../notes/substrate/glsurfaceview-and-compose-lifetime.md).
 Physical-device profiling and external-surface glass capture remain open.
+
+The **GPU effects** gallery also includes Flow (ambient), Material (reflective
+card), Liquid (supplied progress), Particles (finite replay/scrub), and Field
+(supplied density samples). EffectSettings admits progress and up to twelve
+owned EffectFieldSample values. Product meaning and Replay timing stay in the
+catalog; the graphics module owns drawing and GPU resources.
+
+**Compositor studio** adds AlphaImage and CompositeSettings to PreviewContent.
+Straight sRGB RGBA uploads convert to linear premultiplied pixels before masking,
+separable blur and final Normal/Multiply/Screen blend/glow. Three offscreen targets
+reuse their dimensions; edits reuse source uploads. The optional onProfile callback
+reports payload estimates and CPU encoding, plus completed Metal GPU intervals
+when available; GLES 2 explicitly has no GPU timing adapter. See the
+[contract](../../../../../contracts/behavior/compositor.md) and
+[profiling protocol](../../../../../docs/GRAPHICS-PROFILING.md).

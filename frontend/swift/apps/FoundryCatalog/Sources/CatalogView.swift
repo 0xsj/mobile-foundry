@@ -2,7 +2,11 @@ import SwiftUI
 
 struct CatalogView: View {
     @Binding var glassTheme: Bool
-    init(glassTheme: Binding<Bool> = .constant(false)) { self._glassTheme = glassTheme }
+    private let onClose: (() -> Void)?
+    init(glassTheme: Binding<Bool> = .constant(false), onClose: (() -> Void)? = nil) {
+        self._glassTheme = glassTheme
+        self.onClose = onClose
+    }
     var body: some View {
         NavigationStack {
             List {
@@ -22,6 +26,7 @@ struct CatalogView: View {
                 }
 
                 Section("Graphics") {
+                    NavigationLink { CompositorStudioView() } label: { Label("Compositor studio", systemImage: "square.3.layers.3d") }
                     NavigationLink { ImageStudioView() } label: { Label("Image studio", systemImage: "slider.horizontal.3") }
                     NavigationLink { ProductStudioView() } label: { Label("Product studio", systemImage: "lamp.desk") }
                     NavigationLink { GPUEffectsView() } label: { Label("GPU effects", systemImage: "cube.transparent") }
@@ -34,6 +39,13 @@ struct CatalogView: View {
                 }
             }
             .navigationTitle("Mobile Foundry")
+            .toolbar {
+                if let onClose {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close catalog", action: onClose)
+                    }
+                }
+            }
         }
     }
 }

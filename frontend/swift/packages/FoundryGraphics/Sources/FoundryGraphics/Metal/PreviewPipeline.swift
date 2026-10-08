@@ -15,6 +15,7 @@ final class PreviewPipeline {
   private var texture: (any MTLTexture)?
   private var geometry: PreviewMesh?
   private var buffer: (any MTLBuffer)?
+  private(set) var compositor: CompositorPipeline?
 
   init(device: any MTLDevice) throws {
     self.device = device
@@ -55,7 +56,15 @@ final class PreviewPipeline {
   /// Resource creation occurs only for a new asset; normal control redraws reuse it.
   func prepare(_ content: PreviewContent) throws {
     switch content {
+    case .composite(let base, let overlay, _):
+      if compositor == nil { compositor = try CompositorPipeline(device: device) }
+      try compositor?.prepare(base: base, overlay: overlay)
+      image = nil
+      texture = nil
+      geometry = nil
+      buffer = nil
     case .image(let next, _, _, _):
+      compositor = nil
       guard image !== next else { return }
       let descriptor = MTLTextureDescriptor.texture2DDescriptor(
         pixelFormat: .rgba8Unorm, width: next.width, height: next.height, mipmapped: false)
@@ -73,6 +82,7 @@ final class PreviewPipeline {
       geometry = nil
       buffer = nil
     case .product(let next, _, _):
+      compositor = nil
       guard geometry !== next else { return }
       let nextBuffer = next.vertices.withUnsafeBytes { bytes in
         device.makeBuffer(
@@ -83,6 +93,14 @@ final class PreviewPipeline {
       buffer = nextBuffer
       image = nil
       texture = nil
+    }
+  }
+
+  func preprocess(_ command: any MTLCommandBuffer, width: Int, height: Int, content: PreviewContent)
+    throws
+  {
+    if case .composite(_, _, let settings) = content {
+      try compositor?.preprocess(command, width: width, height: height, settings: settings)
     }
   }
 
@@ -98,6 +116,8 @@ final class PreviewPipeline {
     encoder.setFragmentTexture(texture ?? placeholder, index: 0)
     encoder.setDepthStencilState(noDepth)
     switch content {
+    case .composite(_, _, let settings):
+      compositor?.composite(encoder, width: width, height: height, settings: settings)
     case .image(let image, let edit, let view, let comparison):
       u.edit = .init(
         edit.exposure, edit.saturation, edit.vignette,

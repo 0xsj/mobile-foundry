@@ -87,3 +87,30 @@ Primary references: [GLUtils](https://developer.android.com/reference/android/op
 and [glTF material specification](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html).
 Gesture test reference: [TouchInjectionScope](https://developer.android.com/reference/kotlin/androidx/compose/ui/test/TouchInjectionScope).
 This preview is not a general glTF importer or complete PBR engine.
+
+## Compositor framebuffer passes and timing limits
+
+Observed 2026-10-08 with Kotlin 2.3.20, compile SDK 36 and API36_Test/Android 16;
+minimum API stays 24 and the context stays GLES 2. CompositorRenderer lazily links
+a fullscreen shader, retains two sources and three RGBA8 targets, and renders
+three intermediate passes through a framebuffer object. It checks attachment
+completeness, restores the previously bound framebuffer for the final pass and
+restores active texture unit zero. Targets are never sampled while attached as
+the current output. GLES target sampling flips Y; uploaded top-left CPU pixels
+do not. The shaders use highp where available and mediump otherwise.
+
+Admitted straight sRGB RGBA8 converts on CPU before glTexImage2D. Private owned
+bytes are exposed only through upload buffers; UI settings cannot mutate pixels.
+Control changes do not upload again. Context loss invalidates handles; resume
+rebuilds from the retained CPU objects with fresh counters.
+
+CPU encode uses SystemClock.elapsedRealtimeNanos around the GL encoding path;
+the first frame includes texture setup/upload, after lazy program creation. There is no GLES 2 GPU query adapter in this slice,
+so GraphicsProfile reports null with an explicit reason. Source inspection of
+Android's Java bindings is not evidence of a device GPU duration. Publication
+posts to main and checks disposal; never mutate Compose state on the GL thread.
+
+Primary reference: [OpenGL ES 2 framebuffer specification](https://registry.khronos.org/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf).
+Read [the graphics walkthrough](../modules/project/core/graphics/README.md#compositor-studio)
+and [device protocol](../../../../docs/GRAPHICS-PROFILING.md). Driver precision,
+GPU counters, physical-device timing and TalkBack gesture coverage remain open.

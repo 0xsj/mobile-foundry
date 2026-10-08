@@ -43,6 +43,10 @@ linked language and tool notes to understand the choices. This notebook follows
     and both catalog features. Compare image encoding/coordinates, vertex packing,
     camera projection and [editable values](../../../notes/patterns/editable-values-and-renderer-resources.md).
 
+14. Read [graphics inputs and finite event time](../../../notes/patterns/graphics-inputs-and-event-time.md), then revisit
+    the graphics and catalog walkthroughs. Compare decorative phase, supplied
+    progress/data and a finite feature-owned celebration playhead.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -57,6 +61,9 @@ linked language and tool notes to understand the choices. This notebook follows
 Paths mirror the Swift root: `apps/FoundryCatalog/` maps to
 `notes/modules/apps/FoundryCatalog/`. Module notes link source and checks;
 transferable notes describe the mechanism without local source paths.
+
+15. Read [compositing and pass ownership](../../../notes/patterns/premultiplied-compositing-and-render-passes.md), then [graphics measurement](../../../notes/techniques/graphics-profiling-and-measurement.md). Revisit the graphics/catalog walkthroughs and native texture notes for
+    transparent input, linear premultiplication, framebuffer passes and completion.
 
 ## Current coverage
 
@@ -167,3 +174,62 @@ Import/export, general scene loading, durable recipes and device profiling remai
 - Which query behaviors require a shared cache, and which belong to one feature's store?
 - What does pure settlement omit that a feature must check before publishing?
 - Why should a material change replace a background without replacing its content?
+
+## GPU use-case expansion
+
+The same day's expansion adds five procedural consumers: Flow, Material, Liquid,
+Particles and Field. Read [graphics inputs and event time](../../../notes/patterns/graphics-inputs-and-event-time.md).
+Five value/policy checks pass per platform plus two actual Metal execution tests.
+Both apps build, Android host regressions and fifteen iOS app checks pass.
+The corrected complete Android device suite passes all thirty-one checks; native
+walkthroughs record the queued-frame scrub race and iOS manual evidence/limits.
+The examples keep decorative time separate from supplied completion/data and a
+finite feature-owned event. Physical-device budgets remain unmeasured.
+
+## Compositor batch evidence
+
+Completed 2026-10-08. Compositor studio extends the retained preview surface with
+owned straight RGBA input, linear premultiplied upload, feathered masking,
+Normal/Multiply/Screen blending, separable blur/glow, comparison and reset.
+Optional profiles separate CPU encoding, available completed Metal GPU intervals
+and estimated texture payload. GLES 2 GPU timing is explicitly unavailable.
+
+Seven graphics value/fixture checks pass per platform, plus three actual Metal
+render tests. Both native builds pass; all sixteen iOS app checks, seventeen
+Android app host checks and the complete thirty-four-check Android device suite
+pass. The final three focused compositor checks also pass after tightening GL
+error classification. Hosted iOS checks cover actual studio layout and retained
+surface/cache/resize/profile/pause/removal. Android checks additionally exercise
+native editing, gestures, reset, context recreation and reopening with PixelCopy.
+
+Manual iOS checks confirm Original/Composed, mask bypass with disabled mask
+controls, repeated profiling, reduced-motion pause and reset to defaults. A
+simulator CLI screenshot was inspected for the actual photograph, transparent
+layer, comparison divider and native control layout. CUA screenshot capture is
+still blank; the CLI image supplies visual evidence. iOS slider/VoiceOver and
+physical-device thermal/energy budgets remain unmeasured. The profiling document
+is a repeatable protocol, not a completed device benchmark.
+
+Next questions: when do measured costs justify skipping passes, using half-float
+targets or adding GPU timer queries; and how should a saved recipe version its
+CPU assets/settings without storing native handles?
+
+## App icon handoff
+
+The 2026-10-08 [icon packaging note](substrate/swift-package-and-xcode-project-wiring.md#generated-app-icon)
+explains original/derivative ownership, prompt provenance and the selected iOS
+asset slot. The simulator build and asset checks pass. TestFlight distribution
+is pending the remaining pre-release work.
+
+## Placeholder shell reading order
+
+Read [tab selection and presentation](substrate/swiftui-tab-selection-and-presentation.md),
+then [the catalog shell](modules/apps/FoundryCatalog/README.md#four-tab-placeholder-shell)
+and [shared lifetime ownership](../../../notes/patterns/tabs-and-feature-lifetime.md).
+The component map is a directory sketch, not completed UI coverage. Next:
+when should each real destination own a detail stack, and how should a deep
+link select a tab before navigating within it?
+
+Shell evidence: simulator build and sixteen existing app/layout checks pass;
+manual iOS execution covers all tabs, material selection and catalog return.
+The app walkthrough records the native capture and restoration limits.

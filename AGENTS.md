@@ -16,6 +16,10 @@ Reusable image editing and mesh product examples implement
 [graphics previews](contracts/behavior/graphics-previews.md). Keep admitted CPU
 assets/edit values separate from native GPU resource ownership. Canonical assets
 and provenance live in `assets`; run `make assets-check` after changing copies.
+Transparent-layer previews and multipass ownership implement
+[compositor studio](contracts/behavior/compositor.md); keep linear premultiplied
+pixels, separate pass outputs, and honest timing/payload labels. Use
+[the profiling protocol](docs/GRAPHICS-PROFILING.md) before making device budgets.
 Other app areas remain scaffolds.
 Implement capabilities in reviewable slices rather than treating planned
 behavior as already available.

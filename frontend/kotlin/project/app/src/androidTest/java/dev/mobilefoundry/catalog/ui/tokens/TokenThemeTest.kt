@@ -110,8 +110,13 @@ class TokenThemeTest {
 
     @Test fun appThemePreviewOverrideAndOpaqueFallbackPreserveSceneState() {
         compose.setContent { FoundryCatalogRoot() }
-        compose.onNodeWithContentDescription("Glass surfaces").performClick().assertIsOn()
-        compose.onNodeWithText("Tokens").performClick()
+        compose.onNode(hasText("Account") and hasClickAction()).performClick()
+        compose.onNodeWithContentDescription("Glass surfaces").assertIsOn()
+            .performClick().assertIsOff().performClick().assertIsOn()
+        compose.onNode(hasText("Studio") and hasClickAction()).performClick()
+        compose.onNodeWithText("Open catalog").performClick()
+        compose.onNodeWithContentDescription("Glass surfaces").assertIsOn()
+        compose.onNodeWithText("Tokens").performScrollTo().performClick()
         val floating = if (Build.VERSION.SDK_INT >= 31) "Glass" else "Solid"
         compose.onNodeWithText("Theme: Glass · Floating: $floating").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("Select object").performScrollTo().performClick()

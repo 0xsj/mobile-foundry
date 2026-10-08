@@ -26,8 +26,10 @@ files. Presets compose those values; they do not duplicate component code.
 Swift folders organize source within one package namespace. Kotlin packages
 mirror folders, for example `dev.mobilefoundry.ui.components.feedback.query`.
 
-Add component families as their first implementation arrives: Forms, Display,
-Layout, Navigation, Overlays, and Shells, using lowercase on Kotlin. Each
+The [component map](docs/COMPONENTS.md) reserves empty leaf folders with .gitkeep
+for visualization: Forms, Display, Layout, Feedback, Navigation, Overlays,
+Shells and Patterns, using lowercase on Kotlin. These are planned controls,
+apart from the implemented entries identified in the map. Each
 component gets a directory for its implementation, configuration, variants, and
 component-specific documentation. A family is a source folder, not a new build
 module. Keep native tests in their package/module test tree and catalog examples
@@ -90,9 +92,11 @@ Native widgets still own their internal animation behavior.
 
 Foundry Studio now has **Solid** and **Glass** material styles, independent of
 light/dark appearance. Both retain the same color, spacing, type, and motion
-tokens. The default is Solid. Select `style` on FoundryTheme at composition;
+tokens. FoundryTheme defaults to Solid; the placeholder app shell starts in
+Glass for visualization. Select `style` on FoundryTheme at composition;
 nested themes inherit it unless overridden. The catalog home has a Glass
-surfaces switch for the app session. Tokens offers App theme/Solid/Glass preview
+surfaces switch for the app session, also available in the Account tab.
+Tokens offers App theme/Solid/Glass preview
 selection plus Reduce transparency preview; these overrides stay local.
 
 `FoundrySurface` has content and floating roles. Content panels remain opaque
@@ -133,7 +137,12 @@ transparency reduction or unavailable blur. See [forms behavior](contracts/behav
 
 ## Catalog and checks
 
-Open **Tokens** in either native catalog. System/Light/Dark and Reduce motion
+Open **Studio → Open catalog → Tokens** in either native app.
+The app shell has Home, Library, Studio and Account placeholders, with native
+SwiftUI tab chrome and a floating Compose bottom bar. iOS system tab chrome
+retains its platform material when Foundry surface style changes. See
+[shell behavior](contracts/behavior/app-shell.md).
+System/Light/Dark and Reduce motion
 preview affect only the examples below the controls. Inspect color roles,
 typography, spacing, radii, action counts, and the bounded position transition.
 Changing appearance preserves the sample's action and position state.

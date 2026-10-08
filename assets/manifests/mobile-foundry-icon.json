@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "id": "mobile-foundry-icon-v1",
+  "provenance": "Generated for Mobile Foundry with the built-in OpenAI imagegen tool, 2026-10-08. Original retained; derivative resized only for iOS asset packaging.",
+  "tool_mode": "image_gen.imagegen / generate; transparent_background=false; no reference images",
+  "generation_id": "exec-31ec11f1-a686-45da-a958-05c8ecb56f6a",
+  "prompt": "Use case: logo-brand\nAsset type: production iOS app icon for Mobile Foundry, a native mobile development and GPU interaction catalog.\nPrimary request: Create one refined, generic abstract icon, sculptural and memorable, with no letters or text.\nSubject: a single substantial cobalt-blue continuous folded ribbon, bent into a compact open geometric loop with a clean porcelain negative-space aperture. Three broad bevelled planes turn through depth, suggesting precision, assembly, and motion. The shape must feel coherent and physically crafted, not a tangle or a stock cube. Strong recognizable silhouette at very small app-icon sizes.\nStyle/medium: premium restrained 3D industrial design render, ceramic-coated metal, smooth satin faces, subtle polished bevels. Minimal and calm, with depth conveyed by form and lighting rather than extra decoration.\nComposition/framing: square 1024 by 1024 image; centered mark occupying approximately 70% of the canvas with generous safe margins. Very slight isometric perspective, all of the mark visible. Full-bleed solid pale porcelain background #F3F4F6 to every edge. Completely opaque pixels, square outer corners: the operating system supplies the app icon mask.\nLighting/mood: soft upper-left studio light, precise darker blue shaded planes and restrained pale-blue edge reflections, short soft contact shadow. Crisp and high contrast without harsh black shadows.\nColor palette: Foundry Studio cobalt #3155C6, deeper blue graphite in shaded parts, pale porcelain #F3F4F6 backdrop. No green, neon, rainbow, or busy gradients.\nConstraints: one finished icon, not a mockup or presentation board; no text, initials, typography, border, outer rounded-square tile, watermark, device, flame, hammer, gear, code brackets, or existing brand logo. Avoid tiny details, transparent background, excessive gloss, dramatic glow, thin wires, or floating unrelated pieces.",
+  "master": {
+    "source": "mobile-foundry-icon-master-v1.png",
+    "sha256": "8699dd75d7f62d4916e9194ebbb6ca7d238b393e5acd997505fad169a304e3a3",
+    "width": 1254,
+    "height": 1254,
+    "format": "8-bit opaque RGB PNG"
+  },
+  "ios": {
+    "source": "mobile-foundry-icon-v1.png",
+    "sha256": "3a95f0d49a3cc46e2bdff3a23e5bfe8ed301ae800633e052ba1bd80802379052",
+    "width": 1024,
+    "height": 1024,
+    "format": "8-bit opaque RGB PNG",
+    "conversion": "sips --resampleHeightWidth 1024 1024 assets/source/mobile-foundry-icon-master-v1.png --out assets/source/mobile-foundry-icon-v1.png",
+    "destination": "frontend/swift/apps/FoundryCatalog/Resources/Assets.xcassets/AppIcon.appiconset/mobile-foundry-icon-v1.png",
+    "scope": "Default iOS/iPadOS app icon; no separate appearance variants or Icon Composer layers."
+  }
+}

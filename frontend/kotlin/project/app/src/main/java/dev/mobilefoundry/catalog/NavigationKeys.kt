@@ -18,3 +18,5 @@ import kotlinx.serialization.Serializable
 @Serializable data object GPUEffectsCatalog : NavKey
 @Serializable data object ImageStudioCatalog : NavKey
 @Serializable data object ProductStudioCatalog : NavKey
+
+@Serializable data object CompositorStudioCatalog : NavKey

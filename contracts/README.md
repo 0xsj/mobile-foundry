@@ -10,6 +10,9 @@ Keep application behavior separate from backend wire details. Managed SDKs
 may use different wire protocols while satisfying an application's repository
 or session interface.
 
+[Placeholder app shell](behavior/app-shell.md) defines four peer destinations,
+catalog presentation/back navigation, material ownership and feature lifetime.
+
 Generated Swift and Kotlin wire models live inside their platform service
 boundaries. The canonical specification and generator inputs live here.
 [Kernel outcomes and failures](behavior/kernel.md) is the first behavioral
@@ -52,3 +55,10 @@ viewer. Both native suites consume [preview fixtures](fixtures/graphics/previews
 Metal execution and Android Surface readback check real output and interaction.
 Native Metal execution and Android Surface pixel/lifecycle tests supplement the
 fixtures; cross-platform pixel identity and device performance are not promised.
+
+[Compositor studio](behavior/compositor.md) adds owned straight RGBA overlays,
+linear premultiplied filtering, masks, blend modes, blur/glow and optional profile
+observations through the existing preview adapter. Both pure suites consume
+[compositor fixtures](fixtures/graphics/compositor.json); native tests exercise
+actual pixels, resource reuse, resizing and lifecycle. Physical-device cost is
+explicitly unmeasured; follow [the protocol](../docs/GRAPHICS-PROFILING.md).

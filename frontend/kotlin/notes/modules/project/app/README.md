@@ -240,3 +240,82 @@ The sample saves no durable edit recipe and imports/exports no user assets.
 ## Related
 
 [State types](../../../language/kotlin-sealed-ui-states-and-data-classes.md), [Kotlin reading order](../../../README.md), and [Setup](../../../../../../docs/SETUP.md).
+
+## Expanded GPU use cases
+
+The 2026-10-08 expansion adds Flow, Material, Liquid, Particles and Field to
+the existing GPU effects destination. Read the updated EffectSettings and shader
+before the catalog controls. Liquid takes supplied completion; Particles takes
+a finite playhead; Field takes up to twelve owned point/weight/radius samples.
+Field and particle canvases draw on input changes. Only the catalog owns Replay
+event timing, with pause/reduction/lifecycle gates and a restart generation.
+See [graphics inputs and event time](../../../../../../notes/patterns/graphics-inputs-and-event-time.md) for the cross-platform
+reasoning, reusable product examples, upload budget and next questions.
+
+Five graphics host checks pass, including new content admission/owned snapshots.
+The app builds and host regressions pass. The first device run passed thirty
+of thirty-one checks: a queued Replay frame overwrote a just-scrubbed input.
+Checking current playback/generation before publication corrected that race.
+All five focused GPU tests and the final complete thirty-one-check device suite
+pass on API36_Test/Android 16. New checks use actual PixelCopy output for the
+five additions and retain the same surface, then exercise progress/data controls,
+reduced motion, finite completion/restart, pause/background and scrub cancellation.
+The input-driven canvas caption avoids displaying the ambient scheduler's zero
+rate as if it measured Replay redraws. Physical-device profiling remains open.
+
+## Compositor studio
+
+Claim: the catalog owns one transient composition and the renderer owns its
+textures/passes; performance observations do not control rendering policy.
+
+Added 2026-10-08. Read [the studio](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/graphics/CompositorStudioScreen.kt) → [asset creation](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/graphics/PreviewAssets.kt) → [graphics walkthrough](../core/graphics/README.md). The existing opaque photograph loads off main; the small RGBA disc/ring is
+code-authored locally and retained by feature identity. Layer/Mask/Compare tools
+change placement or the divider, pinch scales, and labeled sliders provide native
+alternatives for every edit. Reset restores composition defaults. Persistence,
+import/export, arbitrary layers and product rules are outside this example.
+
+Profile redraws defaults off. Reduced motion stops the repeated workload while
+static controls still draw. The native attachment gates RESUMED lifecycle and removal.
+The panel labels target dimensions, four passes, input/target payload, uploads,
+individual target allocations, CPU encoding and available GPU timing separately.
+The latest snapshot is not a statistical recorder or displayed FPS.
+
+[Native integration checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/graphics/CompositorStudioTest.kt) exercise retained canvas identity, static redraw, resizing, profile reporting,
+continuous pause and removal. Device UI checks additionally exercise blend/blur controls, layer drag, mask placement, pinch, reset, redraw/reduction and navigation reopening using PixelCopy.
+Read the platform index for final execution evidence; physical-device budgets
+remain unmeasured. Follow [the profiling protocol](../../../../../../docs/GRAPHICS-PROFILING.md) and [the shared pattern](../../../../../../notes/patterns/premultiplied-compositing-and-render-passes.md). Next: how should a feature save a versioned
+composition recipe without persisting native GPU handles?
+
+## Four-tab placeholder shell
+
+Added 2026-10-08. Read
+[AppShell](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/AppShell.kt),
+then [FoundryCatalogRoot](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/MainActivity.kt),
+[MainNavigation](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/Navigation.kt)
+and [MainScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/main/MainScreen.kt).
+The app saves tab ID and presentation flag and composes only the selected
+placeholder. Studio opens the catalog; its local ViewModelStoreOwner ends
+with the presentation. This also clears its models on Activity recreation;
+this prototype promises saved navigation, not retained feature drafts.
+
+The app starts in Glass for visualization; FoundryTheme still defaults to
+Solid. Account and catalog share the root material callback. FoundryTabBar
+accepts item values and callbacks while the app owns routes, insets and the
+static backdrop. MainNavigation guards its last entry and maps root Back to
+close when an exit callback is supplied. MainScreen scrolls so every catalog
+entry remains reachable with the new close action.
+
+Read [native mechanics](../../../substrate/compose-tabs-and-presentation-owners.md)
+and [shared ownership](../../../../../../notes/patterns/tabs-and-feature-lifetime.md).
+[AppShellTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/shell/AppShellTest.kt)
+exercises four selected-state targets, saved selection/material choice and
+catalog detail Back, root Back and close. The native build and Android host
+regressions pass. The first complete device run passed 35 of 36 tests, including
+both shell checks; an existing token test still expected the old catalog root
+and Solid default. After updating its entry through Account/Studio, all eight
+focused shell/theme checks pass on API36_Test/Android 16. Other implementation
+code was unchanged after the full run. A final emulator screenshot was inspected
+for the Home placeholder, floating bar, selected label and system insets.
+Saved-state testing exercises rememberSaveable restoration, not an actual
+process-kill scenario. Deep links, adaptive tablet navigation, physical-device
+performance and retained catalog drafts remain unverified or planned.

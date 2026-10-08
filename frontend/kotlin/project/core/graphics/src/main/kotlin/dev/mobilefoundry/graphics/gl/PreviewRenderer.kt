@@ -12,7 +12,8 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 internal class PreviewRenderer(private val assets: AssetManager, private val event: (EffectEvent) -> Unit,
-                               private val diagnostic: (Exception) -> Unit) : GLSurfaceView.Renderer {
+                               private val diagnostic: (Exception) -> Unit,
+                               private val profile: (GraphicsProfile) -> Unit = {}) : GLSurfaceView.Renderer {
     var content: PreviewContent? = null
     var running = false
     val clock = EffectClock()
@@ -20,6 +21,7 @@ internal class PreviewRenderer(private val assets: AssetManager, private val eve
     private var image: RasterImage? = null
     private var geometry: PreviewMesh? = null
     private var texture = 0
+    private var compositor: CompositorRenderer? = null
     private var buffer = 0
     private var width = 1
     private var height = 1
@@ -32,7 +34,7 @@ internal class PreviewRenderer(private val assets: AssetManager, private val eve
         put(floatArrayOf(-1f,-1f,0f,3f,-1f,0f,-1f,3f,0f)); position(0)
     }
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        program = 0; texture = 0; buffer = 0; image = null; geometry = null; clock.suspend()
+        program = 0; texture = 0; buffer = 0; image = null; geometry = null; compositor = null; clock.suspend()
         reportTime = seconds(); reported = frames
         try {
             val vertex = compile(GL_VERTEX_SHADER, "preview.vert")
@@ -60,6 +62,7 @@ internal class PreviewRenderer(private val assets: AssetManager, private val eve
     }
     private fun prepare(value: PreviewContent) {
         when (value) {
+            is PreviewContent.Composite -> Unit // Owned by the multipass renderer below.
             is PreviewContent.Image -> if (image !== value.image) {
                 val max = IntArray(1); glGetIntegerv(GL_MAX_TEXTURE_SIZE, max, 0)
                 if (value.image.width > max[0] || value.image.height > max[0]) throw UnsupportedAsset()
@@ -87,6 +90,27 @@ internal class PreviewRenderer(private val assets: AssetManager, private val eve
         val value = content ?: return
         if (program == 0 || width <= 0 || height <= 0) return
         try {
+            if (value is PreviewContent.Composite) {
+                if (compositor == null) {
+                    compositor = CompositorRenderer(assets)
+                    if(texture!=0) { glDeleteTextures(1,intArrayOf(texture),0);texture=0;image=null }
+                    if(buffer!=0) { glDeleteBuffers(1,intArrayOf(buffer),0);buffer=0;geometry=null }
+                }
+                val now=seconds()
+                val compositor=checkNotNull(compositor)
+                compositor.draw(value,width,height)
+                val cpuMs=(seconds()-now)*1000
+                frames++
+                if(!running || now-reportTime>=1.0) {
+                    event(EffectEvent.Statistics(EffectStatistics(frames,if(running)(frames-reported)/maxOf(.001,now-reportTime) else 0.0,width,height)))
+                    profile(GraphicsProfile(frames,width,height,uploads=compositor.uploads,targetAllocations=compositor.targetAllocations,
+                        inputTextureBytes=compositor.inputBytes,offscreenTextureBytes=compositor.targetBytes,cpuEncodeMilliseconds=cpuMs,
+                        gpuMilliseconds=null,gpuTiming="GPU timing unavailable on GLES 2; use a device profiler"))
+                    reported=frames;reportTime=now
+                }
+                return
+            }
+            compositor?.dispose();compositor=null
             glUseProgram(program); prepare(value)
             glClearDepthf(1f); glClear(GL_DEPTH_BUFFER_BIT); glDisable(GL_DEPTH_TEST)
             glBindBuffer(GL_ARRAY_BUFFER, 0)
@@ -94,6 +118,7 @@ internal class PreviewRenderer(private val assets: AssetManager, private val eve
             glDisableVertexAttribArray(normal); glDisableVertexAttribArray(slot)
             val now = seconds(); val time = (clock.frame(now, running) % (kotlin.math.PI * 8)).toFloat()
             when (value) {
+                is PreviewContent.Composite -> Unit // Returned above before the single-pass path.
                 is PreviewContent.Image -> {
                     val e=value.adjustments; val v=value.viewport
                     val split=if(value.comparison.isFinite()) value.comparison.coerceIn(0f,1f) else .5f
@@ -127,7 +152,7 @@ internal class PreviewRenderer(private val assets: AssetManager, private val eve
         } catch (e: Exception) { program=0; fail(e) }
     }
     private fun fail(e: Exception) {
-        if(e is UnsupportedAsset) event(EffectEvent.Failed(Failure.Unavailable(FailureMeta("This asset exceeds the device's GPU limits.","graphics.asset-capability"))))
+        if(e is UnsupportedAsset || e is CompositorCapability) event(EffectEvent.Failed(Failure.Unavailable(FailureMeta("GPU resources are unavailable for this composition or asset.","graphics.asset-capability"))))
         else { diagnostic(e);event(EffectEvent.Failed(Failure.Internal(FailureMeta("GPU initialization failed.","graphics.pipeline")))) }
     }
     private fun seconds() = SystemClock.elapsedRealtimeNanos()/1_000_000_000.0

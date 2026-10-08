@@ -22,7 +22,7 @@ import Testing
     if let v = view as? MTKView { return v }
     return view.subviews.lazy.compactMap { metal($0) }.first
   }
-  for screen in [AnyView(ImageStudioView()), AnyView(ProductStudioView())] {
+  for screen in [AnyView(ImageStudioView()), AnyView(ProductStudioView()), AnyView(CompositorStudioView())] {
     host.rootView = screen
     var canvas: MTKView?
     for _ in 0..<150 {

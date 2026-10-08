@@ -6,6 +6,29 @@ import ImageIO
 
 /// Catalog assets only. Other features inject their admitted image or mesh.
 enum PreviewAssets {
+  /// Code-authored straight-alpha fixture: a translucent disc and orbit ring.
+  static func overlay() -> AlphaImage {
+    let size = 256
+    var bytes = [UInt8](repeating: 0, count: size * size * 4)
+    for y in 0..<size {
+      for x in 0..<size {
+        let u = (Double(x) + 0.5) / Double(size)
+        let v = (Double(y) + 0.5) / Double(size)
+        let distance = hypot(u - 0.5, v - 0.5)
+        let ring = max(0, 1 - abs(distance - 0.37) / 0.035)
+        let disc = min(1, max(0, (0.26 - hypot(u - 0.43, v - 0.43)) / 0.018)) * 0.82
+        let satellite = min(1, max(0, (0.09 - hypot(u - 0.77, v - 0.72)) / 0.012))
+        let alpha = max(ring, max(disc, satellite))
+        let i = (y * size + x) * 4
+        bytes[i] = UInt8((70 + 175 * v).rounded())
+        bytes[i + 1] = UInt8((120 + 55 * v).rounded())
+        bytes[i + 2] = UInt8((245 - 100 * v).rounded())
+        bytes[i + 3] = UInt8((alpha * 255).rounded())
+      }
+    }
+    // Dimensions and byte count are fixed here; a failure is a programmer defect.
+    return AlphaImage(width: size, height: size, rgba: Data(bytes))!
+  }
   static func image() -> AppResult<RasterImage> {
     guard let url = Bundle.main.url(forResource: "studio-still-life", withExtension: "png"),
       let source = CGImageSourceCreateWithURL(url as CFURL, nil),
