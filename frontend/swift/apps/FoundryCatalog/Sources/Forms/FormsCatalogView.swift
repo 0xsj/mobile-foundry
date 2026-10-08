@@ -14,7 +14,7 @@ struct FormsCatalogView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: tokens.space.section) {
-                FoundrySurface(.floating) {
+                Surface(.floating) {
                     VStack(alignment: .leading, spacing: tokens.space.stack) {
                         Picker("Provider", selection: Binding(get: { provider }, set: { value in
                             if store.use(CreateNoteComposition.creator(provider: value, scenario: scenario)) { provider = value }

@@ -84,10 +84,16 @@ do not create a build module per family. App-owned token and component galleries
 live under `Sources/Tokens` on Swift and `ui/tokens` on Kotlin. Domain state,
 service selection, and asynchronous orchestration remain outside these folders.
 
-The four-tab prototype lives in Swift app `Sources/Shell` and Kotlin app
+The five-tab prototype lives in Swift app `Sources/Shell` and Kotlin app
 `ui/shell`. Studio opens the existing catalog separately; Account exposes the
 app material choice. Route/presentation ownership stays in the app even though
 the future reusable AppShell component folder is reserved.
+The middle Camera feature lives in `Sources/Camera` and `ui/camera`. Its native
+session and photo decoder stay app-owned; it shares the Image studio editor in
+`Sources/Graphics` and `ui/graphics`. Only admitted CPU pixels enter the graphics
+package. See [camera/photo behavior](../contracts/behavior/camera-photo.md).
+PhotoLibraryImporter in each Camera folder adapts the native selected-photo
+result into that same admitted image boundary.
 
 ## Capability names
 

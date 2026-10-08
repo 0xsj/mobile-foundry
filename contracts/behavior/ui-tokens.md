@@ -31,7 +31,7 @@ components/layout/surface. Hosts choose content or floating responsibility.
 Swift floating surfaces use regular Liquid Glass on iOS/macOS 26+, regular
 Material on earlier supported systems, and an opaque raised surface on reduction.
 Android uses a blurred, tinted Compose backdrop on API 31+ when the host provides
-FoundryBackdrop; unsupported APIs and missing sources fall back to opaque raised
+Backdrop; unsupported APIs and missing sources fall back to opaque raised
 surfaces. The source contains the background slot only, never the foreground
 controls. Source changes update the sampled backdrop. Compose GraphicsLayers
 are scoped to the host composition. External renderer surfaces are outside this

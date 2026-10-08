@@ -116,8 +116,8 @@ sensitivity remains a test limitation rather than a proven palette regression.
 ## Swappable material slice
 
 Added 2026-10-08. Read [Material](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/styles/tokens/Material.kt),
-the updated provider and V1, then [FoundryBackdrop](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/surface/FoundryBackdrop.kt)
-and [FoundrySurface](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/surface/FoundrySurface.kt).
+the updated provider and V1, then [Backdrop](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/surface/Backdrop.kt)
+and [Surface](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/surface/Surface.kt).
 The material family owns blur/tint/highlight parameters as well as semantic
 role selection. Content panels always remain solid. Floating surfaces replay
 the bounded host's separately blurred background, tint it, then draw controls.
@@ -155,8 +155,8 @@ external renderer capture, battery cost, or physical-device frame pacing.
 ## Native forms and write feedback
 
 The 2026-10-08 forms slice adds
-[FoundryTextField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/textfield/FoundryTextField.kt),
-[FoundrySubmitButton](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/submitbutton/FoundrySubmitButton.kt), and
+[LabeledTextField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/textfield/LabeledTextField.kt),
+[SubmitButton](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/submitbutton/SubmitButton.kt), and
 [MutationFeedback](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/mutation/MutationFeedback.kt).
 OutlinedTextField keeps native editing/labels and adds caller help/error semantics.
 The button disables while busy; feedback supplies a polite live region, public
@@ -195,10 +195,115 @@ device evidence would justify applying backdrop effects beyond bounded panels?
 The 2026-10-08 [component map](../../../../../../../docs/COMPONENTS.md) reserves
 .gitkeep-only planned leaf directories grouped like Bento. These are not
 implemented APIs. The new
-[FoundryTabBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/tabbar/FoundryTabBar.kt)
+[TabBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/tabbar/TabBar.kt)
 is implemented: it receives item IDs, labels, icon slots, selected ID and a
 selection callback. A transparent Material NavigationBar renders over the
-floating FoundrySurface. The app supplies a bounded backdrop and safe-area
+floating Surface. The app supplies a bounded backdrop and safe-area
 padding; the internal bar adds zero insets. No routes, screens or feature models
 enter core/ui. See [the app shell](../../app/README.md#four-tab-placeholder-shell)
 and [backdrop mechanics](../../../../substrate/compose-backdrop-layers.md).
+
+## Everyday component batch and naming
+
+Added 2026-10-08. Read [the API/usage guide](../../../../../../../docs/blueprints/ui-components.md),
+then [ActionButton](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/button/ActionButton.kt),
+[Card](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/card/Card.kt),
+[ListRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/listrow/ListRow.kt),
+and [SelectionCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/selectioncard/SelectionCard.kt).
+Twelve formerly reserved leaves now contain implementation. All component APIs
+and helper types use unbranded names. Package/theme/token names retain their
+identity. Explicit imports distinguish Card and Surface from Material controls.
+
+ActionButton selects native Button/OutlinedButton/TextButton for its variant
+and disables activation while busy. SubmitButton delegates to it. Card composes
+Surface, and SettingsSection/SelectionCard compose Card. ColumnScope and RowScope
+content receivers expose appropriate native layout customization. There is no
+extra layout model, service dependency or coroutine ownership. Read
+[slot mechanics](../../../../language/kotlin-covariant-query-state-and-content-slots.md)
+and [shared state ownership](../../../../../../../notes/patterns/component-slots-and-caller-owned-state.md).
+
+ListRow puts trailing content below copy at fontScale >= 1.5. Tabs uses native
+scrollable tabs; unique, nonempty options must contain the current value. A
+SelectionCard has one selectable radio-option action and a passive RadioButton;
+its content slot cannot contain nested controls. EmptyState hides decorative
+artwork semantics while leaving its title/message/actions available.
+
+Both native builds and the focused eleven-check Android run pass, including
+four new ComponentCatalogTest checks and existing forms/shell regressions.
+These exercise busy/disabled actions, explicit removal confirmation, search
+empty/clear recovery, selected/settings state across themes and saved state,
+native sheet dismissal and actual progress-range semantics. These are emulator
+checks, not a complete TalkBack, large-font, localization, keyboard, sheet-gesture
+or physical-device audit.
+
+## Selection controls and native overlays
+
+Added 2026-10-08. Read
+[ToggleField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/toggle/ToggleField.kt),
+[Checkbox](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/checkbox/Checkbox.kt),
+[RadioGroup](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/radiogroup/RadioGroup.kt),
+[SelectField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/select/SelectField.kt),
+[ValueSlider](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/slider/ValueSlider.kt),
+and [DateField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/datepicker/DateField.kt).
+Whole-row choice modifiers carry the native switch/checkbox/radio role; their
+native visual indicators have null callbacks. Mixed-state transitions, formatted
+slider copy and committed values remain caller policy. Slider steps count
+intermediate stops; a three-step 0..1 range has five positions.
+
+DateField uses the nullable millisecond picker API, supported at minimum API 24.
+Its conditional remembered picker state is a temporary draft. Confirm commits
+one nonnull value; dismissal removes the draft. Formatting uses UTC because
+native picker dates are UTC-midnight calendar labels. Read
+[Compose selection and modal drafts](../../../../substrate/compose-selection-and-modal-drafts.md)
+for the LocalDate API-level alternative and timezone gotcha.
+
+[SheetPanel](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/overlays/sheet/SheetPanel.kt),
+[ConfirmationDialog](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/overlays/dialog/ConfirmationDialog.kt),
+and [ActionMenu](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/overlays/menu/ActionMenu.kt)
+wrap native modal sheets, alerts and menu items. The caller owns sheet/dialog
+presence and real actions; menus own expansion only. Empty menus disable their
+trigger, disabled entries cannot dispatch, and destructive entries can request
+confirmation. Large sheet slots need caller scrolling.
+
+The Android app builds and all four existing UI token/material unit tests pass.
+Actual control/overlay interactions and saved-state checks are recorded in the
+app walkthrough. Next: when should a multi-field draft move above its modal,
+and which domain date encoding should cross the service seam?
+
+The final focused emulator suite passes fourteen checks, including six gallery
+checks and one real date-picker transaction/time-zone check; the remaining seven
+are existing forms/shell regressions. This establishes exercised native behavior,
+not comprehensive TalkBack, date constraints or physical-device coverage.
+
+## Display feedback and collection components
+
+Added 2026-10-08. Read
+[Avatar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/avatar/Avatar.kt),
+[StatCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/stat/StatCard.kt),
+[Skeleton](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/skeleton/Skeleton.kt),
+[ToastBanner](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/toast/ToastBanner.kt),
+[FieldGroup](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/fieldgroup/FieldGroup.kt),
+and [CollectionToolbar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/collectiontoolbar/CollectionToolbar.kt).
+They fill six reserved leaves using the existing UI module and native composition.
+
+Avatar receives fallback text or nullable BoxScope artwork; it clears child
+semantics and supplies one identity. StatCard combines supplied value/trend copy,
+so domain units and good/bad meaning remain caller policy. Skeleton creates its
+native infinite transition only while animated and not reduced, and exposes no
+fake loading content. The host supplies a real label. The theme's system/parent
+reduction already flows to this branch.
+
+ToastBanner has optional ToastAction and separate dismissal, with a polite
+message live region and independent native buttons. It has no queue, timer or
+operation runtime. FieldGroup establishes traversal grouping without flattening
+native fields; error takes precedence over help but per-field association remains
+caller policy. CollectionToolbar exposes ColumnScope filter/action slots rather
+than an item, filter or selected-ID model.
+
+Read [native mechanics](../../../../substrate/compose-loading-and-passive-content.md)
+and [shared projection/lifetime](../../../../../../../notes/patterns/collection-projections-and-feedback-lifetime.md).
+The app builds and four UI token/material unit checks pass. All nineteen focused
+emulator checks pass, including a native pixel test demonstrating pulse changes
+and static output after changing reduction while composed. This is exercised
+emulator output, not complete TalkBack, large-font or hardware performance
+coverage. Next: which notice needs explicit event identity and timeout ownership?

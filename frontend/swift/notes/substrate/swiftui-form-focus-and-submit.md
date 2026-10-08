@@ -23,7 +23,7 @@ or dismiss the keyboard after admission without the component creating state.
 
 ```swift
 // Excerpt — inside CreateNoteScreen.body
-FoundryTextField("Title",
+LabeledTextField("Title",
     text: Binding(get: { store.title }, set: { store.editTitle($0) }),
     error: store.titleError, enabled: store.canEdit, focus: $titleFocused,
     onBlur: { store.blurTitle() }, onSubmit: { submit() })

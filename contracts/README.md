@@ -10,8 +10,11 @@ Keep application behavior separate from backend wire details. Managed SDKs
 may use different wire protocols while satisfying an application's repository
 or session interface.
 
-[Placeholder app shell](behavior/app-shell.md) defines four peer destinations,
+[App shell](behavior/app-shell.md) defines five peer destinations,
 catalog presentation/back navigation, material ownership and feature lifetime.
+[Camera and photo preview](behavior/camera-photo.md) defines explicit camera
+permission, native capture lifetime, bounded photo admission, sample fallback
+and reuse of Image studio's editing controls.
 
 Generated Swift and Kotlin wire models live inside their platform service
 boundaries. The canonical specification and generator inputs live here.
@@ -38,6 +41,9 @@ the query and UI libraries.
 roles, native scales, scoped appearance, and reduced motion. Both UI suites
 consume the same [token fixtures](fixtures/ui/tokens.json); the fixture is test
 input rather than a runtime theme file.
+
+[Reusable UI components](behavior/ui-components.md) defines the unbranded
+component APIs, customization slots, caller-owned state and everyday gallery.
 
 [Forms and mutations](behavior/forms-mutations.md) owns admitted create commands,
 the narrow write port, pure mutation phases and feature draft/lifetime rules.

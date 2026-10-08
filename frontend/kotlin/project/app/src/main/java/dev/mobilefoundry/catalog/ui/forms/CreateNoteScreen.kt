@@ -16,10 +16,10 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import dev.mobilefoundry.kernel.FailureKind
 import dev.mobilefoundry.query.*
 import dev.mobilefoundry.ui.components.feedback.mutation.MutationFeedback
-import dev.mobilefoundry.ui.components.forms.submitbutton.FoundrySubmitButton
-import dev.mobilefoundry.ui.components.forms.textfield.FoundryTextField
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurfaceRole
+import dev.mobilefoundry.ui.components.forms.submitbutton.SubmitButton
+import dev.mobilefoundry.ui.components.forms.textfield.LabeledTextField
+import dev.mobilefoundry.ui.components.layout.surface.Surface
+import dev.mobilefoundry.ui.components.layout.surface.SurfaceRole
 import dev.mobilefoundry.ui.theme.FoundryTheme
 
 @Composable
@@ -34,17 +34,17 @@ fun CreateNoteScreen(state: CreateNoteFormState, editTitle: (String) -> Unit, bl
             if (submit()) focusManager.clearFocus() else focus.requestFocus()
         }
     }
-    FoundrySurface(Modifier.testTag("create-note-panel"), role = FoundrySurfaceRole.FLOATING) {
+    Surface(Modifier.testTag("create-note-panel"), role = SurfaceRole.FLOATING) {
         Column(Modifier.fillMaxWidth().padding(tokens.space.page), verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
             Text("Create note", style = tokens.typography.heading)
-            FoundryTextField("Title", value = state.title, onValueChange = editTitle,
+            LabeledTextField("Title", value = state.title, onValueChange = editTitle,
                 modifier = Modifier.fillMaxWidth().focusRequester(focus).onFocusChanged {
                     if (wasFocused && !it.isFocused) blurTitle()
                     wasFocused = it.isFocused
                 }, help = "Required · Up to 200 characters.", error = state.titleError, enabled = state.canEdit,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { submitAction() }))
-            FoundrySubmitButton("Create note", "Creating note…", state.mutation.isSubmitting,
+            SubmitButton("Create note", "Creating note…", state.mutation.isSubmitting,
                 onClick = submitAction, enabled = state.canEdit)
             MutationFeedback(state.mutation, submitting = "Waiting for confirmation…") { note ->
                 Column {

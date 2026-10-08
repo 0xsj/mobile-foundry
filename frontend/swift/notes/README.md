@@ -47,6 +47,29 @@ linked language and tool notes to understand the choices. This notebook follows
     the graphics and catalog walkthroughs. Compare decorative phase, supplied
     progress/data and a finite feature-owned celebration playhead.
 
+15. Read [compositing and pass ownership](../../../notes/patterns/premultiplied-compositing-and-render-passes.md),
+    then [graphics measurement](../../../notes/techniques/graphics-profiling-and-measurement.md).
+    Revisit the graphics/catalog walkthroughs and native texture notes.
+16. Read [capture assets and preview lifetime](../../../notes/patterns/capture-assets-and-preview-lifetime.md),
+    then [AVFoundation and photo admission](substrate/avfoundation-capture-and-photo-admission.md)
+    and the [app camera walkthrough](modules/apps/FoundryCatalog/README.md#camera-and-shared-photo-editor).
+    Trace explicit permission → serial session → bounded pixels → shared editor.
+17. Read [component slots and caller-owned state](../../../notes/patterns/component-slots-and-caller-owned-state.md),
+    then the [UI component batch](modules/packages/FoundryUI/README.md#everyday-component-batch-and-naming)
+    and [everyday gallery](modules/apps/FoundryCatalog/README.md#everyday-component-gallery).
+    Compare native labels, optional content builders, variants and composed patterns.
+
+18. Read [selection and modal drafts](substrate/swiftui-selection-and-modal-drafts.md),
+    then the UI and app walkthroughs' Controls/Overlays sections. Compare
+    committed values, temporary date drafts, mixed selection, intermediate slider
+    stops and native explicit confirmation.
+
+19. Read [loading and passive content](substrate/swiftui-loading-and-passive-content.md),
+    then the UI/app walkthroughs' Display/Feedback/Collections sections and
+    [projection/lifetime reasoning](../../../notes/patterns/collection-projections-and-feedback-lifetime.md).
+    Compare passive identity, reduced-motion animation, group field targets,
+    visible selection scope and transient notice restoration.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -62,10 +85,65 @@ Paths mirror the Swift root: `apps/FoundryCatalog/` maps to
 `notes/modules/apps/FoundryCatalog/`. Module notes link source and checks;
 transferable notes describe the mechanism without local source paths.
 
-15. Read [compositing and pass ownership](../../../notes/patterns/premultiplied-compositing-and-render-passes.md), then [graphics measurement](../../../notes/techniques/graphics-profiling-and-measurement.md). Revisit the graphics/catalog walkthroughs and native texture notes for
-    transparent input, linear premultiplication, framebuffer passes and completion.
-
 ## Current coverage
+
+Display/feedback/collection batch, 2026-10-08: six more APIs bring the three
+component batches to 27 building blocks. Both apps compile, eighteen existing
+iOS app checks, nineteen focused Android checks and four UI package tests per
+platform pass. Android includes real pulse/reduced-motion pixels, native editing,
+notice lifetime and retained collection selection. Read step 19 and the native
+walkthroughs for source links, manual iOS evidence and remaining device limits.
+
+Selection/overlay batch, 2026-10-08: nine more APIs fill the existing mirrored
+leaves, bringing these two component batches to 21 building blocks. Controls and
+Overlays demonstrate caller-owned selection, date drafts and explicit actions.
+Both native apps build; eighteen existing iOS app checks, fourteen focused
+Android interaction checks and four token/material tests per platform pass.
+Read step 18 and the native walkthroughs for source links, manual iOS evidence
+and remaining accessibility/device limits.
+
+Everyday UI batch, 2026-10-08: twelve reusable components populate reserved leaves
+and a Components gallery exercises Actions, Content and Patterns. All component
+APIs, existing and new, use descriptive names without a Foundry prefix. Both apps
+build; eighteen iOS app checks and eleven focused Android checks pass. iOS CLI
+captures verify light/dark action and settings/selection layouts, retained busy
+state/count and quality selection across material changes. Read step 17 and the
+native walkthroughs for usage and remaining accessibility/device limits.
+
+Orientation metadata fix, 2026-10-08: the universal app now declares three
+generic orientations and all four iPad orientations in its generated Info.plist.
+The team subsequently selected in Xcode is preserved in `project.yml`.
+Read [generated orientation metadata](substrate/swift-package-and-xcode-project-wiring.md#generated-orientation-metadata)
+and the catalog's archive verification. Rotated layouts and upload validation
+remain separate checks.
+
+Signing investigation, 2026-10-08: a normal simulator build and Xcode Run both
+succeeded with no development team configured, and the earlier signing error
+cleared from the Issues navigator. No configuration change was needed. Read
+[simulator versus device signing](substrate/swift-package-and-xcode-project-wiring.md#simulator-and-device-signing-investigation)
+before configuring a physical-device or TestFlight team; neither is verified yet.
+
+Latest gallery follow-up, 2026-10-08: Camera's Photos action opens the system
+single-image picker and reuses the existing bounded decoder/editor. Native tab
+labels override automatic symbol filling. All eighteen app checks pass, the final
+app builds, and the real simulator picker → selected image → editor path was
+observed, as was picker cancellation. A final screenshot confirms all five
+outlined icons and the compact Photos label. The initial Sample photo action
+described below has been replaced.
+Read the [gallery walkthrough](modules/apps/FoundryCatalog/README.md#gallery-input-and-outline-tabs),
+PhotosUI substrate and symbol-variant note. Next: how should a large/cloud asset
+transfer expose cancellation and memory limits before export is introduced?
+
+Camera slice, 2026-10-08: the middle Camera tab uses AVFoundation and
+bounded ImageIO photo admission, then shares Image studio's native editor.
+All eighteen iOS app checks pass, including two decoder checks; simulator and
+unsigned generic-device builds pass. Manual simulator execution covers sample
+load, Mono/Vivid, photo retention across tabs and Retake. CLI captures verify
+the five-tab layout, centered shutter and actual grayscale output. The final
+filter accessibility adjustment was built and manually checked: each preset is
+exposed as its own labeled button with selected state. Physical camera behavior,
+interruptions, VoiceOver and device budgets remain open. Follow reading step 16.
+Next: how should export encode a versioned edit without retaining GPU handles?
 
 The 2026-10-07 bootstrap links a SwiftUI app to an empty Swift kernel library.
 The package and iOS simulator builds passed. The catalog shows planned areas;

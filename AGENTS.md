@@ -20,9 +20,18 @@ Transparent-layer previews and multipass ownership implement
 [compositor studio](contracts/behavior/compositor.md); keep linear premultiplied
 pixels, separate pass outputs, and honest timing/payload labels. Use
 [the profiling protocol](docs/GRAPHICS-PROFILING.md) before making device budgets.
+The app-owned [camera slice](contracts/behavior/camera-photo.md) admits bounded
+photos into the existing editor. Keep native camera sessions separate from CPU
+photo ownership and GPU resources; stop capture when its viewfinder is inactive.
 Other app areas remain scaffolds.
 Implement capabilities in reviewable slices rather than treating planned
 behavior as already available.
+
+Reusable UI components and their component-local types use descriptive names
+without a `Foundry` prefix, such as `ActionButton`, `LabeledTextField`, `Card`,
+`SurfaceRole` and `SelectionCard`. Keep native widget names available rather
+than shadowing `Button` or `TextField`. Package, token/theme and app names are
+separate from this component naming convention.
 
 ## Learning notes
 

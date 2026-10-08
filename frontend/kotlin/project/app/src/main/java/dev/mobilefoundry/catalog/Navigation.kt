@@ -17,6 +17,7 @@ import dev.mobilefoundry.catalog.ui.notes.NotesCatalogScreen
 import dev.mobilefoundry.catalog.ui.query.QueryCatalogScreen
 import dev.mobilefoundry.catalog.ui.tokens.TokenCatalogScreen
 import dev.mobilefoundry.catalog.ui.forms.FormsCatalogScreen
+import dev.mobilefoundry.catalog.ui.components.ComponentCatalogScreen
 import dev.mobilefoundry.catalog.ui.graphics.GPUEffectsScreen
 import dev.mobilefoundry.catalog.ui.graphics.CompositorStudioScreen
 import dev.mobilefoundry.catalog.ui.graphics.ImageStudioScreen
@@ -32,6 +33,9 @@ fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) ->
     onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
     entryProvider =
       entryProvider {
+        entry<ComponentsCatalog> {
+          ComponentCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
         entry<CompositorStudioCatalog> {
           CompositorStudioScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
         }

@@ -147,7 +147,7 @@ private struct TokenSection<Content: View>: View {
     let content: Content
     init(_ title: String, @ViewBuilder content: () -> Content) { self.title = title; self.content = content() }
     var body: some View {
-        FoundrySurface {
+        Surface {
             VStack(alignment: .leading, spacing: tokens.space.stack) {
                 Text(title).font(tokens.typography.heading).accessibilityAddTraits(.isHeader)
                 content
@@ -179,7 +179,7 @@ private struct MaterialExample: View {
                             .offset(x: geometry.size.width * 0.3, y: -30)
                     }.frame(width: geometry.size.width, height: geometry.size.height)
                 }.accessibilityHidden(true)
-                FoundrySurface(.floating) {
+                Surface(.floating) {
                     VStack(alignment: .leading, spacing: tokens.space.inline) {
                         Text("Scene controls").font(tokens.typography.label)
                         ViewThatFits(in: .horizontal) {

@@ -52,8 +52,31 @@ concepts, patterns, and verification techniques live here.
 15. Read [premultiplied compositing and render passes](patterns/premultiplied-compositing-and-render-passes.md),
     then [graphics profiling and measurement](techniques/graphics-profiling-and-measurement.md).
     Follow the native compositor walkthroughs and [device protocol](../docs/GRAPHICS-PROFILING.md).
+16. Read [capture assets and preview lifetime](patterns/capture-assets-and-preview-lifetime.md),
+    then the native camera walkthroughs and substrate notes. Compare camera access,
+    decoded photograph ownership and independent GPU preview lifetime.
 
 ## Current coverage
+
+Everyday UI batch, 2026-10-08: twelve reusable components and a native Components
+gallery extend the existing family directories. Components and component-local
+types now have descriptive names without the Foundry prefix. Read
+[slot and state ownership](patterns/component-slots-and-caller-owned-state.md)
+and [usage examples](../docs/blueprints/ui-components.md#using-the-apis), then the
+native UI/app walkthroughs. Both builds, eighteen iOS app checks and eleven
+focused Android interaction checks pass. Screenshots verify the exercised iOS
+light/dark/material layouts; comprehensive accessibility/device coverage remains open.
+
+The 2026-10-08 iOS distribution follow-up fixes missing orientation metadata
+without removing iPad support and preserves the user's selected development
+team in the generator specification. Read
+[generated orientations](../frontend/swift/notes/substrate/swift-package-and-xcode-project-wiring.md#generated-orientation-metadata)
+before rebuilding an archive; older archives retain their original metadata.
+
+For the 2026-10-08 Xcode signing investigation, read
+[simulator versus device signing](../frontend/swift/notes/substrate/swift-package-and-xcode-project-wiring.md#simulator-and-device-signing-investigation).
+The simulator build and Xcode Run passed without a team during that earlier
+investigation; the subsequent orientation fix preserves the selected team.
 
 Started 2026-10-07 after native initialization. The current notes explain the
 build wiring and existing application scaffolds. Swift package and simulator
@@ -150,6 +173,31 @@ Backend profiles were scaffolded 2026-10-08. Go has reserved module layers and
 no `go.mod`; the provider notebooks record local stack configuration and the
 checks performed. Provider setup alone does not establish native session,
 repository, or synchronization behavior.
+
+## Selection and overlay batch
+
+The 2026-10-08 follow-up adds six selection controls and three native overlay
+patterns on both platforms, with Controls and Overlays gallery families. Read
+[committed values and transient interaction](patterns/component-slots-and-caller-owned-state.md#committed-values-and-transient-interaction--2026-10-08),
+then reading step 18 in each platform notebook. Committed selection belongs to
+the app; date drafts and menu expansion are temporary component mechanics.
+The native walkthroughs record actual checks and date/time-zone representation
+differences. Existing details/removal examples now reuse the shared wrappers. Both native
+apps build; eighteen existing iOS app checks, fourteen focused Android checks
+and four token/material checks per platform pass. Native interaction and
+screenshot observations are separate from those automated counts.
+
+## Display feedback and collection batch
+
+The 2026-10-08 third batch adds Avatar, StatCard, Skeleton, ToastBanner, FieldGroup
+and CollectionToolbar to both native UI trees. Display, Feedback and Collections
+exercise passive identities, loading reduction, explicit recovery and visible
+selection scope; Controls adds grouped editing. Read
+[collection projections and feedback lifetime](patterns/collection-projections-and-feedback-lifetime.md),
+then reading step 19 in each native notebook. Both apps compile; eighteen existing
+iOS app checks, nineteen focused Android checks and four UI package checks per
+platform pass. The native walkthroughs separate runtime/pixel/manual evidence
+from remaining accessibility and hardware questions.
 
 ## Shared findings
 
@@ -250,3 +298,39 @@ pass. Manual iOS navigation and both Home screenshots were inspected. Android's
 complete run passed 35/36 checks; after updating an old theme test for the shell
 entry point, the final eight shell/theme checks pass. Native walkthroughs record
 saved-state coverage and the remaining device/accessibility limits.
+
+## Middle Camera destination
+
+The 2026-10-08 camera slice extends the shell to Home, Library, Camera, Studio,
+Account. Camera has explicit permission, native live preview/still capture,
+front/back selection, a grid and Retake. Captured pixels and the bundled sample
+feed the same GPU editor as Image studio. Natural/Mono/Vivid/Soft reuse existing
+adjustments; exposure, saturation, vignette, comparison, pan and zoom remain
+available. Read [capture ownership](patterns/capture-assets-and-preview-lifetime.md),
+then each native walkthrough and framework note from reading step 16.
+
+Both native apps build; the unsigned iOS device branch also compiles. Eighteen
+iOS app checks, Android host regressions and the focused nine-check Android
+camera/shell/preview suite pass. Android executes a synthetic camera capture,
+real GPU filter pixels and owned camera closure. Manual iOS sample checks cover
+filter selection, retained photo across tabs, Retake and actual grayscale/layout
+screenshots. Physical capture quality/orientation, interruptions and device
+performance remain unmeasured. Saving/export and durable photo recipes are
+separate slices. Next: which output resolution, encoding and asset lifetime
+should a saved edit promise?
+
+## Gallery and outline follow-up
+
+The 2026-10-08 follow-up replaces Sample photo with native library selection.
+Both importers feed the existing bounded CPU-photo/editor boundary. Capture
+pauses during picking/loading; cancellation leaves the current screen usable.
+Tab icons stay outlined, with native selected highlights and accessible states.
+Read the revised [capture pattern](patterns/capture-assets-and-preview-lifetime.md#selected-library-input--2026-10-08)
+and the native gallery walkthroughs from reading step 16.
+
+Eighteen iOS app checks, seven focused Android camera/shell checks and Android
+host regressions pass; both apps package. Real iOS system-picker selection was
+observed with a seeded photograph. Android tests inject picker results and then
+exercise actual URI I/O, EXIF-aware decoding, cancellation/failure UI and GPU
+filters. Cloud providers, broad accessibility and device memory/performance
+remain open. The preceding sample checks record the original camera slice.

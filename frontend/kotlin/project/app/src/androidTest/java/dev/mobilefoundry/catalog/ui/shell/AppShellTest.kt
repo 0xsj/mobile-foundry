@@ -13,9 +13,14 @@ class AppShellTest {
     private fun tab(label: String) = compose.onNode(hasText(label) and hasClickAction())
     private fun back() = compose.runOnIdle { compose.activity.onBackPressedDispatcher.onBackPressed() }
 
-    @Test fun fourTabsAndMaterialChoiceSurviveSavedState() {
+    @Test fun fiveTabsAndMaterialChoiceSurviveSavedState() {
         val restoration = StateRestorationTester(compose)
         restoration.setContent { FoundryCatalogRoot() }
+        val positions = listOf("Home", "Library", "Camera", "Studio", "Account").map {
+            tab(it).fetchSemanticsNode().boundsInRoot.center.x
+        }
+        org.junit.Assert.assertTrue(positions.zipWithNext().all { (left, right) -> left < right })
+        org.junit.Assert.assertEquals((positions.first() + positions.last()) / 2, positions[2], 2f)
         listOf("Home", "Library", "Studio", "Account").forEach { label ->
             tab(label).performClick().assertIsSelected()
             compose.onNodeWithText("Nothing here yet.").assertIsDisplayed()

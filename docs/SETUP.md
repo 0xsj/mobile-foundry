@@ -71,8 +71,19 @@ open FoundryCatalog.xcodeproj
 ```
 
 Select the shared `FoundryCatalog` scheme and an iOS simulator in Xcode, then
-run the app. Choose a development team in Signing & Capabilities to run on a
-physical device. Select HTTP health in the Foundation list to try the injected scenarios.
+run the app. Simulator runs do not require an Apple development team. For a
+physical device, select the FoundryCatalog app target → Signing & Capabilities,
+enable Automatically manage signing, and choose your Team. TestFlight requires
+a team enrolled in the Apple Developer Program. See Apple's
+[device setup](https://developer.apple.com/documentation/xcode/running-your-app-on-simulated-or-physical-devices)
+and [distribution setup](https://developer.apple.com/documentation/xcode/preparing-your-app-for-distribution).
+Keep any chosen `DEVELOPMENT_TEAM` value in the app target's settings in
+`project.yml` so regeneration preserves it. This working catalog records the
+team selected locally in Xcode; choose your own team when reusing the blueprint.
+If Xcode still shows an earlier signing error with a simulator selected, run
+again and inspect the latest result before changing signing settings.
+
+Select HTTP health in the Foundation list to try the injected scenarios.
 Select Notes service seam to run the same list screen against memory or an HTTP
 adapter with injected responses. Select Async UI patterns to explore generic
 loading, retained content/empty, failure, retry, and cancellation presentation.
@@ -94,6 +105,12 @@ make ios-generate
 
 Keep the generated `.xcodeproj` and shared scheme versioned so a checkout can
 open in Xcode directly. See [XcodeGen project configuration](https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md).
+
+The generated Info.plist declares portrait and both landscape orientations for
+iPhone and all four orientations for iPad multitasking. Keep these settings in
+`project.yml`; changing them does not update an existing archive. After a
+distribution metadata fix, create a new archive with Product → Archive and
+distribute that new entry from Organizer.
 
 To build directly from the application's directory:
 

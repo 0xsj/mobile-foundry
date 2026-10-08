@@ -14,7 +14,7 @@ import androidx.compose.ui.semantics.semantics
 import dev.mobilefoundry.graphics.*
 import dev.mobilefoundry.graphics.gl.GPUPreviewSurface
 import dev.mobilefoundry.kernel.*
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
+import dev.mobilefoundry.ui.components.layout.surface.Surface
 import dev.mobilefoundry.ui.theme.FoundryTheme
 import kotlinx.coroutines.CancellationException
 import java.util.Locale
@@ -79,7 +79,7 @@ fun CompositorStudioScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 onUnexpectedError = { Log.e("FoundryGraphics", "Unexpected compositor error", it) }, onProfile = { profile = it })
         } else CircularProgressIndicator()
         Text("Original on the left · Composed on the right", style = tokens.typography.caption)
-        FoundrySurface {
+        Surface {
             Column(Modifier.fillMaxWidth().padding(tokens.space.page), verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(tokens.space.inline)) {
                     listOf("Layer", "Mask", "Compare").forEach { value -> FilterChip(selected = tool == value, onClick = { tool = value }, label = { Text(value) }) }
@@ -108,7 +108,7 @@ fun CompositorStudioScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 }) { Text("Reset composition") }
             }
         }
-        FoundrySurface {
+        Surface {
             Column(Modifier.fillMaxWidth().padding(tokens.space.page), verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
                 Text("Render workload", style = tokens.typography.heading)
                 Row(horizontalArrangement = Arrangement.spacedBy(tokens.space.inline)) {

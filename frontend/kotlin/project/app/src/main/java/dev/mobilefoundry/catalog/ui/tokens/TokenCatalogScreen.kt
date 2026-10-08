@@ -20,7 +20,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import dev.mobilefoundry.ui.styles.tokens.FoundryAppearance
 import dev.mobilefoundry.ui.styles.tokens.FoundryThemeStyle
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
+import dev.mobilefoundry.ui.components.layout.surface.Surface
 import dev.mobilefoundry.ui.theme.FoundryTheme
 
 private enum class PreviewAppearance(val label: String, val appearance: FoundryAppearance?) {
@@ -142,7 +142,7 @@ private fun TokenExamples(modifier: Modifier = Modifier) {
 @Composable
 private fun TokenSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     val tokens = FoundryTheme.tokens
-    FoundrySurface {
+    Surface {
         Column(Modifier.fillMaxWidth().padding(tokens.space.page), verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
             Text(title, style = tokens.typography.heading, modifier = Modifier.semantics { heading() })
             content()

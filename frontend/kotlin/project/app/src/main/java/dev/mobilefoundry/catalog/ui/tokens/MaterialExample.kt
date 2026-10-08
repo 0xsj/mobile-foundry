@@ -34,7 +34,7 @@ internal fun MaterialExample() {
         val styleName = if (tokens.materials.style == FoundryThemeStyle.GLASS) "Glass" else "Solid"
         val floatingName = if (floating == FoundrySurfaceMaterial.GLASS) "Glass" else "Solid"
         Text("Theme: $styleName · Floating: $floatingName", style = tokens.typography.caption)
-        FoundryBackdrop(Modifier.fillMaxWidth().heightIn(min = 300.dp).clip(RoundedCornerShape(tokens.shape.panel)),
+        Backdrop(Modifier.fillMaxWidth().heightIn(min = 300.dp).clip(RoundedCornerShape(tokens.shape.panel)),
             background = {
                 Canvas(Modifier.fillMaxSize()) {
                     drawRect(Brush.linearGradient(listOf(c.surfaceSunk.color, c.accentTint.color)))
@@ -47,7 +47,7 @@ internal fun MaterialExample() {
                 }
             }) {
             Column(Modifier.fillMaxWidth().padding(top = 140.dp).align(Alignment.BottomCenter).padding(tokens.space.stack)) {
-                FoundrySurface(role = FoundrySurfaceRole.FLOATING) {
+                Surface(role = SurfaceRole.FLOATING) {
                     Column(Modifier.fillMaxWidth().padding(tokens.space.stack), verticalArrangement = Arrangement.spacedBy(tokens.space.inline)) {
                         Text("Scene controls", style = tokens.typography.label)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(tokens.space.inline)) {

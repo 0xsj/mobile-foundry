@@ -16,6 +16,7 @@ struct CatalogView: View {
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 Section("Foundation") {
+                    NavigationLink { ComponentCatalogView() } label: { Label("Components", systemImage: "rectangle.3.group") }
                     NavigationLink { FormsCatalogView() } label: { Label("Forms and mutations", systemImage: "square.and.pencil") }
                     NavigationLink { TokenCatalogView() } label: { Label("Tokens", systemImage: "paintpalette") }
                     NavigationLink { HealthCatalogView() } label: { Label("HTTP health", systemImage: "network") }

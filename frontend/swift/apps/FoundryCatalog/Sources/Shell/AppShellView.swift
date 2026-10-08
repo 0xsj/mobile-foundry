@@ -1,13 +1,15 @@
+import FoundryGraphics
 import FoundryUI
 import SwiftUI
 
 enum ShellTab: String, CaseIterable, Identifiable {
-    case home, library, studio, account
+    case home, library, camera, studio, account
     var id: String { rawValue }
     var title: String {
         switch self {
         case .home: "Home"
         case .library: "Library"
+        case .camera: "Camera"
         case .studio: "Studio"
         case .account: "Account"
         }
@@ -16,8 +18,9 @@ enum ShellTab: String, CaseIterable, Identifiable {
         switch self {
         case .home: "house"
         case .library: "books.vertical"
+        case .camera: "camera"
         case .studio: "square.stack.3d.up"
-        case .account: "person.crop.circle"
+        case .account: "person"
         }
     }
 }
@@ -27,16 +30,24 @@ struct AppShellView: View {
     @Binding var glassTheme: Bool
     @SceneStorage("foundry.shell.selectedTab") private var selection = ShellTab.home.rawValue
     @State private var catalogPresented = false
+    @State private var cameraPhoto: RasterImage?
 
     var body: some View {
         TabView(selection: $selection) {
             ForEach(ShellTab.allCases) { tab in
                 NavigationStack {
-                    ShellPlaceholderView(tab: tab, glassTheme: $glassTheme) {
-                        catalogPresented = true
+                    if tab == .camera {
+                        CameraView(photo: $cameraPhoto, isSelected: selection == tab.rawValue && !catalogPresented)
+                    } else {
+                        ShellPlaceholderView(tab: tab, glassTheme: $glassTheme) {
+                            catalogPresented = true
+                        }
                     }
                 }
-                .tabItem { Label(tab.title, systemImage: tab.symbol) }
+                .tabItem {
+                    Label(tab.title, systemImage: tab.symbol)
+                        .environment(\.symbolVariants, .none)
+                }
                 .tag(tab.rawValue)
             }
         }
@@ -75,7 +86,7 @@ private struct ShellPlaceholderView: View {
                         .buttonStyle(.borderedProminent).controlSize(.large)
                 }
                 if tab == .account {
-                    FoundrySurface(.floating) {
+                    Surface(.floating) {
                         Toggle("Glass surfaces", isOn: $glassTheme).padding(tokens.space.page)
                     }
                     Text("Compare Solid and Glass in the catalog. The tab bar follows iOS styling.")

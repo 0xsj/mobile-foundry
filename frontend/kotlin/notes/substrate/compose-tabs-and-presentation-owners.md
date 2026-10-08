@@ -32,7 +32,7 @@ are therefore recreated after Activity recreation; saved navigation can still
 restore. This deliberately does not promise retained feature drafts.
 
 The bottom bar asks the existing floating surface to render its background.
-FoundryBackdrop captures the static wash only; the navigation items are
+Backdrop captures the static wash only; the navigation items are
 foreground content, avoiding self-sampling. The host supplies system insets,
 and the internal NavigationBar uses zero additional insets to avoid duplication.
 

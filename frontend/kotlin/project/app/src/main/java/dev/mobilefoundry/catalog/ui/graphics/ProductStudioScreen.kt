@@ -14,7 +14,7 @@ import androidx.compose.ui.semantics.semantics
 import dev.mobilefoundry.graphics.*
 import dev.mobilefoundry.graphics.gl.GPUPreviewSurface
 import dev.mobilefoundry.kernel.*
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
+import dev.mobilefoundry.ui.components.layout.surface.Surface
 import dev.mobilefoundry.ui.theme.FoundryTheme
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +61,7 @@ fun ProductStudioScreen(onBack:()->Unit,modifier:Modifier=Modifier) {
                 is EffectEvent.Failed->failure=it.failure
             } },onUnexpectedError={ Log.e("FoundryGraphics","Unexpected preview error",it) })
         } else CircularProgressIndicator()
-        FoundrySurface {
+        Surface {
             Column(Modifier.fillMaxWidth().padding(tokens.space.page),verticalArrangement=Arrangement.spacedBy(tokens.space.stack)) {
                 Row(horizontalArrangement=Arrangement.spacedBy(tokens.space.inline)) {
                     ProductFinish.entries.forEach { f->FilterChip(selected=finish==f,onClick={finish=f},label={Text(f.name.lowercase().replaceFirstChar { it.uppercase() })}) }

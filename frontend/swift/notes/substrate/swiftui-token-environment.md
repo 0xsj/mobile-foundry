@@ -67,7 +67,7 @@ is another inherited environment value inside the resolved token bundle. The
 provider reads `accessibilityReduceTransparency` and combines it with ancestor
 and caller reduction. Transparency and motion requests remain independent.
 
-FoundrySurface keeps caller content outside the material switch, changing only
+Surface keeps caller content outside the material switch, changing only
 the background view. An availability branch uses regular Liquid Glass on
 iOS/macOS 26+, regular Material on earlier supported versions, and a semantic
 opaque fill when reduced. `if #available` is a runtime availability check that

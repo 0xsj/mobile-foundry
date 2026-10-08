@@ -72,7 +72,7 @@ struct CompositorStudioView: View {
           ProgressView("Loading photograph…").frame(maxWidth: .infinity, minHeight: 240)
         }
         Text("Original on the left · Composed on the right").font(tokens.typography.caption)
-        FoundrySurface {
+        Surface {
           VStack(alignment: .leading, spacing: tokens.space.stack) {
             Picker("Canvas tool", selection: $tool) {
               ForEach(Tool.allCases, id: \.self) { Text($0.rawValue.capitalized).tag($0) }
@@ -104,7 +104,7 @@ struct CompositorStudioView: View {
             Button("Reset composition", action: reset)
           }.padding(tokens.space.page)
         }
-        FoundrySurface {
+        Surface {
           VStack(alignment: .leading, spacing: tokens.space.stack) {
             Text("Render workload").font(tokens.typography.heading)
             Picker("Quality", selection: $quality) {

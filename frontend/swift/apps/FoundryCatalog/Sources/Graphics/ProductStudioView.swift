@@ -44,7 +44,7 @@ struct ProductStudioView: View {
         } else {
           ProgressView("Loading model…").frame(maxWidth: .infinity, minHeight: 240)
         }
-        FoundrySurface {
+        Surface {
           VStack(alignment: .leading, spacing: tokens.space.stack) {
             Picker("Finish", selection: $finish) {
               ForEach(ProductFinish.allCases, id: \.self) { Text($0.rawValue.capitalized).tag($0) }

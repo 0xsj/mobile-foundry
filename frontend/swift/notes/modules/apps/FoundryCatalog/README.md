@@ -316,3 +316,219 @@ became blank after modal dismissal; accessibility state and the CLI capture
 provide the recorded evidence. Process/scene restoration, older iOS versions,
 tablet adaptation and physical-device accessibility/performance are unverified.
 Future destination features/stacks, deep links and authentication are absent.
+
+## Camera and shared photo editor
+
+Claim: Camera owns native capture while its admitted CPU photograph can feed
+the existing GPU editor without retaining the camera session.
+
+Added 2026-10-08. The fifth destination is inserted between Library and Studio.
+[AppShellView](../../../../apps/FoundryCatalog/Sources/Shell/AppShellView.swift)
+holds an optional RasterImage across ordinary tab changes. Read
+[CameraView](../../../../apps/FoundryCatalog/Sources/Camera/CameraView.swift) →
+[controller and engine](../../../../apps/FoundryCatalog/Sources/Camera/CameraCapture.swift) →
+[PhotoDecoder](../../../../apps/FoundryCatalog/Sources/Camera/PhotoDecoder.swift) →
+[ImageEditorView](../../../../apps/FoundryCatalog/Sources/Graphics/ImageEditorView.swift).
+Camera is app-owned; the reusable graphics package still receives only owned
+pixels and bounded adjustments. [ImageStudioView](../../../../apps/FoundryCatalog/Sources/Graphics/ImageStudioView.swift)
+now loads the bundled asset and hosts that same editor with its previous defaults.
+
+Enable camera explicitly requests permission. Selected tab, active scene and
+viewfinder state gate session work; entering the editor stops capture. Flip
+reconfigures the native input. The engine confines synchronous AVFoundation work
+to a serial queue, correlates capture IDs, and tags events with a generation.
+The controller rejects obsolete session and photo completions. Native rotation
+coordinators handle preview and capture compensation separately. Decode applies
+metadata orientation, bounds the thumbnail to 2048 and flattens it onto white
+before admission. The project source declares the camera usage description.
+
+Natural/Mono/Vivid/Soft set existing exposure/saturation/vignette values from
+[PhotoFilter](../../../../apps/FoundryCatalog/Sources/Graphics/PhotoFilter.swift).
+The camera editor begins neutral; the original catalog keeps its initial
+comparison and sample adjustments. Retake clears pixels and returns to the
+viewfinder. No save/export or durable draft is implied. Tab changes can recreate
+editor controls, even though the photo itself remains in memory.
+
+[PhotoDecoderTests](../../../../apps/FoundryCatalog/Tests/PhotoDecoderTests.swift)
+uses a transparent 3000×1500 image with orientation metadata to check upright,
+bounded opaque admission, plus malformed bytes. The complete eighteen-check
+iOS app suite passes on iPhone 17 Pro/iOS 26.2, including the existing hosted
+editor/renderer regressions. Simulator and unsigned generic-device builds pass;
+the latter compiles the physical permission branch. Read
+[AVFoundation substrate](../../../substrate/avfoundation-capture-and-photo-admission.md)
+for manual Sendable confinement and native API limits.
+
+Manual simulator checks confirm Sample photo, Mono/Vivid selection, retained
+photograph after Home → Camera, and Retake returning to the disabled shutter.
+CLI screenshots were inspected for native layout and the actual grayscale photo.
+CUA's native screenshot remains blank; simulator CLI capture supplies the pixels.
+A label on the horizontal filter ScrollView hid its individual buttons in the
+observed accessibility tree, even with explicit child containment. Removing that
+container label leaves four individually labeled, selected-state buttons. The
+final adjustment builds and its buttons respond through native accessibility;
+this is not a complete VoiceOver audit.
+
+Physical capture, lens switching, OS interruption and device orientation still
+need a real phone. Sample-photo editing is a separate simulator check; it cannot
+establish those hardware properties. Next: how should export own encoding,
+resolution and photo-library permission without changing preview ownership?
+
+## Gallery input and outline tabs
+
+The 2026-10-08 follow-up replaces Camera's Sample photo action with Photos
+(accessible name Choose photo). [PhotoLibraryImporter](../../../../apps/FoundryCatalog/Sources/Camera/PhotoLibraryImporter.swift)
+loads the chosen PhotosPickerItem, applies a 32 MiB encoded-size limit and reuses
+PhotoDecoder off main. CameraView pauses capture during presentation/import,
+shows loading/failure state and rejects canceled or obsolete results. Retake
+still returns to the viewfinder; the original Image studio keeps its bundled
+asset. No full-library authorization or original-photo write is introduced.
+
+The eighteen-check app suite passes. Manual simulator execution opened the real
+system picker, selected a repository photograph seeded into Photos, and reached
+the existing GPU editor. CLI screenshots show the picker, selected photograph
+and outline tabs. The final compact Photos label and outline person icon were
+visually inspected; canceling the system picker returned to the usable Camera
+screen with its shutter still disabled and Choose photo available.
+The earlier sample checks above describe the initial camera slice, not a remaining
+sample button. Cloud downloads, denied URI equivalents and a complete VoiceOver
+audit remain unverified. Read [PhotosUI mechanics](../../../substrate/avfoundation-capture-and-photo-admission.md#photosui-input--2026-10-08-follow-up)
+and [symbol variants](../../../substrate/swiftui-tab-selection-and-presentation.md#outlined-symbols--2026-10-08-follow-up).
+
+## Orientation metadata and archive validation
+
+The 2026-10-08 distribution follow-up fixes an App Store Connect rejection for
+missing supported orientations in this universal app. Read the orientation
+build settings in [project.yml](../../../../apps/FoundryCatalog/project.yml),
+then [generated plist mechanics](../../../substrate/swift-package-and-xcode-project-wiring.md#generated-orientation-metadata).
+The generic array declares portrait and both landscapes; the iPad-specific
+array includes portrait upside down as required by the reported multitasking
+validation. The locally selected development team is now preserved in the same
+generator specification instead of being lost when the project is regenerated.
+
+Observed verification: `make ios-generate` and `make ios-build` pass. An unsigned
+Release archive built with `xcodebuild`, destination `generic/platform=iOS`,
+`CODE_SIGNING_ALLOWED=NO`, and archive path
+`.cache/archives/FoundryCatalog-orientations.xcarchive` also passes. Python
+`plistlib` inspected both packaged plists and asserted the exact orientation
+sets and device families `[1, 2]`; the Release bundle retains identifier
+`dev.mobilefoundry.catalog`, version `0.1.0`, build `1`.
+
+This is local packaging evidence, not successful App Store Connect validation.
+The user must create a new signed archive before distributing the fix, since
+the previously rejected archive is unchanged. Screen rotation, iPad layout and
+camera orientation on hardware remain separate runtime checks. Next: which
+phone and iPad sizes should form the pre-TestFlight rotation check?
+
+## Everyday component gallery
+
+Added 2026-10-08. Studio → Open catalog → Components opens
+[ComponentCatalogView](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift).
+The app owns counters, search text, busy state, settings, quality selection and
+presentation state. Actions, Content and Patterns organize the examples. Theme
+controls scope Light/Dark and Solid/Glass without replacing the state owner.
+Native sheet and confirmation examples compose the same components; they do not
+implement the reserved shared overlay wrappers. Read
+[the UI walkthrough](../../packages/FoundryUI/README.md#everyday-component-batch-and-naming)
+and [slot ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md).
+
+Observed verification: the regenerated project builds and all eighteen existing
+iOS app checks pass on iPhone 17 Pro/iOS 26.2. Manual native interactions and
+CLI screenshots verify the light action layout, dark busy button, retained
+action count of one after changing appearance, and Detailed selection retained
+after changing Glass to Solid. Screenshots show the actual settings/selection
+composition and readable native text. Simulator accessibility snapshots can lag
+the visible state; screenshots supplied the current visual evidence.
+
+Android has independent automated gallery interaction checks. This iOS slice
+does not claim equivalent automated widget activation or a complete VoiceOver,
+Dynamic Type, iPad/rotation, localization or keyboard audit. Next: which repeated
+row/accessory or overlay pattern deserves its own public API?
+
+## Controls and overlays gallery
+
+Added 2026-10-08. The parent
+[ComponentCatalogView](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+now offers five families; native Tabs uses a menu for this many choices.
+[ControlExamples](../../../../apps/FoundryCatalog/Sources/Components/ControlExamples.swift)
+receives a binding to values retained above the family switch. It demonstrates
+mixed aggregate selection, disabled toggle, radio/menu choice, a five-position
+slider and date draft confirmation. Review date begins at October 8, 2026 in the
+local calendar, not at an arbitrary backend timestamp.
+
+[OverlayExamples](../../../../apps/FoundryCatalog/Sources/Components/OverlayExamples.swift)
+receives caller-owned presentation/counter values. A disabled Share action, menu
+duplication, native sheet and reset confirmation show the difference between
+request, dismissal and commit. The existing details/removal examples also use
+the shared wrappers, replacing their earlier inline native implementations.
+Read [the UI walkthrough](../../packages/FoundryUI/README.md#selection-controls-and-native-overlays)
+and [native mechanics](../../../substrate/swiftui-selection-and-modal-drafts.md).
+
+The regenerated project builds and all eighteen existing iOS app checks pass.
+The package also compiles on macOS and passes four token/material tests. Manual
+simulator checks and CLI screenshots provide widget/layout evidence separately;
+the final observations are recorded below. Full VoiceOver, accessibility sizes,
+iPad/rotation, hardware and TestFlight checks for this batch remain open.
+
+Observed iPhone 17 Pro/iOS 26.2 interactions: Include everything advances mixed
+to all included; Compact becomes selected. Changing a date draft then discarding
+keeps October 8; confirming October 9 updates the committed review copy. Menu
+Share is exposed disabled, Duplicate creates one copy, Keep copies preserves it,
+and Confirm reset clears it. The shared sheet opens and closes in the dark
+preview. CLI screenshots verify the native calendar, selected October 9 draft,
+dark overlay gallery and the final full-sheet background. An initial sheet
+capture exposed a dark content rectangle within a light intrinsic-height host;
+the convenience wrapper now fills available bounds and aligns content at the
+top. The corrected build and fresh screenshot confirm the repair.
+
+Android's final fourteen-check suite independently covers native activation,
+slider semantics, family/theme/restoration retention and date transactions. The
+iOS checks above are manual observations, not added automated widget tests.
+
+## Display feedback and collections gallery
+
+Added 2026-10-08. The parent
+[ComponentCatalogView](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+adds Display, Feedback and Collections and hoists their values above the family
+switch. [DisplayExamples](../../../../apps/FoundryCatalog/Sources/Components/DisplayExamples.swift)
+switches between fallback/artwork avatars and supplies illustrative stat copy.
+[FeedbackExamples](../../../../apps/FoundryCatalog/Sources/Components/FeedbackExamples.swift)
+separates loading/reduction controls, temporary notice presence and explicit
+undo/retry counters. Changing families clears notice presence without resetting
+committed preview values or counters.
+
+[CollectionExamples](../../../../apps/FoundryCatalog/Sources/Components/CollectionExamples.swift)
+filters/sorts three app-owned records and stores selected stable IDs separately.
+Select visible unions only matches; Clear selection removes all. Filtering can
+hide selected IDs, and the summary continues to count them. Empty projections
+disable Select visible and offer filter reset. No service or shared query engine
+is introduced. [FieldGroupExample](../../../../apps/FoundryCatalog/Sources/Components/FieldGroupExample.swift)
+adds native fields to Controls, with app-owned validation and group error/help.
+
+Read [the UI walkthrough](../../packages/FoundryUI/README.md#display-feedback-and-collection-components),
+[native loading mechanics](../../../substrate/swiftui-loading-and-passive-content.md),
+and [projection/lifetime reasoning](../../../../../../notes/patterns/collection-projections-and-feedback-lifetime.md).
+The regenerated app compiles and passes all eighteen existing iOS app checks;
+the macOS UI package compiles and its four tests pass. Manual simulator checks
+and CLI captures supply actual widget/layout evidence recorded below. Full
+VoiceOver announcements, Dynamic Type, iPad/rotation and physical-device checks
+for these APIs remain separate.
+
+Observed iPhone 17 Pro/iOS 26.2 interactions and CLI captures: fallback avatars
+use one identity each, switching artwork retains the Studio emblem identity,
+and combined stat semantics include supplied values/trend/units. Feedback exposes
+real loading copy with no skeleton elements, changes to static preview copy under
+reduction, and explicit Retry replaces the failed notice with a saved notice and
+increments only its local counter. Native Undo and collection navigation were
+also exercised. Selecting visible favorites yields two selected IDs; turning the
+filter off reveals three records while retaining two selections. Native Newest
+choice orders Orbit, Atlas, Field with the same selected IDs. Dark/Glass changes
+retain selection, and screenshots show the actual avatar/stat, skeleton/banner
+and floating toolbar composition.
+
+The loading preview was adjusted to pass animated: false to each Swift skeleton
+when its local reduction toggle is selected. This avoids installing a nested
+theme background as a visible rectangle inside the Card; inherited/system
+reduction still applies inside Skeleton itself. The final app compiles after
+this gallery-only adjustment; a fresh launch and final CLI screenshot verify
+static placeholders directly on the Card background. Android separately exercises live theme reduction
+in its native pulse pixel test.

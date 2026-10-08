@@ -8,15 +8,15 @@ struct CreateNoteScreen: View {
     let store: CreateNoteStore
 
     var body: some View {
-        FoundrySurface(.floating) {
+        Surface(.floating) {
             VStack(alignment: .leading, spacing: tokens.space.stack) {
                 Text("Create note").font(tokens.typography.heading)
-                FoundryTextField("Title", text: Binding(get: { store.title }, set: { store.editTitle($0) }),
+                LabeledTextField("Title", text: Binding(get: { store.title }, set: { store.editTitle($0) }),
                                  help: "Required · Up to 200 characters.", error: store.titleError,
                                  enabled: store.canEdit, focus: $titleFocused,
                                  onBlur: { store.blurTitle() }, onSubmit: { submit() })
                     .textInputAutocapitalization(.sentences)
-                FoundrySubmitButton("Create note", submittingTitle: "Creating note…", isSubmitting: store.mutation.isSubmitting,
+                SubmitButton("Create note", submittingTitle: "Creating note…", isSubmitting: store.mutation.isSubmitting,
                                     enabled: store.canEdit, action: { submit() })
                 MutationFeedback(store.mutation, submitting: "Waiting for confirmation…") { note in
                     VStack(alignment: .leading, spacing: tokens.space.inline) {

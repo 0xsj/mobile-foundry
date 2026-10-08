@@ -63,6 +63,12 @@ semantic colors and scales, scoped system-aware themes, and a Tokens catalog.
 [Styles](STYLES.md) separates token definitions, preset values, native theme
 adaptation, and component families following Bento's organization. UI remains
 independent of services and feature request lifetime.
+The [everyday component batch](contracts/behavior/ui-components.md) adds unbranded
+action, search, display, feedback, selection and page/settings APIs. Native slots
+and caller state keep them reusable across verticals; the app-owned Components
+gallery exercises composed patterns and native overlays. Display, loading,
+grouped fields and collection composition keep image admission, validation,
+selected IDs and transient notice lifetime with their caller.
 Solid/Glass material styles are independent of light/dark colors. Content panels
 remain opaque; floating surfaces use native glass or a bounded Compose backdrop
 with an opaque fallback. Renderer frame ownership and external GPU integration
@@ -183,6 +189,17 @@ across ordinary edits; context recreation rebuilds from CPU input. Catalogs own
 asset decoding and feature state. The internal triangle format is an exemplar,
 not a universal engine schema or general importer. Persistence, import/export
 and product-specific variant rules remain above this seam.
+
+The [camera slice](contracts/behavior/camera-photo.md) supplies another input to
+the same image editor. App-owned AVFoundation/CameraX adapters own permission,
+session lifetime and still capture. Native decoding normalizes orientation,
+flattens alpha and bounds dimensions before admitting RasterImage. The shell
+holds only transient CPU pixels across tab changes; neither the camera session
+nor platform image handles enter the shared graphics boundary.
+System photo pickers supply a second source through app-owned import adapters.
+Only the chosen asset is read, normalized and admitted; selected-library access
+does not require camera or full-library permission. Picker/URI objects remain
+above the CPU image boundary and are not persisted as a durable asset recipe.
 
 The [compositor](contracts/behavior/compositor.md) extends the retained preview
 surface with straight RGBA admission, linear premultiplied upload, masking, blend

@@ -13,7 +13,7 @@ import androidx.compose.ui.semantics.semantics
 import dev.mobilefoundry.graphics.*
 import dev.mobilefoundry.graphics.gl.GPUEffectSurface
 import dev.mobilefoundry.kernel.*
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
+import dev.mobilefoundry.ui.components.layout.surface.Surface
 import dev.mobilefoundry.ui.theme.FoundryTheme
 import java.util.Locale
 import androidx.lifecycle.Lifecycle
@@ -79,7 +79,7 @@ fun GPUEffectsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                     is EffectEvent.Failed -> failure = it.failure
                 } }, onUnexpectedError = { Log.e("FoundryGraphics", "Unexpected GPU error", it) })
         }
-        FoundrySurface {
+        Surface {
             Column(Modifier.fillMaxWidth().padding(tokens.space.page), verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
                 Text("Effect", style = tokens.typography.label)
                 EffectKind.entries.chunked(3).forEach { row ->

@@ -36,7 +36,7 @@ struct GPUEffectsView: View {
                 Text(effect.useCase)
                     .foregroundStyle(tokens.colors.inkSecondary.color)
                 if let failure {
-                    FoundrySurface {
+                    Surface {
                         VStack(alignment: .leading, spacing: tokens.space.stack) {
                             Label(failure.publicInfo().meta.message, systemImage: "exclamationmark.circle")
                             Button("Try again") { self.failure = nil; backend = "Starting GPU…"; statistics = nil; attempt += 1 }
@@ -57,7 +57,7 @@ struct GPUEffectsView: View {
                         })
                     }.aspectRatio(1.2, contentMode: .fit).id(attempt)
                 }
-                FoundrySurface {
+                Surface {
                     VStack(alignment: .leading, spacing: tokens.space.stack) {
                         Picker("Effect", selection: $effect) {
                             ForEach(EffectKind.allCases, id: \.self) { Text($0.title).tag($0) }

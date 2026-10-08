@@ -21,6 +21,7 @@ import dev.mobilefoundry.catalog.NotesCatalog
 import dev.mobilefoundry.catalog.QueryCatalog
 import dev.mobilefoundry.catalog.TokensCatalog
 import dev.mobilefoundry.catalog.FormsCatalog
+import dev.mobilefoundry.catalog.ComponentsCatalog
 import dev.mobilefoundry.catalog.GPUEffectsCatalog
 import dev.mobilefoundry.catalog.CompositorStudioCatalog
 import dev.mobilefoundry.catalog.ImageStudioCatalog
@@ -47,6 +48,7 @@ fun MainScreen(
         modifier = Modifier.semantics { contentDescription = "Glass surfaces" })
     }
     Button(onClick = { onItemClick(TokensCatalog) }) { Text("Tokens") }
+    Button(onClick = { onItemClick(ComponentsCatalog) }) { Text("Components") }
     Button(onClick = { onItemClick(FormsCatalog) }) { Text("Forms and mutations") }
     Button(onClick = { onItemClick(GPUEffectsCatalog) }) { Text("GPU effects") }
     Button(onClick = { onItemClick(CompositorStudioCatalog) }) { Text("Compositor studio") }

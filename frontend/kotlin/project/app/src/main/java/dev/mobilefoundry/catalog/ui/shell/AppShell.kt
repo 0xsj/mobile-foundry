@@ -19,16 +19,19 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import dev.mobilefoundry.catalog.MainNavigation
 import dev.mobilefoundry.catalog.R
-import dev.mobilefoundry.ui.components.layout.surface.FoundryBackdrop
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurfaceRole
-import dev.mobilefoundry.ui.components.navigation.tabbar.FoundryTabBar
-import dev.mobilefoundry.ui.components.navigation.tabbar.FoundryTabItem
+import dev.mobilefoundry.catalog.ui.camera.CameraScreen
+import dev.mobilefoundry.graphics.RasterImage
+import dev.mobilefoundry.ui.components.layout.surface.Backdrop
+import dev.mobilefoundry.ui.components.layout.surface.Surface
+import dev.mobilefoundry.ui.components.layout.surface.SurfaceRole
+import dev.mobilefoundry.ui.components.navigation.tabbar.TabBar
+import dev.mobilefoundry.ui.components.navigation.tabbar.TabItem
 import dev.mobilefoundry.ui.theme.FoundryTheme
 
 private enum class ShellTab(val label: String, val icon: Int) {
     HOME("Home", R.drawable.ic_tab_home),
     LIBRARY("Library", R.drawable.ic_tab_library),
+    CAMERA("Camera", R.drawable.ic_tab_camera),
     STUDIO("Studio", R.drawable.ic_tab_studio),
     ACCOUNT("Account", R.drawable.ic_tab_account),
 }
@@ -38,6 +41,7 @@ private enum class ShellTab(val label: String, val icon: Int) {
 fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
     var selectedId by rememberSaveable { mutableStateOf(ShellTab.HOME.name) }
     var catalogPresented by rememberSaveable { mutableStateOf(false) }
+    var cameraPhoto by remember { mutableStateOf<RasterImage?>(null) }
     val tab = ShellTab.entries.firstOrNull { it.name == selectedId } ?: ShellTab.HOME
     val tokens = FoundryTheme.tokens
 
@@ -51,7 +55,7 @@ fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
             MainNavigation(glassTheme, onGlassThemeChange, onExit = { catalogPresented = false })
         }
     } else {
-        FoundryBackdrop(Modifier.fillMaxSize(), background = {
+        Backdrop(Modifier.fillMaxSize(), background = {
             Canvas(Modifier.fillMaxSize()) {
                 drawRect(tokens.colors.surfaceGround.color)
                 drawRect(Brush.radialGradient(
@@ -61,13 +65,20 @@ fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
             }
         }) {
             Column(Modifier.fillMaxSize()) {
-                ShellPlaceholder(tab, glassTheme, onGlassThemeChange,
-                    onOpenCatalog = { catalogPresented = true },
-                    modifier = Modifier.weight(1f).windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)))
-                FoundryTabBar(
+                if (tab == ShellTab.CAMERA) {
+                    CameraScreen(cameraPhoto, onPhotoChange = { cameraPhoto = it },
+                        modifier = Modifier.weight(1f).windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                            .padding(tokens.space.page))
+                } else {
+                    ShellPlaceholder(tab, glassTheme, onGlassThemeChange,
+                        onOpenCatalog = { catalogPresented = true },
+                        modifier = Modifier.weight(1f).windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)))
+                }
+                TabBar(
                     items = ShellTab.entries.map { destination ->
-                        FoundryTabItem(destination.name, destination.label) {
+                        TabItem(destination.name, destination.label) {
                             Icon(painterResource(destination.icon), contentDescription = null)
                         }
                     }, selectedId = tab.name, onSelect = { selectedId = it },
@@ -104,7 +115,7 @@ private fun ShellPlaceholder(
             }
         }
         if (tab == ShellTab.ACCOUNT) {
-            FoundrySurface(role = FoundrySurfaceRole.FLOATING) {
+            Surface(role = SurfaceRole.FLOATING) {
                 Row(Modifier.fillMaxWidth().padding(tokens.space.page),
                     verticalAlignment = Alignment.CenterVertically) {
                     Text("Glass surfaces", modifier = Modifier.weight(1f))

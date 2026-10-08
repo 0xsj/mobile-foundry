@@ -174,7 +174,7 @@ internal-copy projection pass. This does not establish server delivery, draft
 process restoration, TalkBack speech or every font/keyboard configuration.
 
 The Glass follow-up on the same day selects floating surfaces for both outer
-form panels and hosts an explicit FoundryBackdrop around the screen's decorative
+form panels and hosts an explicit Backdrop around the screen's decorative
 background. Without that host Android would fall back to solid even with a
 floating role. Foreground controls are excluded from the capture. A fifth form
 device check samples actual form pixels across Solid → Glass → reduced
@@ -299,7 +299,7 @@ with the presentation. This also clears its models on Activity recreation;
 this prototype promises saved navigation, not retained feature drafts.
 
 The app starts in Glass for visualization; FoundryTheme still defaults to
-Solid. Account and catalog share the root material callback. FoundryTabBar
+Solid. Account and catalog share the root material callback. TabBar
 accepts item values and callbacks while the app owns routes, insets and the
 static backdrop. MainNavigation guards its last entry and maps root Back to
 close when an exit callback is supplied. MainScreen scrolls so every catalog
@@ -319,3 +319,181 @@ for the Home placeholder, floating bar, selected label and system insets.
 Saved-state testing exercises rememberSaveable restoration, not an actual
 process-kill scenario. Deep links, adaptive tablet navigation, physical-device
 performance and retained catalog drafts remain unverified or planned.
+
+## Camera and shared photo editor
+
+Claim: CameraX use cases end at the app boundary; an admitted photograph then
+uses the existing editor and GPU preview independently of those use cases.
+
+Added 2026-10-08. [AppShell](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/AppShell.kt)
+inserts Camera between Library and Studio and remembers its transient RasterImage.
+Read [CameraScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/camera/CameraScreen.kt) →
+[CameraCaptureController](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/camera/CameraCaptureController.kt) →
+[PhotoDecoder](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/camera/PhotoDecoder.kt) →
+[ImageEditorContent](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/graphics/ImageEditorContent.kt).
+[ImageStudioScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/graphics/ImageStudioScreen.kt)
+loads the bundled asset and hosts that same extracted editor. The caller owns
+scrolling; GPU resource ownership remains in core/graphics.
+
+The manifest declares CAMERA with optional camera hardware. Enable camera
+requests runtime permission; RESUMED lifecycle, permission and viewfinder state
+gate binding. The screen's DisposableEffect unbinds only its owned Preview and
+ImageCapture on exit. CameraState.OPEN admits shutter actions. Switching lenses
+replaces the controller and disposes the old use cases. Capture copies bounded
+compressed bytes, closes ImageProxy in finally and decodes off main. Generation
+checks reject native/decode results from an earlier binding. CameraX rotation
+metadata is applied before opaque RGBA admission, with a maximum 2048 edge.
+
+[PhotoFilter](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/graphics/PhotoFilter.kt)
+defines Natural/Mono/Vivid/Soft as existing adjustment values. The camera begins
+neutral; Image studio retains its previous initial edits and comparison. Retake
+clears the photograph and recreates the viewfinder. Ordinary tab changes retain
+shell-owned pixels; process restoration and durable edits remain separate work.
+
+[CameraScreenTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/camera/CameraScreenTest.kt)
+checks decoding, sample → real GPU filters/controls → navigation → retake, and
+actual synthetic CameraX capture followed by closed camera states after leaving
+the tab. Its virtual-capture test is explicitly emulator-only. The first run's
+Mono assertion included the unfiltered tinted letterbox; sampling the central
+photograph fixed the test measurement without changing shader behavior.
+The final focused nine-check camera/shell/preview run passes on API36_Test /
+Android 16. It includes the updated five-target/middle-position assertions in
+[AppShellTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/shell/AppShellTest.kt)
+and all four original preview interaction checks. The APK and Android host
+regressions pass. This slice did not rerun the complete unrelated device suite.
+
+Read [CameraX substrate](../../../substrate/camerax-capture-and-photo-admission.md)
+and [shared capture ownership](../../../../../../notes/patterns/capture-assets-and-preview-lifetime.md).
+Physical camera quality, sensor rotation, interruptions, denied permission UI and
+device performance need further execution. Next: how should an export command
+own output size and storage permission while the preview remains transient?
+
+## Gallery input and outline tabs
+
+The 2026-10-08 follow-up replaces Sample photo with Choose photo. The system
+PickVisualMedia(ImageOnly) result enters
+[PhotoLibraryImporter](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/camera/PhotoLibraryImporter.kt),
+which reads only the selected URI, bounds compressed data to 32 MiB and decodes
+off main. PhotoDecoder.decodeLibrary reads EXIF rotation/reflection separately
+from the CameraX callback's rotation. Permission to use a camera is unnecessary
+for this path. CameraScreen unbinds capture during picker presentation/import,
+leaves canceled selection unchanged and shows recoverable import failure copy.
+The original catalog's Image studio still has its bundled photograph.
+
+All seven focused camera/shell checks pass, including the existing virtual camera
+and navigation checks. A test ActivityResultRegistry supplies selected/canceled
+results, while URI reads, conversion, editor state and real GPU pixels execute.
+Additional checks cover malformed input, missing URI access and EXIF rotation/
+transverse dimensions. The updated APK packages and Android host regressions pass.
+This result does not establish system-picker UI, reflected pixel placement, cloud
+providers or a complete unrelated device-suite rerun. Initial AAPT2 startup
+failures disappeared in a fresh Gradle process limited to two workers; no source
+workaround was required. The existing five tab vectors are already stroked outlines.
+Read [picker/EXIF substrate](../../../substrate/camerax-capture-and-photo-admission.md#selected-library-input--2026-10-08-follow-up).
+
+## Everyday component gallery
+
+Added 2026-10-08. Studio → Open catalog → Components opens
+[ComponentCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt).
+The app owns saveable counters, search, busy state, settings, quality selection,
+current family and native presentation. A scoped theme and bounded Backdrop
+let Light/Dark and Solid/Glass change without replacing those owners. Native
+ModalBottomSheet and AlertDialog examples compose the same controls rather than
+introducing shared overlay wrappers. Read
+[the UI walkthrough](../core/ui/README.md#everyday-component-batch-and-naming)
+and [slot ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md).
+
+Both native builds pass. The focused Android run passes eleven tests: four new
+[component checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogTest.kt),
+five existing forms checks and two shell checks. Gallery coverage includes
+disabled/busy activation, confirmation/cancel, search empty/clear recovery,
+quality/settings retained across preview changes and saved-state restoration,
+native sheet open/close and progress-range semantics. The existing form and
+shell consumers also compile and execute with the unbranded API names.
+
+This focused suite does not rerun camera/GPU/unrelated feature tests. Broad
+TalkBack, localization, keyboard, larger fonts/screens and physical-device
+checks remain open. Next: which repeated composition warrants extracting a
+shared overlay or collection toolbar instead of another native app example?
+
+## Controls and overlays gallery
+
+Added 2026-10-08. The parent
+[ComponentCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+now offers five families. Committed toggles, child selections, export format,
+destination, intensity and review date use rememberSaveable above the family
+switch. Preview themes, changing families and saved-instance restoration retain
+these values; this is not durable application storage.
+
+[ControlExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ControlExamples.kt)
+receives values/callbacks and derives the aggregate checkbox. Mixed activation
+selects all, a disabled toggle stays inactive, and a three-step slider supplies
+five positions. The review date is seeded with October 8, 2026 UTC midnight.
+[OverlayExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/OverlayExamples.kt)
+requests caller-owned sheet/reset presentation and duplication; disabled Share
+and cancel cannot perform operations. Existing details/removal examples now
+reuse SheetPanel and ConfirmationDialog.
+
+Read [the UI walkthrough](../core/ui/README.md#selection-controls-and-native-overlays)
+and [native mechanics](../../../substrate/compose-selection-and-modal-drafts.md).
+Interaction checks live in
+[ComponentCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogTest.kt)
+and [DateFieldTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DateFieldTest.kt).
+The latter changes the default zone to America/Los_Angeles and verifies date
+formatting, cancel and confirm using the actual native picker. Final run outcomes
+and limitations are recorded below. Next: which multi-field draft needs a
+feature-owned save/cancel policy instead of a single temporary picker state?
+
+Final verification: the focused API 36 emulator run passes all fourteen checks:
+six component-gallery checks, one native date-picker check, five forms checks
+and two shell checks. Both apps build, and four UI unit tests pass per platform.
+New checks cover mixed/off/on semantics, disabled toggle, radio/menu selection,
+actual slider range/steps, family/theme/saved-state retention, native sheet close,
+disabled Share, menu duplication and reset cancel/confirm. The date check proves
+October 8 remains October 8 in a western zone, discard keeps it, and confirm
+commits October 9. Early test selectors assumed numeric day text; inspection
+showed this Material version exposes full date text in its day button semantics.
+The final selector uses that observed native text.
+
+This focused run does not rerun unrelated camera/GPU tests or establish broad
+TalkBack, localization, large-font, rotation, sheet gesture or hardware coverage.
+
+## Display feedback and collections gallery
+
+Added 2026-10-08. The parent
+[ComponentCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+adds three families and hoists their values above its family switch.
+[DisplayExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/DisplayExamples.kt)
+composes avatar fallbacks/artwork and supplied stats.
+[FeedbackExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/FeedbackExamples.kt)
+uses saveable loading/reduction/counters, but a remember-only notice. Family
+changes clear it and saved-instance restoration does not replay recovery UI.
+Undo/retry callbacks change local counters only after explicit activation.
+
+[CollectionExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/CollectionExamples.kt)
+projects three app-owned records through search/favorites/sort while retaining
+selected IDs. Select visible adds matching IDs, Clear selection clears all, and
+empty matches disable Select visible while offering filter reset.
+[FieldGroupExample](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/FieldGroupExample.kt)
+keeps native text editing and caller validation separate from group layout.
+Read [the UI walkthrough](../core/ui/README.md#display-feedback-and-collection-components),
+[native mechanics](../../../substrate/compose-loading-and-passive-content.md),
+and [shared reasoning](../../../../../../notes/patterns/collection-projections-and-feedback-lifetime.md).
+
+The focused API 36 emulator run passes nineteen checks: ten
+[ComponentCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogTest.kt)
+checks, one [DateFieldTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DateFieldTest.kt),
+one [SkeletonMotionTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/SkeletonMotionTest.kt),
+five forms checks and two shell checks. New coverage includes one accessible
+avatar identity with fallback/artwork, supplied stats, loading/content switching,
+explicit notice dismissal/retry/undo and no notice replay, grouped native editing
+and help/error precedence, real recency ordering, hidden selection retention,
+visible bulk selection, empty/reset recovery and saved-state retention. The
+motion check controls the native Compose test clock, captures actual pixels,
+observes pulse changes and verifies stable output after changing reduction.
+
+Both apps compile, eighteen existing iOS app checks and four UI token/material
+checks per platform pass. This focused run does not rerun unrelated GPU/camera
+checks or establish complete TalkBack/announcement, keyboard, large-font,
+rotation or hardware performance coverage. Next: which bulk command should
+include hidden IDs, and what would make a real Undo transaction durable?

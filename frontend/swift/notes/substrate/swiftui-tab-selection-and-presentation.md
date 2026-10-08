@@ -33,7 +33,7 @@ not durable settings or a guarantee that every termination preserves state.
 
 ## Gotchas and evidence limits
 
-The Solid/Glass switch changes FoundrySurface rendering. TabView remains
+The Solid/Glass switch changes Surface rendering. TabView remains
 native platform chrome, including its accessibility/material behavior; avoid
 layering another custom glass panel around it. Native system widgets own their
 internal animation. Simulator observations do not establish physical-device
@@ -45,3 +45,23 @@ which paths were actually exercised.
 See [the app walkthrough](../modules/apps/FoundryCatalog/README.md#four-tab-placeholder-shell),
 [UI walkthrough](../modules/packages/FoundryUI/README.md), and
 [shared lifetime pattern](../../../../notes/patterns/tabs-and-feature-lifetime.md).
+
+## Outlined symbols — 2026-10-08 follow-up
+
+TabView supplies a fill variant for SF Symbols by default. To keep each tab
+outlined, set the symbolVariants environment to .none inside its Label:
+
+```swift
+// Excerpt: the shell's native tab label.
+Label(tab.title, systemImage: tab.symbol)
+    .environment(\.symbolVariants, .none)
+```
+
+Apple's [SymbolVariants.none documentation](https://developer.apple.com/documentation/swiftui/symbolvariants/none)
+explains why symbolVariant(.none) does not clear inherited variants. The explicit
+environment override does. Use a base symbol with an actual outline form; the
+Account tab now uses person rather than the cropped silhouette. Native tab
+highlights, tint and accessible selected state remain platform-owned.
+The final simulator screenshot shows all five outlined symbols, including
+Account, with Camera selected. Kotlin's existing stroked
+tab vectors need no variant override.

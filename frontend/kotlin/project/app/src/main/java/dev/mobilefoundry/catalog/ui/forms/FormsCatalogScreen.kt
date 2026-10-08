@@ -19,9 +19,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.mobilefoundry.catalog.composition.*
 import dev.mobilefoundry.query.isSubmitting
-import dev.mobilefoundry.ui.components.layout.surface.FoundryBackdrop
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurface
-import dev.mobilefoundry.ui.components.layout.surface.FoundrySurfaceRole
+import dev.mobilefoundry.ui.components.layout.surface.Backdrop
+import dev.mobilefoundry.ui.components.layout.surface.Surface
+import dev.mobilefoundry.ui.components.layout.surface.SurfaceRole
 import dev.mobilefoundry.ui.styles.tokens.FoundryThemeStyle
 import dev.mobilefoundry.ui.theme.FoundryTheme
 
@@ -35,7 +35,7 @@ fun FormsCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val state by model.state.collectAsStateWithLifecycle()
     val tokens = FoundryTheme.tokens
     DisposableEffect(model) { onDispose { model.stop() } }
-    FoundryBackdrop(Modifier.fillMaxSize(), background = {
+    Backdrop(Modifier.fillMaxSize(), background = {
         Canvas(Modifier.fillMaxSize()) {
             drawRect(tokens.colors.surfaceGround.color)
             if (tokens.materials.style == FoundryThemeStyle.GLASS) {
@@ -54,7 +54,7 @@ fun FormsCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
             TextButton(onClick = onBack) { Text("Back") }
             Text("Forms and mutations", style = tokens.typography.title)
-            FoundrySurface(role = FoundrySurfaceRole.FLOATING) {
+            Surface(role = SurfaceRole.FLOATING) {
                 Column(Modifier.fillMaxWidth().padding(tokens.space.page), verticalArrangement = Arrangement.spacedBy(tokens.space.stack)) {
                     Text("Provider", style = tokens.typography.label)
                     Row(horizontalArrangement = Arrangement.spacedBy(tokens.space.inline)) {

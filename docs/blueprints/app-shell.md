@@ -10,7 +10,7 @@ Authority: [shell behavior](../../contracts/behavior/app-shell.md) and
    accepts an optional close action and retains its existing NavigationStack.
 3. Kotlin app composition owns saveable selection/presentation. Only the active
    placeholder is composed. A reusable value-driven tab bar renders Material
-   navigation items inside an existing floating FoundrySurface/backdrop.
+   navigation items inside an existing floating Surface/backdrop.
    MainNavigation accepts an optional exit action and guards its root entry.
 4. Add no service integrations or fictional content. Account hosts the shared
    material switch; Studio hosts the catalog entry. Keep all existing examples.

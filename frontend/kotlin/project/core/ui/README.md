@@ -16,11 +16,13 @@ presentation checks in the catalog app. `make ui-test` checks shared token
 fixtures, contrast, and reduction. See [the token contract](../../../../../contracts/behavior/ui-tokens.md).
 Open **Tokens**, **Async UI patterns**, **Notes service seam**, or **Forms and mutations**.
 
-FoundryTheme also selects Solid/Glass surface styles. `FoundrySurface` keeps
-content panels opaque; floating controls sample the host's `FoundryBackdrop`
+FoundryTheme also selects Solid/Glass surface styles. `Surface` keeps
+content panels opaque; floating controls sample the host's `Backdrop`
 on API 31+, with an opaque fallback. See [surface themes](../../../../../STYLES.md#swappable-surface-themes).
 
-See [the component map](../../../../../docs/COMPONENTS.md) for reserved empty
-catalog folders and intended contents. Navigation/TabBar's Kotlin counterpart
-is implemented as FoundryTabBar: items, selection and a callback over the
+See [the component map](../../../../../docs/COMPONENTS.md) for implemented and reserved
+catalog folders. Three reusable batches add 27 controls and compositions, including
+native selection and overlays; see [usage](../../../../../docs/blueprints/ui-components.md).
+Navigation/TabBar's Kotlin counterpart
+is implemented as TabBar: items, selection and a callback over the
 floating surface. Route identity and presentation lifetime stay in the app.

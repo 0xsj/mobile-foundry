@@ -47,6 +47,29 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
     the graphics and catalog walkthroughs. Compare decorative phase, supplied
     progress/data and a finite feature-owned celebration playhead.
 
+15. Read [compositing and pass ownership](../../../notes/patterns/premultiplied-compositing-and-render-passes.md),
+    then [graphics measurement](../../../notes/techniques/graphics-profiling-and-measurement.md).
+    Revisit the graphics/catalog walkthroughs and native texture notes.
+16. Read [capture assets and preview lifetime](../../../notes/patterns/capture-assets-and-preview-lifetime.md),
+    then [CameraX and photo admission](substrate/camerax-capture-and-photo-admission.md)
+    and the [app camera walkthrough](modules/project/app/README.md#camera-and-shared-photo-editor).
+    Trace explicit permission → owned use cases → closed ImageProxy → GPU editor.
+17. Read [component slots and caller-owned state](../../../notes/patterns/component-slots-and-caller-owned-state.md),
+    then the [UI component batch](modules/project/core/ui/README.md#everyday-component-batch-and-naming)
+    and [everyday gallery](modules/project/app/README.md#everyday-component-gallery).
+    Compare native content receivers, caller state, variants and composed patterns.
+
+18. Read [selection and modal drafts](substrate/compose-selection-and-modal-drafts.md),
+    then the UI and app walkthroughs' Controls/Overlays sections. Compare
+    committed values, temporary date drafts, mixed selection, intermediate slider
+    stops and native explicit confirmation.
+
+19. Read [loading and passive content](substrate/compose-loading-and-passive-content.md),
+    then the UI/app walkthroughs' Display/Feedback/Collections sections and
+    [projection/lifetime reasoning](../../../notes/patterns/collection-projections-and-feedback-lifetime.md).
+    Compare passive identity, reduced-motion animation, group field targets,
+    visible selection scope and transient notice restoration.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -62,10 +85,50 @@ Paths mirror the Kotlin root, including `project/`: `project/app/` maps to
 `notes/modules/project/app/`. Reusable explanations stay independent of source
 paths; module walkthroughs link their actual use.
 
-15. Read [compositing and pass ownership](../../../notes/patterns/premultiplied-compositing-and-render-passes.md), then [graphics measurement](../../../notes/techniques/graphics-profiling-and-measurement.md). Revisit the graphics/catalog walkthroughs and native texture notes for
-    transparent input, linear premultiplication, framebuffer passes and completion.
-
 ## Current coverage
+
+Display/feedback/collection batch, 2026-10-08: six more APIs bring the three
+component batches to 27 building blocks. Both apps compile, eighteen existing
+iOS app checks, nineteen focused Android checks and four UI package tests per
+platform pass. Android includes real pulse/reduced-motion pixels, native editing,
+notice lifetime and retained collection selection. Read step 19 and the native
+walkthroughs for source links, manual iOS evidence and remaining device limits.
+
+Selection/overlay batch, 2026-10-08: nine more APIs fill the existing mirrored
+leaves, bringing these two component batches to 21 building blocks. Controls and
+Overlays demonstrate caller-owned selection, date drafts and explicit actions.
+Both native apps build; eighteen existing iOS app checks, fourteen focused
+Android interaction checks and four token/material tests per platform pass.
+Read step 18 and the native walkthroughs for source links, manual iOS evidence
+and remaining accessibility/device limits.
+
+Everyday UI batch, 2026-10-08: twelve reusable components and a native Components
+gallery extend the family directories. Existing and new component APIs have no
+Foundry prefix. Both builds and eleven focused Android checks pass, including
+four new gallery checks plus forms/shell regressions. Read step 17 for controlled
+state, theme/saved-state retention and native presentation evidence. TalkBack,
+all large-font layouts, localization and physical devices remain separate checks.
+
+Latest gallery follow-up, 2026-10-08: Choose photo opens the system single-image
+picker; selected URI bytes enter a bounded importer and EXIF-aware decoder.
+All seven focused camera/shell checks and Android host regressions pass, and
+the APK packages. The tests inject OS selection results but execute real I/O,
+decoding and GPU edits. Existing tab vectors are outlined. The initial Sample
+photo action below has been replaced. Read the
+[gallery walkthrough](modules/project/app/README.md#gallery-input-and-outline-tabs)
+and updated picker substrate. Next: how should persisted media access and a
+saved asset recipe differ from this transient import?
+
+Camera slice, 2026-10-08: CameraX 1.6.2 supplies the centered Camera
+destination, explicit permission, native viewfinder/capture and bounded photo
+admission. Image studio and Camera share one native editor. The APK and Android
+host regressions pass. All nine focused camera/shell/preview device checks pass
+on API36_Test/Android 16, including synthetic capture, actual Mono/Vivid pixels,
+tab placement, retained photo/Retake and camera closure. The first Mono check
+included the tinted letterbox; the final measurement samples image content.
+This slice does not claim a complete unrelated device-suite rerun or physical
+camera/denial/interruption coverage. Follow reading step 16. Next: which output
+encoding and storage ownership should an export command promise?
 
 The 2026-10-07 bootstrap builds the generated Compose app and the empty
 Kotlin/JVM kernel module. The debug APK and two starter unit tests passed.

@@ -35,6 +35,14 @@ component-specific documentation. A family is a source folder, not a new build
 module. Keep native tests in their package/module test tree and catalog examples
 in the app. Avoid a growing flat collection of unrelated UI files.
 
+Component APIs and filenames have no Foundry prefix. Use ActionButton,
+LabeledTextField, SubmitButton, Surface, Card and other descriptive names;
+component helper types follow the same rule. Package, token/theme and app names
+retain their identities. The [component batches](contracts/behavior/ui-components.md)
+add native slots, semantic variants, reduced-motion loading and caller-owned
+selection/feedback examples. See
+[usage examples](docs/blueprints/ui-components.md#using-the-apis).
+
 ## Design direction: Foundry Studio
 
 V1 is a quiet workspace for native tools and interactive graphics: porcelain in
@@ -99,7 +107,7 @@ surfaces switch for the app session, also available in the Account tab.
 Tokens offers App theme/Solid/Glass preview
 selection plus Reduce transparency preview; these overrides stay local.
 
-`FoundrySurface` has content and floating roles. Content panels remain opaque
+`Surface` has content and floating roles. Content panels remain opaque
 for dense reading content. Floating controls and the form gallery's outer panels
 use the selected material. The form gallery supplies a subtle cobalt backdrop
 so Glass has content to sample; its native fields/text render above the effect.
@@ -108,7 +116,7 @@ on older supported systems. Android uses a recorded Compose backdrop, 16 dp
 blur, a neutral tint (88% light / 86% dark), and a highlighted edge on API 31+.
 This is a native Android frosted treatment, not Apple's optical rendering.
 
-Android hosts provide a bounded `FoundryBackdrop` with background and foreground
+Android hosts provide a bounded `Backdrop` with background and foreground
 slots. Only the background is recorded; controls never sample themselves.
 Missing backdrop or API below 31 produces an opaque raised surface. External
 SurfaceView/GL output needs a future renderer bridge. Do not assume this first
@@ -138,10 +146,20 @@ transparency reduction or unavailable blur. See [forms behavior](contracts/behav
 ## Catalog and checks
 
 Open **Studio → Open catalog → Tokens** in either native app.
-The app shell has Home, Library, Studio and Account placeholders, with native
-SwiftUI tab chrome and a floating Compose bottom bar. iOS system tab chrome
+The app shell orders Home, Library, Camera, Studio and Account, with native
+SwiftUI tab chrome and a floating Compose bottom bar. Camera occupies the middle
+position and opens a native viewfinder, then the shared photo editor. The other
+destinations retain their placeholders and entry actions. iOS system tab chrome
 retains its platform material when Foundry surface style changes. See
 [shell behavior](contracts/behavior/app-shell.md).
+Tab symbols stay outlined when selected. Swift sets symbolVariants to none
+inside each tab label to override the system's automatic fill; Kotlin uses the
+existing stroked vectors. Native selection highlights and labels remain visible.
+Choose photo opens the system library picker and sends the selected image to
+the same editor as camera capture.
+The live viewfinder is a native camera surface, independent of the decorative
+backdrop. Photo filters set the existing GPU image-adjustment values after capture;
+they do not tint the live viewfinder. See [camera behavior](contracts/behavior/camera-photo.md).
 System/Light/Dark and Reduce motion
 preview affect only the examples below the controls. Inspect color roles,
 typography, spacing, radii, action counts, and the bounded position transition.

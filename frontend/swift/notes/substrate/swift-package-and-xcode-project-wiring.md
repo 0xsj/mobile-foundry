@@ -51,6 +51,69 @@ this note when the toolchain, project generator, deployment baseline, or package
 distribution changes. Framework state and rendering lifecycles are separate
 subjects to record when their implementations begin.
 
+## Simulator and device signing investigation
+
+Claim: a development-team diagnostic must be checked against the current run
+destination and latest build; simulator execution does not establish device
+signing readiness.
+
+Observed 2026-10-08 with Xcode 26.2. The app's generated project had no
+`DEVELOPMENT_TEAM`, and Xcode displayed an earlier signing failure while an
+iPhone 17 Pro simulator was selected. A Debug simulator `xcodebuild` completed
+successfully without a `CODE_SIGNING_ALLOWED=NO` override. Clicking Run in Xcode
+then built and launched FoundryCatalog on that simulator, and the Issues
+navigator had no errors. No signing configuration was changed. This establishes
+that the current simulator path works; the cause of the earlier failure was
+not reproduced.
+
+For a physical iPhone, use the app target's Signing & Capabilities panel to
+enable automatic signing and select the intended team. Persist the chosen
+`DEVELOPMENT_TEAM` in the app target's `project.yml` settings, because a GUI-only
+project edit is lost on regeneration. TestFlight requires an Apple Developer
+Program team. Primary references: Apple's
+[simulated and physical devices](https://developer.apple.com/documentation/xcode/running-your-app-on-simulated-or-physical-devices)
+and [distribution preparation](https://developer.apple.com/documentation/xcode/preparing-your-app-for-distribution).
+
+The simulator check neither creates a device provisioning profile nor verifies
+an archive, device launch or TestFlight upload. Next question: which team and
+registered bundle identifier should own the eventual distribution build?
+
+## Generated orientation metadata
+
+Claim: an app targeting both iPhone and iPad must declare its supported
+orientations in the built bundle; simulator build success alone does not catch
+missing distribution metadata.
+
+Observed 2026-10-08 with Xcode 26.2 and XcodeGen 2.46.0. App Store Connect
+validation rejected the user's archive because no orientations were specified
+for its iPad multitasking support. The target already selected device families
+1 and 2, but its generated Info.plist had no orientation build settings.
+Apple defines the property and device-specific variants in
+[UISupportedInterfaceOrientations](https://developer.apple.com/documentation/bundleresources/information-property-list/uisupportedinterfaceorientations).
+
+The generic `INFOPLIST_KEY_UISupportedInterfaceOrientations` build setting now
+declares portrait and both landscape orientations. Its `_iPad` counterpart
+adds portrait upside down. Xcode emits the latter as the device-specific
+`UISupportedInterfaceOrientations~ipad` array; the build-setting suffix and
+final plist key use different spelling. This keeps iPad support and avoids
+opting out of multitasking to bypass the missing metadata.
+
+Regeneration also preserves the development team the user subsequently selected
+in Xcode by recording it in the generator's source settings. That is the working
+catalog's team, not a team another consumer should inherit when making a new app.
+
+Example: after editing the generator specification, run `make ios-generate`
+and `make ios-build`, then inspect the packaged app's Info.plist with `plutil`.
+Check the arrays and `UIDeviceFamily` rather than relying only on a source diff.
+An archive is a separate snapshot: Product → Archive must create a new one after
+the fix. Retrying distribution of the old archive retains the invalid plist.
+
+Observed verification: project generation and the Debug simulator build pass;
+the simulator bundle contains the three generic and four iPad orientations,
+and device families `[1, 2]`. Release archive verification is recorded in the
+catalog walkthrough. Metadata checks do not establish every screen's rotated
+layout, real-camera orientation or successful server-side upload validation.
+
 ## Generated app icon
 
 Claim: keep original artwork and provenance separate from the app's selected,

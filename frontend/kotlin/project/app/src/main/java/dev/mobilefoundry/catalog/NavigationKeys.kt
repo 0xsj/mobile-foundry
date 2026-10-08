@@ -15,6 +15,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object FormsCatalog : NavKey
 
+@Serializable data object ComponentsCatalog : NavKey
+
 @Serializable data object GPUEffectsCatalog : NavKey
 @Serializable data object ImageStudioCatalog : NavKey
 @Serializable data object ProductStudioCatalog : NavKey

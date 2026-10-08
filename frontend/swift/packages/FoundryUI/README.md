@@ -16,10 +16,12 @@ See [the contract](../../../../contracts/behavior/query-ui.md) and
 platforms. See [the token contract](../../../../contracts/behavior/ui-tokens.md).
 Open **Tokens**, **Async UI patterns**, **Notes service seam**, or **Forms and mutations** in the catalog.
 
-FoundryTheme also selects Solid/Glass surface styles. `FoundrySurface` keeps
+FoundryTheme also selects Solid/Glass surface styles. `Surface` keeps
 content panels opaque and adapts floating controls to native glass/material,
 with transparency reduction. See [surface themes](../../../../STYLES.md#swappable-surface-themes).
 
-See [the component map](../../../../docs/COMPONENTS.md) for the reserved empty
-catalog folders and intended contents. The four-tab prototype lives in app
+See [the component map](../../../../docs/COMPONENTS.md) for implemented and reserved
+catalog folders. Three reusable component batches add 27 controls and compositions,
+including native selection and overlays; see [usage](../../../../docs/blueprints/ui-components.md).
+The five-tab prototype lives in app
 composition and uses native TabView rather than a reusable routing wrapper.

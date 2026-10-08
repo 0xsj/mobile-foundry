@@ -34,13 +34,13 @@ class GlassBackdropTest {
         val reduced = mutableStateOf(false)
         compose.setContent {
             FoundryTheme(style = FoundryThemeStyle.GLASS, reduceTransparency = reduced.value) {
-                FoundryBackdrop(Modifier.size(240.dp), background = {
+                Backdrop(Modifier.size(240.dp), background = {
                     Canvas(Modifier.fillMaxSize()) {
                         drawRect(if (changed.value) Color.Green else Color.Red)
                         if (!changed.value) drawRect(Color.Blue, Offset(size.width / 2, 0f), Size(size.width / 2, size.height))
                     }
                 }) {
-                    FoundrySurface(Modifier.align(Alignment.BottomEnd).size(width = 160.dp, height = 80.dp).testTag("glass"), FoundrySurfaceRole.FLOATING) {
+                    Surface(Modifier.align(Alignment.BottomEnd).size(width = 160.dp, height = 80.dp).testTag("glass"), SurfaceRole.FLOATING) {
                         var count by remember { mutableIntStateOf(0) }
                         TextButton(onClick = { count++ }, modifier = Modifier.align(Alignment.BottomCenter)) { Text("Pick $count") }
                     }

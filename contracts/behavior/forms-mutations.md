@@ -65,10 +65,10 @@ feedback always uses kernel publicInfo. Old defects are ignored after invalidati
 ## Native controls and catalog
 
 Reusable controls live in Components/Forms/TextField, Components/Forms/SubmitButton
-and Components/Feedback/Mutation, with lowercase Kotlin paths. FoundryTextField
+and Components/Feedback/Mutation, with lowercase Kotlin paths. LabeledTextField
 renders a persistent label, native single-line input, help/error copy, and an
 error indicator that does not rely on color. The caller owns focus and keyboard
-submission policy. FoundrySubmitButton shows native progress and blocks action
+submission policy. SubmitButton shows native progress and blocks action
 while busy/disabled. MutationFeedback renders progress copy, projected failure,
 or caller-supplied success content without invoking callbacks.
 
