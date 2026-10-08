@@ -307,3 +307,39 @@ emulator checks pass, including a native pixel test demonstrating pulse changes
 and static output after changing reduction while composed. This is exercised
 emulator output, not complete TalkBack, large-font or hardware performance
 coverage. Next: which notice needs explicit event identity and timeout ownership?
+
+## Context navigation and adaptive layouts
+
+Added 2026-10-08. The fourth batch fills six leaves, bringing the component
+batches to 33 building blocks. Read
+[NavLink](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/navlink/NavLink.kt),
+[PopoverPanel](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/overlays/popover/PopoverPanel.kt),
+[HelpTooltip](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/overlays/tooltip/HelpTooltip.kt),
+[ContentContainer](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/container/ContentContainer.kt),
+[AdaptiveGrid](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/grid/AdaptiveGrid.kt),
+and [MediaFrame](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/aspectratio/MediaFrame.kt).
+They use the existing module, descriptive unprefixed names and native slots.
+
+NavLink invokes a caller route callback from a full-row native clickable target;
+its chevron is decorative and directional. PopoverPanel composes an anchor and
+focusable native DropdownMenu. Native outside/back dismissal and explicit close
+invoke only presentation callbacks. The native menu supplies vertical scrolling;
+do not nest another unbounded scrolling list inside. HelpTooltip is persistent
+tap help, not native timed/hover TooltipBox behavior.
+
+ContentContainer centers a capped padded Column. MediaFrame supplies a ratio and
+clipping while the caller supplies crop/semantics. AdaptiveGrid uses Layout with
+bounded width and natural child heights. It measures each child once, grows the
+minimum width with fontScale and places relative to reading direction. Maximum
+row heights prevent longer content overlapping later rows. Its child composition
+paths stay stable across reflow; consumer key calls preserve item identity. The
+eager grid has no scroll or record model, and is intended for small compositions.
+
+Read [native mechanisms](../../../../substrate/compose-layout-and-contextual-presentation.md),
+[shared ownership](../../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08),
+and [usage](../../../../../../../docs/blueprints/ui-components.md#small-responsive-compositions).
+[AdaptiveLayoutTest](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/AdaptiveLayoutTest.kt)
+measures actual bounds after width/font/RTL changes, retains a remembered child
+counter and checks container insets/media ratio. Four existing UI token/material
+unit checks pass. App interaction results and limits live in its walkthrough.
+Next: which consumer needs native lazy-grid ownership instead of eager layout?

@@ -1,6 +1,6 @@
 # Reusable UI components
 
-Status: Implemented three batches on SwiftUI and Compose. Other component leaves
+Status: Implemented four batches on SwiftUI and Compose. Other component leaves
 in the directory map remain reserved.
 
 ## Ownership and customization
@@ -78,10 +78,28 @@ per-field accessibility and validation; it does not replace them. Loading
 placeholders represent unavailable content rather than a successful empty result.
 Toasts are presentation, not confirmation that an operation completed.
 
+## Context, navigation and layout
+
+| API | Behavior |
+| --- | --- |
+| NavLink | A full-row route affordance with title, subtitle and leading slot. Swift wraps native NavigationLink and requires a caller NavigationStack; Kotlin invokes onNavigate. Routes, destination content and back-stack/state policy stay in the app. Native disabled modifiers remain available. |
+| PopoverPanel | Caller-controlled anchored content, heading and close action. Native outside/back dismissal updates presentation without choosing an option. Swift uses popover with compact popover adaptation; Kotlin uses a focusable DropdownMenu surface. Use short content: Swift callers supply scrolling for long slots; Android's menu already scrolls vertically. |
+| HelpTooltip | Short contextual copy and a visible tap trigger, built on PopoverPanel. Caller controls presence. Explicit/native dismissal; no timer, hover or long-press requirement. This is persistent tap help, not an automatic native hover tooltip. |
+| ContentContainer | Centered, configurable readable maximum width, including token page insets. No scroll view, system inset handling or route ownership. Swift accepts inset; Kotlin accepts native PaddingValues. |
+| AdaptiveGrid | Eager non-scrolling layout for small compositions, with positive minimum item width, positive maximum columns and nonnegative spacing. Text scaling increases the minimum width; width determines equal-sized columns, and the tallest child determines each row's height. Incomplete rows retain column widths. Caller supplies stable identities and adequate vertical space. Use bounded width and an outer scroll view where needed; large collections need native lazy grids. |
+| MediaFrame | Positive finite width/height ratio, default 16:9; fills available width and clips overflowing artwork. Caller supplies crop/fitting and accessible media meaning. Requires enough height for its ratio; it does not load or admit images. |
+
+Layout inputs are native points/dp rather than a separate responsive model.
+Grid children remain individually accessible and interactive; layouts do not
+combine them into a single focus target. Native RTL placement keeps the first
+column at the leading edge. MediaFrame does not add a label for unknown imagery.
+Popover content must not contain another unbounded vertically scrolling list
+inside Android's menu. Use a sheet/detail page for substantial content.
+
 ## Catalog
 
 Studio → Open catalog → Components exposes Actions, Content, Patterns, Controls
-and Overlays, plus Display, Feedback and Collections.
+and Overlays, plus Display, Feedback, Collections, Context and Layout.
 Local Dark/Glass previews retain example state. Examples include search → empty
 → clear recovery, busy/disabled actions, status rows, feedback, progress, settings
 and single-choice cards. Controls adds mixed aggregate selection, choice groups,
@@ -98,6 +116,13 @@ Controls also includes grouped native editing and caller validation. Collections
 filters and sorts three local records, retains selected IDs when filters hide
 them, adds only visible IDs with Select visible and clears all with Clear selection.
 An empty projection disables Select visible and offers filter reset.
+
+Context demonstrates short help, explicit close, storage-choice admission and a
+separate placeholder detail route. Android preserves saveable gallery state
+across that route using an app-owned SaveableStateHolder. Presentation flags are
+transient and not replayed on restoration. Layout demonstrates narrow/readable
+bounds, three keyed cards, 4:3 previews and caller-owned selection. Preview themes
+and family changes retain picked values. No destination data or storage is added.
 
 ## Evidence boundary
 

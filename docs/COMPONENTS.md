@@ -52,29 +52,29 @@ families stay within the existing UI package/module.
 | `Feedback/Toast` / `feedback/toast` | ToastBanner / ToastAction: caller-presented message with explicit action/dismissal. |
 | `Forms/FieldGroup` / `forms/fieldgroup` | FieldGroup: related native fields with group help/error. |
 | `Patterns/CollectionToolbar` / `patterns/collectiontoolbar` | CollectionToolbar: summary, filter and action slots. |
+| `Navigation/NavLink` / `navigation/navlink` | NavLink: full-row native navigation affordance and caller route/destination. |
+| `Overlays/Popover` / `overlays/popover` | PopoverPanel: anchored caller-controlled contextual content. |
+| `Overlays/Tooltip` / `overlays/tooltip` | HelpTooltip: explicitly presented short tap help. |
+| `Layout/Container` / `layout/container` | ContentContainer: centered readable bounds including configurable insets. |
+| `Layout/Grid` / `layout/grid` | AdaptiveGrid: small eager compositions reflowing with width and text size. |
+| `Layout/AspectRatio` / `layout/aspectratio` | MediaFrame: ratio-controlled clipped media slot. |
 
 Component APIs and their helper types have no Foundry prefix. Existing controls
 are LabeledTextField, SubmitButton, Surface, Backdrop, TabBar and TabItem.
 See [usage examples](blueprints/ui-components.md#using-the-apis) and
 [behavior](../contracts/behavior/ui-components.md). Open Studio → Open catalog →
 Components for interactive Actions, Content, Patterns, Controls and Overlays
-previews, with Display, Feedback and Collections examples from the third batch.
+previews, with Display, Feedback, Collections, Context and Layout examples.
 Details and removal examples reuse the shared overlay wrappers.
 
 ## Reserved leaves
 
 | Swift | Kotlin | Intended contents |
 | --- | --- | --- |
-| `Layout/Container` | `layout/container` | Page insets and readable content bounds. |
 | `Layout/Stack` | `layout/stack` | Consistent vertical/horizontal spacing. |
-| `Layout/Grid` | `layout/grid` | Adaptive collections and item spacing. |
 | `Layout/Divider` | `layout/divider` | Semantic separators. |
-| `Layout/AspectRatio` | `layout/aspectratio` | Media and preview bounds. |
 | `Navigation/TabBar` | `navigation/tabbar` | Top-level destination items and selected state. Kotlin is implemented in this slice; Swift uses native app chrome. |
-| `Navigation/NavLink` | `navigation/navlink` | A labeled navigation affordance; caller owns the route. |
 | `Navigation/NavigationRail` | `navigation/navigationrail` | Future larger-screen destination rail. |
-| `Overlays/Popover` | `overlays/popover` | Anchored contextual content. |
-| `Overlays/Tooltip` | `overlays/tooltip` | Short accessible contextual help. |
 | `Shells/AppShell` | `shells/appshell` | Reusable layout slots after another app needs the shell. |
 | `Shells/AuthShell` | `shells/authshell` | Future sign-in/onboarding layout; no auth implementation. |
 | `Shells/DetailShell` | `shells/detailshell` | Detail header, content and action regions. |

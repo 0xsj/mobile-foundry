@@ -21,8 +21,8 @@ content panels opaque; floating controls sample the host's `Backdrop`
 on API 31+, with an opaque fallback. See [surface themes](../../../../../STYLES.md#swappable-surface-themes).
 
 See [the component map](../../../../../docs/COMPONENTS.md) for implemented and reserved
-catalog folders. Three reusable batches add 27 controls and compositions, including
-native selection and overlays; see [usage](../../../../../docs/blueprints/ui-components.md).
+catalog folders. Four reusable batches add 33 controls and compositions, including
+native selection, overlays, contextual help and adaptive layouts; see [usage](../../../../../docs/blueprints/ui-components.md).
 Navigation/TabBar's Kotlin counterpart
 is implemented as TabBar: items, selection and a callback over the
 floating surface. Route identity and presentation lifetime stay in the app.

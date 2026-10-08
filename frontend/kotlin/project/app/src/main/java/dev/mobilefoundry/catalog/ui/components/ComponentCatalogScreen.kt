@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.semantics.contentDescription
@@ -37,31 +38,42 @@ import dev.mobilefoundry.ui.theme.FoundryTheme
 
 private enum class ComponentGroup(val label: String) {
     ACTIONS("Actions"), CONTENT("Content"), PATTERNS("Patterns"), CONTROLS("Controls"), OVERLAYS("Overlays"),
-    DISPLAY("Display"), FEEDBACK("Feedback"), COLLECTIONS("Collections")
+    DISPLAY("Display"), FEEDBACK("Feedback"), COLLECTIONS("Collections"), CONTEXT("Context"), LAYOUT("Layout")
 }
 
 @Composable
 fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     var dark by rememberSaveable { mutableStateOf(false) }
     var glass by rememberSaveable { mutableStateOf(true) }
-    Column(modifier.fillMaxSize()) {
-        TextButton(onClick = onBack) { Text("Back") }
-        Text("Components", style = FoundryTheme.tokens.typography.title)
-        Row {
-            FilterChip(dark, { dark = !dark }, label = { Text("Dark preview") })
-            Spacer(Modifier.width(FoundryTheme.tokens.space.inline))
-            FilterChip(glass, { glass = !glass }, label = { Text("Glass preview") })
-        }
+    var details by rememberSaveable { mutableStateOf(false) }
+    val stateHolder = rememberSaveableStateHolder()
+    if (details) {
         FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
             style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
-            ComponentExamples(Modifier.weight(1f))
+            ComponentDetailScreen(onBack = { details = false })
+        }
+        return
+    }
+    stateHolder.SaveableStateProvider("componentExamples") {
+        Column(modifier.fillMaxSize()) {
+            TextButton(onClick = onBack) { Text("Back") }
+            Text("Components", style = FoundryTheme.tokens.typography.title)
+            Row {
+                FilterChip(dark, { dark = !dark }, label = { Text("Dark preview") })
+                Spacer(Modifier.width(FoundryTheme.tokens.space.inline))
+                FilterChip(glass, { glass = !glass }, label = { Text("Glass preview") })
+            }
+            FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
+                style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
+                ComponentExamples(onNavigate = { details = true }, modifier = Modifier.weight(1f))
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ComponentExamples(modifier: Modifier = Modifier) {
+private fun ComponentExamples(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
     val t = FoundryTheme.tokens
     var group by rememberSaveable { mutableStateOf(ComponentGroup.ACTIONS) }
     var count by rememberSaveable { mutableIntStateOf(0) }
@@ -96,6 +108,11 @@ private fun ComponentExamples(modifier: Modifier = Modifier) {
     var workspaceTitle by rememberSaveable { mutableStateOf("Atlas") }
     var ownerName by rememberSaveable { mutableStateOf("Jordan") }
     var fieldsValidated by rememberSaveable { mutableStateOf(false) }
+    var help by remember { mutableStateOf(false) }
+    var options by remember { mutableStateOf(false) }
+    var choices by rememberSaveable { mutableIntStateOf(0) }
+    var narrow by rememberSaveable { mutableStateOf(false) }
+    var picked by rememberSaveable { mutableStateOf("None") }
     val projects = listOf("Atlas workspace", "Orbit study", "Field notes")
     Backdrop(modifier.fillMaxWidth(), background = {
         Box(Modifier.fillMaxSize().background(Brush.linearGradient(listOf(t.colors.surfaceGround.color,
@@ -104,9 +121,10 @@ private fun ComponentExamples(modifier: Modifier = Modifier) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(t.space.page),
             verticalArrangement = Arrangement.spacedBy(t.space.section)) {
             PageHeader("Everyday interfaces", "Simple controls, useful compositions, and room for your own content.") {
-                Badge("27 building blocks", tone = MessageTone.INFO)
+                Badge("33 building blocks", tone = MessageTone.INFO)
             }
-            Tabs("Component families", ComponentGroup.entries, group, { group = it; notice = 0 }, label = { it.label })
+            Tabs("Component families", ComponentGroup.entries, group,
+                { group = it; notice = 0; help = false; options = false }, label = { it.label })
             when (group) {
                 ComponentGroup.ACTIONS -> {
                     Card(role = SurfaceRole.FLOATING) {
@@ -197,6 +215,9 @@ private fun ComponentExamples(modifier: Modifier = Modifier) {
                     notice, { notice = it }, undos, retries, { undos++ }, { retries++ })
                 ComponentGroup.COLLECTIONS -> CollectionExamples(collectionSearch, { collectionSearch = it }, favorites, { favorites = it },
                     collectionSort, { collectionSort = it }, selectedProjects, { selectedProjects = it })
+                ComponentGroup.CONTEXT -> ContextExamples(help, { help = it }, options, { options = it }, choices,
+                    { choices++ }, { help = false; options = false; onNavigate() })
+                ComponentGroup.LAYOUT -> LayoutExamples(narrow, { narrow = it }, picked, { picked = it })
             }
         }
     }

@@ -40,7 +40,8 @@ LabeledTextField, SubmitButton, Surface, Card and other descriptive names;
 component helper types follow the same rule. Package, token/theme and app names
 retain their identities. The [component batches](contracts/behavior/ui-components.md)
 add native slots, semantic variants, reduced-motion loading and caller-owned
-selection/feedback examples. See
+selection/feedback examples. Contextual help, native navigation affordances and
+small adaptive layouts reuse the same tokens and native content slots. See
 [usage examples](docs/blueprints/ui-components.md#using-the-apis).
 
 ## Design direction: Foundry Studio

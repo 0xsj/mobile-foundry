@@ -68,7 +68,9 @@ action, search, display, feedback, selection and page/settings APIs. Native slot
 and caller state keep them reusable across verticals; the app-owned Components
 gallery exercises composed patterns and native overlays. Display, loading,
 grouped fields and collection composition keep image admission, validation,
-selected IDs and transient notice lifetime with their caller.
+selected IDs and transient notice lifetime with their caller. Contextual help
+and navigation retain caller-owned presentation/routes; small adaptive layouts
+measure native children without adding scroll or collection state.
 Solid/Glass material styles are independent of light/dark colors. Content panels
 remain opaque; floating surfaces use native glass or a bounded Compose backdrop
 with an opaque fallback. Renderer frame ownership and external GPU integration

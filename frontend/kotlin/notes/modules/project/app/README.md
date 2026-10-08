@@ -497,3 +497,37 @@ checks per platform pass. This focused run does not rerun unrelated GPU/camera
 checks or establish complete TalkBack/announcement, keyboard, large-font,
 rotation or hardware performance coverage. Next: which bulk command should
 include hidden IDs, and what would make a real Undo transaction durable?
+
+## Context and layout gallery
+
+Added 2026-10-08. [ComponentCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+adds Context and Layout, for ten families and 33 building blocks. Context popup
+flags use remember only; choices, narrow preview and picked item use
+rememberSaveable. Family changes clear popup flags. The app owns a detail flag
+and SaveableStateHolder around gallery content, preserving saveable values when
+the detail route replaces it. BackHandler and the visible back button return to
+the gallery. This local route is an example, not a new reusable router.
+
+[ContextExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ContextExamples.kt)
+uses short help and storage option panels. Close/back dismiss without selecting;
+only Choose local storage increments the local count. NavLink opens a separate
+placeholder screen using shared ContentContainer and Card.
+[LayoutExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/LayoutExamples.kt)
+keys three cards, supplies accessible abstract 4:3 artwork and keeps picked values
+above the family switch. Narrow preview changes only the readable width to 240dp.
+
+Read [the UI walkthrough](../core/ui/README.md#context-navigation-and-adaptive-layouts),
+[native mechanisms](../../../substrate/compose-layout-and-contextual-presentation.md),
+and [shared reasoning](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08).
+[ContextCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ContextCatalogTest.kt)
+executes help close, menu back/close without commit, explicit choice, no popup
+replay after restoration, navigation return and retained narrow/picked/theme
+values. [AdaptiveLayoutTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/AdaptiveLayoutTest.kt)
+checks native bounds under width/font/RTL changes, remembered child state,
+readable insets and actual media ratio.
+
+All fourteen focused API 36 emulator checks pass: these four new checks plus ten
+existing ComponentCatalogTest regressions. Both apps build and four UI unit tests
+per platform pass. This does not rerun unrelated GPU/camera tests or establish
+complete TalkBack/keyboard/localization/hardware coverage. Next: which real route
+needs an entry-owned ViewModel and which collection needs a lazy data pipeline?

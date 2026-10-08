@@ -275,3 +275,49 @@ focused checks provide separate native interaction and pixel evidence. Manual
 iOS observations are recorded in the app walkthrough, without claiming added
 automated iOS widget coverage. Next: which product needs image cache ownership,
 a notice queue, or a server-wide bulk selection scope?
+
+## Context navigation and adaptive layouts
+
+Added 2026-10-08. The fourth batch fills six existing leaves, bringing the
+component batches to 33 building blocks. Read
+[NavLink](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/NavLink/NavLink.swift),
+[PopoverPanel](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Overlays/Popover/PopoverPanel.swift),
+[HelpTooltip](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Overlays/Tooltip/HelpTooltip.swift),
+[ContentContainer](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Container/ContentContainer.swift),
+[AdaptiveGrid](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Grid/AdaptiveGrid.swift),
+and [MediaFrame](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/AspectRatio/MediaFrame.swift).
+No component or helper gains a Foundry prefix, package or third-party dependency.
+
+NavLink supplies a native NavigationLink around a ListRow; the consumer owns the
+NavigationStack and destination. PopoverPanel attaches native presentation to a
+generic anchor and receives the caller's Binding. Its close action only changes
+presentation. Scoped tokens/color scheme cross the presentation boundary. Native
+compact adaptation preserves the anchored popover. HelpTooltip is visible tap
+help with short copy and no auto-hide/hover timer. Use a sheet/detail or an
+explicitly scrolling panel slot for longer content.
+
+ContentContainer caps and centers the padded region; MediaFrame establishes
+ratio bounds and clips unknown caller artwork without choosing a crop or label.
+AdaptiveGrid uses a private native Layout. ScaledMetric grows its minimum cell
+width with Dynamic Type; each row reserves its tallest measured child. It places
+columns in native reading direction, retains incomplete-row widths and introduces
+no nested scroll or item model. Stable ForEach identity stays with the consumer.
+These eager layouts serve small compositions; long feeds need native lazy grids.
+
+Read [native mechanisms](../../../substrate/swiftui-layout-and-contextual-presentation.md),
+[shared ownership](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08),
+and [usage](../../../../../../docs/blueprints/ui-components.md#small-responsive-compositions).
+Checks live in [ComponentLayoutTests](../../../../apps/FoundryCatalog/Tests/ComponentLayoutTests.swift):
+actual hosted geometry at normal/narrow/large-text/RTL settings, plus readable
+insets and a 4:3 media frame. The package compiles on macOS and passes its four
+existing token/material tests. The app walkthrough separates native measurement,
+manual interactions and remaining device/accessibility limits.
+Next: which consumer needs lazy scrolling, configurable alignment or a different
+compact presentation instead of these small native compositions?
+
+The final iOS suite passes all twenty checks, including both new geometry cases.
+Its RTL case caught double mirroring in the first implementation; SwiftUI already
+mirrors custom Layout positions, so no explicit reversal is retained. This is a
+native execution finding supported by the framework reference, not an inferred
+promise from a passing formula test. Manual gallery evidence stays in the app
+walkthrough; broad device/accessibility coverage remains open.

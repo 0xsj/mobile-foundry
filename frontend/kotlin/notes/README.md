@@ -70,6 +70,11 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
     Compare passive identity, reduced-motion animation, group field targets,
     visible selection scope and transient notice restoration.
 
+20. Read [layout and contextual presentation](substrate/compose-layout-and-contextual-presentation.md),
+    then the UI/app walkthroughs' Context/Layout sections. Compare native
+    measurement, stable child identity, text scaling, anchored dismissal and
+    caller-owned navigation/restoration.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -86,6 +91,14 @@ Paths mirror the Kotlin root, including `project/`: `project/app/` maps to
 paths; module walkthroughs link their actual use.
 
 ## Current coverage
+
+Context/navigation/layout batch, 2026-10-08: six APIs bring the four component
+batches to 33 building blocks. Both apps build; twenty iOS app checks, fourteen
+focused Android checks and four UI package checks per platform pass. New tests
+measure native grid reflow under width/text/RTL changes and actual container/media
+bounds. Android also exercises child identity, popup dismissal and navigation
+restoration. Read step 20 and the native walkthroughs for source links, manual
+iOS visual evidence, the corrected double-mirroring finding and remaining limits.
 
 Display/feedback/collection batch, 2026-10-08: six more APIs bring the three
 component batches to 27 building blocks. Both apps compile, eighteen existing

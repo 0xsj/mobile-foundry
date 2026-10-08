@@ -105,3 +105,37 @@ Read [semantic theme ownership](semantic-tokens-and-native-themes.md),
 [form/mutation ownership](forms-and-mutation-ownership.md).
 Next: which repeated screen composition justifies another shared pattern, and
 which customization is better left as native caller content?
+
+## Geometry and contextual navigation — 2026-10-08
+
+A reusable layout measures native children; it need not own records, selection,
+scroll position or routes. The fourth UI batch uses an eager grid for small
+card sets. Available width and native text scaling determine its columns. Each
+row uses its tallest child's measured height, so longer copy does not overlap
+the next row. The last row retains column widths rather than stretching a
+single final card. Large feeds still need native lazy collections and a feature
+that owns their data/scroll pipeline.
+
+Reflow must not change identity. Keep children under stable native ForEach/key
+identities rather than rebuilding differently nested row trees at each width.
+Native measurement checks exercise actual geometry after width/text-scale/RTL
+changes; Android also retains a child's counter through those changes. This is
+stronger evidence than checking only a column-count formula, and narrower than
+a complete accessibility or device audit.
+
+Contextual presentation and navigation are separate policies. A help trigger
+can expose short copy through a caller-controlled anchored panel. Closing it
+must not select an option or dispatch an effect. A navigation affordance can
+use a native destination builder or invoke an app router without knowing either
+route storage or domain services. When navigation removes the gallery from
+composition, its app owner explicitly decides which saved values return and
+which transient popup flags should disappear.
+
+Example: open storage options, dismiss with zero choices, then reopen and choose
+local storage once. Open a detail destination and return: the choice count is
+still one, while no old help popup is replayed. That is presentation/state policy,
+not evidence of persisted storage or an implemented account feature.
+
+The native UI/app walkthroughs from reading step 20 link actual implementations
+and checks. Next: which product needs a lazy collection, which needs an app rail,
+and which detail route needs independent saved state instead of a simple example?

@@ -19,7 +19,7 @@ struct ComponentCatalogView: View {
 
 private enum ComponentGroup: String, CaseIterable {
     case actions = "Actions", content = "Content", patterns = "Patterns", controls = "Controls", overlays = "Overlays"
-    case display = "Display", feedback = "Feedback", collections = "Collections"
+    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout"
 }
 
 private struct ComponentExamples: View {
@@ -39,12 +39,14 @@ private struct ComponentExamples: View {
     @State private var feedback = FeedbackValues()
     @State private var collection = CollectionValues()
     @State private var fields = FieldGroupValues()
+    @State private var context = ContextValues()
+    @State private var layout = LayoutValues()
     private let projects = ["Atlas workspace", "Orbit study", "Field notes"]
 
     var body: some View {
         VStack(alignment: .leading, spacing: t.space.section) {
             PageHeader("Everyday interfaces", subtitle: "Simple controls, useful compositions, and room for your own content.") {
-                Badge("27 building blocks", tone: .info)
+                Badge("33 building blocks", tone: .info)
             }
             Tabs("Component families", selection: $group, options: ComponentGroup.allCases, label: { $0.rawValue })
             switch group {
@@ -58,6 +60,8 @@ private struct ComponentExamples: View {
             case .display: DisplayExamples(artwork: $artwork)
             case .feedback: FeedbackExamples(values: $feedback)
             case .collections: CollectionExamples(values: $collection)
+            case .context: ContextExamples(values: $context)
+            case .layout: LayoutExamples(values: $layout)
             }
         }
         .padding(t.space.page)
@@ -66,7 +70,9 @@ private struct ComponentExamples: View {
                                     t.colors.surfaceGround.color], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
         .clipShape(RoundedRectangle(cornerRadius: t.shape.panel))
-        .onChange(of: group) { _, _ in feedback.notice = nil }
+        .onChange(of: group) { _, _ in
+            feedback.notice = nil; context.help = false; context.options = false
+        }
         .sheetPanel("Project details", isPresented: $showDetails, closeLabel: "Close details") {
             Card { ListRow("Atlas workspace", subtitle: "Updated just now") }
                 .presentationDetents([.medium, .large])

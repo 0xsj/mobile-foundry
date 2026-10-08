@@ -199,6 +199,17 @@ iOS app checks, nineteen focused Android checks and four UI package checks per
 platform pass. The native walkthroughs separate runtime/pixel/manual evidence
 from remaining accessibility and hardware questions.
 
+## Context navigation and layout batch
+
+The fourth UI batch, 2026-10-08, adds NavLink, PopoverPanel, HelpTooltip,
+ContentContainer, AdaptiveGrid and MediaFrame on both platforms, for 33 building
+blocks. Context and Layout exercise caller-owned presentation/routes and small
+responsive compositions. Read [geometry and contextual navigation](patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08),
+then step 20 in each native notebook for actual source/check links. Both apps
+build; twenty iOS app checks, fourteen focused Android checks and four UI package
+checks per platform pass. Native walkthroughs separate geometry, interaction and remaining device
+limits. Layouts do not add routing, durable storage or a lazy data pipeline.
+
 ## Shared findings
 
 | Directory | Responsibility |

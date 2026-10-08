@@ -22,7 +22,7 @@ Keep slot content interactive only where its host is not already a control.
 
 The app owns ComponentCatalogView / ComponentCatalogScreen and all preview
 state. A catalog route opens it. Actions, Content, Patterns, Controls, Overlays,
-Display, Feedback and Collections organize examples;
+Display, Feedback, Collections, Context and Layout organize examples;
 Dark/Glass controls scope the theme without recreating the state owner. Android
 provides a bounded Backdrop; Swift supplies native surface sampling. Native
 sheet and confirmation flags remain app-owned and use shared native wrappers.
@@ -155,6 +155,89 @@ projection and holds selected IDs separately. Filtering does not silently clear
 hidden selections. Select visible adds the projection to selection; Clear
 selection clears all IDs. These policies belong to the example, not the toolbar.
 For large datasets, supply an appropriate app-owned lazy list and data pipeline.
+
+## Context and routes
+
+```swift
+// Conceptual: inside a caller NavigationStack; help is a caller-owned Binding.
+NavLink("Storage details", subtitle: "Manage local copies") { StorageDetailView() }
+HelpTooltip("About previews", message: "Previews stay on this device.",
+            isPresented: $help, closeLabel: "Close help")
+PopoverPanel("Storage options", isPresented: $options, closeLabel: "Close options") {
+    ActionButton("Options") { options = true }
+} content: {
+    Text("Keep a local copy for quick access.")
+    ActionButton("Use local storage") { chooseLocal(); options = false }
+}
+```
+
+```kotlin
+// Conceptual: the feature supplies navigation, presentation and storage policy.
+NavLink("Storage details", onNavigate = openStorage, subtitle = "Manage local copies")
+HelpTooltip("About previews", "Previews stay on this device.", help,
+    onShow = { help = true }, onDismissRequest = { help = false }, closeLabel = "Close help")
+PopoverPanel("Storage options", options, { options = false }, "Close options",
+    anchor = { ActionButton({ options = true }) { Text("Options") } }) {
+    Text("Keep a local copy for quick access.")
+    ActionButton({ chooseLocal(); options = false }) { Text("Use local storage") }
+}
+```
+
+NavLink does not create a router. Swift's destination builder supplies a native
+NavigationLink; Compose's callback can use the app's chosen navigation owner.
+The gallery's Android detail route preserves the gallery's saveable state with
+SaveableStateHolder. This is an app example, not a navigation dependency in core/ui.
+HelpTooltip is short persistent tap help, not a timed hover tooltip. PopoverPanel
+uses a native anchored popover on Swift (including compact adaptation) and a
+focusable Material menu popup on Android. Close/outside/back dismiss without
+performing the content action. Use sheets/details for substantial content; Swift
+long slots need caller scrolling, while Android's menu already scrolls.
+
+## Small responsive compositions
+
+```swift
+// Conceptual: caller supplies stable records, artwork fitting and selection.
+ScrollView {
+    ContentContainer(maximumWidth: 720) {
+        AdaptiveGrid(minimumItemWidth: 160, maximumColumns: 3) {
+            ForEach(items) { item in
+                Card {
+                    MediaFrame(ratio: 4 / 3) { artwork(item).resizable().scaledToFill() }
+                    Text(item.title)
+                    ActionButton("Open", action: { open(item.id) })
+                }
+            }
+        }
+    }
+}
+```
+
+```kotlin
+// Conceptual: caller supplies scrolling, keyed records and admitted artwork.
+Column(Modifier.verticalScroll(rememberScrollState())) {
+    ContentContainer(maximumWidth = 720.dp) {
+        AdaptiveGrid(minimumItemWidth = 160.dp, maximumColumns = 3) {
+            items.forEach { item -> key(item.id) {
+                Card {
+                    MediaFrame(ratio = 4f / 3f) { Artwork(item, Modifier.fillMaxSize()) }
+                    Text(item.title)
+                    ActionButton({ open(item.id) }) { Text("Open") }
+                }
+            } }
+        }
+    }
+}
+```
+
+ContentContainer's bound includes padding; use inset: 0 / PaddingValues(0.dp)
+when the parent already owns page insets. AdaptiveGrid has no item model, scrolling
+or lazy loading. It keeps equal column widths, measures each row's tallest child
+and increases minimum item width with native text scaling. Native RTL placement
+changes column direction. Stable ForEach/key identity prevents reflow from
+recreating a child's state. Supply bounded width and enough vertical space.
+Use LazyVGrid/LazyVerticalGrid with appropriate app scroll ownership for long
+collections. MediaFrame controls bounds and clipping; native image fitting and
+accessibility labels remain caller policy.
 
 ## Verification
 

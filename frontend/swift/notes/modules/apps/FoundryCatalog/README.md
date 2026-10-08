@@ -532,3 +532,51 @@ reduction still applies inside Skeleton itself. The final app compiles after
 this gallery-only adjustment; a fresh launch and final CLI screenshot verify
 static placeholders directly on the Card background. Android separately exercises live theme reduction
 in its native pulse pixel test.
+
+## Context and layout gallery
+
+Added 2026-10-08. [ComponentCatalogView](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+now offers ten families and a 33-building-block badge. It keeps ContextValues and
+LayoutValues above the family switch. Changing families clears popup presence
+without clearing committed choice counts or picked items.
+[ContextExamples](../../../../apps/FoundryCatalog/Sources/Components/ContextExamples.swift)
+demonstrates short tap help, explicit/native dismissal and an explicit local
+storage choice. NavLink opens ComponentDetailView in the existing NavigationStack;
+this destination is a placeholder, not implemented storage. Its content uses the
+shared readable container and native scrolling.
+
+[LayoutExamples](../../../../apps/FoundryCatalog/Sources/Components/LayoutExamples.swift)
+uses three stable ForEach identities, abstract native 4:3 artwork and caller-owned
+picked copy. Narrow preview caps the content at 240 points; the same grid reflows
+rather than switching to a different hierarchy. Theme changes do not own selection.
+No GPU renderer or new image admission is needed for these decorative previews.
+
+Read [the UI walkthrough](../../packages/FoundryUI/README.md#context-navigation-and-adaptive-layouts),
+[native mechanisms](../../../substrate/swiftui-layout-and-contextual-presentation.md),
+and [shared reasoning](../../../../../../notes/patterns/component-slots-and-caller-owned-state.md#geometry-and-contextual-navigation--2026-10-08).
+[ComponentLayoutTests](../../../../apps/FoundryCatalog/Tests/ComponentLayoutTests.swift)
+adds actual native geometry checks, not a copied column formula. They host views,
+record CGRect preferences and change width, Dynamic Type and reading direction;
+a separate case checks padded readable width and media ratio. Popover/nav
+activation evidence is manual and recorded separately below.
+Next: which detail destination needs real data and its own independent navigation
+state, and which help content is substantial enough to deserve a sheet/page?
+
+Final verification: all twenty iOS app checks pass on iPhone 17 Pro/iOS 26.2,
+including the two new hosted layout checks. The first run exposed an explicit
+RTL reversal that canceled SwiftUI's automatic mirroring. Removing it makes
+native first-column geometry move to the right; the full suite passes afterward.
+An attempted targeted command without Swift Testing's function parentheses
+selected zero tests and is not counted as evidence. The final full-suite result
+has twenty actual tests and zero failures.
+
+Manual execution confirms short help opens/closes, closing storage options keeps
+zero choices, explicit selection increments to one, and detail navigation/back
+returns to that count. Pick Atlas updates caller copy. Narrow preview becomes
+one centered column; Dark preview retains the picked value. CLI screenshots were
+inspected for the actual anchored native help, two-column cards with differing
+copy heights, and the centered dark one-column layout. The generic layout test
+also exercises accessibility3 and RTL; this does not establish a complete gallery
+VoiceOver, localization, keyboard, iPad/rotation or physical-device audit.
+Android independently passes fourteen focused component/geometry checks. Both
+native consumers build and four UI package tests pass per platform.
