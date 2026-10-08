@@ -162,17 +162,3 @@ shared mobile findings live in root `notes`.
 implementation slice leaves a reading handoff. [AGENTS.md](AGENTS.md) carries
 that requirement into future sessions. Run `make notes-check` to check links,
 module paths, and native example labels.
-
-## Repository references
-
-- [Bento frontend service conventions](../bento/frontend/SERVICE-QUERY-CONVENTION.md)
-- [Bento kernel](../bento/frontend/next/lib/kernel/)
-- [Bento HTTP transport](../bento/frontend/next/lib/http/)
-- [Bento component catalog](../bento/frontend/next/app/kitchen-sink/)
-- [Bento semantic style tokens](../bento/frontend/STYLES.md)
-- [Bento backend boundaries](../bento/backend/CONVENTIONS.md)
-- [Implementation blueprint protocol](../IMPLEMENTATION-BLUEPRINT-PROTOCOL.md)
-
-Write construction specifications for individual slices once their ownership
-and behavioral contracts are established. Extract starter generation after
-the reference applications demonstrate those contracts.
