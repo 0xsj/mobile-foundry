@@ -19,6 +19,7 @@ fun DateField(title: String, selectedDateMillis: Long?, onDateChange: (Long) -> 
     confirmLabel: String, cancelLabel: String, placeholder: String,
     modifier: Modifier = Modifier, enabled: Boolean = true) {
     var presented by remember { mutableStateOf(false) }
+    LaunchedEffect(enabled) { if (!enabled) presented = false }
     val formatted = selectedDateMillis?.let {
         DateFormat.getDateInstance(DateFormat.MEDIUM).apply { timeZone = TimeZone.getTimeZone("UTC") }.format(Date(it))
     } ?: placeholder
@@ -27,11 +28,11 @@ fun DateField(title: String, selectedDateMillis: Long?, onDateChange: (Long) -> 
         OutlinedButton(onClick = { presented = true }, enabled = enabled,
             modifier = Modifier.semantics { contentDescription = title }) { Text(formatted) }
     }
-    if (presented) {
+    if (presented && enabled) {
         val draft = rememberDatePickerState(initialSelectedDateMillis = selectedDateMillis)
         DatePickerDialog(onDismissRequest = { presented = false },
-            confirmButton = { TextButton(enabled = draft.selectedDateMillis != null, onClick = {
-                draft.selectedDateMillis?.let(onDateChange); presented = false
+            confirmButton = { TextButton(enabled = enabled && draft.selectedDateMillis != null, onClick = {
+                if (enabled) draft.selectedDateMillis?.let(onDateChange); presented = false
             }) { Text(confirmLabel) } },
             dismissButton = { TextButton(onClick = { presented = false }) { Text(cancelLabel) } }) {
             DatePicker(draft, title = { Text(title, modifier = Modifier.padding(FoundryTheme.tokens.space.page)) })

@@ -93,6 +93,86 @@ linked language and tool notes to understand the choices. This notebook follows
     and [Activity gallery](modules/apps/FoundryCatalog/README.md#activity-gallery).
     Compare awaited refresh, explicit paging, stable row identity and cancellation.
 
+24. Read [media paging and overlays](substrate/swiftui-media-paging-and-overlays.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#media-browsing-and-actions)
+    and [Media gallery](modules/apps/FoundryCatalog/README.md#media-gallery).
+    Compare native position, stable per-record values, passive artwork and independent actions.
+
+25. Read [composer and safe area](substrate/swiftui-composer-and-safe-area.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#communication-and-attachments)
+    and [Communication gallery](modules/apps/FoundryCatalog/README.md#communication-gallery).
+    Compare draft lifetime, transfer state, admission, independent actions and keyboard placement.
+
+26. Read [wrapping and native row actions](substrate/swiftui-wrapping-and-list-actions.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#selection-tokens-and-row-editing)
+    and [Editing gallery](modules/apps/FoundryCatalog/README.md#editing-gallery).
+    Compare token admission, stable IDs, hidden selection, transient swipes and undo.
+
+27. Read [native chart drawing and meaning](substrate/swiftui-chart-drawing-and-summaries.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#insights-and-small-charts)
+    and [Insights gallery](modules/apps/FoundryCatalog/README.md#insights-gallery).
+    Compare explicit scales, numerical bounds, summaries, larger text and goal ownership.
+
+28. Read [time/date drafts](substrate/swiftui-time-and-date-drafts.md), then
+    the [UI walkthrough](modules/packages/FoundryUI/README.md#dates-and-agendas) and
+    [Scheduling gallery](modules/apps/FoundryCatalog/README.md#scheduling-gallery).
+    Compare calendar labels, clock readings, temporary drafts and command admission.
+
+29. Read [bounded panes and navigation](substrate/swiftui-bounded-panes-and-navigation.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#adaptive-workspaces) and
+    [Workspace gallery](modules/apps/FoundryCatalog/README.md#workspace-gallery).
+    Compare stable selection, compact detail intent, local bounds, Back and path ownership.
+
+30. Read [table columns and scrolling](substrate/swiftui-table-columns-and-scrolling.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#tables-and-pagination) and
+    [Tables gallery](modules/apps/FoundryCatalog/README.md#tables-gallery).
+    Compare aligned presentation, full ordering, stable tie-breakers and page admission.
+
+31. Read [account menus and action slots](substrate/swiftui-account-menus-and-action-slots.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#accounts-and-access) and
+    [Account gallery](modules/apps/FoundryCatalog/README.md#account-gallery).
+    Compare account context, device capability scope, captured intent and prompt lifetime.
+
+32. Read [attributed text and search actions](substrate/swiftui-attributed-text-and-search-actions.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#search-and-discovery) and
+    [Discovery gallery](modules/apps/FoundryCatalog/README.md#discovery-gallery).
+    Compare literal runs, independent actions, applied filters and temporary drafts.
+
+33. Read [inline fields and order composition](substrate/swiftui-inline-fields-and-order-composition.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#products-and-order-composition) and
+    [Commerce gallery](modules/apps/FoundryCatalog/README.md#commerce-gallery).
+    Compare formatted copy, code drafts, applied discounts, current totals and snapshots.
+
+34. Read [notification actions and narration](substrate/swiftui-notification-actions-and-narration.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#notifications-and-inbox) and
+    [Notifications gallery](modules/apps/FoundryCatalog/README.md#notifications-gallery).
+    Compare read/archive identity, visible command scope and transient detail presentation.
+
+35. Read [plan slots and usage bars](substrate/swiftui-plan-slots-and-usage-bars.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#plans-and-usage) and
+    [Plans gallery](modules/apps/FoundryCatalog/README.md#plans-gallery).
+    Compare selected/reviewed/current values, billing copy and retained usage.
+
+36. Read [tree actions and indentation](substrate/swiftui-tree-actions-and-indentation.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#files-and-hierarchy) and
+    [Files gallery](modules/apps/FoundryCatalog/README.md#files-gallery).
+    Compare saved expansion, search projection, retained identity and independent native actions.
+
+37. Read [member slots and selectable links](substrate/swiftui-member-slots-and-selectable-links.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#sharing-and-access) and
+    [Sharing gallery](modules/apps/FoundryCatalog/README.md#sharing-gallery).
+    Compare membership identity, revision-bound confirmations and explicit copy effects.
+
+38. Read [playback slots and native transport](substrate/swiftui-playback-slots-and-native-transport.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#playback-and-timeline) and
+    [Playback gallery](modules/apps/FoundryCatalog/README.md#playback-gallery).
+    Compare requested transport, per-track position, manual time and independent metadata.
+
+39. Read [code entry and native hints](substrate/swiftui-code-entry-and-content-hints.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#verification-and-code-entry) and
+    [Verification gallery](modules/apps/FoundryCatalog/README.md#verification-gallery).
+    Compare canonical drafts, explicit submission, attempt identity and code lifetime.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -109,6 +189,94 @@ Paths mirror the Swift root: `apps/FoundryCatalog/` maps to
 transferable notes describe the mechanism without local source paths.
 
 ## Current coverage
+
+The twenty-third UI batch adds two Verification components (108 total, 29 families).
+Verification, 2026-10-09: both consumers build; 61 iOS app checks, four focused
+Android Verification UI and nine Swift/eight Kotlin UI package checks pass.
+Reading step 39 traces native code entry, challenge/attempt identity and transient
+code restoration. Time is manual and no code is delivered or account authenticated.
+Native Autofill suggestions and full assistive traversal remain separate checks.
+
+The twenty-second UI batch adds two Playback components (106 total, 28 families).
+Verification, 2026-10-09: both consumers build; 59 iOS app checks, four focused
+Android Playback UI and seven Swift/six Kotlin UI package checks pass. Reading
+step 38 traces native transport slots, per-track positions and timeline admission.
+The preview advances manually and plays no audio; engine/OS playback remains
+separate work. Notes checks validate links/labels rather than execution.
+
+The twenty-first UI batch adds two Sharing components (104 total, 27 families).
+Verification, 2026-10-09: both consumers build; 57 iOS app checks, four focused
+Android Sharing UI and seven Swift/six Kotlin UI package checks pass. Reading
+step 37 traces independent identity/access/actions and admitted local membership
+commands. Example invitations and link policy do not authorize real access.
+
+The twentieth UI batch adds two Files components (102 total, 26 families).
+Verification, 2026-10-09: both consumers build; 55 iOS app checks, four focused
+Android Files UI and seven Swift/six Kotlin UI package checks pass. Reading
+step 36 traces bounded tree indentation, ancestor search and retained selection.
+The files are local fixtures; filesystem/provider adapters remain separate work.
+
+The nineteenth UI batch adds three Plans components (100 total, 25 families).
+Verification, 2026-10-09: both consumers build; 53 iOS app checks, four focused
+Android Plans UI and seven Swift/six Kotlin UI package checks pass. Reading
+step 35 traces native slots, selected/reviewed/current choices and retained usage.
+Notes checks validate links/labels; real products, receipts and entitlement
+authorization remain future service/platform work.
+
+The sixteenth UI batch adds three Discovery components (91 total, 22 families).
+Verification, 2026-10-09: both consumers build; all 47 iOS app checks, four focused
+Android Discovery UI checks and seven Swift/six Kotlin UI package checks pass.
+Reading step 32 covers literal styling, filter draft admission, saved identity
+and recent queries. Notes checks validate links/labels, not native execution.
+
+The fifteenth UI batch adds four Account components (88 total, 21 families).
+Verification, 2026-10-09: both native consumers build; all 45 iOS app checks,
+four focused Android Account UI checks and seven Swift/six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Reading step 31 separates supplied identity/capability projections from real
+authentication and OS authorization; pending confirmations remain ephemeral.
+
+The fourteenth UI batch adds three Tables components (84 total, 20 families).
+Verification, 2026-10-09: both native consumers build; all 43 iOS app checks,
+four focused Android Tables UI checks, seven Swift and six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Reading step 30 links small-page presentation, stable sorting, empty projection,
+native scrolling and the remaining dense-data/accessibility/service limits.
+
+The thirteenth UI batch adds three Workspace components (81 total, 19 families).
+Verification, 2026-10-09: both native consumers build; all 41 iOS app
+checks, five focused Android Workspace UI checks and seven Swift/six
+Kotlin UI package checks pass. `make notes-check` validates links and
+example labels, not native behavior.
+Reading step 29 distinguishes native logical geometry and interaction from
+physical tablet/foldable, focus, deep-link and full accessibility coverage.
+
+The twelfth UI batch adds four Scheduling components (78 total, 18 families).
+Both consumers build; 39 iOS app checks, five Android scheduling checks, one date regression and
+seven Swift/six Kotlin UI checks pass. Reading step 28 links picker drafts,
+date/time meaning, unavailable choices, saved-state evidence and remaining
+calendar/locale/device limits.
+
+The eleventh UI batch adds six Insights components (74 total, 17 families).
+Both consumers build; 37 iOS app checks, four final Android Insights checks,
+five Android editing regressions and six UI unit checks per platform pass.
+Reading step 27 links numerical/pixel/layout evidence, chart meaning and the
+remaining accessibility/device/large-series limits.
+
+The tenth UI batch adds five editing components (68 total, 16 families).
+Both apps build; 35 iOS app checks, five final Android editing checks, thirteen
+existing Android component/communication regressions and four UI unit checks per
+platform pass. Reading step 26 links wrapping, native row actions, selection/undo,
+draft/restoration evidence and remaining accessibility/device limits.
+
+The ninth UI batch adds six communication/attachment components (63 total).
+All 32 iOS app checks pass. The native walkthrough records actual larger-text
+geometry and manual keyboard, recovery and theme observations; reading step 25
+links ownership and platform limits.
+
+The eighth UI batch adds six media browsing/action components (57 total), with
+native paging, per-study values and independent overlay controls. Reading step
+24 links source, native checks and limits.
 
 The seventh UI batch adds six activity/feed building blocks (51 total), a
 native scrolling destination and explicit refresh/page fixture. Reading step 23

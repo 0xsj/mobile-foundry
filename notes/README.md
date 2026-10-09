@@ -58,6 +58,73 @@ concepts, patterns, and verification techniques live here.
 
 ## Current coverage
 
+The twenty-third UI batch adds Verification (108 building blocks, 29 families).
+Start with [challenge drafts and attempt identity](patterns/challenge-drafts-and-attempt-identity.md),
+then native reading step 39 and the Verification gallery walkthroughs. Both
+consumers build; 61 iOS app checks, four focused Android Verification UI checks
+and nine Swift/eight Kotlin UI package checks pass (2026-10-09). The local fixture
+uses a manual clock and authenticates no account; real delivery/challenge services
+and native Autofill observations remain separate work.
+
+The twenty-second UI batch adds Playback (106 building blocks, 28 families).
+Start with [media timeline and transport admission](patterns/media-timeline-and-transport-admission.md),
+then native reading step 38 and the Playback gallery walkthroughs. Both consumers
+build; 59 iOS app checks, four focused Android Playback UI checks and seven Swift/
+six Kotlin UI package checks pass (2026-10-09). The local timeline advances
+manually and plays no audio; native engine and OS session work remain separate.
+
+The twenty-first UI batch adds Sharing (104 building blocks, 27 families). Start
+at step 37 in each native notebook and
+[membership identity and confirmed revisions](patterns/membership-identity-and-confirmed-revisions.md).
+Native member/link compositions keep role policy and clipboard effects in the
+feature, with protected owners and revision-bound local confirmations.
+
+The twentieth UI batch adds Files (102 building blocks, 26 families). Start
+at step 36 in each native notebook and
+[tree projection and retained selection](patterns/tree-projection-and-retained-selection.md).
+Rows receive flattened values while the fixture owner manages expansion, ancestor
+search, favorites and selected identity.
+
+The nineteenth UI batch adds Plans (100 building blocks, 25 families). Start
+at step 35 in each native notebook and
+[plan choice and applied allowance](patterns/plan-choice-and-applied-allowance.md).
+Native feature/plan/usage APIs compose a local plan picker; reviewed application
+changes current allowance without silently resetting usage.
+
+The eighteenth UI batch adds Notifications (97 building blocks, 24 families).
+Start at step 34 in each native notebook and
+[inbox projection/read identity](patterns/inbox-projection-and-read-identity.md).
+The local inbox composes native count/row APIs with existing sections, menus and
+alerts; stable read/archive state stays separate from filtering and detail flags.
+
+The seventeenth UI batch adds Commerce (95 building blocks, 23 families). Start
+at step 33 in each native notebook and
+[price copy and committed cart values](patterns/price-copy-and-committed-cart-values.md).
+Native products, code input and order summary compose a local cart with explicit
+admission and retained reviews; pricing services and purchases remain future work.
+
+The sixteenth UI batch adds Discovery (91 building blocks, 22 families). Start
+at reading step 32 in each native notebook and
+[search projections and filter drafts](patterns/search-projection-and-filter-drafts.md).
+The preview explores literal highlights, suggestions/history, independent
+bookmarks and explicit applied/draft filters without a search service.
+
+The eleventh UI batch adds Insights and small charts, for 74 building blocks in
+17 families. Start at reading step 27 in each native notebook and
+[chart meaning/scales](patterns/chart-meaning-and-scales.md).
+
+The tenth UI batch adds selection, tokens and row editing, for 68 building blocks
+in 16 families. Start at reading step 26 in each native notebook and
+[selection identity/undo](patterns/selection-identity-and-undo.md).
+
+The ninth UI batch adds communication/attachments, for 63 building blocks in 15
+families. Start at reading step 25 in each native notebook and
+[composer draft/transfer ownership](patterns/composer-drafts-and-transfer-ownership.md).
+
+The eighth UI batch adds media browsing/actions, for 57 building blocks in 14
+families. Start at reading step 24 in each native notebook and
+[media selection/artwork ownership](patterns/media-selection-and-passive-artwork.md).
+
 The seventh UI batch adds activity/feed compositions, for 51 building blocks.
 Start at reading step 23 in each native notebook and
 [refresh/page ownership](patterns/refresh-and-pagination-ownership.md).
@@ -412,3 +479,232 @@ four Android activity checks, nineteen existing Android component regressions,
 and four UI unit checks per platform pass. Notes validation passes. Module
 walkthroughs distinguish scoped reruns, native control/gesture observations and
 remaining coverage limits.
+
+## Media browsing and actions batch
+
+Added 2026-10-09: IconAction, RatingField, PageIndicator, Carousel, MediaTile and
+MediaOverlay on both platforms. The Media gallery and separate preview share
+selection, ratings, favorite IDs and a local use count. Read
+[shared ownership](patterns/media-selection-and-passive-artwork.md),
+[Swift native mechanics](../frontend/swift/notes/substrate/swiftui-media-paging-and-overlays.md)
+and [Compose native mechanics](../frontend/kotlin/notes/substrate/compose-media-paging-and-overlays.md).
+Both consumers build. All 29 iOS app checks, four final Android media checks,
+fourteen existing Android component/activity regressions and four UI unit checks
+per platform pass. Notes validation passes.
+Module walkthroughs distinguish native control/gesture evidence, manual visual
+observations and remaining coverage limits.
+
+## Communication and attachments batch
+
+Added 2026-10-09: ConversationRow, MessageBubble, MessageComposer, AttachmentRow,
+TransferStatus and TypingIndicator on both platforms. Design room composes a
+local multiline draft, attachment recovery, independent inspection and a pinned
+composer. Start with [draft and operation ownership](patterns/composer-drafts-and-transfer-ownership.md),
+[Swift keyboard placement](../frontend/swift/notes/substrate/swiftui-composer-and-safe-area.md)
+and [Compose state/insets](../frontend/kotlin/notes/substrate/compose-composer-and-ime.md).
+Both consumers build. All 32 iOS app checks, four final Android communication
+checks, thirteen existing component/media regressions and four UI unit checks
+per platform pass. Native walkthroughs separate initial harness corrections,
+manual iOS keyboard/recovery/theme observations and remaining device/service limits.
+
+## Selection, tokens and row editing batch
+
+Added 2026-10-09: WrapLayout, RemovableChip, TokenField, SelectionRow and
+SwipeActionRow (with SwipeAction) compose the Editing library preview. Read
+[identity/undo](patterns/selection-identity-and-undo.md), then
+[Swift](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#editing-gallery)
+and [Kotlin](../frontend/kotlin/notes/modules/project/app/README.md#editing-gallery)
+for source, state ownership and actual evidence. Both apps build; 35 iOS checks,
+five final Android editing checks, thirteen existing Android regressions and four
+UI unit checks per platform pass. Native wrapping/RTL and Android swipe/restoration
+are exercised; manual iOS action/menu/undo and two themes are recorded separately.
+No persistent library, complete accessibility or physical-device audit is claimed.
+Next: add an actual collection command port with revision-aware undo admission.
+
+## Insights and small charts batch
+
+Added 2026-10-09: TrendBadge, LegendItem, Sparkline, BarChart, ProgressRing and
+ChartPanel compose the Insights dashboard. Read [chart meaning/scales](patterns/chart-meaning-and-scales.md),
+then [Swift](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#insights-gallery)
+and [Kotlin](../frontend/kotlin/notes/modules/project/app/README.md#insights-gallery)
+for source and evidence. Both consumers build; 37 iOS app checks, four final
+Android Insights checks, five editing regressions and six UI unit checks per
+platform pass. Native numerical bounds, Android pixels/semantics/restoration and
+Swift hosted larger-text geometry are exercised. Manual iOS drawing/goal checks
+and the post-fix automation limitation are recorded separately. No complete
+accessibility, real analytics, dense time series or device budget is claimed.
+Next: define an admitted metrics port and a shared time/axis policy when needed.
+
+## Dates and agendas batch
+
+Added 2026-10-09: TimeField/ClockTime, DateRangeField, DayStrip/DayOption and
+AgendaRow compose a local Scheduling planner (78 building blocks, 18 families).
+Start with [calendar dates and clock readings](patterns/calendar-dates-and-clock-readings.md),
+then [Swift](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#scheduling-gallery)
+and [Kotlin](../frontend/kotlin/notes/modules/project/app/README.md#scheduling-gallery)
+for source, checks and limits. Both apps build; 39 iOS app checks, five Android
+scheduling checks, one date-picker regression and seven Swift/six Kotlin UI checks pass. Native modal edits,
+command guards, larger-text geometry and Android restoration are exercised.
+No calendar access, recurrence, reminder, real availability or durable booking
+is implemented. Next: define calendar/zone conversion and a revision-aware
+scheduling command at the feature/service boundary.
+
+## Adaptive workspaces batch
+
+Added 2026-10-09: DestinationRail/RailDestination, BreadcrumbTrail/BreadcrumbItem
+and SplitPane/PaneMode compose the Workspace browser (81 building blocks,
+19 families). Read [adaptive layout and navigation state](patterns/adaptive-layout-and-navigation-state.md),
+then [Swift](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#workspace-gallery)
+and [Kotlin](../frontend/kotlin/notes/modules/project/app/README.md#workspace-gallery)
+for actual sources and limits.
+Verification, 2026-10-09: both native consumers build; all 41 iOS app
+checks, five focused Android Workspace UI checks and seven Swift/six
+Kotlin UI package checks pass. `make notes-check` validates links and
+example labels, not native behavior.
+Native controls, synthetic wide/narrow geometry, RTL/larger text and Android
+restoration are exercised. No root router, deep links, durable projects, complete
+accessibility or physical tablet/foldable audit is established. Next: decide
+route serialization and focus restoration for a real workspace.
+
+## Tables and pagination batch
+
+Added 2026-10-09: TableSortHeader/TableSortOrder, DataTable/DataTableColumn and
+PaginationBar compose the local Project ledger (84 building blocks, 20 families).
+Read [sort and page ownership](patterns/table-sorting-and-page-ownership.md), then
+[Swift](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#tables-gallery)
+and [Kotlin](../frontend/kotlin/notes/modules/project/app/README.md#tables-gallery)
+for sources, actual checks and limits.
+Verification, 2026-10-09: both native consumers build; all 43 iOS app checks,
+four focused Android Tables UI checks, seven Swift and six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Native alignment, scroll movement, larger text/RTL and Android restoration are
+exercised. No virtualization, full accessibility or real ordered-page service is
+established. Next: decide numbered-page/cursor semantics and stale response admission.
+
+## Commerce batch
+
+Added 2026-10-09: PriceLabel, ProductRow, OrderSummary and InlineActionField
+compose Cart preview (95 building blocks, 23 families). Read
+[price/command ownership](patterns/price-copy-and-committed-cart-values.md), then
+step 33 in each native notebook for source and adaptive field mechanics.
+Draft codes, applied discounts, derived current totals and review snapshots have
+separate ownership. Both consumers build; 49 iOS app checks, four focused Android
+Commerce UI and seven Swift/six Kotlin UI package checks pass. Notes checks
+validate links and labels. No authoritative quote, reservation, tax/currency
+domain, purchase operation or full assistive-technology/device audit is established.
+
+## Discovery batch
+
+Added 2026-10-09: HighlightedText/HighlightSegment, SearchSuggestionRow and
+SearchResultRow compose Search workspace (91 building blocks, 22 families).
+Read [search projection and draft ownership](patterns/search-projection-and-filter-drafts.md),
+then step 32 in each platform notebook for source and native text mechanics.
+Applied values, saved IDs and recent queries stay feature-owned; modal drafts
+are discarded. Literal text styling introduces no parsing or search engine.
+Both consumers build; 47 iOS app checks, four focused Android Discovery UI checks
+and seven Swift/six Kotlin UI package checks pass. Notes checks validate links
+and labels. No service, durable history, multilingual ranking or full
+assistive-technology/physical-device audit is established.
+
+## Accounts and access batch
+
+Added 2026-10-09: ProfileHeader, AccountSwitcher/AccountOption, SessionRow and
+PermissionCard compose the Account center (88 building blocks, 21 families).
+Read [context and device capabilities](patterns/account-context-and-device-capabilities.md),
+then [Swift](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#account-gallery)
+and [Kotlin](../frontend/kotlin/notes/modules/project/app/README.md#account-gallery)
+for actual source, native evidence and limits.
+Verification, 2026-10-09: both native consumers build; all 45 iOS app checks,
+four focused Android Account UI checks and seven Swift/six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Native menu selection/disabled state, independent actions, account-qualified
+removal, cancelled confirmations, larger text/RTL and Android restoration are
+exercised. Actual credentials, session services, OS access and full accessibility
+audits remain separate. Next: define principal/workspace scope before connecting
+real guarded session commands or platform capability adapters.
+
+## Notifications batch
+
+Added 2026-10-09: CountBadge and NotificationRow compose Inbox preview
+(97 building blocks, 24 families). Read
+[inbox projection/read identity](patterns/inbox-projection-and-read-identity.md)
+and step 34 in each native notebook for source and native mechanics. Existing
+section/menu/alert components supply grouping, archive and undo presentation.
+Both consumers build; 51 iOS app cases, four focused Android inbox cases and
+seven Swift/six Kotlin UI package cases pass. Android checks cover restoration
+and retained earlier family state. Notes checks validate links/labels only.
+No push integration, synchronized receipts or full assistive/device audit is
+established. Next: define account scope, offline receipts and undo conflicts.
+
+## Plans batch
+
+Added 2026-10-09: FeatureRow, PlanCard and UsageMeter compose Plans preview
+(100 building blocks, 25 families). Start with
+[plan choice and applied allowance](patterns/plan-choice-and-applied-allowance.md)
+and reading step 35 in each native notebook. Selected, reviewed and current
+choices stay separate; applying a local plan preserves usage and can expose an
+exceeded allowance. Both consumers build; 53 iOS app cases, four focused Android
+Plans cases and seven Swift/six Kotlin UI package cases pass. Notes checks validate
+links/labels, not execution. No store billing, receipt verification or full
+assistive/device audit is established. Next: actual entitlement and usage-period scope.
+
+## Files batch
+
+Added 2026-10-09: FileTypeMark and TreeRow/TreeDisclosure compose Files preview
+(102 building blocks, 26 families). Start with
+[tree projection and retained selection](patterns/tree-projection-and-retained-selection.md),
+then native reading step 36 and the Files gallery walkthroughs.
+
+The fixture separates saved expansion, matching-plus-ancestor search projection,
+retained selected identity, favorites and transient inspector presence. Both apps
+build; 55 iOS app checks, four focused Android Files cases and seven Swift/six
+Kotlin UI package cases pass. Native cases exercise bounded extreme-depth
+large-text/RTL targets, independent actions, restoration, disabled/empty admission
+and retained earlier family state. Notes checks validate links/labels, not execution.
+Real filesystem/provider loading, permissions and full assistive traversal remain
+separate work.
+
+## Sharing batch
+
+Added 2026-10-09: MemberRow and ShareLinkCard compose Sharing preview
+(104 building blocks, 27 families). Start with
+[membership identity and confirmed revisions](patterns/membership-identity-and-confirmed-revisions.md),
+then native reading step 37 and the Sharing gallery walkthroughs.
+
+The fixture separates identity/roles from native composition and guards invitations,
+protected owners, revision-bound removals and explicit copy admission. Both apps
+build; 57 iOS app cases, four focused Android Sharing cases and seven Swift/six
+Kotlin UI package cases pass. Checks cover independent native actions, narrow
+large-text/RTL layouts, restoration, invalidation and retained prior family state.
+Notes checks validate links/labels, not execution. No real invitations, access
+tokens or server authorization are provided; native selection/clipboard UI and
+full assistive traversal need separate observations.
+
+## Playback batch
+
+The twenty-second UI batch adds PlaybackControls and NowPlayingCard
+(106 building blocks, 28 families). Start with
+[media timeline and transport admission](patterns/media-timeline-and-transport-admission.md),
+then native reading step 38 and the Playback gallery walkthroughs.
+Both consumers build; 59 iOS app cases, four focused Android Playback UI checks
+and seven Swift/six Kotlin UI package checks pass (2026-10-09).
+They cover bounded transport/seek/replay/repeat, independent favorites, narrow
+large-text/RTL geometry and Android saved-state/routes with earlier cart retention.
+The slider updates local state and Advance is manual: no audio, automatic clock,
+real player recovery or device playback performance is established. Notes checks
+validate links, module paths and example labels rather than executing examples.
+
+## Verification batch
+
+The twenty-third UI batch adds OneTimeCodeField/CodeFormat and VerificationCard
+(108 building blocks, 29 families). Start with
+[challenge drafts and attempt identity](patterns/challenge-drafts-and-attempt-identity.md),
+then native reading step 39 and the Verification gallery walkthroughs.
+Both consumers build; 61 iOS app cases, four focused Android Verification UI checks
+and nine Swift/eight Kotlin UI package checks pass (2026-10-09).
+They cover code admission/native hints, local request identity/expiry, narrow
+large-text/RTL geometry and Android recreation/routes with earlier cart retention.
+Android code/pending/error/success presentation is transient while nonsecret
+choices/times/counters restore. No code delivery, automatic deadline, OS Autofill
+suggestion, auth session or full assistive traversal is established. Notes checks
+validate links, module paths and example labels rather than executing examples.

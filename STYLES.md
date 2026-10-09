@@ -186,8 +186,119 @@ and preview controls. The [learning handoff](notes/patterns/semantic-tokens-and-
 explains the decisions and verification limits. See [Setup](docs/SETUP.md) for
 toolchain and emulator prerequisites.
 
+Insights resolves the same roles for native chart strokes/tracks and legends.
+Labels, formatted values and trend copy remain native scalable text; ring values
+move outside the circle at larger sizes. Native color overrides customize series,
+while mark shapes and readable copy keep color from being the only signal.
+ChartPanel follows content/floating Solid/Glass roles. Charts add no timer,
+interpolated counts or new palette.
+
 Activity compositions resolve existing text, accent, line and spacing roles.
 Timeline markers/connectors are decorative; avatar groups expose a supplied
 summary. Native refresh/progress controls follow the scoped theme. Expansion
 uses immediate native layout rather than adding animation to long text. Screen
 scrolling and refresh/page work remain caller-owned.
+
+Editing uses existing label, accent, line and native target roles. WrapLayout
+keeps variable token/action widths and grows rows as native copy requires; stable
+children retain identity during reflow. Selected row markers supplement explicit
+state semantics. Native swipe/menu surfaces indicate action tone, while the
+screen's existing ActionBar/ToastBanner follow scoped Solid/Glass presentation.
+
+Communication uses supplied native text and existing theme roles: incoming
+messages use the content surface, outgoing messages use accentTint, transfer
+failure copy uses crit, and the composer follows the floating Solid/Glass surface.
+Logical placement follows native layout direction. Typing dots are decorative and
+their opacity pulse disappears under scoped reduced motion. Attachment actions
+stay independent of passive thumbnails and selectable message text.
+
+Media browsing uses the same native button, text, space and accent roles.
+IconAction supplies semantic meaning for passive icons; PageIndicator is a
+passive summary. Rating choices retain touch bounds when wrapping. MediaOverlay
+adds a configurable bottom scrim for white copy, while supplied controls keep
+native theme surfaces. Native modifiers own media clipping and crop.
+
+Scheduling uses the existing accent/tint/line roles for selected days, caption
+and label styles for date/time copy, and native minimum action bounds. Day choices
+wrap at narrow widths; agenda copy and actions stack. Date/time modal chrome
+inherits the active theme, while native picker presentation remains platform
+specific. Caller-formatted copy carries time-zone and availability meaning.
+
+Workspace navigation resolves the existing accent/tint, ink, line and native
+target roles. DestinationRail follows the floating Solid/Glass surface role;
+breadcrumbs use wrapping native action bounds and passive current copy.
+SplitPane receives local bounds, adds token spacing and places primary content
+at the logical leading edge. Larger text chooses one pane rather than compressing
+both columns. Icons are passive outline artwork supplied by the app; these
+components introduce no palette or implicit transition animation.
+
+Tables use opaque content surfaces with sunk header backgrounds, line separators,
+native text and independent controls. Fixed column widths include cell padding;
+long text grows vertically and the horizontal viewport preserves those widths.
+Pagination wraps native minimum-sized actions around supplied page copy. Floating
+ledger controls follow Solid/Glass. Sort direction includes explicit accessible
+copy in addition to a decorative arrow; the batch adds no color or animation token.
+
+Account compositions use native semantic heading/body/caption styles and passive
+outline artwork. Larger text stacks profile artwork above identity copy; session
+and permission actions stay below their copy instead of compressing a trailing
+column. Profile/device content and permission cards are opaque. The floating
+account controls follow Solid/Glass; the account menu retains native presentation
+and selected/disabled semantics. No new palette or custom transition is added.
+
+Discovery uses existing accent and semibold text for supplied emphasis runs.
+HighlightedText retains one native wrapping text value and accepts native
+font/style and emphasis-color overrides. Suggestions use logical directional
+affordances; open and bookmark actions retain separate native targets. Result
+cards stay opaque, floating search controls follow Solid/Glass, and filter sheets
+retain native presentation. No new palette, blur or animation token is added.
+
+Commerce uses native heading/body/caption styles for current/comparison/unit
+price copy. Comparison strike-through is supplemented with full supplied
+narration. Product rows and order summaries stay opaque; cart controls follow
+Solid/Glass. Prices and code/action layouts grow vertically at narrow bounds and
+larger text. Native dividers, minimum action bounds and existing theme roles
+apply; this batch adds no color, animation or currency-formatting token.
+
+Notifications use the existing accent/tint for count capsules and unread emphasis.
+Unread status also has supplied visible copy and complete accessible narration.
+Update copy grows vertically beside passive artwork; sibling actions retain
+native targets below it. Content cards stay opaque and inbox controls follow
+Solid/Glass. Relative times, count caps and plural forms are caller copy, not tokens.
+
+Plans use existing opaque content cards, accent selected outlines and native
+choice targets. Feature marks are decorative and availability also has readable
+copy. Price, feature and usage text grow vertically; floating preview controls
+follow Solid/Glass. UsageMeter uses a determinate native bar only for a supplied
+finite fraction; missing/nonfinite fractions hide it. Complete caller narration
+retains quota/overflow meaning even when the visual fraction is clamped.
+
+Files use existing accent ink/tint and semantic monospaced caption for passive
+FileTypeMark labels. TreeRow selected tint, native chevrons and outlined favorite
+actions reuse existing tokens. Logical indentation defaults to 16 points/dp per
+level with a 48 cap; large text stacks passive artwork above copy and grows
+vertically. Floating controls sample the scoped Glass theme, while file content
+cards remain opaque. No new palette, file artwork loader or implicit transition
+is introduced.
+
+Sharing uses existing avatar, semantic identity/heading/body/code styles and
+accent/status roles. MemberRow leaves access/actions outside the passive identity
+group, stacks avatar above growing copy for larger text and follows logical
+alignment. ShareLinkCard keeps opaque content and limits native text selection
+to the monospaced link. Floating preview controls use scoped Glass surfaces;
+role menus, confirmations and clipboard presentation use native mechanisms.
+No new palette or implicit membership animation is introduced.
+
+Playback uses the existing opaque Card, semantic heading/caption text and native
+IconAction/ValueSlider controls. Passive artwork defaults to an 80-point/dp square;
+larger text stacks it above growing identity. Transport glyphs occupy 24 points/dp
+inside native action targets, with reflow at narrow widths. Labels and state copy
+carry meaning beyond glyphs. Floating preview controls use scoped Glass surfaces.
+No palette, playback animation or timeline clock token is introduced.
+
+Verification uses an opaque content card, existing semantic heading/body/code
+styles and native text input/action targets. Larger text stacks passive delivery
+artwork above copy and grows help/error/status vertically. Code digits retain
+left-to-right order inside logical RTL layouts; surrounding labels follow the
+host. Floating preview controls follow Glass. Input remains one native field,
+with no per-digit focus boxes, new palette or implicit countdown animation.

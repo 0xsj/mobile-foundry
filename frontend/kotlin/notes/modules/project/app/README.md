@@ -658,3 +658,676 @@ unit checks per platform pass. Notes validation passes. This focused coverage
 does not rerun unrelated GPU/camera checks or establish comprehensive TalkBack,
 localization, process-restored feeds, real-network or physical-device behavior.
 Next: choose a domain paging contract and route-owned state holder for a real feed.
+
+## Media gallery
+
+Added 2026-10-09: Media is the fourteenth family, with 57 building blocks.
+[Catalog ownership](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt) retains values through family/route changes.
+[MediaExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/MediaExamples.kt) composes native paging, passive position, supplied
+artwork, overlay favorites and per-study ratings. MediaTile shows the selected
+study's metadata and an explicit Use action that increments a local count.
+ComponentCatalogScreen keeps native PagerState, a saveable rating map keyed by
+study ID, favorite-ID list, enabled flag and local use count above family/route
+replacement. MediaValues is a passed snapshot whose callback updates those
+owners. The fixed study order maps currentPage to a record; rating identity is
+the record ID. Previous/Next use an app-owned coroutine scope and token motion.
+
+Enable media controls gates gestures/rating/favorites/use. Clear resets only the
+current rating. The procedural artwork needs no asset loader or new UI
+dependency, and is not an image editing or GPU performance feature.
+
+Read [UI mechanics](../core/ui/README.md#media-browsing-and-actions),
+[native paging](../../../substrate/compose-media-paging-and-overlays.md)
+and [shared ownership](../../../../../../notes/patterns/media-selection-and-passive-artwork.md).
+[Native checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/MediaCatalogTest.kt) link actual code and assertions.
+
+Final evidence, 2026-10-09: Four final media checks pass on the temporary API 36 emulator: three
+MediaCatalogTest checks plus one MediaComponentTest check. They execute native
+swiping, explicit paging, independent favorite/rating actions, per-record
+retention, selected/disabled choices, Clear, use counts, Back/family/theme changes
+and saved-state restoration of values/native page position. The font-scale-two
+240 dp composition checks target bounds and proves passive artwork/icon text and
+position do not absorb an overlay action. The prior broader run passes all
+eighteen checks (four media plus fourteen existing component/activity regressions).
+A final scoped rerun verifies the rating map keyed by study IDs after moving
+from the initial fixed-order rating list; no source change followed it.
+
+Initial attempts could compile but had no connected device. A temporary read-only
+instance of API36_Test supplied execution without deleting its locked saved data.
+No comprehensive TalkBack, localization, arbitrary live-record replacement,
+physical-device performance or durable review-storage guarantee is claimed.
+
+Both native consumers build; four UI token/material unit checks per platform
+pass. Notes validation passes. Next: choose
+an admitted media record contract and a selection fallback before adding a loader.
+
+## Communication gallery
+
+Claim: a caller-owned conversation fixture can exercise draft and transfer
+recovery independently of shared component rendering and backend transport.
+
+Added 2026-10-09: Communication is the fifteenth family, with 63 building blocks.
+[CommunicationExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/CommunicationExamples.kt) composes all six new APIs; the Design room row
+opens a destination with a persistent composer.
+
+ComponentCatalogScreen keeps rememberTextFieldState plus saveable primitive
+flags, transfer enum, append-only sent-text/attachment lists and counters above
+route replacement. CommunicationValues is a passed snapshot; its callback updates
+those owners. The fixture never deletes/reorders history, so its append-only
+positions remain stable. Real messages need domain IDs and persistence policy.
+
+The explicit fixture controls admit waiting → transferring → paused/failed/
+complete, with Resume/Retry returning to transferring. There is no timer or
+network request. Adding an incomplete attachment blocks send; failing/retrying
+preserves text, and cancellation removes only the file. A nonblank text or a
+completed attachment can send. Admission appends one local message, then clears
+the draft/file. Disabled callbacks guard transitions. Inspect increments a local
+counter; typing presence is a toggleable fixture. No filesystem reads or messages
+to another person occur.
+
+ConversationPreviewScreen uses a bounded Column with app-owned imePadding,
+a weighted scrolling transcript/recovery body and a separate composer. Native
+Back clears focus before replacing the route. This is source-level inset setup;
+the executed semantic checks do not establish all real IME occlusion/animations.
+
+Read [UI mechanics](../core/ui/README.md#communication-and-attachments),
+[native framework behavior](../../../substrate/compose-composer-and-ime.md)
+and [shared draft/transfer ownership](../../../../../../notes/patterns/composer-drafts-and-transfer-ownership.md).
+[Native checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/CommunicationCatalogTest.kt) link actual assertions.
+
+Final evidence, 2026-10-09: Four final communication checks pass on the isolated read-only API 36 emulator:
+three CommunicationCatalogTest cases and one large-text CommunicationComponentTest.
+They execute native multiline editing, pending-file send blocking, failure/retry,
+pause/resume, completion, independent attachment inspection, draft clearing,
+cancellation, disabled input/actions, route/family/theme retention and saved-state
+restoration. The narrow font-scale-two case checks passive artwork/typing semantics
+and busy input/slot/send gating while retaining text. Four UI unit checks pass.
+
+The first 17-case run passed thirteen existing component/media regressions but
+failed the new harness: disabled fields omit SetText, and pinned controls have no
+scroll ancestor. Retained-label selectors and appropriate action placement fixed
+those checks. One later empty-field assertion mixed help/label copy with text;
+asserting native EditableText separately fixed it. The final four-case run passes.
+The temporary read-only emulator was used without resetting saved AVD data.
+
+Both consumers build. Full VoiceOver/TalkBack, localization, every keyboard,
+rotation/iPad, physical-device performance and real service delivery remain
+outside this slice. Keep pinned slots small and supply bounded screen layout.
+Next: introduce an actual message/attachment service through existing thin seams
+with operation identity and draft-revision-aware success handling.
+
+## Editing gallery
+
+Claim: a local library can show identity-preserving selection/removal/undo without
+turning shared UI components into a collection service.
+
+Added 2026-10-09: Editing is the sixteenth family, with 68 building blocks.
+[EditingExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/EditingExamples.kt) composes all five APIs; Open library editor opens
+the native destination with six stable fixture records.
+
+ComponentCatalogScreen saves small primitive strings, lists and flags above
+route replacement. EditingValues is an immutable passed snapshot; callbacks
+update those owners. LibraryEditingScreen uses stable LazyColumn item keys,
+screen-owned imePadding and a separate bottom notice/action region. Swipe state
+is intentionally not saved; restoring domain values cannot replay the gesture.
+
+The feature trims one tag, rejects case-insensitive duplicates, caps tags at six
+and preserves rejected drafts. Accepted admission clears only that draft; removing
+a tag preserves it. Filtering derives visible records without changing selected
+IDs. Select visible items changes only that projection; the bottom summary names
+hidden selection and bulk actions operate on all selected IDs. Removal guards
+valid/nonremoved identity and captures the latest IDs plus prior selected subset.
+Undo restores those same records/selection while retaining archive flags and source
+ordering. Another removal replaces the snapshot; dismiss discards recovery.
+Disabled commands are guarded at the owner too. No files or backend records change.
+
+Read [UI mechanics](../core/ui/README.md#selection-tokens-and-row-editing),
+[native framework behavior](../../../substrate/compose-wrapping-and-swipe-actions.md)
+and [shared identity/undo](../../../../../../notes/patterns/selection-identity-and-undo.md).
+[Checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/EditingCatalogTest.kt) link actual assertions.
+
+Final evidence, 2026-10-09: Five final editing checks pass on the isolated read-only API 36 emulator.
+They exercise hidden selection and bulk archive/remove/undo, native right/left
+swipes, reset and subsequent unarchive, saved-instance undo/restoration without
+command replay, duplicate rejection/native Done, accepted tag clearing, removal
+with draft retention, disabled controls and Back/family/Dark/Glass retention.
+The narrow font-scale-1.5 check measures wrapped native 48dp removal targets and
+native selection state; another case invokes custom accessibility actions and
+checks disabled swipe/restoration cannot dispatch. Four UI unit checks pass.
+
+The first compile attempt treated CustomActions as a callback action; it is a
+semantics property list. Text-edit methods return Unit and cannot chain into
+performImeAction. Reading custom action values on the UI thread and separating
+input/submission corrected the harness. The first 18-case execution passed four
+editing cases and thirteen existing component/communication regressions; one
+assertion expected supporting copy without its visible Error prefix. Asserting
+native Error semantics plus retained draft fixed that selector. The final five-
+case run passes. Saved AVD data was not reset.
+
+Both consumers build. Full VoiceOver/TalkBack, localization, all keyboard/window
+sizes, macOS runtime, physical-device gestures/performance and persistent undo
+remain outside this slice. A real library command needs receipts/revisions and
+failure projection through existing result/mutation seams.
+Next: how should undo admit a record that changed after its removal?
+
+## Insights gallery
+
+Claim: a caller-owned dashboard can compare periods and empty data without
+overwriting an independently owned goal or hiding chart values in decoration.
+
+Added 2026-10-09: Insights is the seventeenth family, with 74 building blocks.
+[InsightsExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/InsightsExamples.kt) composes six APIs. Open insights dashboard
+opens the scrolling native destination.
+
+ComponentCatalogScreen saves primitive period, completed count, enabled/empty
+flags and destination state above route replacement. InsightsValues is an immutable
+snapshot; callbacks update those owners. InsightsPreviewScreen owns a bounded
+vertical scroller, with period tabs' native horizontal scroll inside it. Disclosure
+state is local presentation; it is not part of a durable analytics model.
+
+The immutable fixture provides seven daily Week samples or four weekly Month
+samples. Focus totals are 210/420 minutes and Design/Reading/Practice categories
+sum to the same total. Both periods use a 200-minute bar maximum; sparklines
+explicitly describe their relative scale and have a native exact-values disclosure.
+Comparison copy/direction is fixture policy. Empty mode replaces focus plots while
+keeping the independent session goal. Its 0..20 commands reject disabled/out-of-
+range changes; Reset returns to 14. Drawing components never aggregate, format a
+unit/date, select a period or perform analytics collection. No service is invoked.
+
+Read [UI mechanics](../core/ui/README.md#insights-and-small-charts),
+[native drawing](../../../substrate/compose-chart-drawing-and-semantics.md)
+and [chart meaning/scales](../../../../../../notes/patterns/chart-meaning-and-scales.md).
+[Checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/InsightsCatalogTest.kt) link executed assertions.
+
+Final evidence, 2026-10-09: Four final Insights checks pass on the isolated read-only API 36 emulator.
+They exercise period/empty/goal independence, sample disclosure, category copy,
+disabled goal controls, reset, Back/family/Dark/Glass retention and saved-state
+restoration. The drawing case captures pixels for finite signed extremes, a flat
+sequence and empty input. A narrow font-scale-two panel checks merged category/value
+semantics, bounded/clamped progress copy and an independently activated/disabled
+minimum-height footer action. Six UI unit checks pass.
+
+The initial nine-case execution passed three Insights checks plus all five editing
+regressions. One test clicked Month after scrolling down to the goal, but generic
+performScrollTo followed the tab's nested horizontal scope without restoring the
+outer viewport. Two further selector/placement attempts confirmed Month remained
+offscreen. Scrolling the outer insight-scroll viewport back to its header, then
+asserting visibility and clicking the native tab, fixed the harness. The final
+four-case run passes; actual category values are asserted after scrolling their
+panel into view. The temporary read-only emulator did not reset saved AVD data.
+
+Both consumers build. Full VoiceOver/TalkBack, all locales/keyboards/window sizes,
+macOS runtime, dense data, time axes, physical-device rendering/performance and
+real analytics providers remain outside this slice. Next: introduce an admitted
+metrics service through existing thin seams before adding dashboard orchestration.
+
+## Scheduling gallery
+
+Claim: a session draft, date availability and an applied session are distinct
+feature values above family/route/theme changes.
+Origin, 2026-10-09: [Scheduling source](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/SchedulingExamples.kt) and
+[consumer checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/SchedulingCatalogTest.kt), linked from the root component catalog.
+
+Open Scheduling → Open schedule planner. The UTC week fixture has an unavailable
+Sunday and an initially selected Monday. Tuesday has an empty agenda until Apply
+copies a chosen time/day into one local session. Use time changes only the feature
+draft; Keep time changes nothing. Date endpoints commit independently. Reversed
+dates disable all bounded days/Apply without repairing the selected ID or changing
+the already applied session. Reset dates restores the week. Empty projection and
+disabled controls retain feature values; Android saves primitives above routes.
+
+Evidence: both native consumers build; 39 iOS app checks pass, including admission
+and 240-point accessibility-size geometry. Five Android scheduling checks pass,
+including native hour/minute cancel/commit, disabled modal closure, 240-dp font
+scale 2 layout, range admission, route/theme changes and saved-state restoration.
+One existing Android date-picker regression passes as well. The UI package check
+passes seven Swift and six Kotlin checks. See the native
+substrate for what each check establishes. A full VoiceOver/TalkBack, all locales,
+real-zone DST, device calendar, reminders and physical-device audit remains open.
+
+Read [UI APIs](../core/ui/README.md#dates-and-agendas), [native mechanics](../../../substrate/compose-time-and-date-drafts.md) and
+[calendar meaning](../../../../../../notes/patterns/calendar-dates-and-clock-readings.md).
+Next: define a real availability/scheduling port and reject stale revisions
+without discarding a user's uncommitted time/date draft.
+
+Final Android evidence, 2026-10-09: the six-check scheduling/date run passes
+after correcting the existing test selector. The native calendar labeled
+October 9 as `Today, Friday, October 9, 2026`, so its exact full-date selector
+failed; a full-date substring allows the Today prefix and retains exact UTC
+timestamp/cancel/commit assertions. The fifth scheduling check covers independent
+date endpoints and disabling an open draft. An isolated read-only emulator was
+used; its initial crash-report helper handshake stalled, so that instance was
+restarted with crash reporting disabled. This changed test setup only.
+
+## Workspace gallery
+
+Claim: selected project identity, collection projection and compact detail intent
+are separate feature values above adaptive layout and catalog routes.
+Origin, 2026-10-09: [Workspace source](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/WorkspaceExamples.kt) and
+[consumer checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/WorkspaceCatalogTest.kt), reached through Components → Workspace.
+
+Open adaptive workspace, choose Orbit study, star it and return to projects.
+Selection/stars remain. Wider local bounds show a rail beside the project list
+and detail; Single pane preview requests the compact flow. Archived hides Orbit
+without selecting Field notes; the wide detail uses an unselected placeholder.
+Returning to Starred makes Orbit visible again. The disabled Shared rail item
+does nothing. Breadcrumb ancestors close compact detail or return to All projects;
+the final crumb stays passive. Current copy follows browse intent rather than a
+retained hidden or inactive selection. The preview's outer Back exits to Components.
+
+The owner retains values across theme/family/route changes. Android additionally
+saves primitives and route; no new Swift process-restoration claim is made.
+Compact Android system Back closes detail before exiting the preview. Reflow
+does not change selected identity or replay project actions. These are local
+fixture projects, with no storage, service or navigation-library integration.
+
+Verification, 2026-10-09: both native consumers build; all 41 iOS app
+checks, five focused Android Workspace UI checks and seven Swift/six
+Kotlin UI package checks pass. `make notes-check` validates links and
+example labels, not native behavior.
+Four component checks exercise native selected/disabled actions, passive current copy, 240-dp font-scale-two wrapping, scrollable rail items, width/RTL/text reflow and selection across hidden collections. One catalog check covers native system Back, saved-state restoration and family/theme/route changes.
+Wide hosts are synthetic native geometry on phone simulators; physical tablet,
+foldable hinge, predictive-back animation, keyboard/focus, localization and full
+VoiceOver/TalkBack coverage remain open. Scroll offsets are slot-local and are
+not promised across reflow. Read [UI APIs](../core/ui/README.md#adaptive-workspaces),
+[native mechanics](../../../substrate/compose-bounded-panes-and-navigation.md)
+and [adaptive ownership](../../../../../../notes/patterns/adaptive-layout-and-navigation-state.md).
+Next: connect a real routed workspace and admit deep-link selection before
+choosing its compact pane.
+
+## Tables gallery
+
+Claim: full ordering, page projection and inspected identity are distinct feature
+values above table slots and catalog routes.
+Origin, 2026-10-09: [ledger source](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/TableExamples.kt) and
+[consumer checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/TableCatalogTest.kt), reached from Components → Tables → Open project ledger.
+
+The nine-record fixture has Project/Sessions/Status sort keys and three records
+per page. Clicking a new key chooses ascending; clicking it again reverses the
+primary order. Ascending ID breaks ties in either direction. Sorting preserves
+the current page. Inspect accepts only a visible row, retains its ID and increments
+a local count. The DataTable cell has one native action, independent of other
+cells. Values are above family/route/theme changes; Android saves primitives.
+
+Example: sort Sessions ascending and open page 2 to inspect Field notes. Empty
+records displays no rows and disabled Page 1 of 1, retaining actual page 2,
+sort and inspected ID. Turning it off restores page 2. Disabling actions blocks
+sort/page/inspection without discarding values. These are local fixture actions;
+there is no inspection route, service request, durable storage or server cursor.
+
+Verification, 2026-10-09: both native consumers build; all 43 iOS app checks,
+four focused Android Tables UI checks, seven Swift and six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Four Android UI checks exercise native sort/endpoint/global disabled actions,
+scrolling to an independent cell action, alignment, 240-dp font-scale-two growth,
+RTL, sort/page/inspection, empty projection and saved-state/family/theme/route
+retention. The first movement assertion incorrectly treated clipped semantic
+bounds as a translation; the corrected check observes native ScrollState movement,
+visible action activation and aligned header/cell bounds. The isolated read-only
+emulator does not reset or mutate the saved AVD baseline.
+No full VoiceOver/TalkBack, all locales, physical-device performance, desktop
+keyboard traversal, virtualization or remote response admission is established.
+Read [UI APIs](../core/ui/README.md#tables-and-pagination),
+[native mechanics](../../../substrate/compose-table-columns-and-scrolling.md) and
+[shared policy](../../../../../../notes/patterns/table-sorting-and-page-ownership.md).
+Next: define stable ordering and page/cursor revisions for a real data source,
+then prevent a late response from replacing a newer user's sort/page intent.
+
+## Commerce gallery
+
+Claim: saveable cart values and review snapshots outlive catalog routes/themes,
+while a review sheet remains ephemeral presentation.
+
+Origin, 2026-10-09: [Commerce source](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/CommerceExamples.kt)
+and [consumer checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/CommerceCatalogTest.kt),
+reached from Components → Commerce → Open cart preview (95 blocks/23 families).
+
+CommerceValues holds bounded product quantities, delivery, code draft, applied
+discount/error, enabled/busy state and recorded review total/items/count. The
+feature admits IDs/quantity limits before deriving integer-cent subtotal,
+ten-percent item discount, delivery and total. cartMoney is fixed USD display
+copy for this fixture, not a general monetary formatter.
+
+Text editing does not change an applied discount. Button/Done admission trims and
+normalizes the ASCII sample code; invalid attempts project an error and retain
+prior valid discount. Busy blocks code operations and review while retaining
+draft/cart. Clear empties quantities, not delivery/draft/discount; Restore changes
+only sample quantities. Global disabled blocks all cart operations.
+
+ComponentCatalogScreen hoists saveable primitives/route before preview branches.
+CommerceContent remembers review visibility keyed by availability. Review records
+a total/item snapshot immediately and shows a disposable native sheet. Restoring
+the route keeps its recorded values while discarding the sheet. Quantity edits
+recalculate current totals without rewriting the snapshot. The host clears native
+focus before code application/review and bounds review content scrolling.
+
+Example: three kits and one notebook with Pick up and applied STUDIO10 review
+at $89.10. Clear then restore shows $26.10 but preserves that review. Read
+[UI walkthrough](../core/ui/README.md#products-and-order-composition),
+[native mechanism](../../../substrate/compose-inline-fields-and-order-composition.md)
+and [shared ownership](../../../../../../notes/patterns/price-copy-and-committed-cart-values.md).
+
+Verification, 2026-10-09: both consumers build; 49 iOS app checks, four focused
+Android Commerce UI and seven Swift/six Kotlin UI package checks pass. The
+consumer cases exercise quantity endpoints/unavailability, keyboard code
+application, errors, totals, busy/disabled controls, discarded review sheets,
+routes/themes and restoration. Component cases measure narrow large-text/RTL
+bounds, independent actions and retained draft after width changes. No full
+TalkBack/localization/device audit, authoritative quote or purchase is established.
+Next: introduce actual quote identity and guarded mutations through a service seam.
+
+## Discovery gallery
+
+Claim: saveable feature values outlive catalog routes and themes while filter
+draft/presentation remain temporary native UI mechanics.
+
+Origin, 2026-10-09: [Discovery source](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/DiscoveryExamples.kt)
+and [consumer checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DiscoveryCatalogTest.kt),
+reached from Components → Discovery → Open search workspace (91 blocks/22 families).
+
+DiscoveryValues projects six stable local records from a trimmed literal query
+and applied topic/archive facets. Enabled/visible guards admit opening and saving
+independently. Hidden saved IDs and opened identity are retained. Explicit search
+submission, suggestions and opening remember trimmed, case-insensitively unique
+queries, bounded to three; clearing text leaves recent queries intact.
+
+ComponentCatalogScreen hoists saveable primitives and route above its preview
+branch. DiscoveryContent remembers only filter draft/visibility, copies applied
+values when opening and commits solely on Apply. Reset changes draft; native
+dismissal, availability loss and restoration discard the sheet. Applied chips
+remove only their facet. The sheet bounds a vertical scroller and the host clears
+focus before opening it or submitting search. Matching offsets stay Kotlin-local;
+HighlightedText receives complete literal runs.
+
+Example: save/open Motion study, filter it out, discard a new draft and restore
+the route. Saved/open/applied values remain, while the pending sheet disappears.
+Switch families and Dark/Glass without replacing feature values. No service,
+record destination, durable history, debounce or multilingual ranking exists.
+
+Verification, 2026-10-09: both consumers build; 47 iOS app checks, four focused
+Android Discovery UI and seven Swift/six Kotlin UI package checks pass. Catalog
+checks exercise filter cancel/apply/reset, restoration, hidden bookmarks,
+history, independent actions, routes, theme changes and disabled controls.
+Component checks measure 240-dp font-scale-two/RTL and action bounds. This is not
+a TalkBack/localization/device/backend audit. An overlapping instrumentation run
+was discarded; the final sequential four-case run passed completely.
+Read [UI walkthrough](../core/ui/README.md#search-and-discovery),
+[native mechanism](../../../substrate/compose-annotated-text-and-search-actions.md)
+and [projection pattern](../../../../../../notes/patterns/search-projection-and-filter-drafts.md).
+Next: connect actual query lifetime and account-scoped history through services.
+
+## Account gallery
+
+Claim: captured account-qualified intent and device-scoped capability projection
+need distinct feature ownership above reusable account UI.
+Origin, 2026-10-09: [account source](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/AccountExamples.kt) and
+[consumer checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/AccountCatalogTest.kt), reached from Components → Account → Open account center.
+
+Personal and Studio team are available; Invited workspace is disabled. Each
+begins with three fixture devices. Removal keys include account/device IDs;
+current iPhone is protected. Cancel keeps all devices, and confirm rechecks
+enabled state, captured account and eligible device before changing the list.
+Switching context or disabling actions closes outstanding prompts. A stale
+captured context is rejected even if its callback runs later.
+
+Example: remove Personal's desktop, switch to Studio team (three devices), then
+return to Personal (two). Allow the local photo preview and both contexts show
+Allowed. A Denied scenario offers Preview settings and increments a count while
+retaining Denied. Profile action also increments a preview count. No OS photo
+prompt, settings app, real device removal or authenticated service is invoked.
+
+Verification, 2026-10-09: both native consumers build; all 45 iOS app checks,
+four focused Android Account UI checks and seven Swift/six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Four focused Android checks cover native selected/disabled/current choices,
+unknown selection, closing unavailable menus, 240-dp font-scale-two growth, RTL,
+independent actions, cancelled/confirmed removal, protected current device and
+saved-state/family/theme/route retention. Nonsecret primitives are saveable above
+preview branches; prompts use remember keyed by context/availability. Saved-state
+recreation discards outstanding confirmations without removing a device.
+
+The feature distinguishes dialog presentation from pending intent: dismissing
+the wrapper cannot erase the value needed by its confirm callback. Context and
+eligibility are checked at the feature boundary; a disabled control is not an
+authorization mechanism. Real principal/workspace/session relationships remain
+an explicit future domain decision rather than a guarantee of this fixture.
+Read [UI APIs](../core/ui/README.md#accounts-and-access), [native mechanics](../../../substrate/compose-account-menus-and-action-slots.md)
+and [shared scope](../../../../../../notes/patterns/account-context-and-device-capabilities.md).
+No real auth/capability work, full VoiceOver/TalkBack, all locales, physical-device
+profiling or secure-storage behavior is established. Next: define context scope,
+then connect session commands and foreground permission refresh through adapters.
+
+## Notifications gallery
+
+Claim: saved inbox identities survive changes of presentation while transient
+native details are discarded on saved-state recreation.
+
+Origin/evidence, 2026-10-09:
+[NotificationExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/NotificationExamples.kt)
+projects the same four-update fixture as Swift. The
+[component route](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+hoists nonsecret filter/read/archive/undo/opened/count primitives. The new inbox
+preview branch follows earlier family owners so they remain composed while it is
+open. Its local sheet flag uses remember; LaunchedEffect closes unavailable details.
+
+Example: choose Unread, open Review (which marks it read), archive Invitation and
+mark visible updates read. Undo restores Invitation unread, even after state
+recreation. Theme/family/route changes retain feature choices and earlier cart
+quantities. Active-inbox count and current visible count have different scope.
+Details remain available after their record leaves Unread, then close when
+archived or globally disabled. Reset restores fixtures without erasing the open
+operation count. All model commands reject unknown/archived/disabled targets.
+
+Verification: both consumers build; 51 iOS app cases, four focused Android inbox
+cases and seven Swift/six Kotlin UI package cases pass.
+[Component cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/NotificationComponentTest.kt)
+cover native semantic roles, independent actions and large-text/RTL bounds.
+[Consumer cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/NotificationCatalogTest.kt)
+exercise sheet presentation/dismissal, filtered bulk scope, archive undo,
+saved-state recreation, route/theme/family retention and retained cart values.
+Family tabs have a horizontal scroll inside the vertical gallery: tests bring
+the tab container into the vertical viewport before targeting its horizontal tab.
+No TalkBack, all-locales or device performance audit is established.
+Read [UI walkthrough](../core/ui/README.md#notifications-and-inbox),
+[native mechanics](../../../substrate/compose-notification-actions-and-narration.md)
+and [shared pattern](../../../../../../notes/patterns/inbox-projection-and-read-identity.md).
+Next: define real receipt/undo conflicts and account scope before service integration.
+
+## Plans gallery
+
+Claim: saved plan/current/usage values retain their meaning independently of
+transient review presentation and catalog routes.
+
+Origin/evidence, 2026-10-09:
+[PlanExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/PlanExamples.kt)
+owns the same Starter/Studio/Team fixture as Swift. The
+[component route](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+hoists nonsecret selected/current/cycle/usage/review primitives above preview
+branches. The Plans branch follows earlier owners so their remembered state is
+not removed. Sheet presence uses remember; LaunchedEffect dismisses an invalid review.
+
+Example: select Studio/Yearly while current Starter remains three of five. Review
+stores this plan/cycle and application rechecks it before switching allowance to
+fifty. Recreating state retains review metadata but closes its sheet and applies
+nothing. Reach fifty and apply Starter: fifty used remains, the bar clamps full
+and explicit copy reports exceeded allowance. Pending/disabled/unavailable and
+stale review commands reject application or export. Reset usage is explicit.
+
+Verification, 2026-10-09: both consumers build; 53 iOS app cases, four focused
+Android Plans cases and seven Swift/six Kotlin UI package cases pass.
+[Component cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/PlanComponentTest.kt)
+cover native selection/eligibility and large-text bounds;
+[consumer cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/PlanCatalogTest.kt)
+exercise review/application, retained usage, current/draft distinction, quotas,
+saved-state recreation, theme/family/route retention and earlier cart quantities.
+The initial price assertion matched the same narration in card and sheet; the
+final check scopes it to the review container, rather than changing that copy.
+Nested catalog scroll tests bring the family container into the vertical viewport.
+
+Passive complete labels must include price/availability/overflow meaning.
+Selected UI is not entitlement authorization; a real product/quote/receipt service
+needs explicit identity and validity. No TalkBack, all-locales, billing service or
+physical-device audit is established.
+Read [UI walkthrough](../core/ui/README.md#plans-and-usage),
+[native mechanics](../../../substrate/compose-plan-slots-and-usage-bars.md) and
+[shared pattern](../../../../../../notes/patterns/plan-choice-and-applied-allowance.md).
+Next: actual service-owned capabilities and usage periods before store integration.
+
+## Files gallery
+
+Claim: saveable feature primitives retain file choices across destinations while
+the inspector's transient presence can be safely discarded during recreation.
+
+Origin/evidence, 2026-10-09:
+[FileExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/FileExamples.kt)
+contains the fixed acyclic BrowserItem tree and FileBrowserValues projection.
+[Catalog wiring](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+owns saveable query/expansion/favorites/selection/open count/eligibility values
+above route returns. The Files return follows earlier family owners, so visiting
+it does not remove their state from composition.
+
+Example: collapse all, search field, favorite/open the nested image and recreate
+saved state. The sheet is discarded while selected identity and favorite survive.
+Clear search restores manual expansion. Expand the path to reveal the selected
+row, collapse its parent, and switch families/themes; state remains. Reset clears
+query/selection and restores initial expansion without losing favorites or opens.
+Guarded opening requires visibility; a retained selected item can still be
+inspected/favorited while hidden. Empty/disabled state closes the sheet.
+
+Verification, 2026-10-09: both consumers build; 55 iOS app checks, four focused
+Android Files cases and seven Swift/six Kotlin UI package cases pass.
+[Gallery cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/FileCatalogTest.kt)
+execute the actual native search, disclosures, favorite/inspector, saved-state
+recreation, themes/routes and earlier cart-state retention, plus disabled/empty/
+unknown/unavailable/hidden command rejection. UI checks are over local records;
+they establish no provider identity, file loading, OS permission or full TalkBack
+traversal. Search IME dismissal and pre-inspector focus clearing are feature actions.
+
+Read [UI walkthrough](../core/ui/README.md#files-and-hierarchy),
+[native mechanics](../../../substrate/compose-tree-actions-and-indentation.md),
+[shared pattern](../../../../../../notes/patterns/tree-projection-and-retained-selection.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#files-and-hierarchy).
+Next: asynchronous loaded-child projection and provider reconciliation outside
+the reusable rows.
+
+## Sharing gallery
+
+Claim: saveable membership values retain role/link choices while a transient
+revision-bound removal request is safely discarded during recreation.
+
+Origin/evidence, 2026-10-09:
+[SharingExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/SharingExamples.kt)
+owns known contacts, guarded SharingValues commands and native clipboard dispatch.
+[Catalog wiring](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+owns saveable IDs/role map/draft/error/link choice/revision/counts above route
+returns. The Sharing return follows earlier family owners and keeps their state
+in composition.
+
+Example: invite River as Editor, change Jamie to Viewer and turn link access Off.
+Open removal, then recreate saved state. Members/roles/link choice survive and
+the confirmation is discarded. A fresh explicit request may remove River; Cancel
+changes nothing. Protected, unknown, stale, disabled and pending commands reject.
+The fixed address lookup is not generic email validation and sends no message.
+
+Explicit copy checks current eligibility, then invokes a supplied copyText callback
+or the native ClipboardManager/ClipData adapter and records admission. Off hides
+the link and disables the app copy button; previous clipboard text remains.
+The callback is the test seam, while native manual link selection is separate.
+
+Verification, 2026-10-09: both consumers build; 57 iOS app cases, four focused
+Android Sharing cases and seven Swift/six Kotlin UI package cases pass.
+[Gallery cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/SharingCatalogTest.kt)
+execute actual role menus, button/IME invitations, errors, cancel/confirm,
+invalidation, saved-state restoration, themes/routes and retained prior cart state.
+An injected copy callback receives the example URL once; rejected requests do not
+dispatch. These checks do not exercise the OS selection toolbar/clipboard feedback,
+full TalkBack or actual backend permissions.
+
+Capture the rendered removal request before ConfirmationDialog: it dismisses
+before calling confirmation. Reading mutable removal state in that callback would
+find null. The captured ID/revision is still rechecked against feature admission.
+Read [UI walkthrough](../core/ui/README.md#sharing-and-access),
+[native mechanics](../../../substrate/compose-member-slots-and-selectable-links.md),
+[shared pattern](../../../../../../notes/patterns/membership-identity-and-confirmed-revisions.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#sharing-and-access).
+Next: actual provider concurrency, account scope and admitted mutation results.
+
+## Playback gallery
+
+Claim: saveable per-track values retain local timeline choices while a real
+engine remains responsible for actual playback and lifecycle reconciliation.
+
+Origin/evidence, 2026-10-09:
+[PlaybackExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/PlaybackExamples.kt)
+owns fixtures, guarded immutable PlaybackValues and content.
+[Catalog wiring](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+owns selected ID, Double position map, favorite IDs, playing/speed/repeat/scenario,
+flags and counts in rememberSaveable above route returns. The Playback return
+follows earlier family owners so it does not remove their state from composition.
+
+Example: seek Coastline to 45, switch to Orbit, play and advance at 1.5×, then
+return. Each track retains its own position and selection pauses. Buffering pauses
+transport but keeps favorite eligible. Recreate saved state: position map, speed,
+repeat, favorites and scenario restore. This is local UI data, not a running audio
+resource. Switching families/themes/routes retains it and the earlier cart.
+
+Seek clamps finite input and pauses at the end. Playing at the end resets to zero.
+Manual steps require playing and a finite positive delta/target; repeat wraps,
+otherwise the end clamps and pauses. Unknown/unavailable/invalid/ineligible
+commands reject without changing counts. Retry restores Ready without resuming.
+Disabled/empty state retains positions; Reset clears positions/transport choices
+and recovers Ready/nonempty while preserving favorites/counts.
+
+Verification, 2026-10-09: both consumers build; 59 iOS app cases, four focused
+Android Playback cases and seven Swift/six Kotlin UI package cases pass.
+[Gallery checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/PlaybackCatalogTest.kt)
+execute native slider SetProgress, transport, menus, repeat/favorite, recovery,
+saved-state recreation, themes/routes and earlier cart retention. These checks
+do not simulate a physical drag, full TalkBack, engine restoration, media loading
+or playback performance. No timer or audio session exists in this fixture.
+Read [UI walkthrough](../core/ui/README.md#playback-and-timeline),
+[native mechanics](../../../substrate/compose-playback-slots-and-native-transport.md),
+[shared pattern](../../../../../../notes/patterns/media-timeline-and-transport-admission.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#playback-and-timeline).
+Next: engine command admission and identity-scoped seek completion before adding
+OS transport/background playback.
+
+## Verification gallery
+
+Claim: nonsecret saved choices and transient codes/attempts give verification UI
+clear restoration behavior without replaying a command or claiming authentication.
+
+Origin/evidence, 2026-10-09:
+[VerificationExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/VerificationExamples.kt)
+owns guarded immutable VerificationValues.
+[Catalog wiring](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+owns all values above route returns. Channel/response/generation/times/enabled/
+counters use rememberSaveable; draft/request/error/verified use transient remember.
+Earlier family owners remain composed during the destination.
+
+Example: paste 123-456, submit and advance 30 seconds while pending, then recreate.
+Channel/timing/counters restore; draft and pending check disappear. No check
+replays. Resend starts a new generation; a wrong local code produces an error,
+editing clears it and Done begins the same guarded command as Verify.
+The matching fixture result clears draft and presents local success.
+
+Each request captures attempt ID plus challenge generation/channel/code. A
+canceled or disabled request cannot apply later, and a new begin has a distinct ID.
+Manual expiry discards pending/draft; resend/channel/reset create fresh challenges.
+Reset retains counters. These UI guards do not supply real code delivery, rate
+limits, durable deadlines, server validation or auth state.
+
+Verification, 2026-10-09: both consumers build; 61 iOS app cases, four focused
+Android Verification cases and nine Swift/eight Kotlin UI package cases pass.
+[Gallery cases](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/VerificationCatalogTest.kt)
+execute actual field replacement/Done, native buttons/menus, incorrect/unavailable
+recovery, cancellation/expiry/stale/disabled/duplicate rejection, recreation,
+theme/family/routes and earlier cart retention. They assert that code/pending are
+discarded while counters/channel/timing survive. They do not drive physical paste
+menus, OS Autofill delivery, full TalkBack or actual authentication.
+
+Read [UI walkthrough](../core/ui/README.md#verification-and-code-entry),
+[native mechanics](../../../substrate/compose-code-entry-and-autofill-hints.md),
+[shared pattern](../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#verification-and-code-entry).
+Next: provider challenge identity and deadline reconciliation at the service seam.

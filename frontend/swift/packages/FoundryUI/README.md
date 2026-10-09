@@ -21,7 +21,71 @@ content panels opaque and adapts floating controls to native glass/material,
 with transparency reduction. See [surface themes](../../../../STYLES.md#swappable-surface-themes).
 
 See [the component map](../../../../docs/COMPONENTS.md) for implemented and reserved
-catalog folders. Seven reusable component batches add 51 controls and compositions,
-including native selection, overlays, contextual help, adaptive layouts, detail compositions, onboarding and activity feeds; see [usage](../../../../docs/blueprints/ui-components.md).
+catalog folders. Twenty-three reusable component batches add 108 controls and compositions,
+including native selection, overlays, contextual help, adaptive layouts, detail compositions, onboarding, activity feeds, media browsing, communication, collection editing and small charts; see [usage](../../../../docs/blueprints/ui-components.md).
 The five-tab prototype lives in app
 composition and uses native TabView rather than a reusable routing wrapper.
+
+Scheduling adds TimeField/ClockTime, DateRangeField, DayStrip/DayOption and
+AgendaRow. Picker drafts are temporary; date interpretation, range validation,
+day availability and session application stay in the feature. See the
+component usage guide and native module walkthrough for the planner example.
+
+Workspace adds DestinationRail, BreadcrumbTrail and SplitPane. Callers provide
+stable IDs, path copy, selected state, native slots and compact Back policy.
+SplitPane requires bounded height and preserves values only when the host keeps
+them above its layout branches. See the usage guide and workspace walkthrough.
+
+Tables adds TableSortHeader/TableSortOrder, DataTable/DataTableColumn and PaginationBar.
+The host owns sort/page policy and record actions. Small pages scroll horizontally
+at fixed supplied widths; native cell controls remain independent.
+
+Account adds ProfileHeader, AccountSwitcher/AccountOption, SessionRow and
+PermissionCard. Identity/capability values and action admission stay in the host;
+menus and artwork presentation stay native. Account context and device permission
+scope are separate. The local preview never performs authentication or OS access.
+
+Discovery adds HighlightedText/HighlightSegment, SearchSuggestionRow and
+SearchResultRow. Literal styling and native action slots receive caller values;
+matching, history, filters, bookmarks and navigation stay in the feature.
+SearchField now accepts default-enabled state for editing/clear/submission.
+
+Commerce adds PriceLabel, ProductRow, OrderSummary and InlineActionField. The
+feature supplies formatted prices, totals, independent product actions and code
+admission. Field button/keyboard share eligibility without starting a request.
+
+Notifications adds CountBadge and NotificationRow. Count text and full narration
+are supplied; rows expose an open action, unread emphasis and independent native
+action slots. Inbox state, grouping, read policy, archive/undo and routes stay in
+the app. No notification permission or push integration is introduced.
+
+Plans adds FeatureRow, PlanCard and UsageMeter. Copy, prices, feature availability
+and quota fractions are supplied. The plan card has an explicit native choice
+button and independent slots; it is not a whole-card tap target. Draft plan,
+reviewed choice, current allowance and usage stay with the consumer.
+
+Files adds FileTypeMark and TreeRow with the TreeDisclosure helper. The feature
+supplies flattened depth/selection and separate open/disclosure/action eligibility;
+the row caps logical indentation and grows for accessibility text. Format artwork
+is passive, with complete row narration supplied by the caller. Hierarchy/search,
+favorites, provider identity and OS file access remain feature/adapter work.
+
+Sharing adds MemberRow and ShareLinkCard. Member identity/decoration is passive;
+access/action slots retain independent native controls. Supplied nonnil link text
+is selectable, with unavailable copy for nil. Lookup, roles, command admission,
+URL/token creation and clipboard work remain feature/platform responsibilities.
+
+PlaybackControls supplies independent previous/play-pause/next native actions
+with caller labels, state and eligibility. NowPlayingCard groups passive identity/
+artwork and keeps timeline, controls and action builders separate. Artwork size
+is finite positive and host-bounded; larger text stacks the identity region.
+Engine state, loading, timeline scheduling, seek/queue policy and OS playback
+effects stay with consumers. Read [usage](../../../../docs/blueprints/ui-components.md#playback-and-timeline).
+
+OneTimeCodeField/CodeFormat provide a single native field for canonical partial
+ASCII codes, bounded length, admitted paste separators and explicit guarded
+submission. iOS supplies the native one-time-code hint; actual autofill delivery
+is separate evidence. VerificationCard accepts supplied delivery identity and
+independent content/status/action builders. Challenge identity, clocks, delivery,
+resend, validation and auth stay outside shared UI.
+Read [usage](../../../../docs/blueprints/ui-components.md#verification-and-code-entry).

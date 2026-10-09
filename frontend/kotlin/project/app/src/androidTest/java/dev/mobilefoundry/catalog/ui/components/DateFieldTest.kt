@@ -35,11 +35,13 @@ class DateFieldTest {
             // UTC midnight remains October 8 rather than becoming October 7 locally.
             compose.onNodeWithText("Oct 8, 2026").assertIsDisplayed()
             compose.onNodeWithContentDescription("Review date").performClick()
-            compose.onNode(hasText("Friday, October 9, 2026") and hasClickAction()).performClick()
+            // The native label prefixes "Today," when the fixture is today's date.
+            // Retain the full date match and exact UTC assertions below.
+            compose.onNode(hasText("Friday, October 9, 2026", substring = true) and hasClickAction()).performClick()
             compose.onNodeWithText("Discard date").performClick()
             compose.onNodeWithText("Committed: $october8").assertIsDisplayed()
             compose.onNodeWithContentDescription("Review date").performClick()
-            compose.onNode(hasText("Friday, October 9, 2026") and hasClickAction()).performClick()
+            compose.onNode(hasText("Friday, October 9, 2026", substring = true) and hasClickAction()).performClick()
             compose.onNodeWithText("Use date").performClick()
             compose.onNodeWithText("Committed: ${october8 + 86400000L}").assertIsDisplayed()
             compose.onNodeWithText("Oct 9, 2026").assertIsDisplayed()

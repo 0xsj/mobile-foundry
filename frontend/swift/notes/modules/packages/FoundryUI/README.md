@@ -437,3 +437,568 @@ checks pass, four new Android activity checks pass, and nineteen existing Androi
 component regressions pass. Four UI unit checks per platform and notes validation
 pass. The app walkthrough separates native refresh-control/gesture evidence,
 manual visual observations, test-helper corrections and coverage limits.
+
+## Media browsing and actions
+
+Added 2026-10-09 for the eighth batch. New component leaves:
+
+- [IconAction](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/IconAction/IconAction.swift).
+- [RatingField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/Rating/RatingField.swift).
+- [PageIndicator](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/PageIndicator/PageIndicator.swift).
+- [Carousel](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Carousel/Carousel.swift).
+- [MediaTile](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/MediaTile/MediaTile.swift).
+- [MediaOverlay](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/MediaOverlay/MediaOverlay.swift).
+
+IconAction reuses native ActionButton target/styling, hides only passive icon
+content and supplies localized action meaning. RatingField receives bounded
+integer state and separate option/value copy; the exact selected choice remains
+a native action. Zero is unrated and clearing belongs to the host. Its adaptive
+layout preserves touch targets. PageIndicator is passive, with a small bounded
+count and one supplied summary replacing decorative dots.
+
+MediaTile supplies a ratio frame, metadata and separate action slot without an
+implied whole-card tap. MediaOverlay hides decorative art/scrim semantics while
+keeping overlay content independent. The caller provides bounds, clipping,
+meaningful media copy and readable action surfaces; image admission stays outside
+these components.
+
+Carousel uses a horizontal lazy native stack with full-viewport pages, native
+paging behavior and stable-ID scroll position. Its optional native ID bridge
+writes only valid IDs to the nonoptional caller binding. The caller supplies
+nonempty unique records, a valid selection, bounds and any native scrollDisabled
+modifier; it creates no request, page command or autoplay task.
+
+Read [native mechanics](../../../substrate/swiftui-media-paging-and-overlays.md),
+[shared ownership](../../../../../../notes/patterns/media-selection-and-passive-artwork.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#media-browsing-and-actions).
+[Native consumer checks](../../../../apps/FoundryCatalog/Tests/MediaComponentTests.swift) cover actual native layout/semantics rather
+than a second UI model. Both consumers build; 29 iOS app checks, four final Android
+media checks, fourteen component/activity regressions and four UI unit checks
+per platform pass. App walkthroughs separate evidence and limits. Next: what
+record-admission policy should precede dynamic carousel content replacement?
+
+## Communication and attachments
+
+Claim: communication compositions can project caller draft/transfer values and
+independent actions without becoming a messaging or upload service.
+
+Added 2026-10-09 for the ninth batch. New leaves:
+
+- [ConversationRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/ConversationRow/ConversationRow.swift).
+- [MessageBubble](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/MessageBubble/MessageBubble.swift).
+- [MessageComposer](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/MessageComposer/MessageComposer.swift).
+- [AttachmentRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/AttachmentRow/AttachmentRow.swift).
+- [TransferStatus](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Feedback/Transfer/TransferStatus.swift).
+- [TypingIndicator](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Feedback/Typing/TypingIndicator.swift).
+
+MessageComposer takes a draft binding and external focus binding. MultilineField
+retains native text editing while canSend/isSending/enabled project app admission.
+The inherited disabled environment gates its slot subtree. ViewThatFits chooses
+action layout without recreating the field. MessageBubble uses logical spacers,
+native selectable text and separate interactive accessories. TypingIndicator uses
+the existing native phase animation only when scoped motion permits.
+
+ConversationRow has one native action and hides only passive identity artwork;
+unread/time copy is supplied and native ListRow stacks metadata at larger text.
+AttachmentRow hides passive preview semantics and retains independent action
+children. TransferStatus uses existing native ProgressIndicator only while
+transferring; phase/copy/actions are supplied, with no transition logic in core UI.
+
+Example: the feature keeps a draft while a file transfer fails, supplies Retry to
+TransferStatus, and only enables MessageComposer's send when the file is ready.
+Do not put buttons in artwork slots or assume a send callback clears text.
+Apply native bounds/modifiers and keep pinned slot content compact; keyboard
+placement belongs to the destination.
+
+Read [native mechanics](../../../substrate/swiftui-composer-and-safe-area.md),
+[shared ownership](../../../../../../notes/patterns/composer-drafts-and-transfer-ownership.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#communication-and-attachments).
+[Native consumer checks](../../../../apps/FoundryCatalog/Tests/CommunicationComponentTests.swift) exercise actual hosted layout or native semantics
+and interaction. Both apps build; all 32 iOS app checks, four final Android
+communication checks, thirteen existing component/media regressions and four
+UI unit checks per platform pass. App walkthroughs record the test corrections
+and manual keyboard observation separately. No full accessibility, localization,
+device or upload integration audit is claimed.
+Next: which draft/operation identity should a real message feature admit?
+
+## Selection, tokens and row editing
+
+Claim: wrapping tokens, controlled choices and native row actions can share UI
+primitives while admission, collection identity and undo remain feature-owned.
+
+Added 2026-10-09 for the tenth batch. New leaves:
+
+- [WrapLayout](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Wrap/WrapLayout.swift).
+- [RemovableChip](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/RemovableChip/RemovableChip.swift).
+- [TokenField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/TokenField/TokenField.swift).
+- [SelectionRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/SelectionRow/SelectionRow.swift).
+- [SwipeActionRow / SwipeAction](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/SwipeActionRow/SwipeActionRow.swift).
+
+WrapArrangement measures intrinsic child widths and reflows at finite available
+width, using the tallest row height for the next gap. Native Layout placement
+mirrors for RTL. TokenField receives text/focus bindings and inherits disabled
+state into its slot subtree. SelectionRow exposes a selected native button;
+SwipeActionRow attaches native List swipe actions with supplied Buttons/roles.
+
+RemovableChip is one native action with supplied identity-aware remove copy.
+TokenField's explicit Add and native Done share eligibility, enabled and busy
+guards; no parsing, trimming, duplicates, limit or automatic clearing is built
+into the control. SelectionRow's marker/leading artwork is passive; other row
+commands belong outside that selection target. SwipeAction carries callback/copy,
+destructive tone and per-action eligibility. It never owns removal or undo.
+
+Example: a library admits one unique tag, renders it in removable slots, keys
+rows by stable record IDs and supplies Archive/Remove through swipe and menu.
+Use small eager wrapping groups, compatible child bounds and host-owned scrolling.
+Swift gestures need List; Compose host keys retain row identity. Persist domain
+values separately from a transient swipe position.
+
+Read [native mechanics](../../../substrate/swiftui-wrapping-and-list-actions.md),
+[shared ownership](../../../../../../notes/patterns/selection-identity-and-undo.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#selection-tokens-and-row-editing).
+[Native checks](../../../../apps/FoundryCatalog/Tests/EditingComponentTests.swift) exercise hosted wrapping or semantics/actions.
+Both apps build; 35 iOS app checks, five final Android editing checks, thirteen
+existing Android component/communication regressions and four UI unit checks per
+platform pass. The app walkthrough records harness corrections and manual iOS
+observations separately. No full accessibility, all locales/devices, persistent
+collection or real command integration audit is claimed.
+Next: how should editable token identity differ from its visible label?
+
+## Insights and small charts
+
+Claim: small native charts can project admitted data and readable meaning while
+periods, units, comparison scales and goal changes remain feature-owned.
+
+Added 2026-10-09 for the eleventh batch. New leaves:
+
+- [TrendBadge / TrendDirection](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/TrendBadge/TrendBadge.swift).
+- [LegendItem / LegendMark](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Charts/Legend/LegendItem.swift).
+- [Sparkline](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Charts/Sparkline/Sparkline.swift).
+- [BarChart / ChartBar](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Charts/BarChart/BarChart.swift).
+- [ProgressRing](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Charts/ProgressRing/ProgressRing.swift).
+- [ChartPanel](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/ChartPanel/ChartPanel.swift).
+
+Sparkline draws an inset Path through normalized CGPoint values in native Canvas.
+ProgressRing draws Circle trim/stroke and moves value text below the fixed circle
+at accessibility DynamicType sizes. BarChart uses native Text/ViewThatFits and
+GeometryReader; its final accessible value includes every category/formatted value.
+ChartPanel keeps footer controls independent rather than combining their semantics.
+
+TrendBadge receives explicit direction and tone; an increase is not automatically
+success. LegendItem carries supplied series copy with passive dot/line/square.
+Sparkline connects equally-spaced finite samples in input order, without smoothing
+or a time axis. Empty draws no mark, single draws a centered dot and constants a
+midline. Scaling before extrema subtraction prevents finite signed-range overflow.
+Bars require stable unique IDs, nonnegative finite values and an explicit positive
+maximum large enough for every value. Rings clamp finite progress geometry but
+receive truthful formatted copy from the caller. External data admission belongs
+at a result/service boundary before reaching these programmer preconditions.
+
+Example: compare Week/Month categories on the same 200-minute scale while giving
+each sparkline its own descriptive summary and an exact-values disclosure. Keep
+the independent goal outside those projections. Small eager composition has no
+promised dense-series/device budget. Use a richer native chart for real timestamps,
+axes, negative/diverging bars, selection, pan/zoom or large history.
+
+Read [native mechanics](../../../substrate/swiftui-chart-drawing-and-summaries.md),
+[chart meaning/scales](../../../../../../notes/patterns/chart-meaning-and-scales.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#insights-and-small-charts).
+[Numerical checks](../../../../packages/FoundryUI/Tests/FoundryUITests/ChartTests.swift) exercise finite extrema and degenerate sequences;
+[consumer checks](../../../../apps/FoundryCatalog/Tests/InsightsComponentTests.swift) cover native layout, drawing or semantics/actions.
+Both consumers build; all 37 iOS app checks, four final Android Insights checks,
+five Android editing regressions and six UI unit checks per platform pass. App
+notes distinguish manual observation, harness corrections and platform limits.
+Next: what shared axis/selection model should a time-aware chart receive?
+
+## Dates and agendas
+
+Claim: calendar/date interpretation and availability remain feature policies;
+the UI owns native picker drafts, selection presentation and copy layout.
+Added 2026-10-09: [TimeField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/TimePicker/TimeField.swift), [DateRangeField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/DateRange/DateRangeField.swift), [DayStrip](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/DayStrip/DayStrip.swift), [AgendaRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/AgendaRow/AgendaRow.swift).
+
+TimeField/ClockTime separates hour/minute meaning from native picker encoding.
+DateRangeField composes two independently committed dates and caller help/error,
+without swapping endpoints. DayStrip wraps supplied stable IDs and independent
+selected/disabled states. AgendaRow keeps its status/actions outside merged
+passive copy. DateField now dismisses disabled drafts; Swift modal themes inherit
+their caller's scope.
+
+The [native consumer checks](../../../../apps/FoundryCatalog/Tests/SchedulingComponentTests.swift) exercise actual controls/layout,
+with feature admission in the app. Read [native mechanics](../../../substrate/swiftui-time-and-date-drafts.md),
+[shared ownership](../../../../../../notes/patterns/calendar-dates-and-clock-readings.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#dates-and-agendas).
+Checks and limits are recorded in the app walkthrough; no calendar service,
+recurrence, DST resolution or booking guarantee is established.
+Next: use these slots in a concrete planner with an admitted scheduling command.
+
+## Adaptive workspaces
+
+Claim: destination/path affordances and local pane presentation can remain reusable
+while feature identity, compact intent and route policy stay above their slots.
+Origin, 2026-10-09: thirteenth batch, source and native consumer checks.
+
+- [DestinationRail / RailDestination](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/NavigationRail/DestinationRail.swift).
+- [BreadcrumbTrail / BreadcrumbItem](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/Breadcrumbs/BreadcrumbTrail.swift).
+- [SplitPane / PaneMode](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/SplitPane/SplitPane.swift).
+
+DestinationRail uses native SwiftUI Buttons and selected traits; labels remain
+visible and icons passive. The host bounds its width/height and chooses a compact
+alternative. BreadcrumbTrail renders supplied ancestors as native actions and
+the last item as passive current copy. Unique IDs are programmer preconditions;
+unknown selection does not select a default. Empty paths are valid.
+
+SplitPane receives positive finite primary/minimum detail widths and callbacks
+building native content for the actual PaneMode. Local bounds, text size and
+forceSingle choose one or two slots. It requires bounded height; pane scrolling
+belongs to the host. Mode changes can recreate slot-local state. Do not put
+drafts, service owners or selection inside those conditional slots. The example
+retains selection when compact Back closes detail or a collection hides that ID.
+
+Read [native mechanics](../../../substrate/swiftui-bounded-panes-and-navigation.md),
+[shared ownership](../../../../../../notes/patterns/adaptive-layout-and-navigation-state.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#adaptive-workspaces).
+[Native checks](../../../../apps/FoundryCatalog/Tests/WorkspaceComponentTests.swift) cover actual pane layout and feature/control boundaries.
+Verification, 2026-10-09: both native consumers build; all 41 iOS app
+checks, five focused Android Workspace UI checks and seven Swift/six
+Kotlin UI package checks pass. `make notes-check` validates links and
+example labels, not native behavior.
+No draggable divider, root router, fold hinge, deep-link or focus-restoration
+guarantee is implemented. Next: use the slots in a real routed editor and decide
+which state should be serialized by its native navigation owner.
+
+## Tables and pagination
+
+Claim: small admitted pages can retain aligned presentation and independent cell
+controls without moving sort/page policy into reusable UI.
+Origin, 2026-10-09: fourteenth component batch, source and native consumer checks.
+
+- [TableSortHeader / TableSortOrder](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/TableSortHeader/TableSortHeader.swift).
+- [DataTable / DataTableColumn](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/DataTable/DataTable.swift).
+- [PaginationBar](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/Pagination/PaginationBar.swift).
+
+DataTable uses Identifiable row values and generic ViewBuilder slots. Shared HStack frames preserve column width while native text grows vertically.
+One horizontal scroller owns all headers/rows. Positive finite widths include
+padding; rows/columns require stable unique IDs and a finite total width. Empty
+rows retain headers. The host provides vertical scrolling and contextual cell
+narration; interactive cells remain independent. Small eager pages are deliberate;
+there is no virtualization or implicit native table header association.
+
+TableSortHeader projects optional order and supplied localized state copy, with
+a decorative arrow and one native action. TableSortOrder and DataTableColumn
+keep Foundation.SortOrder and SwiftUI.TableColumn available to consumers.
+PaginationBar projects a valid one-based page and disables first/last/global
+actions. It emits adjacent page intent without updating data or starting work.
+The ledger example sorts the full fixture before projecting three records, keeps
+the chosen page and preserves hidden inspected identity under empty projection.
+
+Read [native mechanics](../../../substrate/swiftui-table-columns-and-scrolling.md),
+[shared ownership](../../../../../../notes/patterns/table-sorting-and-page-ownership.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#tables-and-pagination).
+[Native checks](../../../../apps/FoundryCatalog/Tests/TableComponentTests.swift) exercise geometry, scrolling or action/state boundaries.
+Verification, 2026-10-09: both native consumers build; all 43 iOS app checks,
+four focused Android Tables UI checks, seven Swift and six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+No sticky columns, spreadsheet editing, dense-data budget, localization audit or
+server ordering guarantee is established. Next: admit a real ordered page through
+an existing service seam before choosing a cursor or numbered-page contract.
+
+## Products and order composition
+
+Claim: price meaning and command policy arrive as caller values while native
+compositions keep product, code and summary actions independent.
+
+Origin, 2026-10-09: seventeenth UI batch and native consumer checks.
+Read [PriceLabel](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/PriceLabel/PriceLabel.swift),
+[ProductRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/ProductRow/ProductRow.swift),
+[OrderSummary](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/OrderSummary/OrderSummary.swift)
+and [InlineActionField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/InlineAction/InlineActionField.swift).
+
+PriceLabel accepts formatted current/comparison/detail text and a complete native
+accessible label. No money model or comparison inference exists. ProductRow
+composes ListRow with decorative artwork, then independent price/status/actions.
+OrderSummary reuses Card, SectionHeader, native Divider and KeyValueRow; its
+supplied lines/footer retain native focus targets. The card never calculates totals.
+
+InlineActionField combines FieldGroup feedback, a native rounded TextField and
+ActionButton. ViewThatFits uses a horizontal input/action row then a stacked
+fallback; accessibility sizes always stack. Both submit paths use one explicit
+enabled/not busy/canSubmit guard. Text/focus bindings remain supplied; the caller
+decides parsing, validation, keyboard dismissal and clearing. Help/error sits
+outside the control row so it does not disturb input/button alignment.
+
+Example: render an admitted price and supply its previous-price meaning in
+narration; put bounded quantity controls in product actions. Use InlineActionField
+for a promo/invite code while keeping its command in the owner. Busy gates editing
+and submission, while canSubmit=false alone still allows text edits.
+
+[Native checks](../../../../apps/FoundryCatalog/Tests/CommerceComponentTests.swift)
+cover fixture command/totals/snapshot policy and 240-point larger-text/RTL
+geometry. Both consumers build; 49 iOS app, four focused Android Commerce UI
+and seven Swift/six Kotlin UI package checks pass. These checks do not establish
+full VoiceOver/localization/device or payment behavior. Read
+[native mechanics](../../../substrate/swiftui-inline-fields-and-order-composition.md),
+[catalog flow](../../apps/FoundryCatalog/README.md#commerce-gallery),
+[shared ownership](../../../../../../notes/patterns/price-copy-and-committed-cart-values.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#products-and-order-composition).
+Next: admit real server quote copy without moving arithmetic into these views.
+
+## Search and discovery
+
+Claim: literal text runs, supplied suggestion actions and independent result
+actions form a reusable search presentation without owning a search engine.
+
+Origin, 2026-10-09: sixteenth UI batch and native catalog consumer checks.
+Read [HighlightedText / HighlightSegment](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/HighlightedText/HighlightedText.swift),
+[SearchSuggestionRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/SearchSuggestionRow/SearchSuggestionRow.swift),
+[SearchResultRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/SearchResultRow/SearchResultRow.swift)
+and the extended [SearchField](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/SearchField/SearchField.swift).
+
+HighlightSegment holds complete literal text and an emphasis flag. HighlightedText
+appends attributed runs into one native Text, with optional font/color overrides.
+The rows receive title/detail, accessible action copy and decorative artwork.
+SearchResultRow puts passive preview inside its open Button and independent
+actions below it; enabled applies to opening, while the host gates each sibling.
+SearchField's default-enabled extension guards editing, clearing and submission.
+The component has no matching, history, filters, routing or service logic.
+
+Example: render an admitted excerpt with highlighted runs, provide a complete
+open label and put Save in actions rather than inside preview. Meaningful
+preview content must be included in narration. Combining Button children keeps
+its native role; replacing them with ignore initially produced an untyped
+accessibility element in the simulator and was corrected during interaction QA.
+
+[Consumer checks](../../../../apps/FoundryCatalog/Tests/DiscoveryComponentTests.swift)
+cover feature guards/text preservation and actual narrow, larger-text/RTL bounds.
+Both consumers build; 47 iOS app, four focused Android Discovery UI and seven
+Swift/six Kotlin UI package checks pass. These checks do not establish a full
+assistive-technology, localization or device audit. See
+[native text mechanics](../../../substrate/swiftui-attributed-text-and-search-actions.md),
+[catalog flow](../../apps/FoundryCatalog/README.md#discovery-gallery),
+[shared reasoning](../../../../../../notes/patterns/search-projection-and-filter-drafts.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#search-and-discovery).
+Next: integrate locale-aware matching and actual query state outside these views.
+
+## Accounts and access
+
+Claim: identity/session/capability presentation can be reusable without taking
+ownership of authenticated context or OS prompting.
+Origin, 2026-10-09: fifteenth UI batch and native consumer checks.
+
+- [ProfileHeader](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/ProfileHeader/ProfileHeader.swift).
+- [AccountSwitcher / AccountOption](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/AccountSwitcher/AccountSwitcher.swift).
+- [SessionRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/SessionRow/SessionRow.swift).
+- [PermissionCard](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/PermissionCard/PermissionCard.swift).
+
+Swift stores generic ViewBuilder values. Menu/Buttons retain native presentation;
+selected and disabled states. A unique supplied AccountOption list and optional
+selection control the menu. Unknown IDs show the caller's placeholder. Current
+and unavailable choices do not dispatch. ProfileHeader puts decorative artwork
+above copy for larger native text; all supplied action slots remain independent.
+SessionRow accepts activity copy rather than dates or session objects.
+PermissionCard reuses opaque Card and imposes no capability enum or adapter.
+
+Example: an account center supplies profile copy, per-device removal actions and
+an Ask/Allowed/Denied photo projection. The feature owns current-device protection,
+confirmation and actual operation admission. Decorative slots must not contain
+interactive controls or information absent from the supplied copy/status.
+
+Verification, 2026-10-09: both native consumers build; all 45 iOS app checks,
+four focused Android Account UI checks and seven Swift/six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+[Native checks](../../../../apps/FoundryCatalog/Tests/AccountComponentTests.swift) cover supplied-state guards, independent native actions
+or actual narrow/large-text/RTL geometry. Read [native mechanics](../../../substrate/swiftui-account-menus-and-action-slots.md),
+[shared scope](../../../../../../notes/patterns/account-context-and-device-capabilities.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#accounts-and-access).
+No credentials, permission API, session revocation, secure storage or full
+assistive-technology audit is supplied. Next: use these slots with a feature-owned
+identity service and capability adapter once their scopes are defined.
+
+## Notifications and inbox
+
+Claim: count/notification components project supplied meaning and expose native
+actions without owning inbox identities or receipts.
+
+Origin/evidence, 2026-10-09: the eighteenth UI batch adds
+[CountBadge](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/CountBadge/CountBadge.swift) and
+[NotificationRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/NotificationRow/NotificationRow.swift).
+Generic ViewBuilder values keep artwork and actions native. CountBadge accepts
+opaque visible copy plus full narration. NotificationRow has a native open
+Button, supplied read/time copy and semibold unread emphasis; sibling actions
+remain outside its label. Enabled controls opening only. The feature chooses
+each action's eligibility, rather than disabling all descendants automatically.
+
+Example: display 99+ while narrating 128 unread updates, then compose a row with
+independent read and archive commands. Count caps, zero hiding, plural forms,
+grouping and relative time remain caller policy. Decorative slots must be passive
+and must not carry meaning absent from the supplied narration. Read state is not
+native selection state or permission authorization.
+
+Verification: both consumers build; 51 iOS app cases, four focused Android inbox
+cases and seven Swift/six Kotlin UI package cases pass. The
+[hosted cases](../../../../apps/FoundryCatalog/Tests/NotificationComponentTests.swift)
+exercise fixture admission and real 240-point large-text/RTL geometry with
+independent minimum-sized actions. No full assistive traversal is established.
+Read [native mechanics](../../../substrate/swiftui-notification-actions-and-narration.md),
+[consumer](../../apps/FoundryCatalog/README.md#notifications-gallery),
+[identity pattern](../../../../../../notes/patterns/inbox-projection-and-read-identity.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#notifications-and-inbox).
+Next: supply localized identity/read copy and scoped real command adapters.
+
+## Plans and usage
+
+Claim: native feature/price slots and an explicit choice control keep entitlement
+and usage policy outside reusable plan presentation.
+
+Origin/evidence, 2026-10-09: the nineteenth UI batch adds
+[FeatureRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/FeatureRow/FeatureRow.swift),
+[PlanCard](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/PlanCard/PlanCard.swift) and
+[UsageMeter](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/UsageMeter/UsageMeter.swift).
+Feature/usage views are passive, with complete supplied narration. Decorative
+marks/bar do not carry independent meaning. PlanCard stores native price/status/
+feature builders and has an explicit ActionButton; selected traits and enabled
+state are distinct. Selection rejects repeated choice; independent slot actions
+stay outside that target and keep their own eligibility.
+
+Example: supply yearly charge meaning beside a monthly-equivalent price, then
+show usage 50 of 5 after a local downgrade. The meter clamps its decorative bar
+without hiding overflow copy. Nil/nonfinite omits the bar rather than loading.
+Draft/current/review values, quota calculation and receipt admission are host policy.
+
+Verification, 2026-10-09: both consumers build; 53 iOS app cases, four focused
+Android Plans cases and seven Swift/six Kotlin UI package cases pass.
+[Hosted/owner checks](../../../../apps/FoundryCatalog/Tests/PlanComponentTests.swift)
+exercise admission, retained usage and 240-point larger-text/RTL native geometry
+with independent slot action bounds. iOS review interaction is source/build-checked;
+Android consumer checks exercise actual sheet/restore/application. No full
+VoiceOver or billing integration is established.
+Read [native mechanics](../../../substrate/swiftui-plan-slots-and-usage-bars.md),
+[consumer](../../apps/FoundryCatalog/README.md#plans-gallery),
+[shared pattern](../../../../../../notes/patterns/plan-choice-and-applied-allowance.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#plans-and-usage).
+Next: localized assistive traversal and feature-owned real quote/receipt admission.
+
+## Files and hierarchy
+
+Claim: flattened caller state and sibling native targets let file rows be reused
+without importing hierarchy or provider behavior into the UI package.
+
+Origin/evidence, 2026-10-09: the twentieth UI batch adds
+[FileTypeMark](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Display/FileTypeMark/FileTypeMark.swift)
+and [TreeRow/TreeDisclosure](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/TreeRow/TreeRow.swift).
+Read the passive format mark, native opening Button, sibling disclosure IconAction
+and independent action builder. Complete supplied labels include format/folder
+meaning; passive leading artwork is hidden. Selected traits stay separate from
+expanded or disabled state.
+
+Example: display a nested PNG with a separate favorite action. The caller supplies
+a depth and full narration. Defaults cap 16-point indentation at 48; larger text
+moves artwork above growing copy. Opening's enabled flag leaves disclosure/action
+eligibility independent. Do not place interactive controls in the leading slot.
+
+Verification, 2026-10-09: both consumers build; 55 iOS app checks, four focused
+Android Files cases and seven Swift/six Kotlin UI package cases pass.
+[Hosted/owner cases](../../../../apps/FoundryCatalog/Tests/FileComponentTests.swift)
+exercise fixture admission/projection plus narrow extreme-depth large-text/RTL
+geometry, passive artwork bounds and minimum action targets. iOS sheet interaction
+and full VoiceOver traversal are not established by these geometry checks.
+Read [native mechanics](../../../substrate/swiftui-tree-actions-and-indentation.md),
+[consumer](../../apps/FoundryCatalog/README.md#files-gallery),
+[shared pattern](../../../../../../notes/patterns/tree-projection-and-retained-selection.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#files-and-hierarchy).
+Next: localized hierarchy narration and provider-owned loaded-child scope.
+
+## Sharing and access
+
+Claim: passive identity and link text plus independent native slots let sharing
+compositions remain reusable across membership and authorization models.
+
+Origin/evidence, 2026-10-09: the twenty-first UI batch adds
+[MemberRow](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/MemberRow/MemberRow.swift)
+and [ShareLinkCard](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/ShareLinkCard/ShareLinkCard.swift).
+Read the passive identity group, supplied full narration, independent access/
+action builders and narrowly scoped native text selection. Only the identity/
+decoration group ignores child accessibility; controls remain separate.
+
+Example: place an Avatar beside a member identity, a native role menu below it
+and an independently eligible removal action. Larger text stacks avatar above
+identity. A nonnil link uses selectable monospaced Text, nil uses caller unavailable
+copy. The card does not copy, create a link or choose a browser destination.
+Native selection granularity follows the OS; do not wrap the card's action slots
+inside its selectable text or one ignored accessibility element.
+
+Verification, 2026-10-09: both consumers build; 57 iOS app cases, four focused
+Android Sharing cases and seven Swift/six Kotlin UI package cases pass.
+[Hosted/owner cases](../../../../apps/FoundryCatalog/Tests/SharingComponentTests.swift)
+exercise membership admission and 240-point accessibility-text/RTL identity/link
+growth with bounded native action targets. They do not drive the iOS selection
+menu, clipboard presentation, confirmation interaction or full VoiceOver traversal.
+Read [native mechanics](../../../substrate/swiftui-member-slots-and-selectable-links.md),
+[consumer](../../apps/FoundryCatalog/README.md#sharing-gallery),
+[shared pattern](../../../../../../notes/patterns/membership-identity-and-confirmed-revisions.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#sharing-and-access).
+Next: localized assistive traversal and service-backed access decisions outside
+these passive/slot components.
+
+## Playback and timeline
+
+Claim: independent native controls and passive media identity keep playback
+compositions reusable across engines and feature policies.
+
+Origin/evidence, 2026-10-09: the twenty-second UI batch adds
+[PlaybackControls](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/PlaybackControls/PlaybackControls.swift)
+and [NowPlayingCard](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/NowPlayingCard/NowPlayingCard.swift).
+Read the three IconAction values, horizontal/vertical ViewThatFits, supplied
+accessibility value, passive heading group and independent ViewBuilder slots.
+Only identity/artwork ignores child narration; the slider and actions remain
+native elements outside that group.
+
+Example: put a ValueSlider in timeline, PlaybackControls in controls and an
+independent favorite in actions. Give each transport action its own admission.
+Artwork defaults to an 80-point square and requires finite positive host-fitting
+size. Accessibility Dynamic Type stacks artwork above growing title/detail.
+The card does not load media or reinterpret its caller's playback state.
+
+Verification, 2026-10-09: both consumers build; 59 iOS app cases, four focused
+Android Playback cases and seven Swift/six Kotlin UI package cases pass.
+[Hosted/owner checks](../../../../apps/FoundryCatalog/Tests/PlaybackComponentTests.swift)
+exercise timeline admission, 240-point accessibility-text/RTL growth, independent
+slot bounds and minimum native targets. These are not native slider gestures,
+full VoiceOver traversal, audio playback or physical-device performance evidence.
+Read [native mechanics](../../../substrate/swiftui-playback-slots-and-native-transport.md),
+[consumer](../../apps/FoundryCatalog/README.md#playback-gallery),
+[shared pattern](../../../../../../notes/patterns/media-timeline-and-transport-admission.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#playback-and-timeline).
+Next: engine-backed snapshots and seek completion outside these UI components.
+
+## Verification and code entry
+
+Claim: one native code field and independent verification slots provide reusable
+entry UI without importing authentication or delivery policy.
+
+Origin/evidence, 2026-10-09: the twenty-third UI batch adds
+[OneTimeCodeField/CodeFormat](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Forms/OneTimeCode/OneTimeCodeField.swift)
+and [VerificationCard](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Patterns/VerificationCard/VerificationCard.swift).
+Read the controlled Binding setter, optional admission result, iOS content/keyboard
+hints and guarded onSubmit. CodeFormat keeps partial ASCII digits as text; nil
+rejects an edit and an empty string clears. Length is configured from 1...12.
+
+Example: configure six digits, help/error, feature eligibility and focus; place
+the field in the card's content slot with status and native Verify/Resend actions.
+Only passive destination/artwork ignores child narration. Larger text stacks
+artwork above copy. The code field fixes digit direction without changing the
+surrounding logical layout. Caller canonical values cannot contain separators;
+only edits/pastes strip ASCII space/tab/CR/LF/hyphen.
+
+Verification, 2026-10-09: both consumers build; 61 iOS app cases, four focused
+Android Verification cases and nine Swift/eight Kotlin UI package cases pass.
+[Hosted/owner checks](../../../../apps/FoundryCatalog/Tests/VerificationComponentTests.swift)
+inspect the actual UITextField hint/number pad and narrow accessibility-text/RTL
+bounds, plus challenge/attempt admission.
+[Format checks](../../../../packages/FoundryUI/Tests/FoundryUITests/CodeFormatTests.swift)
+cover partial/clear codes, leading zeroes, overflow and Unicode rejection.
+No iOS paste/menu/AutoFill suggestion or full VoiceOver interaction is established.
+Read [native mechanics](../../../substrate/swiftui-code-entry-and-content-hints.md),
+[consumer](../../apps/FoundryCatalog/README.md#verification-gallery),
+[shared pattern](../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
+and [usage](../../../../../../docs/blueprints/ui-components.md#verification-and-code-entry).
+Next: observe native code suggestion delivery separately from content hints.

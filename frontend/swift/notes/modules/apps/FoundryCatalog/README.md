@@ -713,3 +713,673 @@ Both native consumers build. Four UI token/material unit checks per platform
 pass, and the notes checker passes. No complete VoiceOver, localization,
 physical-device, real-network or macOS runtime audit is claimed. Next: choose a
 real feed's cursor/merge and cached-window contract before introducing a provider.
+
+## Media gallery
+
+Added 2026-10-09: Media is the fourteenth family, with 57 building blocks.
+[Catalog ownership](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift) retains values through family/route changes.
+[MediaExamples](../../../../apps/FoundryCatalog/Sources/Components/MediaExamples.swift) composes native paging, passive position, supplied
+artwork, overlay favorites and per-study ratings. MediaTile shows the selected
+study's metadata and an explicit Use action that increments a local count.
+ComponentExamples keeps MediaValues above the family switch and native link.
+The selected record ID, rating dictionary, favorite set and local use count
+remain caller-owned. Previous/Next change the binding using the token motion;
+page position and per-record values do not live inside lazy page content.
+
+Enable media controls gates gestures/rating/favorites/use. Clear resets only the
+current rating. The procedural artwork needs no asset loader or new UI
+dependency, and is not an image editing or GPU performance feature.
+
+Read [UI mechanics](../../packages/FoundryUI/README.md#media-browsing-and-actions),
+[native paging](../../../substrate/swiftui-media-paging-and-overlays.md)
+and [shared ownership](../../../../../../notes/patterns/media-selection-and-passive-artwork.md).
+[Native checks](../../../../apps/FoundryCatalog/Tests/MediaComponentTests.swift) link actual code and assertions.
+
+Final evidence, 2026-10-09: All 29 iOS app checks pass, including two new MediaComponentTests. Hosted
+native checks change selected IDs and measure the selected page aligned to the
+actual viewport, then measure metadata/rating copy growth at accessibility3.
+Manual simulator checks execute rating/favorite actions, Previous/Next with
+per-study retention, Back/reopen retention and light/dark layouts/toolbar. A
+CUA drag did not change the page and is not counted as swipe evidence. These
+checks establish native position/binding/layout behavior; comprehensive swipe,
+VoiceOver, localization, macOS runtime and physical-device audits remain separate.
+The first app build corrected a ToggleField call-site argument from checked to
+its native isOn label.
+
+Both native consumers build; four UI token/material unit checks per platform
+pass. Notes validation passes. Next: choose
+an admitted media record contract and a selection fallback before adding a loader.
+
+## Communication gallery
+
+Claim: a caller-owned conversation fixture can exercise draft and transfer
+recovery independently of shared component rendering and backend transport.
+
+Added 2026-10-09: Communication is the fifteenth family, with 63 building blocks.
+[CommunicationExamples](../../../../apps/FoundryCatalog/Sources/Components/CommunicationExamples.swift) composes all six new APIs; the Design room row
+opens a destination with a persistent composer.
+
+ComponentExamples owns CommunicationValues above the family switch and native
+destination. A binding shares draft, file/transfer fixture and sent previews.
+Swift current-view state is retained across Back/theme/family changes; no durable
+storage is implied. Sent preview messages receive UUID identities.
+
+The explicit fixture controls admit waiting → transferring → paused/failed/
+complete, with Resume/Retry returning to transferring. There is no timer or
+network request. Adding an incomplete attachment blocks send; failing/retrying
+preserves text, and cancellation removes only the file. A nonblank text or a
+completed attachment can send. Admission appends one local message, then clears
+the draft/file. Disabled callbacks guard transitions. Inspect increments a local
+counter; typing presence is a toggleable fixture. No filesystem reads or messages
+to another person occur.
+
+ConversationPreviewView puts transcript/recovery controls in a native ScrollView
+and the composer in a bottom safeAreaInset. Its focus binding belongs to the
+composer host. Interactive keyboard dismissal is screen policy. The native
+software keyboard was explicitly shown for manual verification; the composer
+remained above it with Send accessible.
+
+Read [UI mechanics](../../packages/FoundryUI/README.md#communication-and-attachments),
+[native framework behavior](../../../substrate/swiftui-composer-and-safe-area.md)
+and [shared draft/transfer ownership](../../../../../../notes/patterns/composer-drafts-and-transfer-ownership.md).
+[Native checks](../../../../apps/FoundryCatalog/Tests/CommunicationComponentTests.swift) link actual assertions.
+
+Final evidence, 2026-10-09: All 32 iOS app checks pass, including two new state-policy cases and one hosted
+narrow/larger-text geometry case. The state checks exercise pending-file send
+blocking, failure/retry, pause/resume, one-time local send, cancellation,
+attachment-only admission and disabled callbacks. Hosted geometry verifies
+conversation copy growth at accessibility3 and a minimum-height attachment action
+inside the message bubble. Four UI-package unit checks also pass.
+
+Manual iOS 26.2 observation opened Design room, focused the editor, explicitly
+showed the software keyboard, added a file, failed/retried/completed its transfer
+and sent one local preview. Back → Dark → Design room retained that message.
+Light keyboard and dark conversation images were inspected. A CUA typeText call
+delivered only part of its multiline payload; complete input automation is not
+claimed. Swift owner checks and Android instrumentation separately exercise full
+multiline text.
+
+Both consumers build. Full VoiceOver/TalkBack, localization, every keyboard,
+rotation/iPad, physical-device performance and real service delivery remain
+outside this slice. Keep pinned slots small and supply bounded screen layout.
+Next: introduce an actual message/attachment service through existing thin seams
+with operation identity and draft-revision-aware success handling.
+
+## Editing gallery
+
+Claim: a local library can show identity-preserving selection/removal/undo without
+turning shared UI components into a collection service.
+
+Added 2026-10-09: Editing is the sixteenth family, with 68 building blocks.
+[EditingExamples](../../../../apps/FoundryCatalog/Sources/Components/EditingExamples.swift) composes all five APIs; Open library editor opens
+the native destination with six stable fixture records.
+
+ComponentExamples holds EditingValues above the family switch. A binding shares
+draft/tags, filter, selection/archive/removal sets and the latest undo snapshot
+with the destination. These are current-view values, not durable storage.
+LibraryEditingPreview receives appearance/style and creates its scoped theme;
+the native List owns gestures/scrolling and a bottom safeAreaInset hosts actions.
+
+The feature trims one tag, rejects case-insensitive duplicates, caps tags at six
+and preserves rejected drafts. Accepted admission clears only that draft; removing
+a tag preserves it. Filtering derives visible records without changing selected
+IDs. Select visible items changes only that projection; the bottom summary names
+hidden selection and bulk actions operate on all selected IDs. Removal guards
+valid/nonremoved identity and captures the latest IDs plus prior selected subset.
+Undo restores those same records/selection while retaining archive flags and source
+ordering. Another removal replaces the snapshot; dismiss discards recovery.
+Disabled commands are guarded at the owner too. No files or backend records change.
+
+Read [UI mechanics](../../packages/FoundryUI/README.md#selection-tokens-and-row-editing),
+[native framework behavior](../../../substrate/swiftui-wrapping-and-list-actions.md)
+and [shared identity/undo](../../../../../../notes/patterns/selection-identity-and-undo.md).
+[Checks](../../../../apps/FoundryCatalog/Tests/EditingComponentTests.swift) link actual assertions.
+
+Final evidence, 2026-10-09: All 35 iOS app checks pass. Three new cases exercise hidden selection, visible
+aggregation, archived/removal identity, latest undo, duplicate/cap rejection,
+draft retention and disabled callbacks, plus native wrapping geometry at widths
+400/220, mixed heights and RTL. Four UI-package unit checks pass.
+
+Manual iOS 26.2 execution selected Orbit, invoked its native accessibility Archive
+action, removed it through the visible row menu, and used Undo. The restored row
+retained selected/archived values. Back → Dark/Solid → editor retained values;
+light/glass and dark/solid screenshots were inspected. A CUA drag did not produce
+a gesture outcome, so it does not establish full physical swipe behavior. Native
+List actions were exposed and the action/menu paths executed separately.
+
+Both consumers build. Full VoiceOver/TalkBack, localization, all keyboard/window
+sizes, macOS runtime, physical-device gestures/performance and persistent undo
+remain outside this slice. A real library command needs receipts/revisions and
+failure projection through existing result/mutation seams.
+Next: how should undo admit a record that changed after its removal?
+
+## Insights gallery
+
+Claim: a caller-owned dashboard can compare periods and empty data without
+overwriting an independently owned goal or hiding chart values in decoration.
+
+Added 2026-10-09: Insights is the seventeenth family, with 74 building blocks.
+[InsightsExamples](../../../../apps/FoundryCatalog/Sources/Components/InsightsExamples.swift) composes six APIs. Open insights dashboard
+opens the scrolling native destination.
+
+ComponentExamples holds InsightsValues above the family switch. Bindings carry
+period, empty-data flag, enabled goal controls and completed count into the
+destination. Appearance/style are captured for its theme and navigation chrome.
+Current view state is retained across Back/family/theme, not process termination.
+The exact-values disclosure is local presentation, not a persisted preference.
+
+The immutable fixture provides seven daily Week samples or four weekly Month
+samples. Focus totals are 210/420 minutes and Design/Reading/Practice categories
+sum to the same total. Both periods use a 200-minute bar maximum; sparklines
+explicitly describe their relative scale and have a native exact-values disclosure.
+Comparison copy/direction is fixture policy. Empty mode replaces focus plots while
+keeping the independent session goal. Its 0..20 commands reject disabled/out-of-
+range changes; Reset returns to 14. Drawing components never aggregate, format a
+unit/date, select a period or perform analytics collection. No service is invoked.
+
+Read [UI mechanics](../../packages/FoundryUI/README.md#insights-and-small-charts),
+[native drawing](../../../substrate/swiftui-chart-drawing-and-summaries.md)
+and [chart meaning/scales](../../../../../../notes/patterns/chart-meaning-and-scales.md).
+[Checks](../../../../apps/FoundryCatalog/Tests/InsightsComponentTests.swift) link executed assertions.
+
+Final evidence, 2026-10-09: All 37 iOS app checks pass after the final chart accessibility projection.
+The new owner case verifies Week=210/Month=420 minutes, category totals, independent
+goal/empty state, bounded changes and disabled/reset admission. Hosted geometry
+at 240 points/accessibility3 verifies plot/action bounds and growing copy, with
+a fixed-height sparkline and a minimum-height native action. Six UI-package checks
+pass, including finite extrema and empty/single/constant normalization.
+
+Manual iOS 26.2 observation opened the light/glass dashboard, inspected the real
+sparkline and category/ring drawing, revealed exact values and incremented the goal
+to 15 of 20. The initial bar group exposed only its title in the automation tree;
+the final implementation explicitly supplies all category/value pairs. Final
+native compilation/regressions pass, but a later CUA attempt to reopen the final
+preview failed with windowNotFoundAtPosition and blank screenshot output, so no
+post-fix full assistive-technology observation is claimed.
+
+Both consumers build. Full VoiceOver/TalkBack, all locales/keyboards/window sizes,
+macOS runtime, dense data, time axes, physical-device rendering/performance and
+real analytics providers remain outside this slice. Next: introduce an admitted
+metrics service through existing thin seams before adding dashboard orchestration.
+
+## Scheduling gallery
+
+Claim: a session draft, date availability and an applied session are distinct
+feature values above family/route/theme changes.
+Origin, 2026-10-09: [Scheduling source](../../../../apps/FoundryCatalog/Sources/Components/SchedulingExamples.swift) and
+[consumer checks](../../../../apps/FoundryCatalog/Tests/SchedulingComponentTests.swift), linked from the root component catalog.
+
+Open Scheduling → Open schedule planner. The UTC week fixture has an unavailable
+Sunday and an initially selected Monday. Tuesday has an empty agenda until Apply
+copies a chosen time/day into one local session. Use time changes only the feature
+draft; Keep time changes nothing. Date endpoints commit independently. Reversed
+dates disable all bounded days/Apply without repairing the selected ID or changing
+the already applied session. Reset dates restores the week. Empty projection and
+disabled controls retain feature values; Android saves primitives above routes.
+
+Evidence: both native consumers build; 39 iOS app checks pass, including admission
+and 240-point accessibility-size geometry. Five Android scheduling checks pass,
+including native hour/minute cancel/commit, disabled modal closure, 240-dp font
+scale 2 layout, range admission, route/theme changes and saved-state restoration.
+An existing Android date-picker regression also passes after allowing the
+native Today prefix in its full-date selector; exact UTC timestamp assertions
+remain. The UI package check passes seven Swift and six Kotlin checks. See the native
+substrate for what each check establishes. A full VoiceOver/TalkBack, all locales,
+real-zone DST, device calendar, reminders and physical-device audit remains open.
+
+Read [UI APIs](../../packages/FoundryUI/README.md#dates-and-agendas), [native mechanics](../../../substrate/swiftui-time-and-date-drafts.md) and
+[calendar meaning](../../../../../../notes/patterns/calendar-dates-and-clock-readings.md).
+Next: define a real availability/scheduling port and reject stale revisions
+without discarding a user's uncommitted time/date draft.
+
+Manual final iOS observation, 2026-10-09: the light/glass planner shows native
+day choices and agenda copy. Changing the wheel to 10:30 then Keep time retains
+09:30; reopening starts at 09:30. Use time changes the feature draft to 10:30
+with zero applied sessions; Apply creates the 10:30 agenda row and count one.
+Back and dark/solid theme changes retain those values; reopening the native
+wheel shows 10:30 in the dark theme. The visual check corrected a cramped
+duplicate picker label by hiding it under the existing sheet heading. Simulator
+AX did not expose modal descendants and some coordinate calls failed after
+window movement; screenshots/visible controls supplied the time-modal evidence.
+No iOS date-modal interaction or complete accessibility audit is claimed.
+
+## Workspace gallery
+
+Claim: selected project identity, collection projection and compact detail intent
+are separate feature values above adaptive layout and catalog routes.
+Origin, 2026-10-09: [Workspace source](../../../../apps/FoundryCatalog/Sources/Components/WorkspaceExamples.swift) and
+[consumer checks](../../../../apps/FoundryCatalog/Tests/WorkspaceComponentTests.swift), reached through Components → Workspace.
+
+Open adaptive workspace, choose Orbit study, star it and return to projects.
+Selection/stars remain. Wider local bounds show a rail beside the project list
+and detail; Single pane preview requests the compact flow. Archived hides Orbit
+without selecting Field notes; the wide detail uses an unselected placeholder.
+Returning to Starred makes Orbit visible again. The disabled Shared rail item
+does nothing. Breadcrumb ancestors close compact detail or return to All projects;
+the final crumb stays passive. Current copy follows browse intent rather than a
+retained hidden or inactive selection. The preview's outer Back exits to Components.
+
+The owner retains values across theme/family/route changes. Android additionally
+saves primitives and route; no new Swift process-restoration claim is made.
+Compact Android system Back closes detail before exiting the preview. Reflow
+does not change selected identity or replay project actions. These are local
+fixture projects, with no storage, service or navigation-library integration.
+
+Verification, 2026-10-09: both native consumers build; all 41 iOS app
+checks, five focused Android Workspace UI checks and seven Swift/six
+Kotlin UI package checks pass. `make notes-check` validates links and
+example labels, not native behavior.
+The hosted iOS probe observes 820/280-point bounds, logical RTL placement and accessibility-size collapse. Feature checks cover hidden IDs, guarded selection and current-path changes. Manual simulator observations are recorded below.
+Wide hosts are synthetic native geometry on phone simulators; physical tablet,
+foldable hinge, predictive-back animation, keyboard/focus, localization and full
+VoiceOver/TalkBack coverage remain open. Scroll offsets are slot-local and are
+not promised across reflow. Read [UI APIs](../../packages/FoundryUI/README.md#adaptive-workspaces),
+[native mechanics](../../../substrate/swiftui-bounded-panes-and-navigation.md)
+and [adaptive ownership](../../../../../../notes/patterns/adaptive-layout-and-navigation-state.md).
+Next: connect a real routed workspace and admit deep-link selection before
+choosing its compact pane.
+
+Manual iOS evidence, 2026-10-09: the final simulator build shows aligned breadcrumb
+copy in Light/Glass. Open Orbit, Star this project, Back to projects and the
+Starred collection retain Orbit's selected marker and star. Returning to the
+list changes current-location narration to the collection. Outer Back, Dark
+preview and Solid surfaces preserve the active Orbit detail and starred value
+on reopen; its native navigation chrome follows the preview theme. The rail's
+selected/disabled accessibility tree was observed; full rail gesture, VoiceOver,
+physical iPad and keyboard traversal were not manually audited. A first visual
+pass prompted baseline alignment and current-path corrections before final tests.
+
+## Tables gallery
+
+Claim: full ordering, page projection and inspected identity are distinct feature
+values above table slots and catalog routes.
+Origin, 2026-10-09: [ledger source](../../../../apps/FoundryCatalog/Sources/Components/TableExamples.swift) and
+[consumer checks](../../../../apps/FoundryCatalog/Tests/TableComponentTests.swift), reached from Components → Tables → Open project ledger.
+
+The nine-record fixture has Project/Sessions/Status sort keys and three records
+per page. Clicking a new key chooses ascending; clicking it again reverses the
+primary order. Ascending ID breaks ties in either direction. Sorting preserves
+the current page. Inspect accepts only a visible row, retains its ID and increments
+a local count. The DataTable cell has one native action, independent of other
+cells. Values are above family/route/theme changes; Android saves primitives.
+
+Example: sort Sessions ascending and open page 2 to inspect Field notes. Empty
+records displays no rows and disabled Page 1 of 1, retaining actual page 2,
+sort and inspected ID. Turning it off restores page 2. Disabling actions blocks
+sort/page/inspection without discarding values. These are local fixture actions;
+there is no inspection route, service request, durable storage or server cursor.
+
+Verification, 2026-10-09: both native consumers build; all 43 iOS app checks,
+four focused Android Tables UI checks, seven Swift and six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Two iOS checks exercise feature admission/tie-breakers and actual hosted 240-point
+header/cell alignment, public native scroll movement, larger-text row growth and
+RTL order. The first consumer compile caught Foundation.SortOrder ambiguity;
+final helper names preserve native APIs. The first hosted lookup stopped at the
+outer UIScrollView, so it was corrected to recurse through descendants. A public
+contentOffset change proves layout movement, not a finger gesture. Manual
+simulator observations are recorded separately below.
+
+Manual iOS evidence, 2026-10-09: the ledger opens in Light/Glass with aligned
+headers and rows. Sorting Sessions ascending shows 2/4/6 on page 1 and 8/10/12
+on page 2. The native horizontal Scroll Right action reveals Status and Inspect;
+clicking the first cell action records Field notes and increments Inspections
+to 1. Empty mode shows Page 1 of 1 with both page actions disabled, retains Field
+notes, and restores page 2 when turned off. Returning to the gallery, selecting
+Dark/Solid and reopening preserves page, sort and inspection values; native
+navigation chrome and table surfaces follow that preview. The visible Sessions
+header initially wrapped at the default text size, so the fixture column was
+widened to 180 points/dp on both platforms and native checks rerun. The simulator
+accessibility bridge exposed the table as a scrollable group without its cell
+children; these pointer/native-scroll observations do not establish VoiceOver
+header associations or traversal.
+No full VoiceOver/TalkBack, all locales, physical-device performance, desktop
+keyboard traversal, virtualization or remote response admission is established.
+Read [UI APIs](../../packages/FoundryUI/README.md#tables-and-pagination),
+[native mechanics](../../../substrate/swiftui-table-columns-and-scrolling.md) and
+[shared policy](../../../../../../notes/patterns/table-sorting-and-page-ownership.md).
+Next: define stable ordering and page/cursor revisions for a real data source,
+then prevent a late response from replacing a newer user's sort/page intent.
+
+## Commerce gallery
+
+Claim: cart commands own quantity/code admission and totals, while review
+presentation displays a retained moment-in-time snapshot.
+
+Origin, 2026-10-09: [Commerce source](../../../../apps/FoundryCatalog/Sources/Components/CommerceExamples.swift)
+and [consumer checks](../../../../apps/FoundryCatalog/Tests/CommerceComponentTests.swift),
+reached from Components → Commerce → Open cart preview (95 blocks/23 families).
+
+CommerceValues holds bounded kit/notebook quantities, delivery choice, code draft,
+applied discount/error, enabled/busy state and reviewed total/items/count. Native
+ValueStepper callbacks guard stable product IDs and their limits; unavailable
+Travel case never enters the cart. Integer cents derive subtotal, applied ten
+percent discount, delivery and total for fixed local USD fixtures only.
+
+Code editing clears feedback without applying or removing the discount. Apply
+admits trimmed case-insensitive STUDIO10, while invalid attempts retain an applied
+discount and project an error. Busy code state blocks edit/apply/remove and review;
+global disabled blocks commands. Clear cart empties quantities while preserving
+delivery/draft/discount; Restore changes only sample quantities.
+
+Review records current total/item count, increments a count and opens a local
+sheet. The sheet is disposable; losing review availability dismisses it. A later
+quantity change recalculates current totals without rewriting the recorded review.
+Values remain above family/theme/NavigationLink destinations. Code FocusState and
+review presentation live locally; the caller explicitly dismisses keyboard focus.
+
+Example: max Studio kits and add a notebook, select Pick up, apply STUDIO10 and
+review $89.10. Clear then restore gives $26.10 while keeping that earlier review.
+No quote service, tax, durable cart, currency domain, stock reservation or purchase
+effect is implemented. Read [UI walkthrough](../../packages/FoundryUI/README.md#products-and-order-composition),
+[native mechanism](../../../substrate/swiftui-inline-fields-and-order-composition.md)
+and [shared ownership](../../../../../../notes/patterns/price-copy-and-committed-cart-values.md).
+
+Verification, 2026-10-09: both consumers build; all 49 iOS app checks, four
+focused Android Commerce UI and seven Swift/six Kotlin UI package checks pass.
+The owner case checks arithmetic/admission/retained snapshots, while a real
+240-point host measures larger-text growth, RTL and action bounds. Full native
+keyboard/VoiceOver/localization/device behavior remains outside those observations.
+Next: define authoritative quote and mutation contracts through existing seams.
+
+## Discovery gallery
+
+Claim: stable search/bookmark values live above catalog routes, while a filter
+sheet is a disposable editing session around applied facets.
+
+Origin, 2026-10-09: [Discovery source](../../../../apps/FoundryCatalog/Sources/Components/DiscoveryExamples.swift)
+and [consumer checks](../../../../apps/FoundryCatalog/Tests/DiscoveryComponentTests.swift),
+reached from Components → Discovery → Open search workspace (91 blocks/22 families).
+
+DiscoveryValues stores query, applied topic/archive facets, enabled state, saved
+IDs, recent queries and last-opened identity/count. A computed results projection
+filters six local records. Commands guard enabled and current visible membership;
+hidden IDs remain saved. Suggestions/submit/open remember trimmed nonblank terms,
+case-insensitively deduplicated to three. Opening and saving have separate intents.
+
+DiscoveryContent owns only filter presentation/draft. Opening copies applied
+filters; Reset affects draft, Apply commits and any dismissal discards. Applied
+chips remove their facet. Disable closes the sheet; values remain above the
+family/theme/NavigationLink destination. Highlighting styles one native String
+range in an excerpt and supplies complete runs, never shared numeric offsets.
+
+Example: save Motion study, apply Writing while searching motion and observe
+empty results with its saved identity retained. Discard a different filter draft
+and compare applied copy. Dark/Glass use the existing scoped theme. No service,
+record route, debounce, durable history or full-text ranking is implemented.
+
+Verification, 2026-10-09: both consumers build; all 47 iOS app checks, four
+focused Android Discovery UI and seven Swift/six Kotlin UI package checks pass.
+The owner case checks history/projection/guards/text preservation; real hosted
+240-point geometry checks larger text, RTL and separate save bounds. Native
+manual interaction evidence is recorded in the substrate note; these checks do
+not establish VoiceOver, localization, physical-device or backend behavior.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#search-and-discovery),
+[native mechanism](../../../substrate/swiftui-attributed-text-and-search-actions.md)
+and [projection pattern](../../../../../../notes/patterns/search-projection-and-filter-drafts.md).
+Next: attach a real query owner and define privacy/account scope for history.
+
+## Account gallery
+
+Claim: captured account-qualified intent and device-scoped capability projection
+need distinct feature ownership above reusable account UI.
+Origin, 2026-10-09: [account source](../../../../apps/FoundryCatalog/Sources/Components/AccountExamples.swift) and
+[consumer checks](../../../../apps/FoundryCatalog/Tests/AccountComponentTests.swift), reached from Components → Account → Open account center.
+
+Personal and Studio team are available; Invited workspace is disabled. Each
+begins with three fixture devices. Removal keys include account/device IDs;
+current iPhone is protected. Cancel keeps all devices, and confirm rechecks
+enabled state, captured account and eligible device before changing the list.
+Switching context or disabling actions closes outstanding prompts. A stale
+captured context is rejected even if its callback runs later.
+
+Example: remove Personal's desktop, switch to Studio team (three devices), then
+return to Personal (two). Allow the local photo preview and both contexts show
+Allowed. A Denied scenario offers Preview settings and increments a count while
+retaining Denied. Profile action also increments a preview count. No OS photo
+prompt, settings app, real device removal or authenticated service is invoked.
+
+Verification, 2026-10-09: both native consumers build; all 45 iOS app checks,
+four focused Android Account UI checks and seven Swift/six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+Two added iOS checks cover captured-context guards and actual hosted 240-point
+composition growth, independent action bounds and RTL placement. Swift retains
+feature values above family/route/theme changes; prompts remain view-local.
+
+The feature distinguishes dialog presentation from pending intent: dismissing
+the wrapper cannot erase the value needed by its confirm callback. Context and
+eligibility are checked at the feature boundary; a disabled control is not an
+authorization mechanism. Real principal/workspace/session relationships remain
+an explicit future domain decision rather than a guarantee of this fixture.
+Read [UI APIs](../../packages/FoundryUI/README.md#accounts-and-access), [native mechanics](../../../substrate/swiftui-account-menus-and-action-slots.md)
+and [shared scope](../../../../../../notes/patterns/account-context-and-device-capabilities.md).
+No real auth/capability work, full VoiceOver/TalkBack, all locales, physical-device
+profiling or secure-storage behavior is established. Next: define context scope,
+then connect session commands and foreground permission refresh through adapters.
+
+Manual iOS evidence, 2026-10-09: the Light/Glass screenshot shows the floating
+account controls, opaque profile/permission cards, readable identity copy and
+outline artwork. The native account menu shows Personal checked, Studio team
+available and Invited workspace disabled. Choosing Studio team updates its value
+and Team member copy. Native accessibility actions execute photo preview cancel
+(Ask retained), Allow preview (Allowed), and confirmed MacBook removal (Devices:
+2, current iPhone removal disabled). Switching to Personal shows three devices
+and retains Allowed, establishing distinct fixture scopes. After the first menu
+selection, simulator screenshot capture returned blank images; subsequent action
+results were observed through the native accessibility tree, so that pass does
+not establish dark-surface contrast, scrolled device visuals or VoiceOver traversal.
+
+## Notifications gallery
+
+Claim: read/archive identities outlive filtered visibility, while native detail
+presentation remains a disposable local value.
+
+Origin/evidence, 2026-10-09:
+[NotificationExamples](../../../../apps/FoundryCatalog/Sources/Components/NotificationExamples.swift)
+owns a four-update inbox model; the existing
+[component route](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+retains its @State above family/theme changes. Stable IDs drive read/archive/
+undo/opened state. Today/Earlier groups reuse SectionHeader and Card. The model
+guards known active identity and enabled state at each command boundary.
+
+Example: choose Unread and open Review. It is marked read and leaves the filter,
+but its sheet stays available. Archive from details closes the sheet; Undo restores
+that ID with its existing read state. Mark visible as read snapshots current active
+IDs; archived updates remain unchanged. Undo restores only the latest archive,
+not all historical archives. Reset restores fixtures but retains the open count.
+Counts cover active-inbox unread and visible-filter meaning separately. English
+plural fixtures and supplied relative times are not production localization/time policy.
+
+Verification: both consumers build; 51 iOS app cases, four focused Android inbox
+cases and seven Swift/six Kotlin UI package cases pass.
+[Native checks](../../../../apps/FoundryCatalog/Tests/NotificationComponentTests.swift)
+cover unknown/archived/disabled command admission, filtered bulk scope, stable
+read identity and hosted narrow/large-text/RTL action bounds. The iOS detail flow
+is source/build-checked; the Android consumer tests exercise actual presentation,
+restoration and dismissal. No full VoiceOver or physical-device audit is established.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#notifications-and-inbox),
+[native mechanics](../../../substrate/swiftui-notification-actions-and-narration.md)
+and [shared pattern](../../../../../../notes/patterns/inbox-projection-and-read-identity.md).
+Next: define account receipt scope and offline/server conflict policy before
+connecting a real inbox query/mutation seam.
+
+## Plans gallery
+
+Claim: considering a plan or billing cycle changes a draft; only an admitted
+review application changes current allowance, while usage remains retained.
+
+Origin/evidence, 2026-10-09:
+[PlanExamples](../../../../apps/FoundryCatalog/Sources/Components/PlanExamples.swift)
+owns a bounded Starter/Studio/Team fixture in the
+[component route](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift).
+The @State model lives above family/theme changes. Plan and cycle are typed enums;
+current and selected values are separate. Reviewed plan/cycle are a captured
+choice, not a live projection of the draft. Commands recheck eligibility.
+
+Example: with three exports on Starter, select Studio/Yearly. Current quota stays
+five until Review and Apply preview change. Studio then allows fifty and retains
+three used. Reach fifty, then apply Starter: usage stays fifty and exceeds five.
+Reach current limit cannot lower existing usage; Reset usage is explicit.
+Team choice, disabled/pending actions, changed review drafts and repeated
+application are rejected. Price labels describe monthly-equivalent and billed
+amount separately. Fixed USD values are example copy, not fetched products.
+
+Verification, 2026-10-09: both consumers build; 53 iOS app cases, four focused
+Android Plans cases and seven Swift/six Kotlin UI package cases pass.
+[Hosted/owner checks](../../../../apps/FoundryCatalog/Tests/PlanComponentTests.swift)
+exercise stale/pending/disabled admission, unchanged current allowance before
+application, preserved usage and actual narrow/larger-text/RTL bounds. Review UI
+uses a transient @State flag that closes when eligibility becomes false; its iOS
+interaction is source/build-checked. Android tests exercise native review/restore/
+application. No full assistive, physical-device or store-purchase audit is supplied.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#plans-and-usage),
+[native mechanics](../../../substrate/swiftui-plan-slots-and-usage-bars.md) and
+[shared pattern](../../../../../../notes/patterns/plan-choice-and-applied-allowance.md).
+Next: receipt/quote identity, applied capability scope and real usage-period policy.
+
+## Files gallery
+
+Claim: expansion, search projection, favorites and selected identity stay owned
+above native row controls, while inspector presence remains transient.
+
+Origin/evidence, 2026-10-09:
+[FileExamples](../../../../apps/FoundryCatalog/Sources/Components/FileExamples.swift)
+contains eight fixed acyclic BrowserItem records and FileBrowserValues.
+[Catalog wiring](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+retains values above family selection and binds them into the native Files route.
+Read the depth-first projection, trimmed matching-plus-ancestors search, guards
+and native inspector before studying the row implementation.
+
+Example: collapse all, search field, favorite/open the deeply nested image, then
+clear search. The view returns to saved expansion but keeps last-opened identity
+and favorite. Disclosure is disabled while searching. Empty/disabled state closes
+the sheet without clearing selection; reset clears query/selection and restores
+default expansion while preserving favorites/open count. Guarded commands reject
+unknown, unavailable, hidden-open and ineligible IDs. An inspector can retain
+meaning for a selected identity hidden by a filter.
+
+Verification, 2026-10-09: both apps build; 55 iOS app checks, four focused Android
+Files cases and seven Swift/six Kotlin UI package cases pass.
+[Owner/hosted cases](../../../../apps/FoundryCatalog/Tests/FileComponentTests.swift)
+execute projection, identity retention, command rejection and narrow large-text/
+RTL geometry. They do not drive an iOS sheet interaction or actual file access.
+The @State inspector flag closes on eligibility changes; it does not define
+persisted provider state.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#files-and-hierarchy),
+[native mechanics](../../../substrate/swiftui-tree-actions-and-indentation.md),
+[shared pattern](../../../../../../notes/patterns/tree-projection-and-retained-selection.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#files-and-hierarchy).
+Next: service/provider identity and child loading before using real file records.
+
+## Sharing gallery
+
+Claim: local membership values and revision-bound confirmations stay above UI
+compositions, while copying is an explicit app-owned effect.
+
+Origin/evidence, 2026-10-09:
+[SharingExamples](../../../../apps/FoundryCatalog/Sources/Components/SharingExamples.swift)
+owns known SharingContact fixtures and SharingValues. The
+[catalog](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+retains values above family choice and binds them into Sharing preview.
+Read invite lookup/error preservation, protected-owner admission, revision changes
+and removal rechecks before reading the MemberRow/ShareLinkCard builders.
+
+Example: invite River as Editor, request Jamie's removal, then change membership
+before confirming. The captured revision becomes stale and removal rejects it.
+Owner removal is never admitted. Reset restores members/roles, invalidates requests
+and retains counts/link choice/invite draft. Disabled or pending state rejects
+commands and closes removal presentation. These fixture rules send no invitation
+and do not authorize real access.
+
+Copy button admission returns the example URL and records a request, then invokes
+copyText. The default writes UIPasteboard.general.string; no effect runs from a
+view render or theme/role choice. Off hides the link and disables that button but
+cannot erase previous clipboard text. Displayed native Text remains manually
+selectable independently of the feature's disabled controls.
+
+Verification, 2026-10-09: both apps build; 57 iOS app cases, four focused Android
+Sharing cases and seven Swift/six Kotlin UI package cases pass.
+[Owner/hosted cases](../../../../apps/FoundryCatalog/Tests/SharingComponentTests.swift)
+execute known/duplicate/unavailable invite admission, stale/protected/disabled/
+pending commands, reset preservation and narrow large-text/RTL geometry. They do
+not drive an iOS confirmation, native selection menu or clipboard presentation.
+Transient dialog @State closes on eligibility/revision change; persisted provider
+versions/account scope remain future service work.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#sharing-and-access),
+[native mechanics](../../../substrate/swiftui-member-slots-and-selectable-links.md),
+[shared pattern](../../../../../../notes/patterns/membership-identity-and-confirmed-revisions.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#sharing-and-access).
+Next: real service-admitted membership versions and localized native traversal.
+
+## Playback gallery
+
+Claim: a bounded manually advanced timeline can exercise media UI policy while
+leaving real engine state and scheduling to a later adapter.
+
+Origin/evidence, 2026-10-09:
+[PlaybackExamples](../../../../apps/FoundryCatalog/Sources/Components/PlaybackExamples.swift)
+owns fixtures and guarded PlaybackValues commands.
+[Catalog wiring](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+owns the binding above family/theme/preview navigation. Follow selected ID,
+per-track positions and separate favorite eligibility into the card's slots.
+
+Example: seek Coastline to 45, switch to Orbit, play and Advance 10 seconds at
+1.5×, then return to Coastline. Orbit retains 15 and Coastline retains 45; switching
+pauses. Repeat wraps a manual step, while seeking to the end pauses regardless.
+A paused end replays from zero. Nonfinite/overflowed targets, unavailable/unknown
+IDs and ineligible commands leave values/counts unchanged.
+
+Buffering/Failed pause and block timeline/transport/queue changes while favorite
+remains independent. Retry returns Ready without resuming or clearing metadata.
+Disabled/empty states pause and retain positions. Reset clears position map and
+transport choices, recovers Ready/nonempty and retains favorites/counts. The
+visible local-timeline copy is essential: Play only enables manual stepping.
+
+Verification, 2026-10-09: both consumers build; 59 iOS app cases, four focused
+Android Playback cases and seven Swift/six Kotlin UI package cases pass.
+[Owner/hosted checks](../../../../apps/FoundryCatalog/Tests/PlaybackComponentTests.swift)
+execute bounded seek/replay/repeat/speed/admission and narrow large-text/RTL card
+geometry. They do not drive iOS transport taps, slider gestures or full VoiceOver.
+There is no audio session, automatic clock, media loading or real player recovery.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#playback-and-timeline),
+[native mechanics](../../../substrate/swiftui-playback-slots-and-native-transport.md),
+[shared pattern](../../../../../../notes/patterns/media-timeline-and-transport-admission.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#playback-and-timeline).
+Next: reconcile requested/observed engine state and scope asynchronous seek results
+to the selected media identity.
+
+## Verification gallery
+
+Claim: attempt identity and a challenge generation let a local preview reject
+stale responses while code input remains separate from verification authority.
+
+Origin/evidence, 2026-10-09:
+[VerificationExamples](../../../../apps/FoundryCatalog/Sources/Components/VerificationExamples.swift)
+owns guarded VerificationValues and fixed channel/response fixtures.
+[Catalog wiring](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift)
+owns the binding above family/theme/preview navigation. Follow canEdit/canSubmit/
+canResend, captured attempt ID/generation/channel/code and explicit local completion.
+
+Example: enter 123-456, begin, cancel and begin again. An old attempt cannot finish
+the newer request. Incorrect/unavailable responses retain draft; editing clears
+the error. Local success clears code. Advance time manually to expire a pending
+check: expiry clears request/draft, and a late result cannot verify. Resend or a
+different channel creates a new generation and resets 30/120-second timers.
+
+Disabling invalidates pending but retains draft/choices/times. Reset starts a
+fresh Email challenge with normal response and retains attempt/resend counts.
+Changing a completed channel also starts fresh. Code and local state remain
+in-memory values; there is no delivery, automatic deadline or auth service here.
+The visible fixture notice explains that no message is sent or account verified.
+
+Verification, 2026-10-09: both consumers build; 61 iOS app cases, four focused
+Android Verification cases and nine Swift/eight Kotlin UI package cases pass.
+[Owner/hosted cases](../../../../apps/FoundryCatalog/Tests/VerificationComponentTests.swift)
+execute stale/canceled/disabled/expired/duplicate admission, manual timer bounds,
+native UITextField hints and 240-point large-text/RTL geometry. They do not drive
+iOS verification taps, keyboard/paste/AutoFill UI or full VoiceOver.
+Read [UI walkthrough](../../packages/FoundryUI/README.md#verification-and-code-entry),
+[native mechanics](../../../substrate/swiftui-code-entry-and-content-hints.md),
+[shared pattern](../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
+and [behavior](../../../../../../contracts/behavior/ui-components.md#verification-and-code-entry).
+Next: authoritative provider challenges/deadlines and scoped mutation outcomes.

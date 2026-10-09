@@ -26,7 +26,7 @@ families stay within the existing UI package/module.
 | `Layout/Surface` / `layout/surface` | Solid/glass surfaces; Kotlin also owns backdrop capture. |
 | `Navigation/TabBar` / `navigation/tabbar` | Kotlin: value-driven floating Material bar. Swift leaf is reserved; the app uses native TabView. |
 | `Forms/Button` / `forms/button` | ActionButton: primary, secondary, quiet, destructive, busy/disabled; Swift also exposes ActionButtonStyle. |
-| `Forms/SearchField` / `forms/searchfield` | SearchField: controlled search and explicit clearing. |
+| `Forms/SearchField` / `forms/searchfield` | SearchField: controlled search, explicit clearing, native submission and disabled state. |
 | `Display/Badge` / `display/badge` | Badge with neutral/info/warning/critical MessageTone. |
 | `Display/Card` / `display/card` | Card with content slots, padding and content/floating surface roles. |
 | `Display/ListRow` / `display/listrow` | ListRow with leading/trailing accessories and adaptive copy. |
@@ -76,13 +76,85 @@ families stay within the existing UI package/module.
 | `Display/ExpandableText` / `display/expandabletext` | ExpandableText: caller-controlled long-copy disclosure. |
 | `Patterns/RefreshContainer` / `patterns/refreshcontainer` | RefreshContainer: native refresh adapter around caller-supplied scrolling content. |
 | `Feedback/LoadMore` / `feedback/loadmore` | LoadMoreFooter / LoadMorePhase: explicit idle/loading/failed/exhausted pagination projection. |
+| `Forms/IconAction` / `forms/iconaction` | IconAction: localized native action with passive icon slot. |
+| `Forms/Rating` / `forms/rating` | RatingField: controlled bounded integer choices and supplied value/option copy. |
+| `Navigation/PageIndicator` / `navigation/pageindicator` | PageIndicator: passive small-carousel position and supplied accessible summary. |
+| `Layout/Carousel` / `layout/carousel` | Carousel: native horizontal paging with caller-owned selection/PagerState and stable identity. |
+| `Patterns/MediaTile` / `patterns/mediatile` | MediaTile: ratio frame, supplied metadata and independent action slot. |
+| `Patterns/MediaOverlay` / `patterns/mediaoverlay` | MediaOverlay: decorative artwork, bottom scrim and independent overlay content. |
+| `Patterns/ConversationRow` / `patterns/conversationrow` | ConversationRow: one native open action with supplied preview/time/unread copy and passive identity artwork. |
+| `Display/MessageBubble` / `display/messagebubble` | MessageBubble / MessageDirection: logical incoming/outgoing placement, selectable text and independent accessories. |
+| `Patterns/MessageComposer` / `patterns/messagecomposer` | MessageComposer: caller-owned multiline draft, send eligibility, attachments and action slots. |
+| `Patterns/AttachmentRow` / `patterns/attachmentrow` | AttachmentRow: passive file preview and supplied metadata with independent native actions. |
+| `Feedback/Transfer` / `feedback/transfer` | TransferStatus / TransferPhase: waiting/transferring/paused/failed/complete projection and caller recovery actions. |
+| `Feedback/Typing` / `feedback/typing` | TypingIndicator: supplied readable status and reduced-motion-aware decorative dots. |
+| `Layout/Wrap` / `layout/wrap` | WrapLayout: eager rows of intrinsic-width content, native wrapping and logical layout direction. |
+| `Forms/RemovableChip` / `forms/removablechip` | RemovableChip: one labeled removal action with native target bounds. |
+| `Forms/TokenField` / `forms/tokenfield` | TokenField: controlled single-line draft, supplied token slots and guarded explicit/keyboard add. |
+| `Patterns/SelectionRow` / `patterns/selectionrow` | SelectionRow: whole-row choice with supplied state copy and passive artwork. |
+| `Patterns/SwipeActionRow` / `patterns/swipeactionrow` | SwipeActionRow / SwipeAction: native logical-edge actions around keyed row content. |
+| `Display/TrendBadge` / `display/trendbadge` | TrendBadge / TrendDirection: caller-formatted comparison with explicit direction/tone. |
+| `Charts/Legend` / `charts/legend` | LegendItem / LegendMark: passive series label with decorative mark. |
+| `Charts/Sparkline` / `charts/sparkline` | Sparkline: native small sample sequence with supplied summary. |
+| `Charts/BarChart` / `charts/barchart` | BarChart / ChartBar: labeled nonnegative bars with an explicit common maximum. |
+| `Charts/ProgressRing` / `charts/progressring` | ProgressRing: determinate ring, formatted copy and larger-text layout. |
+| `Patterns/ChartPanel` / `patterns/chartpanel` | ChartPanel: heading, plot, wrapping legend and independent footer slots. |
+| `Forms/TimePicker` / `forms/timepicker` | TimeField / ClockTime: native time draft with explicit confirmation. |
+| `Forms/DateRange` / `forms/daterange` | DateRangeField: independent date endpoints and caller validation copy. |
+| `Navigation/DayStrip` / `navigation/daystrip` | DayStrip / DayOption: supplied day choices with selected/available semantics. |
+| `Patterns/AgendaRow` / `patterns/agendarow` | AgendaRow: readable schedule copy, status and independent action slots. |
+| `Navigation/NavigationRail` / `navigation/navigationrail` | DestinationRail / RailDestination: supplied destinations, native selected/disabled actions and passive icon slots. |
+| `Navigation/Breadcrumbs` / `navigation/breadcrumbs` | BreadcrumbTrail / BreadcrumbItem: wrapping ancestor actions and passive current-location copy. |
+| `Layout/SplitPane` / `layout/splitpane` | SplitPane / PaneMode: bounded primary/detail slots, local-width reflow and caller-owned compact presentation. |
+| `Navigation/TableSortHeader` / `navigation/tablesortheader` | TableSortHeader / TableSortOrder: native sort action, supplied order and localized state narration. |
+| `Layout/DataTable` / `layout/datatable` | DataTable / DataTableColumn: small eager records with stable IDs, fixed column widths and horizontal scrolling. |
+| `Navigation/Pagination` / `navigation/pagination` | PaginationBar: caller-controlled one-based page and explicit previous/next actions. |
+| `Patterns/ProfileHeader` / `patterns/profileheader` | ProfileHeader: supplied identity, decorative avatar and independent status/action slots. |
+| `Navigation/AccountSwitcher` / `navigation/accountswitcher` | AccountSwitcher / AccountOption: native menu of caller-selected available identities. |
+| `Patterns/SessionRow` / `patterns/sessionrow` | SessionRow: supplied device/session/activity copy with independent caller actions. |
+| `Patterns/PermissionCard` / `patterns/permissioncard` | PermissionCard: rationale, supplied capability status and caller actions; no OS permission work. |
+| `Display/HighlightedText` / `display/highlightedtext` | HighlightedText / HighlightSegment: literal native text runs with supplied emphasis. |
+| `Patterns/SearchSuggestionRow` / `patterns/searchsuggestionrow` | SearchSuggestionRow: one enabled/disabled native action with supplied suggestion copy. |
+| `Patterns/SearchResultRow` / `patterns/searchresultrow` | SearchResultRow: one open action with passive preview and independent sibling actions. |
+| `Display/PriceLabel` / `display/pricelabel` | PriceLabel: caller-formatted current/comparison prices, detail and complete narration. |
+| `Patterns/ProductRow` / `patterns/productrow` | ProductRow: passive product artwork/copy/price and independent status/action slots. |
+| `Patterns/OrderSummary` / `patterns/ordersummary` | OrderSummary: opaque supplied lines, total copy and independent footer slots. |
+| `Forms/InlineAction` / `forms/inlineaction` | InlineActionField: controlled draft and a shared guarded button/keyboard action. |
+| `Display/CountBadge` / `display/countbadge` | CountBadge: supplied compact count text and full accessible narration; caller owns capping and zero visibility. |
+| `Patterns/NotificationRow` / `patterns/notificationrow` | NotificationRow: one open action, supplied read/time copy, unread emphasis and independent sibling actions. |
+| `Display/FeatureRow` / `display/featurerow` | FeatureRow: passive feature/availability/detail copy, decorative inclusion mark and complete supplied narration. |
+| `Patterns/PlanCard` / `patterns/plancard` | PlanCard: supplied price/status/feature slots and an explicit selected/disabled native choice button. |
+| `Display/UsageMeter` / `display/usagemeter` | UsageMeter: supplied usage/value/detail/narration with an optional bounded decorative bar. |
+| `Display/FileTypeMark` / `display/filetypemark` | FileTypeMark: passive caller-supplied format text and complete narration, with no file-type inference. |
+| `Patterns/TreeRow` / `patterns/treerow` | TreeRow / TreeDisclosure: native open action, independent branch disclosure, passive artwork and sibling actions with bounded logical indentation. |
+| `Patterns/MemberRow` / `patterns/memberrow` | MemberRow: passive supplied identity, decorative avatar and independent access/action slots. |
+| `Patterns/ShareLinkCard` / `patterns/sharelinkcard` | ShareLinkCard: supplied selectable link or unavailable copy with independent status/actions; no copying, URL creation or authorization. |
+| `Patterns/PlaybackControls` / `patterns/playbackcontrols` | PlaybackControls: independent native previous, play/pause and next actions with supplied labels, state and eligibility. |
+| `Patterns/NowPlayingCard` / `patterns/nowplayingcard` | NowPlayingCard: passive media identity/artwork and independent timeline, controls and action slots; no engine or clock. |
+| `Forms/OneTimeCode` / `forms/onetimecode` | OneTimeCodeField / CodeFormat: one native field, bounded ASCII digits, admitted separators, native code hint and guarded explicit submission. |
+| `Patterns/VerificationCard` / `patterns/verificationcard` | VerificationCard: supplied passive delivery identity and independent content, status and actions; no delivery or auth work. |
 
 Component APIs and their helper types have no Foundry prefix. Existing controls
 are LabeledTextField, SubmitButton, Surface, Backdrop, TabBar and TabItem.
 See [usage examples](blueprints/ui-components.md#using-the-apis) and
 [behavior](../contracts/behavior/ui-components.md). Open Studio → Open catalog →
 Components for interactive Actions, Content, Patterns, Controls and Overlays
-previews, with Display, Feedback, Collections, Context, Layout, Details, Journeys and Activity examples.
+previews, with Display, Feedback, Collections, Context, Layout, Details, Journeys, Activity, Media, Communication, Editing, Insights, Scheduling, Workspace, Tables, Account, Discovery, Commerce, Notifications, Plans, Files, Sharing, Playback and Verification examples.
+Verification opens local code entry with explicit checking/completion, resend cooldowns and expiry.
+Playback opens a manual local timeline with independent transport, seeking, remembered track positions and recovery states.
+Sharing opens local membership and link settings with guarded invitations, role changes and confirmed removal.
+Files opens a local hierarchy with separate open/disclosure actions, ancestor-aware search, favorites and a native inspector.
+Plans opens a local plan picker with billing choices, reviewed application, unavailable options and retained current usage.
+Notifications opens a local inbox with grouped updates, unread filtering, independent read/archive actions and latest-archive undo.
+Communication opens Design room for a local conversation with a persistent composer.
+Editing opens a native library editor with tags, filtering, selection, swipe/menu actions and undo.
+Insights opens a local dashboard with period selection, readable charts, empty data and a session goal.
+Scheduling opens a local planner with day choices, date ranges, native time input and explicit session application.
+Workspace opens a local project browser with compact detail/back, wider panes, collection destinations and breadcrumbs.
+Tables opens a local project ledger with sorting, pages, independent cell actions and empty/disabled states.
+Account opens a local identity/access center with account-scoped device removal, protected current devices and shared photo-access preview states.
+Discovery opens a local search workspace with recent queries, explicit filter drafts, literal emphasis and independent bookmarks.
+Commerce opens a local cart with bounded quantities, applied discounts, delivery choices and review snapshots.
 Details and removal examples reuse the shared overlay wrappers.
 
 ## Reserved leaves
@@ -92,7 +164,6 @@ Details and removal examples reuse the shared overlay wrappers.
 | `Layout/Stack` | `layout/stack` | Consistent vertical/horizontal spacing. |
 | `Layout/Divider` | `layout/divider` | Semantic separators. |
 | `Navigation/TabBar` | `navigation/tabbar` | Top-level destination items and selected state. Kotlin is implemented in this slice; Swift uses native app chrome. |
-| `Navigation/NavigationRail` | `navigation/navigationrail` | Future larger-screen destination rail. |
 | `Shells/AppShell` | `shells/appshell` | Reusable layout slots after another app needs the shell. |
 
 ## Ownership
@@ -109,5 +180,5 @@ Product studio and Compositor studio are app examples, not UI components.
 Camera capture and photo admission are also app features. Camera and Image
 studio reuse one app-owned photo editor per platform; the GPU preview adapter
 still receives only admitted pixels and bounded edit values.
-Charts and workspace editors can receive dedicated families when there is a
-concrete native slice to explore.
+Charts now contains small summary visuals. Dense interactive charts and workspace
+editors can receive further native slices when a concrete consumer needs them.

@@ -456,3 +456,568 @@ checks pass, four new Android activity checks pass, and nineteen existing Androi
 component regressions pass. Four UI unit checks per platform and notes validation
 pass. The app walkthrough separates native refresh-control/gesture evidence,
 manual visual observations, test-helper corrections and coverage limits.
+
+## Media browsing and actions
+
+Added 2026-10-09 for the eighth batch. New component leaves:
+
+- [IconAction](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/iconaction/IconAction.kt).
+- [RatingField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/rating/RatingField.kt).
+- [PageIndicator](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/pageindicator/PageIndicator.kt).
+- [Carousel](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/carousel/Carousel.kt).
+- [MediaTile](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/mediatile/MediaTile.kt).
+- [MediaOverlay](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/mediaoverlay/MediaOverlay.kt).
+
+IconAction reuses native ActionButton target/styling, hides only passive icon
+content and supplies localized action meaning. RatingField receives bounded
+integer state and separate option/value copy; the exact selected choice remains
+a native action. Zero is unrated and clearing belongs to the host. Its adaptive
+layout preserves touch targets. PageIndicator is passive, with a small bounded
+count and one supplied summary replacing decorative dots.
+
+MediaTile supplies a ratio frame, metadata and separate action slot without an
+implied whole-card tap. MediaOverlay hides decorative art/scrim semantics while
+keeping overlay content independent. The caller provides bounds, clipping,
+meaningful media copy and readable action surfaces; image admission stays outside
+these components.
+
+Carousel delegates to native HorizontalPager with a caller PagerState and
+stable key builder. It admits nonempty pages and exposes userScrollEnabled. The
+app owns rememberPagerState and any command coroutine; the component creates no
+scope, request or autoplay job.
+
+Read [native mechanics](../../../../substrate/compose-media-paging-and-overlays.md),
+[shared ownership](../../../../../../../notes/patterns/media-selection-and-passive-artwork.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#media-browsing-and-actions).
+[Native consumer checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/MediaComponentTest.kt) cover actual native layout/semantics rather
+than a second UI model. Both consumers build; 29 iOS app checks, four final Android
+media checks, fourteen component/activity regressions and four UI unit checks
+per platform pass. App walkthroughs separate evidence and limits. Next: what
+record-admission policy should precede dynamic carousel content replacement?
+
+## Communication and attachments
+
+Claim: communication compositions can project caller draft/transfer values and
+independent actions without becoming a messaging or upload service.
+
+Added 2026-10-09 for the ninth batch. New leaves:
+
+- [ConversationRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/conversationrow/ConversationRow.kt).
+- [MessageBubble](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/messagebubble/MessageBubble.kt).
+- [MessageComposer](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/messagecomposer/MessageComposer.kt).
+- [AttachmentRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/attachmentrow/AttachmentRow.kt).
+- [TransferStatus](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/transfer/TransferStatus.kt).
+- [TypingIndicator](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/feedback/typing/TypingIndicator.kt).
+
+MessageComposer takes caller TextFieldState rather than reconstructing text on
+recomposition. Its field and send action are gated internally; arbitrary slot
+actions consume the supplied interactive Boolean. FlowRow wraps native targets.
+MessageBubble uses logical row spacing and a SelectionContainer around message
+text only. TypingIndicator's native infinite transition exists only when scoped
+motion permits. Its dots and duplicated visual label have cleared child semantics,
+leaving one supplied passive summary.
+
+ConversationRow has one native action and hides only passive identity artwork;
+unread/time copy is supplied and native ListRow stacks metadata at larger text.
+AttachmentRow hides passive preview semantics and retains independent action
+children. TransferStatus uses existing native ProgressIndicator only while
+transferring; phase/copy/actions are supplied, with no transition logic in core UI.
+
+Example: the feature keeps a draft while a file transfer fails, supplies Retry to
+TransferStatus, and only enables MessageComposer's send when the file is ready.
+Do not put buttons in artwork slots or assume a send callback clears text.
+Apply native bounds/modifiers and keep pinned slot content compact; keyboard
+placement belongs to the destination.
+
+Read [native mechanics](../../../../substrate/compose-composer-and-ime.md),
+[shared ownership](../../../../../../../notes/patterns/composer-drafts-and-transfer-ownership.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#communication-and-attachments).
+[Native consumer checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/CommunicationComponentTest.kt) exercise actual hosted layout or native semantics
+and interaction. Both apps build; all 32 iOS app checks, four final Android
+communication checks, thirteen existing component/media regressions and four
+UI unit checks per platform pass. App walkthroughs record the test corrections
+and manual keyboard observation separately. No full accessibility, localization,
+device or upload integration audit is claimed.
+Next: which draft/operation identity should a real message feature admit?
+
+## Selection, tokens and row editing
+
+Claim: wrapping tokens, controlled choices and native row actions can share UI
+primitives while admission, collection identity and undo remain feature-owned.
+
+Added 2026-10-09 for the tenth batch. New leaves:
+
+- [WrapLayout](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/wrap/WrapLayout.kt).
+- [RemovableChip](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/removablechip/RemovableChip.kt).
+- [TokenField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/tokenfield/TokenField.kt).
+- [SelectionRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/selectionrow/SelectionRow.kt).
+- [SwipeActionRow / SwipeAction](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/swipeactionrow/SwipeActionRow.kt).
+
+WrapLayout adapts native FlowRow and exposes its slot scope. TokenField uses
+value/onValueChange input and supplies interactivity to arbitrary token controls.
+SelectionRow exposes native checkbox toggle semantics. SwipeActionRow remembers
+ephemeral native gesture state, observes settledValue with snapshotFlow, resets
+before dispatch and reads current callbacks through rememberUpdatedState.
+
+RemovableChip is one native action with supplied identity-aware remove copy.
+TokenField's explicit Add and native Done share eligibility, enabled and busy
+guards; no parsing, trimming, duplicates, limit or automatic clearing is built
+into the control. SelectionRow's marker/leading artwork is passive; other row
+commands belong outside that selection target. SwipeAction carries callback/copy,
+destructive tone and per-action eligibility. It never owns removal or undo.
+
+Example: a library admits one unique tag, renders it in removable slots, keys
+rows by stable record IDs and supplies Archive/Remove through swipe and menu.
+Use small eager wrapping groups, compatible child bounds and host-owned scrolling.
+Swift gestures need List; Compose host keys retain row identity. Persist domain
+values separately from a transient swipe position.
+
+Read [native mechanics](../../../../substrate/compose-wrapping-and-swipe-actions.md),
+[shared ownership](../../../../../../../notes/patterns/selection-identity-and-undo.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#selection-tokens-and-row-editing).
+[Native checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/EditingComponentTest.kt) exercise hosted wrapping or semantics/actions.
+Both apps build; 35 iOS app checks, five final Android editing checks, thirteen
+existing Android component/communication regressions and four UI unit checks per
+platform pass. The app walkthrough records harness corrections and manual iOS
+observations separately. No full accessibility, all locales/devices, persistent
+collection or real command integration audit is claimed.
+Next: how should editable token identity differ from its visible label?
+
+## Insights and small charts
+
+Claim: small native charts can project admitted data and readable meaning while
+periods, units, comparison scales and goal changes remain feature-owned.
+
+Added 2026-10-09 for the eleventh batch. New leaves:
+
+- [TrendBadge / TrendDirection](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/trendbadge/TrendBadge.kt).
+- [LegendItem / LegendMark](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/charts/legend/LegendItem.kt).
+- [Sparkline](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/charts/sparkline/Sparkline.kt).
+- [BarChart / ChartBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/charts/barchart/BarChart.kt).
+- [ProgressRing](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/charts/progressring/ProgressRing.kt).
+- [ChartPanel](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/chartpanel/ChartPanel.kt).
+
+Sparkline maps normalized Double coordinates into Float pixel positions inside
+native Canvas/DrawScope; Dp stroke width converts at draw time. ProgressRing uses
+native arc drawing with bounded progress and supplied stateDescription semantics.
+Its value moves below the circle at fontScale >= 1.5. BarChart retains native merged
+category/value rows and hides tracks. ChartPanel leaves footer controls independent.
+
+TrendBadge receives explicit direction and tone; an increase is not automatically
+success. LegendItem carries supplied series copy with passive dot/line/square.
+Sparkline connects equally-spaced finite samples in input order, without smoothing
+or a time axis. Empty draws no mark, single draws a centered dot and constants a
+midline. Scaling before extrema subtraction prevents finite signed-range overflow.
+Bars require stable unique IDs, nonnegative finite values and an explicit positive
+maximum large enough for every value. Rings clamp finite progress geometry but
+receive truthful formatted copy from the caller. External data admission belongs
+at a result/service boundary before reaching these programmer preconditions.
+
+Example: compare Week/Month categories on the same 200-minute scale while giving
+each sparkline its own descriptive summary and an exact-values disclosure. Keep
+the independent goal outside those projections. Small eager composition has no
+promised dense-series/device budget. Use a richer native chart for real timestamps,
+axes, negative/diverging bars, selection, pan/zoom or large history.
+
+Read [native mechanics](../../../../substrate/compose-chart-drawing-and-semantics.md),
+[chart meaning/scales](../../../../../../../notes/patterns/chart-meaning-and-scales.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#insights-and-small-charts).
+[Numerical checks](../../../../../project/core/ui/src/test/kotlin/dev/mobilefoundry/ui/ChartTest.kt) exercise finite extrema and degenerate sequences;
+[consumer checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/InsightsComponentTest.kt) cover native layout, drawing or semantics/actions.
+Both consumers build; all 37 iOS app checks, four final Android Insights checks,
+five Android editing regressions and six UI unit checks per platform pass. App
+notes distinguish manual observation, harness corrections and platform limits.
+Next: what shared axis/selection model should a time-aware chart receive?
+
+## Dates and agendas
+
+Claim: calendar/date interpretation and availability remain feature policies;
+the UI owns native picker drafts, selection presentation and copy layout.
+Added 2026-10-09: [TimeField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/timepicker/TimeField.kt), [DateRangeField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/daterange/DateRangeField.kt), [DayStrip](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/daystrip/DayStrip.kt), [AgendaRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/agendarow/AgendaRow.kt).
+
+TimeField/ClockTime separates hour/minute meaning from native picker encoding.
+DateRangeField composes two independently committed dates and caller help/error,
+without swapping endpoints. DayStrip wraps supplied stable IDs and independent
+selected/disabled states. AgendaRow keeps its status/actions outside merged
+passive copy. DateField now dismisses disabled drafts; Swift modal themes inherit
+their caller's scope.
+
+The [native consumer checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/SchedulingComponentTest.kt) exercise actual controls/layout,
+with feature admission in the app. Read [native mechanics](../../../../substrate/compose-time-and-date-drafts.md),
+[shared ownership](../../../../../../../notes/patterns/calendar-dates-and-clock-readings.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#dates-and-agendas).
+Checks and limits are recorded in the app walkthrough; no calendar service,
+recurrence, DST resolution or booking guarantee is established.
+Next: use these slots in a concrete planner with an admitted scheduling command.
+
+## Adaptive workspaces
+
+Claim: destination/path affordances and local pane presentation can remain reusable
+while feature identity, compact intent and route policy stay above their slots.
+Origin, 2026-10-09: thirteenth batch, source and native consumer checks.
+
+- [DestinationRail / RailDestination](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/navigationrail/DestinationRail.kt).
+- [BreadcrumbTrail / BreadcrumbItem](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/breadcrumbs/BreadcrumbTrail.kt).
+- [SplitPane / PaneMode](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/splitpane/SplitPane.kt).
+
+DestinationRail uses native Material NavigationRail/NavigationRailItem and selected semantics; labels remain
+visible and icons passive. The host bounds its width/height and chooses a compact
+alternative. BreadcrumbTrail renders supplied ancestors as native actions and
+the last item as passive current copy. Unique IDs are programmer preconditions;
+unknown selection does not select a default. Empty paths are valid.
+
+SplitPane receives positive finite primary/minimum detail widths and callbacks
+building native content for the actual PaneMode. Local bounds, text size and
+forceSingle choose one or two slots. It requires bounded height; pane scrolling
+belongs to the host. Mode changes can recreate slot-local state. Do not put
+drafts, service owners or selection inside those conditional slots. The example
+retains selection when compact Back closes detail or a collection hides that ID.
+
+Read [native mechanics](../../../../substrate/compose-bounded-panes-and-navigation.md),
+[shared ownership](../../../../../../../notes/patterns/adaptive-layout-and-navigation-state.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#adaptive-workspaces).
+[Native checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/WorkspaceComponentTest.kt) cover actual pane layout and feature/control boundaries.
+Verification, 2026-10-09: both native consumers build; all 41 iOS app
+checks, five focused Android Workspace UI checks and seven Swift/six
+Kotlin UI package checks pass. `make notes-check` validates links and
+example labels, not native behavior.
+No draggable divider, root router, fold hinge, deep-link or focus-restoration
+guarantee is implemented. Next: use the slots in a real routed editor and decide
+which state should be serialized by its native navigation owner.
+
+## Tables and pagination
+
+Claim: small admitted pages can retain aligned presentation and independent cell
+controls without moving sort/page policy into reusable UI.
+Origin, 2026-10-09: fourteenth component batch, source and native consumer checks.
+
+- [TableSortHeader / TableSortOrder](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/tablesortheader/TableSortHeader.kt).
+- [DataTable / DataTableColumn](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/datatable/DataTable.kt).
+- [PaginationBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/pagination/PaginationBar.kt).
+
+DataTable uses explicit rowKey/key scopes and composable slots. Shared Row/Box widths preserve column alignment while native text grows vertically.
+One horizontal scroller owns all headers/rows. Positive finite widths include
+padding; rows/columns require stable unique IDs and a finite total width. Empty
+rows retain headers. The host provides vertical scrolling and contextual cell
+narration; interactive cells remain independent. Small eager pages are deliberate;
+there is no virtualization or implicit native table header association.
+
+TableSortHeader projects optional order and supplied localized state copy, with
+a decorative arrow and one native action. TableSortOrder and DataTableColumn
+keep Foundation.SortOrder and SwiftUI.TableColumn available to consumers.
+PaginationBar projects a valid one-based page and disables first/last/global
+actions. It emits adjacent page intent without updating data or starting work.
+The ledger example sorts the full fixture before projecting three records, keeps
+the chosen page and preserves hidden inspected identity under empty projection.
+
+Read [native mechanics](../../../../substrate/compose-table-columns-and-scrolling.md),
+[shared ownership](../../../../../../../notes/patterns/table-sorting-and-page-ownership.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#tables-and-pagination).
+[Native checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/TableComponentTest.kt) exercise geometry, scrolling or action/state boundaries.
+Verification, 2026-10-09: both native consumers build; all 43 iOS app checks,
+four focused Android Tables UI checks, seven Swift and six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+No sticky columns, spreadsheet editing, dense-data budget, localization audit or
+server ordering guarantee is established. Next: admit a real ordered page through
+an existing service seam before choosing a cursor or numbered-page contract.
+
+## Products and order composition
+
+Claim: supplied price meaning and native action slots keep calculation and command
+admission outside reusable product/code/order presentation.
+
+Origin, 2026-10-09: seventeenth UI batch and native consumer checks.
+Read [PriceLabel](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/pricelabel/PriceLabel.kt),
+[ProductRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/productrow/ProductRow.kt),
+[OrderSummary](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/ordersummary/OrderSummary.kt)
+and [InlineActionField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/inlineaction/InlineActionField.kt).
+
+PriceLabel projects formatted current/comparison/detail copy with one supplied
+accessible description. ProductRow hides only decorative artwork; price/status/
+native action slots remain independent. OrderSummary reuses opaque Card,
+SectionHeader, native divider and KeyValueRow; arithmetic and checkout do not enter
+the component. Caller Modifier and slots supply placement and extra controls.
+
+InlineActionField uses one native OutlinedTextField and ActionButton with shared
+enabled/not busy/canSubmit gating. BoxWithConstraints stacks below 400 dp or
+fontScale >= 1.5, otherwise aligning the button and input in a Row. Help/error
+copy stays below both controls, with native field error semantics. Done submission
+keeps caller keyboard input options, and a synchronous value callback retains the
+draft above layout branches. Parsing, validation and request state stay supplied.
+
+Example: supply complete price comparison/unit narration and put native quantity
+controls in product actions. InlineActionField can serve promotional or invite
+codes; an ineligible keyboard action leaves text intact. Busy disables edits,
+while canSubmit=false alone gates only submission.
+
+[Component checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/CommerceComponentTest.kt)
+exercise native admission, passive price meaning, 240-dp large-text/RTL bounds
+and retained draft on layout change. Both consumers build; 49 iOS app, four
+focused Android Commerce UI and seven Swift/six Kotlin UI package checks pass.
+No full TalkBack/localization/device or monetary-domain audit is established.
+Read [native mechanics](../../../../substrate/compose-inline-fields-and-order-composition.md),
+[catalog flow](../../app/README.md#commerce-gallery),
+[shared ownership](../../../../../../../notes/patterns/price-copy-and-committed-cart-values.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#products-and-order-composition).
+Next: admit real quote values through a feature seam outside these compositions.
+
+## Search and discovery
+
+Claim: literal annotated text and independent native row actions receive search
+meaning from a feature without owning search or result state.
+
+Origin, 2026-10-09: sixteenth UI batch and native consumer checks.
+Read [HighlightedText / HighlightSegment](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/highlightedtext/HighlightedText.kt),
+[SearchSuggestionRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/searchsuggestionrow/SearchSuggestionRow.kt),
+[SearchResultRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/searchresultrow/SearchResultRow.kt)
+and the extended [SearchField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/searchfield/SearchField.kt).
+
+HighlightSegment holds literal text and emphasis. HighlightedText uses one
+AnnotatedString with optional native TextStyle/color overrides. SearchResultRow
+keeps the clickable native Button role/contentDescription on its open container
+and clears only passive preview descendants. Native actions are siblings outside
+that container; row enabled controls only opening. SearchField's final optional
+enabled parameter preserves existing positional callers and guards native edit,
+clear and keyboard submission. Matching/history/filter/routing policy stays out.
+
+Example: supply complete localized open copy and put Save in actions, never
+inside a passive preview. Clearing the clickable container's semantics would
+erase its native role/action. Disabled fields remove SetText; test their label
+instead of requiring editable-only semantics.
+
+[Component checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/DiscoveryComponentTest.kt)
+exercise literal text, native independent/disabled actions and narrow larger-text
+RTL bounds. Both consumers build; 47 iOS app, four focused Android Discovery UI
+and seven Swift/six Kotlin UI package checks pass. A full TalkBack/localization/
+device audit remains open. Read
+[native text mechanics](../../../../substrate/compose-annotated-text-and-search-actions.md),
+[catalog flow](../../app/README.md#discovery-gallery),
+[shared reasoning](../../../../../../../notes/patterns/search-projection-and-filter-drafts.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#search-and-discovery).
+Next: integrate query lifetime and locale matching outside the reusable UI layer.
+
+## Accounts and access
+
+Claim: identity/session/capability presentation can be reusable without taking
+ownership of authenticated context or OS prompting.
+Origin, 2026-10-09: fifteenth UI batch and native consumer checks.
+
+- [ProfileHeader](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/profileheader/ProfileHeader.kt).
+- [AccountSwitcher / AccountOption](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/accountswitcher/AccountSwitcher.kt).
+- [SessionRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/sessionrow/SessionRow.kt).
+- [PermissionCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/permissioncard/PermissionCard.kt).
+
+Compose supplies composable slots and Modifier. Native DropdownMenu entries retain
+selected and disabled states. A unique supplied AccountOption list and optional
+selection control the menu. Unknown IDs show the caller's placeholder. Current
+and unavailable choices do not dispatch. ProfileHeader puts decorative artwork
+above copy for larger native text; all supplied action slots remain independent.
+SessionRow accepts activity copy rather than dates or session objects.
+PermissionCard reuses opaque Card and imposes no capability enum or adapter.
+
+Example: an account center supplies profile copy, per-device removal actions and
+an Ask/Allowed/Denied photo projection. The feature owns current-device protection,
+confirmation and actual operation admission. Decorative slots must not contain
+interactive controls or information absent from the supplied copy/status.
+
+Verification, 2026-10-09: both native consumers build; all 45 iOS app checks,
+four focused Android Account UI checks and seven Swift/six Kotlin UI package
+checks pass. `make notes-check` validates links/example labels, not execution.
+[Native checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/AccountComponentTest.kt) cover supplied-state guards, independent native actions
+or actual narrow/large-text/RTL geometry. Read [native mechanics](../../../../substrate/compose-account-menus-and-action-slots.md),
+[shared scope](../../../../../../../notes/patterns/account-context-and-device-capabilities.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#accounts-and-access).
+No credentials, permission API, session revocation, secure storage or full
+assistive-technology audit is supplied. Next: use these slots with a feature-owned
+identity service and capability adapter once their scopes are defined.
+
+## Notifications and inbox
+
+Claim: supplied count/read meaning and independent native actions keep inbox
+policy outside reusable components.
+
+Origin/evidence, 2026-10-09: the eighteenth UI batch adds
+[CountBadge](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/countbadge/CountBadge.kt) and
+[NotificationRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/notificationrow/NotificationRow.kt).
+CountBadge replaces passive text semantics with full narration; it does not
+parse/cap a count or decide whether zero is visible. NotificationRow retains
+native clickable Role.Button and enabled semantics, while only passive artwork/
+copy children clear theirs. Caller action slots are independent siblings.
+
+Example: show 99+ with 128 unread updates as its complete meaning. Open a row
+with a supplied read label and independent mark-read/archive controls. Its
+enabled flag gates opening only; each native action has its own eligibility.
+Weighted native copy grows vertically; artwork follows logical leading direction.
+All time formatting, read-on-open, grouping and receipt policy remain caller work.
+
+Verification: both consumers build; 51 iOS app cases, four focused Android inbox
+cases and seven Swift/six Kotlin UI package cases pass.
+[Component cases](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/NotificationComponentTest.kt)
+exercise passive narration, native role/disabled state, independent callbacks
+and 240-dp larger-text/RTL bounds. No TalkBack traversal is established. Clear
+only passive descendants whose complete meaning is supplied; a decorative slot
+cannot contain independent actions or unique information.
+Read [native mechanics](../../../../substrate/compose-notification-actions-and-narration.md),
+[consumer](../../app/README.md#notifications-gallery),
+[identity pattern](../../../../../../../notes/patterns/inbox-projection-and-read-identity.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#notifications-and-inbox).
+Next: connect scoped real commands above these value/callback APIs.
+
+## Plans and usage
+
+Claim: explicit native choice controls and passive supplied quota/feature meaning
+let plan views stay reusable across entitlement domains.
+
+Origin/evidence, 2026-10-09: the nineteenth UI batch adds
+[FeatureRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/featurerow/FeatureRow.kt),
+[PlanCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/plancard/PlanCard.kt) and
+[UsageMeter](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/usagemeter/UsageMeter.kt).
+The passive rows/meters replace child semantics with complete supplied meaning.
+PlanCard leaves its native slots independent and gives its explicit ActionButton
+selected semantics. Selected/disabled choices reject dispatch, while caller help/
+status controls retain their own eligibility. The card itself has no click action.
+
+Example: display a full yearly charge beside its monthly-equivalent price, and
+project 50 of 5 usage after an applied downgrade. Finite bar fractions clamp; null/
+nonfinite omits the decorative bar. Count arithmetic, quota/receipt scope and
+billing policy stay above the component. Passive labels must include all meaningful
+details; an included mark does not perform capability authorization.
+
+Verification, 2026-10-09: both consumers build; 53 iOS app cases, four focused
+Android Plans cases and seven Swift/six Kotlin UI package cases pass.
+[Native component cases](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/PlanComponentTest.kt)
+cover narration, selected/disabled controls, independent callbacks, 240-dp
+font-scale-two/RTL growth and minimum-sized choice/action bounds.
+No full TalkBack or billing integration is established.
+Read [native mechanics](../../../../substrate/compose-plan-slots-and-usage-bars.md),
+[consumer](../../app/README.md#plans-gallery),
+[shared pattern](../../../../../../../notes/patterns/plan-choice-and-applied-allowance.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#plans-and-usage).
+Next: real entitlement adapters and localized assistive traversal outside these
+native value/callback components.
+
+## Files and hierarchy
+
+Claim: flattened caller state and sibling native targets let file rows be reused
+without importing hierarchy or provider behavior into the UI module.
+
+Origin/evidence, 2026-10-09: the twentieth UI batch adds
+[FileTypeMark](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/display/filetypemark/FileTypeMark.kt)
+and [TreeRow/TreeDisclosure](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/treerow/TreeRow.kt).
+Read the passive mark, opening clickable with native Button role, supplied
+selection/full narration, separate disclosure and sibling action slot. Passive
+descendants clear semantics while the clickable root retains its native meaning.
+No tree traversal, expansion ownership or file inference enters this module.
+
+Example: display a nested PNG with an independent favorite target. Indentation
+uses nonnegative depth and finite step/maximum, defaults to 16 dp capped at 48,
+and follows logical start. Font scale at least 1.5 stacks artwork above copy.
+Opening's enabled flag leaves disclosure/action eligibility independent. Leading
+artwork must be passive and included in the complete supplied row narration.
+
+Verification, 2026-10-09: both consumers build; 55 iOS app checks, four focused
+Android Files cases and seven Swift/six Kotlin UI package cases pass.
+[Native component cases](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/FileComponentTest.kt)
+exercise selected/disabled controls, separate callbacks, passive mark narration
+and extreme-depth 240-dp font-scale-two/RTL action bounds. Full TalkBack traversal
+and provider permissions remain unverified.
+Read [native mechanics](../../../../substrate/compose-tree-actions-and-indentation.md),
+[consumer](../../app/README.md#files-gallery),
+[shared pattern](../../../../../../../notes/patterns/tree-projection-and-retained-selection.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#files-and-hierarchy).
+Next: multilingual labels and loaded-child provider admission outside these rows.
+
+## Sharing and access
+
+Claim: passive identity and link text plus independent native slots let sharing
+compositions remain reusable across membership and authorization models.
+
+Origin/evidence, 2026-10-09: the twenty-first UI batch adds
+[MemberRow](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/memberrow/MemberRow.kt)
+and [ShareLinkCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/sharelinkcard/ShareLinkCard.kt).
+Read the passive identity/decoration group with complete contentDescription,
+sibling access/actions and narrowly scoped SelectionContainer. Native controls
+retain their own semantics. No membership policy or clipboard work enters UI.
+
+Example: put a native role menu below identity and an independently eligible
+removal action beneath it. At font scale at least 1.5 avatar stacks above copy;
+logical alignment follows RTL. A nonnull link is selectable monospaced Text;
+null uses caller unavailable copy. Only passive identity clears child semantics.
+Selection must not swallow independent action/status slots.
+
+Verification, 2026-10-09: both consumers build; 57 iOS app cases, four focused
+Android Sharing cases and seven Swift/six Kotlin UI package cases pass.
+[Native component cases](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/SharingComponentTest.kt)
+exercise independent callbacks, passive identity, missing-link copy and 240-dp
+font-scale-two RTL growth/native target bounds. Full TalkBack, the native selection
+toolbar and clipboard feedback are not exercised.
+Read [native mechanics](../../../../substrate/compose-member-slots-and-selectable-links.md),
+[consumer](../../app/README.md#sharing-gallery),
+[shared pattern](../../../../../../../notes/patterns/membership-identity-and-confirmed-revisions.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#sharing-and-access).
+Next: localized traversal and service-owned identity/version admission outside
+these native compositions.
+
+## Playback and timeline
+
+Claim: independently eligible native targets and passive media identity keep a
+playback composition separate from player and timeline policy.
+
+Origin/evidence, 2026-10-09: the twenty-second UI batch adds
+[PlaybackControls](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/playbackcontrols/PlaybackControls.kt)
+and [NowPlayingCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/nowplayingcard/NowPlayingCard.kt).
+Read IconAction targets inside WrapLayout, middle stateDescription, decorative
+fractional Canvas glyphs and the passive heading's clearAndSetSemantics. Timeline,
+controls and action lambdas remain native siblings outside that group.
+
+Example: compose a ValueSlider, transport controls and an independent favorite.
+Each transport action supplies its own admission and current action/state copy.
+Passive artwork defaults to 80 dp and requires finite positive host-fitting size;
+font scale at least 1.5 stacks it above growing identity. LocalContentColor gives
+glyphs the action's existing theme contrast without another icons dependency.
+
+Verification, 2026-10-09: both consumers build; 59 iOS app cases, four focused
+Android Playback cases and seven Swift/six Kotlin UI package cases pass.
+[Component checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/PlaybackComponentTest.kt)
+exercise native roles/state, independent disabled/favorite actions, passive cover,
+240-dp font-scale-two RTL growth and bounded targets. They establish neither full
+TalkBack nor media playback. The owner gallery drives native slider SetProgress;
+it does not simulate a physical slider drag.
+Read [native mechanics](../../../../substrate/compose-playback-slots-and-native-transport.md),
+[consumer](../../app/README.md#playback-gallery),
+[shared pattern](../../../../../../../notes/patterns/media-timeline-and-transport-admission.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#playback-and-timeline).
+Next: engine snapshots/seek admission at the platform boundary.
+
+## Verification and code entry
+
+Claim: a native controlled code field and separate slots keep reusable entry UI
+independent of challenge identity, clocks and authentication.
+
+Origin/evidence, 2026-10-09: the twenty-third UI batch adds
+[OneTimeCodeField/CodeFormat](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/onetimecode/OneTimeCodeField.kt)
+and [VerificationCard](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/patterns/verificationcard/VerificationCard.kt).
+Read canonical String admission, nullable rejection, Number/Done options,
+SmsOtpCode semantics and guarded explicit submission. Native edit/autofill does
+not submit. CodeFormat bounds length to 1...12 and preserves leading zeroes.
+
+Example: use six digits with supplied error/help, independent canEdit/canSubmit
+and explicit verify callback. Only passive delivery identity/artwork clears child
+semantics; content/status/actions keep their native roles. Large text stacks
+artwork above growing copy. Input uses TextDirection.Ltr inside logical RTL.
+Invalid/oversized edits reject wholly rather than extracting a plausible prefix.
+
+Verification, 2026-10-09: both consumers build; 61 iOS app cases, four focused
+Android Verification cases and nine Swift/eight Kotlin UI package cases pass.
+[Component checks](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/VerificationComponentTest.kt)
+exercise native replacement/Done, autofill hint semantics, invalid input rejection,
+independent actions and 240-dp font-scale-two RTL growth/targets.
+[Format checks](../../../../../project/core/ui/src/test/kotlin/dev/mobilefoundry/ui/CodeFormatTest.kt)
+exercise empty/partial digits, leading zeroes, separators, bounds and Unicode.
+Disabled input removes native SetText semantics; stable labels remain test targets.
+Physical paste/Autofill suggestions and full TalkBack are separate observations.
+Read [native mechanics](../../../../substrate/compose-code-entry-and-autofill-hints.md),
+[consumer](../../app/README.md#verification-gallery),
+[shared pattern](../../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
+and [usage](../../../../../../../docs/blueprints/ui-components.md#verification-and-code-entry).
+Next: real challenge services and native Autofill observations outside shared UI.

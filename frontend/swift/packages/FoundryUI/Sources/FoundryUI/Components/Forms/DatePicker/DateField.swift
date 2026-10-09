@@ -24,8 +24,9 @@ public struct DateField: View {
                 Label(formatted(.abbreviated), systemImage: "calendar")
             }.accessibilityLabel(title).accessibilityValue(formatted(.complete))
         }
+        .onChange(of: enabled) { _, value in if !value { presented = false } }
         .sheet(isPresented: $presented) {
-            FoundryTheme {
+            FoundryTheme(appearance: tokens.appearance, style: tokens.materials.style) {
                 ScrollView { VStack(alignment: .leading, spacing: tokens.space.section) {
                     Text(title).font(tokens.typography.heading).accessibilityAddTraits(.isHeader)
                     DatePicker(title, selection: $draft, displayedComponents: .date).datePickerStyle(.graphical)
@@ -42,6 +43,6 @@ public struct DateField: View {
     }
     @ViewBuilder private var actions: some View {
         ActionButton(cancelLabel, variant: .secondary) { presented = false }
-        ActionButton(confirmLabel) { selection = draft; presented = false }
+        ActionButton(confirmLabel, enabled: enabled) { guard enabled else { return }; selection = draft; presented = false }
     }
 }

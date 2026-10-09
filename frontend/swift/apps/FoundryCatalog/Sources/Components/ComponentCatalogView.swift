@@ -19,7 +19,7 @@ struct ComponentCatalogView: View {
 
 private enum ComponentGroup: String, CaseIterable {
     case actions = "Actions", content = "Content", patterns = "Patterns", controls = "Controls", overlays = "Overlays"
-    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout", details = "Details", journeys = "Journeys", activity = "Activity"
+    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout", details = "Details", journeys = "Journeys", activity = "Activity", media = "Media", communication = "Communication", editing = "Editing", insights = "Insights", scheduling = "Scheduling", workspace = "Workspace", tables = "Tables", account = "Account", discovery = "Discovery", commerce = "Commerce", inbox = "Notifications", plans = "Plans", files = "Files", sharing = "Sharing", playback = "Playback", verification = "Verification"
 }
 
 private struct ComponentExamples: View {
@@ -44,12 +44,28 @@ private struct ComponentExamples: View {
     @State private var delivery = DeliveryValues()
     @State private var journey = JourneyValues()
     @State private var activity = ActivityPreviewValues()
+    @State private var media = MediaValues()
+    @State private var communication = CommunicationValues()
+    @State private var editing = EditingValues()
+    @State private var insights = InsightsValues()
+    @State private var scheduling = SchedulingValues()
+    @State private var workspace = WorkspaceValues()
+    @State private var tables = TableValues()
+    @State private var account = AccountValues()
+    @State private var discovery = DiscoveryValues()
+    @State private var commerce = CommerceValues()
+    @State private var inbox = NotificationValues()
+    @State private var plans = PlanValues()
+    @State private var files = FileBrowserValues()
+    @State private var sharing = SharingValues()
+    @State private var playback = PlaybackValues()
+    @State private var verification = VerificationValues()
     private let projects = ["Atlas workspace", "Orbit study", "Field notes"]
 
     var body: some View {
         VStack(alignment: .leading, spacing: t.space.section) {
             PageHeader("Everyday interfaces", subtitle: "Simple controls, useful compositions, and room for your own content.") {
-                Badge("51 building blocks", tone: .info)
+                Badge("108 building blocks", tone: .info)
             }
             Tabs("Component families", selection: $group, options: ComponentGroup.allCases, label: { $0.rawValue })
             switch group {
@@ -68,6 +84,22 @@ private struct ComponentExamples: View {
             case .details: DetailsExamples(values: $delivery)
             case .journeys: JourneyExamples(values: $journey)
             case .activity: ActivityExamples(values: activity)
+            case .media: MediaExamples(values: $media)
+            case .communication: CommunicationExamples(values: $communication)
+            case .editing: EditingExamples(values: $editing)
+            case .insights: InsightsExamples(values: $insights)
+            case .scheduling: SchedulingExamples(values: $scheduling)
+            case .workspace: WorkspaceExamples(values: $workspace)
+            case .tables: TableExamples(values: $tables)
+            case .account: AccountExamples(values: $account)
+            case .discovery: DiscoveryExamples(values: $discovery)
+            case .commerce: CommerceExamples(values: $commerce)
+            case .inbox: NotificationExamples(values: $inbox)
+            case .plans: PlanExamples(values: $plans)
+            case .files: FileExamples(values: $files)
+            case .sharing: SharingExamples(values: $sharing)
+            case .playback: PlaybackExamples(values: $playback)
+            case .verification: VerificationExamples(values: $verification)
             }
         }
         .padding(t.space.page)

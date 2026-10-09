@@ -290,3 +290,111 @@ ExpandableText, RefreshContainer and LoadMoreFooter receive supplied content,
 state and actions. Native list/refresh gestures stay in UI; feed records, stable
 IDs, refresh/page coordination, failures and task lifetime stay in the app.
 The catalog uses a local paged fixture, not another service/query abstraction.
+
+Collection editing UI receives selected flags, token drafts/content and row
+actions. Filtering, admission, stable record identity, guarded mutations and undo
+snapshots remain app-owned. Native swipe state is transient presentation; restoring
+a screen must not replay a command from its old gesture position.
+
+Communication UI receives draft, send eligibility, transfer phase/copy and native
+content/action slots. File admission, operation identity, retry/cancellation,
+delivery results and post-send clearing stay in the feature. The local conversation
+fixture owns native keyboard placement and keeps transfer recovery in scrolling
+content. It does not establish an upload service, message store or outbox.
+
+Small chart UI receives admitted samples, stable category IDs, explicit bar maxima
+and caller-formatted summaries/values. The feature owns grouping, units, periods,
+empty-data admission and goal changes. Native Canvas/layout draws summary visuals;
+the optional graphics renderer and analytics services remain independent seams.
+
+Media UI also receives native presentation state and admitted artwork slots.
+Carousel delegates native paging; per-record ratings/favorites and explicit
+page commands remain above lazy pages in app composition. MediaOverlay hides
+only passive art, while its meaning and actions remain independent controls.
+
+Scheduling UI receives wall-clock readings, calendar dates, supplied day IDs
+and agenda copy. Date ordering, availability, instant conversion and command
+admission stay in the feature. Temporary native picker drafts are separate from
+both feature drafts and applied sessions; reusable UI does not request calendar
+permission or schedule notifications.
+
+Adaptive workspace UI receives destination/path identities, selection and native
+primary/detail slots. Local width and text size choose presentation; feature
+selection, filtering, compact detail intent and back policy stay above layout
+branches. The rail emits actions and breadcrumbs project a supplied path.
+SplitPane is a bounded layout within an app-owned route; it does not own a router
+or replace native navigation containers for application-level navigation.
+
+Tables receive admitted small pages, stable row/column identities, supplied widths
+and native header/cell slots. Sorting, tie-breakers, page size, totals, empty-data
+projection and row action admission stay in the feature. Native horizontal scroll
+preserves column alignment; page controls emit intent without fetching records.
+A real cursor or numbered-page service should fit the existing service/query seams.
+
+Account UI receives identity/context choices, session copy and permission
+projections. Account switching, credential ownership and authenticated service
+composition remain feature responsibilities. A destructive session intent must
+carry its original account/device IDs and be revalidated at confirmation.
+Device capabilities have their own scope: account changes do not imply a new OS
+permission state. UI permission cards expose rationale/status/actions; platform
+permission adapters and settings routing stay outside the reusable UI layer.
+
+Discovery receives supplied literal text runs and action copy. Search matching,
+ranking, filter drafts/application, recent-query policy, saved IDs and result
+routing belong to the feature. Result open controls contain passive preview;
+bookmarks and other native actions remain independent siblings. Keep selected
+identity above its visible filtered projection. Real requests and cancellation
+fit the existing service/query seams without entering reusable row components.
+
+Commerce UI receives formatted amount copy and native slots. Product identity,
+inventory limits, cart quantities, code admission, currency/rounding and totals
+belong to a feature or authoritative service. A draft code and an applied discount
+are separate values; a review snapshot is separate from a recalculated current
+total. Inline field button/keyboard use one admission callback without performing
+an effect. Real quotes, reservations and mutations fit the existing thin seams.
+
+Notification UI receives supplied count/read/time copy, passive artwork and native
+action slots. Stable identity, grouping, read-on-open, filter scope, archive/undo
+and detail presentation belong to the feature. A filtered projection is separate
+from stored read/archive identities. Push delivery, OS notification permissions,
+device tokens and real inbox synchronization belong to platform/service adapters.
+
+Plan UI receives feature availability, formatted prices and usage meaning. Draft
+selection, billing choice, reviewed command and applied entitlement are distinct
+feature values. A review application rechecks eligibility and the original plan/
+cycle snapshot; changing a draft does not change allowance or erase usage.
+Reusable cards/meters do not load products, verify purchases or authorize exports.
+Real billing and entitlement services fit the existing query/mutation seams.
+
+Files UI receives flattened row copy, nonnegative depth, selected state and
+independent open/disclosure/action eligibility. The feature owns hierarchy
+identity, ordered projection, expansion, ancestor search, favorites and retained
+selection. FileTypeMark receives supplied format text; no file inference or OS
+access enters reusable UI. The bounded acyclic Files fixture demonstrates this
+boundary, while real provider adapters, child loading, paging and permissions
+remain outside TreeRow.
+
+Sharing UI receives passive identity and link copy plus native access/action
+slots. The feature owns member identity, roles, invitation lookup/admission,
+protected-owner policy, confirmation revision and explicit clipboard effects.
+The local one-workspace preview guards revision-bound removals and retains
+nonsecret values; a real service must admit workspace/account scope and current
+version before applying membership or issuing/revoking an access token. No
+provider, email sending or clipboard work enters MemberRow/ShareLinkCard.
+
+Playback UI receives supplied identity/artwork, formatted time/state and independent
+native transport/timeline/action slots. Selected identity, remembered position,
+queue policy, speed, repeat, command admission and metadata belong to the feature.
+The catalog uses a manually advanced local timeline; its playing flag owns no
+audio resource. A real native player adapter must publish engine snapshots and
+admit seek/transport commands at its own lifecycle boundary. Engine scheduling,
+loading, interruptions and OS media sessions stay outside PlaybackControls and
+NowPlayingCard.
+
+Verification UI receives canonical code drafts, supplied destination copy and
+independent status/action slots. CodeFormat owns bounded input mechanics; challenge
+identity, attempt admission, delivery, expiry, resend and authoritative verification
+belong to the feature/service. The local preview captures attempt ID plus challenge
+generation/channel and rejects stale completion. Code/pending/result presentation
+are transient on Android recreation. Real challenge time and identity must come
+from an adapter; manual UI countdown values cannot authorize authentication.

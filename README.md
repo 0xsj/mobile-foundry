@@ -109,8 +109,49 @@ Its performance panel separates texture payload, CPU encoding and available Meta
 GPU timing; GLES 2 timing is unavailable. Start with [the compositor notes](notes/patterns/premultiplied-compositing-and-render-passes.md)
 and [physical-device profiling protocol](docs/GRAPHICS-PROFILING.md).
 
-Broader UI controls, complete graphics engines, and
-native storage libraries remain future work. The backend
+Open **Components** for 108 reusable building blocks across 29 families.
+**Verification** adds native one-time-code entry and a customizable verification
+card. Open **Verification preview** to try incomplete/incorrect codes, pending
+checks, cancellation, resend cooldowns and expiry with local fixture responses.
+**Playback** adds transport controls and a now-playing card. Open **Playback
+preview** to try seeking, remembered track positions, speed, repeat and recovery
+with a manually advanced local timeline; no audio is played.
+**Sharing** adds member rows and share-link cards. Open **Sharing preview** to
+try local invitations, role changes, protected owners, removal and link access.
+**Files** adds expandable tree rows and file-format marks. Open **Files preview**
+to explore folders, ancestor-aware search, independent favorites and an inspector.
+**Plans** adds feature rows, selectable plan cards and usage meters. Open
+**Plans preview** to compare billing choices, review a local plan change and
+try available, exhausted and exceeded allowances.
+**Notifications** adds accessible count badges and notification rows with
+independent actions. Open **Inbox preview** to try unread filters, grouped
+updates, mark-visible-read, archive and undo.
+**Commerce** adds price labels, product rows, an order summary and an inline
+action field. Open **Cart preview** to try quantities, applied codes, delivery
+choices, busy/empty states and a retained review snapshot.
+**Discovery** adds suggested-search rows, result rows and literal highlighted
+text. Open **Search workspace** to try recent queries, independent bookmarks,
+applied versus draft filters, and empty or disabled states.
+**Account** adds a profile header, account switcher, device-session rows and
+permission cards; open **Account center** to try scoped device removal,
+cancelled confirmations and shared photo-access preview states.
+**Tables** adds sortable column headers, a scrollable data table and pagination;
+open **Project ledger** to try sorting, empty records and guarded row actions.
+**Workspace** adds a destination rail, breadcrumbs and a bounded split-pane
+layout. Open **Adaptive workspace** to browse projects and keep selection/stars
+while moving between one and two panes.
+**Scheduling** adds time input, date ranges, day choices and agenda rows; open
+**Schedule planner** to edit a draft, try invalid/unavailable dates and apply a
+local session. **Insights**
+adds sparklines, category bars, progress rings, trends and legends; open **Insights
+dashboard** to try period selection, empty data and a local session goal. **Editing**
+adds wrapping tags, row selection, native swipe actions and a library editor with
+undo. **Communication** includes conversation rows, message bubbles, a glass
+composer, attachments and transfer recovery. Open **Design room** to try them
+together. **Media** includes native paging, per-study ratings/favorites, icon
+actions and artwork overlays; preview values stay caller-owned. Complete graphics
+engines, native storage libraries, and identity/sync implementations remain
+future work. The backend
 profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is
 reserved for manual initialization, and both provider stacks have Compose setup.
 
