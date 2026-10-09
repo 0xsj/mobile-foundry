@@ -1383,3 +1383,49 @@ Read [UI walkthrough](../../packages/FoundryUI/README.md#verification-and-code-e
 [shared pattern](../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
 and [behavior](../../../../../../contracts/behavior/ui-components.md#verification-and-code-entry).
 Next: authoritative provider challenges/deadlines and scoped mutation outcomes.
+
+## Shell primitives gallery
+
+Claim: keeping page values above tab content and chrome branches makes layout
+customization independent of feature state.
+
+Origin/evidence: reserved UI completion, 2026-10-09. Components now includes
+Shells (112 building blocks, 30 families). Both native consumers build and all
+64 iOS app cases pass. Hosted checks exercise native tabs and shell geometry;
+Android additionally observes full gallery route/recreation retention. These
+are distinct evidence, not a claim of manual iOS gallery interaction.
+
+What/why: [ShellExamples](../../../../apps/FoundryCatalog/Sources/Components/ShellExamples.swift)
+owns a small ShellValues fixture through a binding from the
+[component gallery](../../../../apps/FoundryCatalog/Sources/Components/ComponentCatalogView.swift).
+Known different selection increments one counter; per-destination markers live
+above native tab content. The preview embeds TabBar in AppShell's content slot;
+its hidden-navigation branch keeps the same value owner. Controls change spacing,
+visibility and selected destination. ScrollView remains app-owned.
+
+The existing [five-tab shell](../../../../apps/FoundryCatalog/Sources/Shell/AppShellView.swift)
+now consumes shared AppShell and TabBar. SceneStorage selection, catalog
+presentation, camera selection/activity and photo state remain in app composition.
+The extraction adds no route or feature-owner policy to the UI package.
+
+Example: open Shells → Open shell preview, add Overview markers, switch Activity,
+add markers, hide/show the bar and revisit Overview. Theme/family changes preserve
+the fixture through the higher gallery owner.
+
+Gotchas: markers are local demo values, not persisted data. Swift @State survives
+recomposition while its owner remains; it is not disk/process persistence. Native
+tab safe areas stay inside the content slot. Do not put another bottom bar/inset
+around TabView or rely on inactive page composition to stop GPU/camera resources.
+
+Actual checks: [ShellComponentTests](../../../../apps/FoundryCatalog/Tests/ShellComponentTests.swift)
+test fixture admission/page values, default/explicit spacing, RTL, bounded shell
+slots and native labels/images/programmatic selection. `make ios-build`,
+`make ios-test` and `make ui-test` pass; logs are `.cache/components-shells-*`.
+The xcresult contains 64 passes, zero skips/failures. iOS manual tab gestures,
+VoiceOver, older OS execution and physical-device performance remain unmeasured.
+
+Related: [UI primitives](../../packages/FoundryUI/README.md#stacks-separators-and-shells),
+[native substrate](../../../substrate/swiftui-native-tabs-and-shell-slots.md),
+[shared ownership](../../../../../../notes/patterns/shell-chrome-and-feature-lifetime.md).
+Next: what should a closed catalog preserve, and how should a deep link select
+a tab before entering its feature stack?

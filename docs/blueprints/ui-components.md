@@ -5,7 +5,7 @@ native platforms. [Behavior](../../contracts/behavior/ui-components.md) defines
 the boundaries; [the component map](../COMPONENTS.md) lists source placement.
 No new package/module or third-party UI dependency is introduced.
 
-The catalog currently contains twenty-three batches with 108 building blocks across 29
+The catalog currently contains twenty-four batches with 112 building blocks across 30
 families. Insights adds small native charts, trends, legends and a dashboard
 alongside Communication's conversation and Media's paging examples.
 
@@ -1382,3 +1382,65 @@ nonsecret choices, remaining times, generation, enabled state and counters; code
 pending attempt, error and success presentation are transient on recreation.
 This manual clock is an example UI policy. A real service owns challenge identity,
 delivery, time limits, verification and auth state at the existing thin seams.
+
+## Stacks, separators and shells
+
+Open **Components → Shells → Open shell preview**. Add a marker on Overview,
+switch to Activity and add another, then revisit Overview. Try Stack spacing,
+hide/show bottom navigation, and switch the gallery theme. Values belong to the
+app fixture rather than the native tab content. The existing five-tab app also
+consumes AppShell and TabBar.
+
+VerticalStack/HorizontalStack use theme `stack`/`inline` spacing unless overridden.
+They preserve native alignment and do not add scrolling or wrapping.
+SectionDivider is decorative; use surrounding headings/copy for meaning.
+Give a vertical divider a bounded row height. Its inset, thickness and color
+are explicit caller options.
+
+```swift
+// Conceptual: the caller owns selection, destinations and page values.
+AppShell(background: { Color.clear }, content: {
+    TabBar(items: [
+        TabItem(id: "home", label: "Home") { Image(systemName: "house") },
+        TabItem(id: "library", label: "Library") { Image(systemName: "books.vertical") }
+    ], selectedId: $selection) { id in
+        ScrollView {
+            VerticalStack {
+                Text(id)
+                SectionDivider(inset: 8)
+                Text("Supplied page content")
+            }.padding(20)
+        }
+    }
+})
+```
+
+```kotlin
+// Conceptual: host supplies a bounded viewport, admitted selection and system insets.
+AppShell(Modifier.fillMaxSize(), background = { SceneBackground() }, content = {
+    Column(Modifier.fillMaxSize().verticalScroll(scrollState)) { PageContent(selectedId) }
+}, navigation = {
+    TabBar(items, selectedId, onSelect, Modifier.windowInsetsPadding(
+        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)))
+})
+```
+
+AppShell requires bounded geometry, not a slot inside an unbounded scroller.
+Hosts supply scrolling inside the content slot and decide safe-area and keyboard
+policy. Swift native TabView owns its chrome/safe areas and therefore occupies
+the content slot with no separate navigation slot. Compose places a floating bar
+in the navigation slot; TabBar disables internal Material insets, so the host
+applies them once. Do not hide interactive controls in the passive background.
+
+TabBar's one-to-five item limit and selected-ID admission are repository policy.
+IDs must be unique/nonempty; selection must exist before replacing items.
+Repeated selection produces no change. Keep feature values above content/layout
+branches; neither native tabs nor AppShell guarantee feature-resource lifetime.
+Camera/session and catalog presentation owners remain app responsibilities.
+
+Both consumers build. The 2026-10-09 checks cover 64 hosted iOS app cases,
+five focused Android shell/navigation cases, and nine Swift/eight Kotlin UI
+package cases. Native tab labels/icons and programmatic Swift selection, stack
+spacing/RTL, bounded slots, Android duplicate suppression and saved-state gallery
+retention were observed. Physical-device rendering, assistive-technology traversal,
+older OS execution and deep links were not measured in this batch.

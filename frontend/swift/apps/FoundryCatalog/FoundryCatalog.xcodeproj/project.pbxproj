@@ -80,6 +80,7 @@
 		C73AFD040F2ED540B311BEAD /* FieldGroupExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812429283299EC334A285966 /* FieldGroupExample.swift */; };
 		CB1E70001189B23E675A318D /* JourneyFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726E4F51372FEB7D5C8FC6BC /* JourneyFieldTests.swift */; };
 		CC52B383BA981BA23EADA74D /* SchedulingComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E8CA8A3659B8BB111192DB /* SchedulingComponentTests.swift */; };
+		D0D2F78D1CEDDBA589B3AF1B /* ShellComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01968813D2BB58920D32AEA /* ShellComponentTests.swift */; };
 		D156AC959BB44FDB98E28C3B /* FoundryQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 16C19CACBB66D76F97451678 /* FoundryQuery */; };
 		D40F98DE25EB0D00CDC18032 /* PreviewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB4C812DE407345299FE6F /* PreviewLayoutTests.swift */; };
 		D662CD4E93E3A371E656C8C2 /* LayoutExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C0828E0F7CC09BB6CD47A /* LayoutExamples.swift */; };
@@ -101,6 +102,7 @@
 		FC96DAB09CD7CFD6EDBD16FC /* DetailsExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D4034479711816477B2881 /* DetailsExamples.swift */; };
 		FCFFB3FAB6774B222E78211B /* ImageEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78ED83740F40C69D261D8E9 /* ImageEditorView.swift */; };
 		FDCD8CD11F063246EDFE9343 /* SharingExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC836542898F099510EE2F4 /* SharingExamples.swift */; };
+		FECD5A47784ADDEDF61FAE89 /* ShellExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10FB00BF8FC37F05A4DAF32 /* ShellExamples.swift */; };
 		FECEB59B63FA63BCE883AD42 /* FileExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07761433E622A80D2713A7F9 /* FileExamples.swift */; };
 /* End PBXBuildFile section */
 
@@ -179,6 +181,7 @@
 		A5AFD3998C549DF9B61D7222 /* FoundryServices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryServices; path = ../../packages/FoundryServices; sourceTree = SOURCE_ROOT; };
 		A9250CE2F492F35F2652E167 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		B02D0D395A8E0FD03A80B617 /* NotificationComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationComponentTests.swift; sourceTree = "<group>"; };
+		B10FB00BF8FC37F05A4DAF32 /* ShellExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellExamples.swift; sourceTree = "<group>"; };
 		B3D4034479711816477B2881 /* DetailsExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsExamples.swift; sourceTree = "<group>"; };
 		BA34A080A355FD34AF3DCDDC /* TableComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableComponentTests.swift; sourceTree = "<group>"; };
 		BAB23E3EAA218C303DF84B88 /* QueryCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryCatalogView.swift; sourceTree = "<group>"; };
@@ -194,6 +197,7 @@
 		D5D8DA6FF1B65B7587366465 /* FoundryGraphics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FoundryGraphics; path = ../../packages/FoundryGraphics; sourceTree = SOURCE_ROOT; };
 		D862FDBEC9EFF3B30E215C1C /* VerificationComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationComponentTests.swift; sourceTree = "<group>"; };
 		DEA821E1E713947B438DE55F /* DeliveryPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryPreviewView.swift; sourceTree = "<group>"; };
+		E01968813D2BB58920D32AEA /* ShellComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellComponentTests.swift; sourceTree = "<group>"; };
 		E0C6D38FCDA5E5D3F7818214 /* MediaComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaComponentTests.swift; sourceTree = "<group>"; };
 		E14CC8E444A059C07C12EC7F /* studio-still-life.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studio-still-life.png"; sourceTree = "<group>"; };
 		E3AD6AC41449E632A8E1A762 /* ActivityExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityExamples.swift; sourceTree = "<group>"; };
@@ -397,6 +401,7 @@
 				FCD16E8D7672D0DD9D4DEE99 /* PlaybackExamples.swift */,
 				F4018BB58C31C87B99702C05 /* SchedulingExamples.swift */,
 				0FC836542898F099510EE2F4 /* SharingExamples.swift */,
+				B10FB00BF8FC37F05A4DAF32 /* ShellExamples.swift */,
 				5BF5E5929FA753BCAB772EB1 /* TableExamples.swift */,
 				3C159EEA50172F65C9A86D6A /* VerificationExamples.swift */,
 				55CE9C53158046ADBEADBBE3 /* WorkspaceExamples.swift */,
@@ -440,6 +445,7 @@
 				53DB4C812DE407345299FE6F /* PreviewLayoutTests.swift */,
 				11E8CA8A3659B8BB111192DB /* SchedulingComponentTests.swift */,
 				C493C83DA95BA0E33BF3A2F3 /* SharingComponentTests.swift */,
+				E01968813D2BB58920D32AEA /* ShellComponentTests.swift */,
 				BA34A080A355FD34AF3DCDDC /* TableComponentTests.swift */,
 				D862FDBEC9EFF3B30E215C1C /* VerificationComponentTests.swift */,
 				30AB6B6FB060DFD439C144CA /* WorkspaceComponentTests.swift */,
@@ -591,6 +597,7 @@
 				D40F98DE25EB0D00CDC18032 /* PreviewLayoutTests.swift in Sources */,
 				CC52B383BA981BA23EADA74D /* SchedulingComponentTests.swift in Sources */,
 				98FB12A02DFA196B08FF9471 /* SharingComponentTests.swift in Sources */,
+				D0D2F78D1CEDDBA589B3AF1B /* ShellComponentTests.swift in Sources */,
 				8D9DD0DEFCB8B40778E098B6 /* TableComponentTests.swift in Sources */,
 				522CF7C3B76807B4A0FAD9A7 /* VerificationComponentTests.swift in Sources */,
 				F1CA3576F2E758155BE22FE7 /* WorkspaceComponentTests.swift in Sources */,
@@ -651,6 +658,7 @@
 				79C1E5BE911D1FDDFAB7D64B /* QueryCatalogView.swift in Sources */,
 				0127A7065DBD4D4EF6F834A7 /* SchedulingExamples.swift in Sources */,
 				FDCD8CD11F063246EDFE9343 /* SharingExamples.swift in Sources */,
+				FECD5A47784ADDEDF61FAE89 /* ShellExamples.swift in Sources */,
 				A88B9DD664E3F0A4957D0C83 /* TableExamples.swift in Sources */,
 				A810155D515BC494BED7AFB0 /* TokenCatalogView.swift in Sources */,
 				F27BAB29F8FB8ED6BEF2F6B2 /* VerificationExamples.swift in Sources */,

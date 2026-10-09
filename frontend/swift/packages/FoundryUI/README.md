@@ -20,11 +20,11 @@ FoundryTheme also selects Solid/Glass surface styles. `Surface` keeps
 content panels opaque and adapts floating controls to native glass/material,
 with transparency reduction. See [surface themes](../../../../STYLES.md#swappable-surface-themes).
 
-See [the component map](../../../../docs/COMPONENTS.md) for implemented and reserved
-catalog folders. Twenty-three reusable component batches add 108 controls and compositions,
+See [the component map](../../../../docs/COMPONENTS.md) for implemented
+catalog folders; the original UI reservations are complete. Twenty-four reusable component batches add 112 controls and compositions,
 including native selection, overlays, contextual help, adaptive layouts, detail compositions, onboarding, activity feeds, media browsing, communication, collection editing and small charts; see [usage](../../../../docs/blueprints/ui-components.md).
-The five-tab prototype lives in app
-composition and uses native TabView rather than a reusable routing wrapper.
+The five-tab prototype consumes AppShell and a controlled native TabView
+adapter; route and feature ownership remain in app composition.
 
 Scheduling adds TimeField/ClockTime, DateRangeField, DayStrip/DayOption and
 AgendaRow. Picker drafts are temporary; date interpretation, range validation,
@@ -89,3 +89,12 @@ is separate evidence. VerificationCard accepts supplied delivery identity and
 independent content/status/action builders. Challenge identity, clocks, delivery,
 resend, validation and auth stay outside shared UI.
 Read [usage](../../../../docs/blueprints/ui-components.md#verification-and-code-entry).
+
+## Shell and layout primitives
+
+VerticalStack/HorizontalStack preserve native alignment with default theme
+spacing. SectionDivider is a configurable decorative line. AppShell separates
+background, flexible content and optional navigation without owning routes or
+safe-area policy. TabBar/TabItem adapt controlled native TabView with caller page
+content and one-to-five admitted identities. The existing five-tab app and the
+Shells preview consume these APIs; feature state remains in the app.

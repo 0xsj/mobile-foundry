@@ -20,8 +20,8 @@ FoundryTheme also selects Solid/Glass surface styles. `Surface` keeps
 content panels opaque; floating controls sample the host's `Backdrop`
 on API 31+, with an opaque fallback. See [surface themes](../../../../../STYLES.md#swappable-surface-themes).
 
-See [the component map](../../../../../docs/COMPONENTS.md) for implemented and reserved
-catalog folders. Twenty-three reusable batches add 108 controls and compositions, including
+See [the component map](../../../../../docs/COMPONENTS.md) for implemented
+catalog folders; the original UI reservations are complete. Twenty-four reusable batches add 112 controls and compositions, including
 native selection, overlays, contextual help, adaptive layouts, detail compositions, onboarding, activity feeds, media browsing, communication, collection editing and small charts; see [usage](../../../../../docs/blueprints/ui-components.md).
 Navigation/TabBar's Kotlin counterpart
 is implemented as TabBar: items, selection and a callback over the
@@ -90,3 +90,13 @@ autofill delivery is separate evidence. VerificationCard accepts supplied delive
 identity and independent content/status/action lambdas. Challenge identity, clocks,
 delivery, resend, validation and auth stay outside shared UI.
 Read [usage](../../../../../docs/blueprints/ui-components.md#verification-and-code-entry).
+
+## Shell and layout primitives
+
+VerticalStack/HorizontalStack preserve native ColumnScope/RowScope alignment and
+weight with default theme spacing. SectionDivider is a configurable decorative
+line. AppShell supplies background, flexible content and optional navigation
+slots with an existing Backdrop context. TabBar/TabItem expose controlled floating
+Material navigation for one-to-five admitted identities. Hosts supply routes,
+scrolling, insets and feature state. The five-tab app and Shells preview consume
+these APIs.

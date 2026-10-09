@@ -398,3 +398,19 @@ belong to the feature/service. The local preview captures attempt ID plus challe
 generation/channel and rejects stale completion. Code/pending/result presentation
 are transient on Android recreation. Real challenge time and identity must come
 from an adapter; manual UI countdown values cannot authorize authentication.
+
+## Shared shell layout and app-owned navigation
+
+The original reserved UI leaves are populated. VerticalStack/HorizontalStack
+adapt native eager stacks with token spacing; SectionDivider projects a
+decorative line. AppShell separates a passive background, flexible content and
+bottom navigation. Its consumer supplies bounded geometry, scroll containers,
+system insets and keyboard policy.
+
+TabBar receives one to five unique nonempty IDs including the current selection.
+Swift adapts native TabView with content per identity; Kotlin adapts Material
+navigation items and leaves content to the shell host. Repeated selection does
+not dispatch a change. App composition owns destinations, presentation and
+feature/resource lifetime, including inactive-camera shutdown and catalog-scoped
+owners. Neither shared primitive is a router, session owner or persistence layer.
+The Shells gallery retains per-page fixture values above native content branches.

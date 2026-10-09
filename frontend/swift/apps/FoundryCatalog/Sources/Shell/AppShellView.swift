@@ -32,25 +32,26 @@ struct AppShellView: View {
     @State private var catalogPresented = false
     @State private var cameraPhoto: RasterImage?
 
+    private var selectedTab: Binding<String> {
+        Binding(get: { ShellTab(rawValue: selection)?.rawValue ?? ShellTab.home.rawValue },
+                set: { if ShellTab(rawValue: $0) != nil { selection = $0 } })
+    }
+
     var body: some View {
-        TabView(selection: $selection) {
-            ForEach(ShellTab.allCases) { tab in
+        AppShell(background: { Color.clear }, content: {
+            TabBar(items: ShellTab.allCases.map { tab in
+                TabItem(id: tab.rawValue, label: tab.title) { Image(systemName: tab.symbol) }
+            }, selectedId: selectedTab) { id in
+                let tab = ShellTab(rawValue: id)!
                 NavigationStack {
                     if tab == .camera {
-                        CameraView(photo: $cameraPhoto, isSelected: selection == tab.rawValue && !catalogPresented)
+                        CameraView(photo: $cameraPhoto, isSelected: selectedTab.wrappedValue == id && !catalogPresented)
                     } else {
-                        ShellPlaceholderView(tab: tab, glassTheme: $glassTheme) {
-                            catalogPresented = true
-                        }
+                        ShellPlaceholderView(tab: tab, glassTheme: $glassTheme) { catalogPresented = true }
                     }
                 }
-                .tabItem {
-                    Label(tab.title, systemImage: tab.symbol)
-                        .environment(\.symbolVariants, .none)
-                }
-                .tag(tab.rawValue)
             }
-        }
+        })
         // Native tab chrome owns material, safe areas and accessibility.
         .fullScreenCover(isPresented: $catalogPresented) {
             CatalogView(glassTheme: $glassTheme, onClose: { catalogPresented = false })

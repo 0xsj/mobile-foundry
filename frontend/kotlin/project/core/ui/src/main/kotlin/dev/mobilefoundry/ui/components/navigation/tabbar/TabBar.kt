@@ -13,7 +13,7 @@ import dev.mobilefoundry.ui.components.layout.surface.SurfaceRole
 
 data class TabItem(val id: String, val label: String, val icon: @Composable () -> Unit)
 
-/** Values and callbacks only. The host supplies safe-area padding and a glass backdrop. */
+/** 1..5 unique nonempty IDs including selectedId. Values/callbacks only; host supplies insets/backdrop and content. */
 @Composable
 fun TabBar(
     items: List<TabItem>,
@@ -21,12 +21,14 @@ fun TabBar(
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    require(items.size in 1..5 && items.all { it.id.isNotEmpty() } && items.map { it.id }.distinct().size == items.size)
+    require(items.any { it.id == selectedId })
     Surface(modifier, role = SurfaceRole.FLOATING) {
         NavigationBar(containerColor = Color.Transparent, tonalElevation = 0.dp,
             windowInsets = WindowInsets(0, 0, 0, 0)) {
             items.forEach { item ->
                 NavigationBarItem(selected = item.id == selectedId,
-                    onClick = { onSelect(item.id) }, icon = item.icon,
+                    onClick = { if (item.id != selectedId) onSelect(item.id) }, icon = item.icon,
                     label = { Text(item.label) })
             }
         }

@@ -1,7 +1,7 @@
 # Reusable UI components
 
-Status: Implemented twenty-three batches on SwiftUI and Compose. Other component leaves
-in the directory map remain reserved.
+Status: Implemented twenty-four batches on SwiftUI and Compose: 112 building
+blocks across 30 gallery families. All originally reserved UI leaves are populated.
 
 ## Ownership and customization
 
@@ -749,3 +749,26 @@ restores nonsecret channel/response/generation/times/enabled/counters but discar
 code, pending attempt, error and verified presentation. Earlier owners remain
 composed during the Verification route. This is no durable challenge clock,
 delivery, retry transport, SMS permission, real code validation or auth state.
+
+## Stacks, separators and shells
+
+| API | Behavior |
+| --- | --- |
+| VerticalStack / HorizontalStack | Native eager VStack/HStack or Column/Row, defaulting to theme stack/inline spacing. Explicit finite nonnegative spacing and native alignment are supported. No scrolling, wrapping, width policy or feature state. Kotlin retains native scope weight/alignment; Swift uses view modifiers. |
+| SectionDivider / DividerAxis | Decorative horizontal/vertical line, default theme line color and one point/dp thickness. Finite nonnegative inset, positive finite thickness and optional color. No accessibility meaning. Vertical orientation requires a bounded host height. |
+| AppShell | Bounded passive background, flexible content and optional independent bottom navigation. Background is excluded from accessibility. Kotlin supplies the existing Backdrop context. Host owns viewport, scroll containers, routes, insets, keyboard and feature lifetime. |
+| TabBar / TabItem | One to five unique nonempty string IDs, including the selected ID. Caller supplies readable labels and passive icons. Swift controlled native TabView includes content per ID; Kotlin floating Material bar exposes selection callback and leaves content to the host. Same-ID selection produces no write/callback. Caller reconciles selection before changing item sets. |
+
+The existing five-tab app consumes AppShell and TabBar. iOS keeps native tab
+safe areas and system chrome by placing TabBar in AppShell's content slot.
+Android disables Material NavigationBar's internal insets and applies app-owned
+safe drawing padding around content and navigation. No router or retained camera
+session is introduced by the shared layout.
+
+Components → Shells → Open shell preview supplies Overview, Activity and
+Settings identities. Per-page markers, spacing and navigation visibility are
+owned above content branches. Known different destination selection increments
+one counter; duplicate/unknown IDs do nothing. Hiding/recreating navigation keeps
+selected identity and markers. Theme/family/destination changes retain values;
+Android also restores admitted fixture values through saved instance state.
+No external navigation, account session or data integration occurs.

@@ -1,10 +1,8 @@
 # Native component map
 
-This is a directory sketch for the reusable UI catalog, adapted from Bento's
-family/component split. Reserved leaves contain only `.gitkeep`; they are not
-implemented APIs or a commitment to wrap every native widget. Remove the marker
-when adding real source. Add variants/configuration beside a component only
-when a consumer needs them. App routes, stores, repositories and GPU renderers
+The reusable UI catalog follows Bento's family/component split. All initially
+reserved UI component leaves now contain implementation. Add variants and
+configuration beside a component when a consumer needs them. App routes, stores, repositories and GPU renderers
 stay outside this tree.
 
 The roots are:
@@ -24,7 +22,10 @@ families stay within the existing UI package/module.
 | `Feedback/Query` / `feedback/query` | Async state rendering and copy. |
 | `Feedback/Mutation` / `feedback/mutation` | Write progress, failure and success rendering. |
 | `Layout/Surface` / `layout/surface` | Solid/glass surfaces; Kotlin also owns backdrop capture. |
-| `Navigation/TabBar` / `navigation/tabbar` | Kotlin: value-driven floating Material bar. Swift leaf is reserved; the app uses native TabView. |
+| `Layout/Stack` / `layout/stack` | VerticalStack and HorizontalStack: eager native layouts with theme defaults, explicit spacing and native alignment. |
+| `Layout/Divider` / `layout/divider` | SectionDivider / DividerAxis: decorative theme line with horizontal/vertical orientation, inset, thickness and color. |
+| `Shells/AppShell` / `shells/appshell` | AppShell: passive background, flexible content and independent navigation slots; host owns routes, scrolling and safe areas. |
+| `Navigation/TabBar` / `navigation/tabbar` | TabBar / TabItem: controlled native TabView on Swift; floating Material navigation bar on Kotlin. App owns selection and destinations. |
 | `Forms/Button` / `forms/button` | ActionButton: primary, secondary, quiet, destructive, busy/disabled; Swift also exposes ActionButtonStyle. |
 | `Forms/SearchField` / `forms/searchfield` | SearchField: controlled search, explicit clearing, native submission and disabled state. |
 | `Display/Badge` / `display/badge` | Badge with neutral/info/warning/critical MessageTone. |
@@ -139,7 +140,7 @@ are LabeledTextField, SubmitButton, Surface, Backdrop, TabBar and TabItem.
 See [usage examples](blueprints/ui-components.md#using-the-apis) and
 [behavior](../contracts/behavior/ui-components.md). Open Studio → Open catalog →
 Components for interactive Actions, Content, Patterns, Controls and Overlays
-previews, with Display, Feedback, Collections, Context, Layout, Details, Journeys, Activity, Media, Communication, Editing, Insights, Scheduling, Workspace, Tables, Account, Discovery, Commerce, Notifications, Plans, Files, Sharing, Playback and Verification examples.
+previews, with Display, Feedback, Collections, Context, Layout, Details, Journeys, Activity, Media, Communication, Editing, Insights, Scheduling, Workspace, Tables, Account, Discovery, Commerce, Notifications, Plans, Files, Sharing, Playback, Verification and Shells examples.
 Verification opens local code entry with explicit checking/completion, resend cooldowns and expiry.
 Playback opens a manual local timeline with independent transport, seeking, remembered track positions and recovery states.
 Sharing opens local membership and link settings with guarded invitations, role changes and confirmed removal.
@@ -157,19 +158,18 @@ Discovery opens a local search workspace with recent queries, explicit filter dr
 Commerce opens a local cart with bounded quantities, applied discounts, delivery choices and review snapshots.
 Details and removal examples reuse the shared overlay wrappers.
 
-## Reserved leaves
+## Directory completion
 
-| Swift | Kotlin | Intended contents |
-| --- | --- | --- |
-| `Layout/Stack` | `layout/stack` | Consistent vertical/horizontal spacing. |
-| `Layout/Divider` | `layout/divider` | Semantic separators. |
-| `Navigation/TabBar` | `navigation/tabbar` | Top-level destination items and selected state. Kotlin is implemented in this slice; Swift uses native app chrome. |
-| `Shells/AppShell` | `shells/appshell` | Reusable layout slots after another app needs the shell. |
+No reserved UI component leaves remain on either platform. This closes the
+original UI directory sketch; backend, data/session/sync and project-template
+reservations are separate work. The catalog now has 112 building blocks across
+30 families. **Shells** opens a bounded tab preview with spacing customization,
+hide/show navigation and retained per-destination marker values.
 
 ## Ownership
 
-The working five-tab prototype lives in app composition, not the reserved
-Shells/AppShell directory. It owns Home, Library, Camera, Studio and Account and opens
+The working five-tab prototype consumes shared AppShell layout and TabBar
+adapters. App composition owns Home, Library, Camera, Studio and Account and opens
 the existing catalog from Studio. Reusable controls accept values/content and
 callbacks; they never choose service adapters or create feature state owners.
 See [shell behavior](../contracts/behavior/app-shell.md),

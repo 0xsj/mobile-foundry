@@ -19,7 +19,7 @@ struct ComponentCatalogView: View {
 
 private enum ComponentGroup: String, CaseIterable {
     case actions = "Actions", content = "Content", patterns = "Patterns", controls = "Controls", overlays = "Overlays"
-    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout", details = "Details", journeys = "Journeys", activity = "Activity", media = "Media", communication = "Communication", editing = "Editing", insights = "Insights", scheduling = "Scheduling", workspace = "Workspace", tables = "Tables", account = "Account", discovery = "Discovery", commerce = "Commerce", inbox = "Notifications", plans = "Plans", files = "Files", sharing = "Sharing", playback = "Playback", verification = "Verification"
+    case display = "Display", feedback = "Feedback", collections = "Collections", context = "Context", layout = "Layout", details = "Details", journeys = "Journeys", activity = "Activity", media = "Media", communication = "Communication", editing = "Editing", insights = "Insights", scheduling = "Scheduling", workspace = "Workspace", tables = "Tables", account = "Account", discovery = "Discovery", commerce = "Commerce", inbox = "Notifications", plans = "Plans", files = "Files", sharing = "Sharing", playback = "Playback", verification = "Verification", shells = "Shells"
 }
 
 private struct ComponentExamples: View {
@@ -60,12 +60,13 @@ private struct ComponentExamples: View {
     @State private var sharing = SharingValues()
     @State private var playback = PlaybackValues()
     @State private var verification = VerificationValues()
+    @State private var shells = ShellValues()
     private let projects = ["Atlas workspace", "Orbit study", "Field notes"]
 
     var body: some View {
         VStack(alignment: .leading, spacing: t.space.section) {
             PageHeader("Everyday interfaces", subtitle: "Simple controls, useful compositions, and room for your own content.") {
-                Badge("108 building blocks", tone: .info)
+                Badge("112 building blocks", tone: .info)
             }
             Tabs("Component families", selection: $group, options: ComponentGroup.allCases, label: { $0.rawValue })
             switch group {
@@ -100,6 +101,7 @@ private struct ComponentExamples: View {
             case .sharing: SharingExamples(values: $sharing)
             case .playback: PlaybackExamples(values: $playback)
             case .verification: VerificationExamples(values: $verification)
+            case .shells: ShellExamples(values: $shells)
             }
         }
         .padding(t.space.page)

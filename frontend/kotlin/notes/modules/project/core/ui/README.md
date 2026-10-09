@@ -1021,3 +1021,47 @@ Read [native mechanics](../../../../substrate/compose-code-entry-and-autofill-hi
 [shared pattern](../../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
 and [usage](../../../../../../../docs/blueprints/ui-components.md#verification-and-code-entry).
 Next: real challenge services and native Autofill observations outside shared UI.
+
+## Stacks, separators and shells
+
+Claim: bounded native layout slots and controlled navigation can remain reusable
+while the host owns routes, insets and feature values.
+
+Origin/evidence: reserved UI completion, 2026-10-09. This is the twenty-fourth
+component batch (112 building blocks, 30 gallery families); all original UI
+reservations now contain source. Both builds, 64 iOS app cases, five focused
+Android shell/gallery cases and nine Swift/eight Kotlin UI package cases pass.
+See [native substrate](../../../../substrate/compose-shell-slots-and-inset-ownership.md)
+for versions, primary references and runtime limits.
+
+What/why: [stack adapters](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/stack/StackLayouts.kt)
+keep native ColumnScope/RowScope with token stack/inline spacing or an override.
+[SectionDivider](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/layout/divider/SectionDivider.kt)
+projects a decorative theme line with orientation/inset/thickness/color.
+[AppShell](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/shells/appshell/AppShell.kt)
+requires bounded constraints, supplies an existing Backdrop and weights content
+above independent bottom navigation. [TabBar](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/navigation/tabbar/TabBar.kt)
+requires one-to-five unique nonempty IDs including selection and suppresses
+same-ID callbacks; native Material navigation semantics remain intact.
+
+Example: the [Shells gallery](../../app/README.md#shell-primitives-gallery)
+changes spacing, hides navigation and revisits per-page markers. The existing
+five-tab app consumes the shared layout/bar while keeping app-owned insets and
+feature/presentation owners.
+
+Gotchas: bounded viewport, scrolling inside content, vertical dividers in bounded
+rows and one inset owner. Passive backgrounds clear semantics and must not host
+controls. A host must reconcile selected identity before changing item lists;
+native composition does not define persistence or resource shutdown.
+
+Actual checks: [component tests](../../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ShellComponentTest.kt)
+measure token/explicit spacing, RTL, nonoverlapping slots, passive backdrop and
+independent page actions/duplicate selection. The focused five-case emulator set
+includes gallery restoration and both existing app-shell regressions.
+`make android-build` and `make ui-test` pass. Other Android gallery families,
+TalkBack, physical devices and older OS execution were not rerun in this batch.
+
+Related: [shared ownership](../../../../../../../notes/patterns/shell-chrome-and-feature-lifetime.md),
+[usage](../../../../../../../docs/blueprints/ui-components.md#stacks-separators-and-shells).
+Next: how should keyboard insets change for real editing screens, and when should
+a navigation rail replace bottom tabs?

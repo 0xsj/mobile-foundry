@@ -30,5 +30,9 @@ Placeholder backgrounds contain a static, subtle accent wash to make
 translucency visible; they do not run an animation loop.
 
 Reusable navigation controls receive item values, selection and callbacks.
-The app owns destination identity, presentation and feature lifetime. Reserved
-component folders document a possible UI catalog, not implemented controls.
+Shared AppShell supplies bounded background/content/navigation slots; shared
+TabBar adapts native chrome. The app owns destination identity, presentation,
+safe-area/keyboard policy and feature lifetime. Swift puts native TabBar content
+inside AppShell with an empty external navigation slot; Compose supplies its
+floating bar to the bottom slot and applies system insets in the app host.
+Neither primitive owns feature state or keeps an inactive camera running.

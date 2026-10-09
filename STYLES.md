@@ -26,11 +26,10 @@ files. Presets compose those values; they do not duplicate component code.
 Swift folders organize source within one package namespace. Kotlin packages
 mirror folders, for example `dev.mobilefoundry.ui.components.feedback.query`.
 
-The [component map](docs/COMPONENTS.md) reserves empty leaf folders with .gitkeep
-for visualization: Forms, Display, Layout, Feedback, Navigation, Overlays,
-Shells and Patterns, using lowercase on Kotlin. These are planned controls,
-apart from the implemented entries identified in the map. Each
-component gets a directory for its implementation, configuration, variants, and
+The [component map](docs/COMPONENTS.md) lists implemented leaf folders across
+Forms, Display, Layout, Feedback, Navigation, Overlays, Shells, Patterns and
+Charts, using lowercase on Kotlin. All original UI reservations are populated.
+Each component gets a directory for its implementation, configuration, variants, and
 component-specific documentation. A family is a source folder, not a new build
 module. Keep native tests in their package/module test tree and catalog examples
 in the app. Avoid a growing flat collection of unrelated UI files.
@@ -302,3 +301,17 @@ artwork above copy and grows help/error/status vertically. Code digits retain
 left-to-right order inside logical RTL layouts; surrounding labels follow the
 host. Floating preview controls follow Glass. Input remains one native field,
 with no per-digit focus boxes, new palette or implicit countdown animation.
+
+## Stack and shell styling
+
+VerticalStack defaults to `space.stack`; HorizontalStack defaults to
+`space.inline`. Explicit spacing and native alignment remain caller choices.
+SectionDivider defaults to the theme line color and one point/dp thickness;
+it is decorative and has no action or accessible meaning. Bound vertical
+dividers to an explicit row height.
+
+AppShell is a layout composition, with a passive background and independent
+content/navigation slots. A scene behind floating surfaces makes Glass visible
+on Kotlin through the existing Backdrop provider. Swift TabBar retains system
+TabView chrome and its native material; the Solid/Glass switch governs shared
+surfaces. Hosts own safe areas and avoid applying the same system inset twice.

@@ -45,7 +45,7 @@ import dev.mobilefoundry.ui.theme.FoundryTheme
 
 private enum class ComponentGroup(val label: String) {
     ACTIONS("Actions"), CONTENT("Content"), PATTERNS("Patterns"), CONTROLS("Controls"), OVERLAYS("Overlays"),
-    DISPLAY("Display"), FEEDBACK("Feedback"), COLLECTIONS("Collections"), CONTEXT("Context"), LAYOUT("Layout"), DETAILS("Details"), JOURNEYS("Journeys"), ACTIVITY("Activity"), MEDIA("Media"), COMMUNICATION("Communication"), EDITING("Editing"), INSIGHTS("Insights"), SCHEDULING("Scheduling"), WORKSPACE("Workspace"), TABLES("Tables"), ACCOUNT("Account"), DISCOVERY("Discovery"), COMMERCE("Commerce"), NOTIFICATIONS("Notifications"), PLANS("Plans"), FILES("Files"), SHARING("Sharing"), PLAYBACK("Playback"), VERIFICATION("Verification")
+    DISPLAY("Display"), FEEDBACK("Feedback"), COLLECTIONS("Collections"), CONTEXT("Context"), LAYOUT("Layout"), DETAILS("Details"), JOURNEYS("Journeys"), ACTIVITY("Activity"), MEDIA("Media"), COMMUNICATION("Communication"), EDITING("Editing"), INSIGHTS("Insights"), SCHEDULING("Scheduling"), WORKSPACE("Workspace"), TABLES("Tables"), ACCOUNT("Account"), DISCOVERY("Discovery"), COMMERCE("Commerce"), NOTIFICATIONS("Notifications"), PLANS("Plans"), FILES("Files"), SHARING("Sharing"), PLAYBACK("Playback"), VERIFICATION("Verification"), SHELLS("Shells")
 }
 
 @Composable
@@ -153,6 +153,17 @@ fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         scheduleHour = it.time.hour; scheduleMinute = it.time.minute; scheduleEnabled = it.enabled; scheduleEmpty = it.empty
         scheduleAppliedDay = it.appliedDay; scheduleAppliedHour = it.appliedTime.hour; scheduleAppliedMinute = it.appliedTime.minute
         scheduleApplied = it.applied
+    }
+    var shellPreview by rememberSaveable { mutableStateOf(false) }
+    var shellSelected by rememberSaveable { mutableStateOf(ShellDestination.OVERVIEW) }
+    var shellSpacing by rememberSaveable { mutableStateOf(ShellSpacing.THEME) }
+    var shellNavigation by rememberSaveable { mutableStateOf(true) }
+    var shellMarkers by rememberSaveable { mutableStateOf(emptyMap<String, Int>()) }
+    var shellSelections by rememberSaveable { mutableIntStateOf(0) }
+    val shells = ShellValues(shellSelected, shellSpacing, shellNavigation, shellMarkers, shellSelections)
+    val onShells: (ShellValues) -> Unit = {
+        shellSelected = it.selected; shellSpacing = it.spacing; shellNavigation = it.showNavigation
+        shellMarkers = it.markers; shellSelections = it.selections
     }
     val stateHolder = rememberSaveableStateHolder()
     var verificationPreview by rememberSaveable { mutableStateOf(false) }
@@ -479,6 +490,14 @@ fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         }
         return
     }
+    // All family owners remain composed during the bounded shell destination.
+    if (shellPreview) {
+        FoundryTheme(appearance = if (dark) FoundryAppearance.DARK else FoundryAppearance.LIGHT,
+            style = if (glass) FoundryThemeStyle.GLASS else FoundryThemeStyle.SOLID) {
+            ShellPreviewScreen(shells, onShells, onBack = { shellPreview = false })
+        }
+        return
+    }
     stateHolder.SaveableStateProvider("componentExamples") {
         Column(modifier.fillMaxSize()) {
             TextButton(onClick = onBack) { Text("Back") }
@@ -508,7 +527,8 @@ fun ComponentCatalogScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                     files = files, onFiles = onFiles, onFilesPreview = { filesPreview = true },
                     sharing = sharing, onSharing = onSharing, onSharingPreview = { sharingPreview = true },
                     playback = playback, onPlayback = onPlayback, onPlaybackPreview = { playbackPreview = true },
-                    verification = verification, onVerification = onVerification, onVerificationPreview = { verificationPreview = true }, modifier = Modifier.weight(1f))
+                    verification = verification, onVerification = onVerification, onVerificationPreview = { verificationPreview = true },
+                    shells = shells, onShells = onShells, onShellPreview = { shellPreview = true }, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -534,7 +554,8 @@ private fun ComponentExamples(onNavigate: () -> Unit, delivery: DeliveryValues, 
     onFiles: (FileBrowserValues) -> Unit, onFilesPreview: () -> Unit, sharing: SharingValues,
     onSharing: (SharingValues) -> Unit, onSharingPreview: () -> Unit, playback: PlaybackValues,
     onPlayback: (PlaybackValues) -> Unit, onPlaybackPreview: () -> Unit, verification: VerificationValues,
-    onVerification: (VerificationValues) -> Unit, onVerificationPreview: () -> Unit, modifier: Modifier = Modifier) {
+    onVerification: (VerificationValues) -> Unit, onVerificationPreview: () -> Unit, shells: ShellValues, onShells: (ShellValues) -> Unit,
+    onShellPreview: () -> Unit, modifier: Modifier = Modifier) {
     val t = FoundryTheme.tokens
     var group by rememberSaveable { mutableStateOf(ComponentGroup.ACTIONS) }
     var count by rememberSaveable { mutableIntStateOf(0) }
@@ -582,7 +603,7 @@ private fun ComponentExamples(onNavigate: () -> Unit, delivery: DeliveryValues, 
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(t.space.page),
             verticalArrangement = Arrangement.spacedBy(t.space.section)) {
             PageHeader("Everyday interfaces", "Simple controls, useful compositions, and room for your own content.") {
-                Badge("108 building blocks", tone = MessageTone.INFO)
+                Badge("112 building blocks", tone = MessageTone.INFO)
             }
             Tabs("Component families", ComponentGroup.entries, group,
                 { group = it; notice = 0; help = false; options = false }, label = { it.label })
@@ -698,6 +719,7 @@ private fun ComponentExamples(onNavigate: () -> Unit, delivery: DeliveryValues, 
                 ComponentGroup.SHARING -> SharingExamples(sharing, onSharing, onSharingPreview)
                 ComponentGroup.PLAYBACK -> PlaybackExamples(playback, onPlayback, onPlaybackPreview)
                 ComponentGroup.VERIFICATION -> VerificationExamples(verification, onVerification, onVerificationPreview)
+                ComponentGroup.SHELLS -> ShellExamples(shells, onShells, onShellPreview)
             }
         }
     }

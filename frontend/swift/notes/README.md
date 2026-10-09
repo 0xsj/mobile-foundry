@@ -173,6 +173,11 @@ linked language and tool notes to understand the choices. This notebook follows
     [Verification gallery](modules/apps/FoundryCatalog/README.md#verification-gallery).
     Compare canonical drafts, explicit submission, attempt identity and code lifetime.
 
+40. Read [native shell slots and chrome](substrate/swiftui-native-tabs-and-shell-slots.md),
+    then the [UI walkthrough](modules/packages/FoundryUI/README.md#stacks-separators-and-shells) and
+    [Shells gallery](modules/apps/FoundryCatalog/README.md#shell-primitives-gallery).
+    Compare bounded content/navigation, inset ownership and retained page values.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -189,6 +194,16 @@ Paths mirror the Swift root: `apps/FoundryCatalog/` maps to
 transferable notes describe the mechanism without local source paths.
 
 ## Current coverage
+
+The twenty-fourth UI batch closes the reserved UI leaves (112 building blocks,
+30 families): VerticalStack, HorizontalStack, SectionDivider and AppShell, plus
+the Swift TabBar adapter. Reading step 40 traces native chrome, bounded slots,
+inset ownership and app-owned feature lifetime. Both consumers build; 64 iOS app
+cases, five focused Android shell/gallery cases including the existing app-shell
+regressions, and nine Swift/eight Kotlin UI package cases pass (2026-10-09).
+Physical-device behavior, older OS execution and assistive traversal remain
+separate checks. Backend/session/data/sync/template reservations are outside this
+UI completion slice.
 
 The twenty-third UI batch adds two Verification components (108 total, 29 families).
 Verification, 2026-10-09: both consumers build; 61 iOS app checks, four focused
@@ -523,7 +538,8 @@ is pending the remaining pre-release work.
 Read [tab selection and presentation](substrate/swiftui-tab-selection-and-presentation.md),
 then [the catalog shell](modules/apps/FoundryCatalog/README.md#four-tab-placeholder-shell)
 and [shared lifetime ownership](../../../notes/patterns/tabs-and-feature-lifetime.md).
-The component map is a directory sketch, not completed UI coverage. Next:
+The original UI directory sketch is now implemented; reading step 40 explains
+the completion slice. Next:
 when should each real destination own a detail stack, and how should a deep
 link select a tab before navigating within it?
 

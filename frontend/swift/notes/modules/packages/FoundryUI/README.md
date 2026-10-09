@@ -1002,3 +1002,47 @@ Read [native mechanics](../../../substrate/swiftui-code-entry-and-content-hints.
 [shared pattern](../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
 and [usage](../../../../../../docs/blueprints/ui-components.md#verification-and-code-entry).
 Next: observe native code suggestion delivery separately from content hints.
+
+## Stacks, separators and shells
+
+Claim: native eager layout and controlled tab adapters can share a component
+boundary without taking ownership of app routes or feature values.
+
+Origin/evidence: reserved UI completion, 2026-10-09. This is the twenty-fourth
+component batch (112 building blocks, 30 gallery families); all originally
+reserved UI leaves now contain source. Both builds, 64 iOS app cases, five
+focused Android shell/gallery cases and nine Swift/eight Kotlin UI package cases
+pass. Runtime evidence and boundaries are in the
+[native substrate note](../../../substrate/swiftui-native-tabs-and-shell-slots.md).
+
+What/why: [VerticalStack](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Stack/VerticalStack.swift)
+and [HorizontalStack](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Stack/HorizontalStack.swift)
+use VStack/HStack with theme stack/inline spacing or an explicit override.
+[SectionDivider](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Layout/Divider/SectionDivider.swift)
+draws an accessibility-hidden theme line with orientation/inset/thickness/color.
+[AppShell](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Shells/AppShell/AppShell.swift)
+separates background/content/navigation; its constrained EmptyView initializer
+supports native tabs without a second bottom bar.
+[TabBar](../../../../packages/FoundryUI/Sources/FoundryUI/Components/Navigation/TabBar/TabBar.swift)
+uses one-to-five admitted identities and a controlled native TabView binding.
+
+Example: the [Shells gallery](../../apps/FoundryCatalog/README.md#shell-primitives-gallery)
+changes spacing and hides navigation while retaining page markers. The existing
+five-tab app consumes the same shell/tab primitives.
+
+Gotchas: require a bounded viewport, choose scroll containers in the host and
+bound vertical dividers. Divider/background slots are decorative. Native tabs
+own system chrome and safe areas; the host owns route/keyboard/resource policy.
+Reconcile selection before replacing tab identities. Native view lifetime is
+not feature-state persistence.
+
+Actual checks: [hosted tests](../../../../apps/FoundryCatalog/Tests/ShellComponentTests.swift)
+measure token/explicit spacing, RTL and nonoverlapping shell slots, and inspect
+native tab labels/images with programmatic selection. `make ios-build`,
+`make ios-test` and `make ui-test` pass. VoiceOver, older OS execution, manual
+tab gestures and physical-device performance were not checked in this slice.
+
+Related: [shared ownership](../../../../../../notes/patterns/shell-chrome-and-feature-lifetime.md),
+[usage](../../../../../../docs/blueprints/ui-components.md#stacks-separators-and-shells).
+Next: how should a changing tab list reconcile saved identity, and when should
+tablet navigation receive a separate adapter?

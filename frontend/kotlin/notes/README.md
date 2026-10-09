@@ -173,6 +173,11 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
     [Verification gallery](modules/project/app/README.md#verification-gallery).
     Compare canonical drafts, explicit submission, attempt identity and code lifetime.
 
+40. Read [native shell slots and chrome](substrate/compose-shell-slots-and-inset-ownership.md),
+    then the [UI walkthrough](modules/project/core/ui/README.md#stacks-separators-and-shells) and
+    [Shells gallery](modules/project/app/README.md#shell-primitives-gallery).
+    Compare bounded content/navigation, inset ownership and retained page values.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -189,6 +194,16 @@ Paths mirror the Kotlin root, including `project/`: `project/app/` maps to
 paths; module walkthroughs link their actual use.
 
 ## Current coverage
+
+The twenty-fourth UI batch closes the reserved UI leaves (112 building blocks,
+30 families): VerticalStack, HorizontalStack, SectionDivider and AppShell, plus
+the Swift TabBar adapter. Reading step 40 traces native chrome, bounded slots,
+inset ownership and app-owned feature lifetime. Both consumers build; 64 iOS app
+cases, five focused Android shell/gallery cases including the existing app-shell
+regressions, and nine Swift/eight Kotlin UI package cases pass (2026-10-09).
+Physical-device behavior, older OS execution and assistive traversal remain
+separate checks. Backend/session/data/sync/template reservations are outside this
+UI completion slice.
 
 The twenty-third UI batch adds two Verification components (108 total, 29 families).
 Verification, 2026-10-09: both consumers build; 61 iOS app checks, four focused
@@ -516,7 +531,8 @@ CPU assets/settings without storing native handles?
 Read [Compose tabs and presentation owners](substrate/compose-tabs-and-presentation-owners.md),
 then [the app shell](modules/project/app/README.md#four-tab-placeholder-shell)
 and [shared lifetime ownership](../../../notes/patterns/tabs-and-feature-lifetime.md).
-The component map is a directory sketch, not completed UI coverage. Next:
+The original UI directory sketch is now implemented; reading step 40 explains
+the completion slice. Next:
 when should each destination own a stack, and which feature state should
 survive Activity recreation versus closing a presentation?
 

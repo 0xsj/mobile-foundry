@@ -21,7 +21,7 @@ import dev.mobilefoundry.catalog.MainNavigation
 import dev.mobilefoundry.catalog.R
 import dev.mobilefoundry.catalog.ui.camera.CameraScreen
 import dev.mobilefoundry.graphics.RasterImage
-import dev.mobilefoundry.ui.components.layout.surface.Backdrop
+import dev.mobilefoundry.ui.components.shells.appshell.AppShell as AppShellLayout
 import dev.mobilefoundry.ui.components.layout.surface.Surface
 import dev.mobilefoundry.ui.components.layout.surface.SurfaceRole
 import dev.mobilefoundry.ui.components.navigation.tabbar.TabBar
@@ -55,7 +55,7 @@ fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
             MainNavigation(glassTheme, onGlassThemeChange, onExit = { catalogPresented = false })
         }
     } else {
-        Backdrop(Modifier.fillMaxSize(), background = {
+        AppShellLayout(Modifier.fillMaxSize(), background = {
             Canvas(Modifier.fillMaxSize()) {
                 drawRect(tokens.colors.surfaceGround.color)
                 drawRect(Brush.radialGradient(
@@ -63,30 +63,26 @@ fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
                     center = Offset(size.width, size.height),
                     radius = maxOf(size.width, size.height) * 0.7f))
             }
-        }) {
-            Column(Modifier.fillMaxSize()) {
-                if (tab == ShellTab.CAMERA) {
-                    CameraScreen(cameraPhoto, onPhotoChange = { cameraPhoto = it },
-                        modifier = Modifier.weight(1f).windowInsetsPadding(
-                            WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
-                            .padding(tokens.space.page))
-                } else {
-                    ShellPlaceholder(tab, glassTheme, onGlassThemeChange,
-                        onOpenCatalog = { catalogPresented = true },
-                        modifier = Modifier.weight(1f).windowInsetsPadding(
-                            WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)))
-                }
-                TabBar(
-                    items = ShellTab.entries.map { destination ->
-                        TabItem(destination.name, destination.label) {
-                            Icon(painterResource(destination.icon), contentDescription = null)
-                        }
-                    }, selectedId = tab.name, onSelect = { selectedId = it },
-                    modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
-                        .padding(horizontal = tokens.space.page, vertical = tokens.space.stack))
+        }, content = {
+            if (tab == ShellTab.CAMERA) {
+                CameraScreen(cameraPhoto, onPhotoChange = { cameraPhoto = it },
+                    modifier = Modifier.fillMaxSize().windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                        .padding(tokens.space.page))
+            } else {
+                ShellPlaceholder(tab, glassTheme, onGlassThemeChange,
+                    onOpenCatalog = { catalogPresented = true },
+                    modifier = Modifier.fillMaxSize().windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)))
             }
-        }
+        }, navigation = {
+            TabBar(items = ShellTab.entries.map { destination ->
+                TabItem(destination.name, destination.label) { Icon(painterResource(destination.icon), contentDescription = null) }
+            }, selectedId = tab.name, onSelect = { selectedId = it },
+                modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
+                    .padding(horizontal = tokens.space.page, vertical = tokens.space.stack))
+        })
     }
 }
 

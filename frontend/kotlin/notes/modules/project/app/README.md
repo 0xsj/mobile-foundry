@@ -1331,3 +1331,51 @@ Read [UI walkthrough](../core/ui/README.md#verification-and-code-entry),
 [shared pattern](../../../../../../notes/patterns/challenge-drafts-and-attempt-identity.md)
 and [behavior](../../../../../../contracts/behavior/ui-components.md#verification-and-code-entry).
 Next: provider challenge identity and deadline reconciliation at the service seam.
+
+## Shell primitives gallery
+
+Claim: saveable page values above route returns outlive tab/content composition
+and keep layout choices independent of feature state.
+
+Origin/evidence: reserved UI completion, 2026-10-09. Components now includes
+Shells (112 building blocks, 30 families). Both builds, 64 iOS app cases, five
+focused Android shell/gallery cases and nine Swift/eight Kotlin UI package cases
+pass. The focused Android set includes both existing AppShellTest regressions.
+
+What/why: [ShellExamples](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ShellExamples.kt)
+projects app-owned selected destination, markers, spacing and navigation visibility.
+The [catalog owner](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/components/ComponentCatalogScreen.kt)
+stores admitted fixture values with rememberSaveable above every route return.
+Earlier family owners remain composed while the bounded shell preview is open.
+AppShell provides a backdrop/content/navigation split; the host supplies scrolling
+and routes, and TabBar receives identities/selection/callbacks only.
+
+The existing [five-tab shell](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/AppShell.kt)
+now aliases shared AppShell as AppShellLayout. Active feature composition,
+safe-drawing padding, transient photo ownership and catalog-scoped ViewModelStore
+disposal stay app-owned. Shared UI does not choose resource lifetime.
+
+Example: add one Overview marker and two Activity markers, choose Relaxed spacing,
+hide the bar and recreate the host. Show it and revisit Overview, then leave the
+route/family, switch themes and return. Page values and earlier cart state remain.
+
+Gotchas: restoration applies only to deliberately saveable fixture values, not
+real data persistence. Bound the viewport, put scrolling inside content, and
+apply insets once. Unknown/same fixture IDs are no-ops; shared TabBar requires
+the selected ID to exist. Passive background slots cannot host controls.
+
+Actual checks: [ShellCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ShellCatalogTest.kt)
+observes the recreation/route/theme/family sequence and earlier Commerce state.
+[ShellComponentTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/components/ShellComponentTest.kt)
+covers spacing/RTL, bounds, passive background and duplicate callback suppression.
+[AppShellTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/shell/AppShellTest.kt)
+checks all five tab positions, saved material/tab choice and catalog back/close.
+The emulator XML reports five cases, zero failures/errors/skips;
+`.cache/components-shells-*` stores logs. Other gallery families, TalkBack,
+physical devices and older OS execution were not rerun in this batch.
+
+Related: [UI primitives](../core/ui/README.md#stacks-separators-and-shells),
+[native substrate](../../../substrate/compose-shell-slots-and-inset-ownership.md),
+[shared ownership](../../../../../../notes/patterns/shell-chrome-and-feature-lifetime.md).
+Next: which values should survive closing a presentation, and how should real
+keyboard/inset policy interact with persistent navigation?

@@ -75,10 +75,10 @@ Components/Layout/Surface/        components/layout/surface/
 ```
 
 The [style guide](../STYLES.md) explains ownership and consumption. The
-[component map](COMPONENTS.md) now reserves mirrored empty component leaves
-with .gitkeep across Forms, Display, Layout, Feedback, Navigation, Overlays,
-Shells and Patterns. Reserved directories have no implementation. Kotlin's
-Navigation/TabBar counterpart is implemented; Swift uses native app TabView.
+[component map](COMPONENTS.md) lists implemented mirrored component leaves
+across Forms, Display, Layout, Feedback, Navigation, Overlays, Shells, Patterns
+and Charts. The initial UI reservations are complete. TabBar uses native
+TabView on Swift and a floating Material bar on Kotlin.
 Keep variants/configuration beside their component;
 do not create a build module per family. App-owned token and component galleries
 live under `Sources/Tokens` on Swift and `ui/tokens` on Kotlin. Domain state,
@@ -87,7 +87,7 @@ service selection, and asynchronous orchestration remain outside these folders.
 The five-tab prototype lives in Swift app `Sources/Shell` and Kotlin app
 `ui/shell`. Studio opens the existing catalog separately; Account exposes the
 app material choice. Route/presentation ownership stays in the app even though
-the future reusable AppShell component folder is reserved.
+shared AppShell supplies layout slots and TabBar supplies controlled native chrome.
 The middle Camera feature lives in `Sources/Camera` and `ui/camera`. Its native
 session and photo decoder stay app-owned; it shares the Image studio editor in
 `Sources/Graphics` and `ui/graphics`. Only admitted CPU pixels enter the graphics

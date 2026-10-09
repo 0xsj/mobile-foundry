@@ -58,6 +58,13 @@ concepts, patterns, and verification techniques live here.
 
 ## Current coverage
 
+The twenty-fourth UI batch closes all originally reserved UI leaves (112 building
+blocks, 30 families). Start with [shell chrome and feature lifetime](patterns/shell-chrome-and-feature-lifetime.md),
+then native reading step 40 and the Shells gallery walkthroughs. Both builds,
+64 iOS app cases, five focused Android shell/gallery cases including the existing
+app-shell regressions, and nine Swift/eight Kotlin UI package cases pass
+(2026-10-09). Backend/session/data/sync/template reservations are separate work.
+
 The twenty-third UI batch adds Verification (108 building blocks, 29 families).
 Start with [challenge drafts and attempt identity](patterns/challenge-drafts-and-attempt-identity.md),
 then native reading step 39 and the Verification gallery walkthroughs. Both
@@ -708,3 +715,27 @@ Android code/pending/error/success presentation is transient while nonsecret
 choices/times/counters restore. No code delivery, automatic deadline, OS Autofill
 suggestion, auth session or full assistive traversal is established. Notes checks
 validate links, module paths and example labels rather than executing examples.
+
+## Shell primitives batch
+
+The twenty-fourth UI batch completes VerticalStack/HorizontalStack, SectionDivider,
+AppShell and the Swift TabBar adapter. No originally reserved UI component leaves
+remain. The shared layout and controlled tab adapters have two consumers: the
+existing five-tab app and a new Shells gallery (112 building blocks, 30 families).
+Start with [shell chrome and feature lifetime](patterns/shell-chrome-and-feature-lifetime.md)
+and native reading step 40. Module walkthroughs explain token spacing, decorative
+separators, bounded slots, native inset/chrome ownership and page-state lifetime.
+
+Verification, 2026-10-09: both builds, 64 hosted iOS app cases, five focused Android
+shell/gallery cases and nine Swift/eight Kotlin UI package cases pass. The iOS
+result contains zero failures/skips; Android XML reports zero failures/errors/skips.
+Checks observe spacing overrides/RTL, nonoverlapping slots, native tab identity,
+duplicate selection suppression and Android restoration across hidden navigation,
+routes, themes and families. Other Android gallery families, manual iOS tab gestures,
+assistive traversal, older OS execution and physical-device performance were not
+checked in this slice. No new TestFlight release was published. Backend and larger
+foundation reservations remain outside the selected UI scope.
+
+Documentation checks: `make notes-check` passes 194 documents, 2265 local links
+and 132 native example labels with zero failures. `git diff --check` passes.
+These are structural checks, not execution of the labeled conceptual excerpts.

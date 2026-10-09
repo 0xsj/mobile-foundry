@@ -109,7 +109,10 @@ Its performance panel separates texture payload, CPU encoding and available Meta
 GPU timing; GLES 2 timing is unavailable. Start with [the compositor notes](notes/patterns/premultiplied-compositing-and-render-passes.md)
 and [physical-device profiling protocol](docs/GRAPHICS-PROFILING.md).
 
-Open **Components** for 108 reusable building blocks across 29 families.
+Open **Components** for 112 reusable building blocks across 30 families.
+**Shells** demonstrates token-based stacks, decorative dividers and a reusable
+app-shell layout with native tabs. Try spacing overrides, hide/show navigation
+and per-page markers; the existing five-tab app also consumes these primitives.
 **Verification** adds native one-time-code entry and a customizable verification
 card. Open **Verification preview** to try incomplete/incorrect codes, pending
 checks, cancellation, resend cooldowns and expiry with local fixture responses.

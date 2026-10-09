@@ -1,12 +1,12 @@
-# Placeholder shell construction
+# Native app shell construction
 
 Authority: [shell behavior](../../contracts/behavior/app-shell.md) and
 [component map](../COMPONENTS.md).
 
-1. Reserve mirrored component leaf folders with .gitkeep and list their intended
-   contents. Keep current controls intact; do not add unused APIs or dependencies.
+1. Compose shared AppShell slots and controlled TabBar items. UI leaves are
+   implemented; application routes and feature owners stay outside the UI package.
 2. Swift app composition owns saved tab selection and a full-screen catalog
-   presentation. Native TabView owns tab semantics and system glass. CatalogView
+   presentation. Shared TabBar adapts native TabView, which owns tab semantics and system glass. CatalogView
    accepts an optional close action and retains its existing NavigationStack.
 3. Kotlin app composition owns saveable selection/presentation. Only the active
    placeholder is composed. A reusable value-driven tab bar renders Material
@@ -31,3 +31,18 @@ root/theme assumption corrected in the existing token test. The focused final
 shell/theme rerun passes all eight checks. Both Home screenshots were inspected.
 Notes/assets checks and diff checks pass. See the native app walkthroughs for
 saved-state, screenshot, platform and physical-device limits.
+
+## Shared layout completion
+
+On 2026-10-09 the five-tab app was migrated to shared AppShell and TabBar
+adapters. Swift retains native TabView chrome and app-owned saved selection;
+Compose retains floating Surface/Backdrop rendering, active-content composition,
+app-owned insets and catalog-scoped ViewModelStore disposal. Camera admission
+and inactive capture lifetime remain in the existing camera feature.
+
+All originally reserved UI leaves now contain implementation. The additional
+Shells gallery is a second consumer with caller-owned page values. Both builds,
+64 iOS app cases, five focused Android shell/gallery cases including both existing
+app-shell regressions, and nine Swift/eight Kotlin UI package cases pass.
+See [the usage guide](ui-components.md#stacks-separators-and-shells) and learning
+notes for execution boundaries. This batch does not publish a new TestFlight build.
