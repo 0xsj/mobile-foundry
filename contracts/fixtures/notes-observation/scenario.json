@@ -1,0 +1,11 @@
+[
+  {"action":"initial","first":[],"second":[]},
+  {"action":"create","reference":"one","title":"First 💡","first":["First 💡"],"second":["First 💡"]},
+  {"action":"pause","first":["First 💡"],"second":["First 💡"]},
+  {"action":"update","reference":"one","title":"Renamed","first":["Renamed"],"second":["First 💡"]},
+  {"action":"create","reference":"two","title":"  Second  ","first":["Renamed","  Second  "],"second":["First 💡"]},
+  {"action":"missing","first":["Renamed","  Second  "],"second":["First 💡"]},
+  {"action":"resume","first":["Renamed","  Second  "],"second":["Renamed","  Second  "]},
+  {"action":"delete","reference":"one","first":["  Second  "],"second":["  Second  "]},
+  {"action":"delete","reference":"two","first":[],"second":[]}
+]

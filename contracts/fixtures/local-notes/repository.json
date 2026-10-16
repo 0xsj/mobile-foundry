@@ -1,0 +1,11 @@
+{
+  "createTitles": ["  First idea  ", "💡 café é", "Quote ' and line\nbreak", "NUL \u0000 tail"],
+  "updateTitle": "  Renamed 💡  ",
+  "invalidUpdates": [
+    {"id": "", "title": "Idea", "code": "notes.invalid_id"},
+    {"id": "../note", "title": "Idea", "code": "notes.invalid_id"},
+    {"id": "note-1", "title": " \t\r\n", "code": "notes.invalid_title"}
+  ],
+  "invalidDeleteIDs": ["", "../note", "💡"],
+  "missingID": "missing-note"
+}

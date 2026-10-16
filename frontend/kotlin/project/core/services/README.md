@@ -1,5 +1,9 @@
 # Services core
 
+[Remote Notes](../../../../../contracts/behavior/remote-notes.md) adds separate
+versioned read/write/receipt ports and an injected HTTP adapter. Local CRUD keeps
+its unversioned behavior. Real Go acceptance is `make go-native-test` at repo root.
+
 Implemented health plus a provider-independent notes port with memory and HTTP
 adapters. See [HTTP and health](../../../../../contracts/behavior/http.md) and
 [notes/query behavior](../../../../../contracts/behavior/notes-query.md), and

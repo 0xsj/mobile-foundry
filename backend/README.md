@@ -5,7 +5,7 @@ needs without starting every service in the repository.
 
 | Profile | Current scope | Entry point |
 | --- | --- | --- |
-| Go | Bento-style owned API directories; module initialization is manual | [Go setup](go/README.md) |
+| Go | Memory/PostgreSQL Identity/Account/Audit/Notes, native HTTP seams and verified standalone CLI extraction | [Go setup](go/README.md), [starter generation](../docs/blueprints/go-starter.md) |
 | Supabase | Pinned self-hosted stack with PostgreSQL, Auth, Storage, Realtime, functions, Studio, and local mail capture | [Supabase setup](supabase/README.md) |
 | Firebase | Auth, Firestore, and Storage emulators with UI and graceful export/import | [Firebase setup](firebase/README.md) |
 
@@ -21,6 +21,6 @@ implementation; server configuration belongs here.
 Every profile has a `notes` notebook with modules, language, patterns,
 concepts, techniques, and substrate categories, matching the native notebooks.
 The provider notebooks explain the local stack and its verification; Go notes
-will grow with actual implementation. Follow
+explain runtime ownership, application ports and shared failure/HTTP packages. Follow
 [the learning workflow](../docs/NOTES.md) and link its reading order from
 [the shared index](../notes/README.md).

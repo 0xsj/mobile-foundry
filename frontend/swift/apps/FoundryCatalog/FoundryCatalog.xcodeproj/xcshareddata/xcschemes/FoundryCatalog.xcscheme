@@ -50,6 +50,17 @@
                ReferencedContainer = "container:FoundryCatalog.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "831947D5164F82AA7F4EBC2E"
+               BuildableName = "FoundryCatalogUITests.xctest"
+               BlueprintName = "FoundryCatalogUITests"
+               ReferencedContainer = "container:FoundryCatalog.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

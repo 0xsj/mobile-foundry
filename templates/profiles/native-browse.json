@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "id": "native-browse",
+  "status": "standalone",
+  "shell": "browse",
+  "capabilities": [
+    "ui"
+  ],
+  "layout": "Preserve repository-relative paths so package dependencies and test fixture depth remain portable.",
+  "exclude": [
+    "**/.build/**",
+    "**/build/**",
+    "**/.gradle/**",
+    "**/.kotlin/**",
+    "**/xcuserdata/**",
+    "**/*.xcuserstate",
+    "**/local.properties",
+    "**/.env*",
+    "**/.DS_Store"
+  ],
+  "sharedSources": [
+    "contracts/fixtures/kernel",
+    "contracts/fixtures/query",
+    "contracts/fixtures/ui"
+  ],
+  "platforms": {
+    "swift": {
+      "entry": "frontend/swift/apps/ProductApp/project.yml",
+      "scheme": "ProductApp",
+      "packages": [
+        "FoundryUI",
+        "FoundryQuery",
+        "FoundryKernel"
+      ],
+      "sources": [
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/apps/ProductApp/Config",
+        "frontend/swift/apps/ProductApp/README.md",
+        "frontend/swift/packages/FoundryUI/Package.swift",
+        "frontend/swift/packages/FoundryUI/Sources",
+        "frontend/swift/packages/FoundryUI/Tests",
+        "frontend/swift/packages/FoundryQuery/Package.swift",
+        "frontend/swift/packages/FoundryQuery/Sources",
+        "frontend/swift/packages/FoundryQuery/Tests",
+        "frontend/swift/packages/FoundryKernel/Package.swift",
+        "frontend/swift/packages/FoundryKernel/Sources",
+        "frontend/swift/packages/FoundryKernel/Tests",
+        "frontend/swift/apps/ProductApp/Sources/ProductApp.swift"
+      ],
+      "identityFiles": {
+        "build": "frontend/swift/apps/ProductApp/Config/Product.xcconfig",
+        "runtime": "frontend/swift/apps/ProductApp/Sources/ProductConfiguration.swift"
+      },
+      "overlays": [
+        {
+          "source": "templates/overlays/shells/swift/project.yml",
+          "destination": "frontend/swift/apps/ProductApp/project.yml"
+        },
+        {
+          "source": "templates/overlays/shells/swift/ProductConfiguration.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/ProductConfiguration.swift"
+        },
+        {
+          "source": "templates/overlays/shells/swift/ProductRootView.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/ProductRootView.swift"
+        },
+        {
+          "source": "templates/overlays/shells/swift/ProductEntryTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/ProductEntryTests.swift"
+        },
+        {
+          "source": "templates/overlays/browse/swift/ProductState.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/ProductState.swift"
+        },
+        {
+          "source": "templates/overlays/browse/swift/BrowseScreen.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/BrowseScreen.swift"
+        },
+        {
+          "source": "templates/overlays/browse/swift/BrowseStateTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/BrowseStateTests.swift"
+        },
+        {
+          "source": "templates/overlays/browse/swift/BrowseUITests.swift",
+          "destination": "frontend/swift/apps/ProductApp/UITests/BrowseUITests.swift"
+        }
+      ],
+      "requiredFiles": [
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/apps/ProductApp/Sources/ProductConfiguration.swift",
+        "frontend/swift/apps/ProductApp/Sources/ProductRootView.swift",
+        "frontend/swift/apps/ProductApp/Tests/ProductEntryTests.swift",
+        "frontend/swift/apps/ProductApp/Sources/ProductState.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/BrowseScreen.swift",
+        "frontend/swift/apps/ProductApp/Tests/BrowseStateTests.swift",
+        "frontend/swift/apps/ProductApp/UITests/BrowseUITests.swift"
+      ]
+    },
+    "kotlin": {
+      "entry": "frontend/kotlin/project/product/build.gradle.kts",
+      "modules": [
+        ":product",
+        ":core:ui",
+        ":core:query",
+        ":core:kernel"
+      ],
+      "sources": [
+        "frontend/kotlin/project/build.gradle.kts",
+        "frontend/kotlin/project/gradle.properties",
+        "frontend/kotlin/project/gradlew",
+        "frontend/kotlin/project/gradlew.bat",
+        "frontend/kotlin/project/gradle",
+        "frontend/kotlin/project/product/build.gradle.kts",
+        "frontend/kotlin/project/product/product.properties",
+        "frontend/kotlin/project/product/README.md",
+        "frontend/kotlin/project/core/ui/build.gradle.kts",
+        "frontend/kotlin/project/core/ui/src",
+        "frontend/kotlin/project/core/query/build.gradle.kts",
+        "frontend/kotlin/project/core/query/src",
+        "frontend/kotlin/project/core/kernel/build.gradle.kts",
+        "frontend/kotlin/project/core/kernel/src",
+        "frontend/kotlin/project/product/src/main/AndroidManifest.xml",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/MainActivity.kt",
+        "frontend/kotlin/project/product/src/main/res/values",
+        "frontend/kotlin/project/product/src/main/res/values-night",
+        "frontend/kotlin/project/product/src/main/res/drawable/ic_product.xml"
+      ],
+      "identityFiles": {
+        "build": "frontend/kotlin/project/product/product.properties",
+        "label": "frontend/kotlin/project/product/src/main/res/values/strings.xml",
+        "runtime": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductConfiguration.kt"
+      },
+      "overlays": [
+        {
+          "source": "templates/overlays/kotlin/settings.gradle.kts",
+          "destination": "frontend/kotlin/project/settings.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/shells/kotlin/ProductConfiguration.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductConfiguration.kt"
+        },
+        {
+          "source": "templates/overlays/shells/kotlin/ProductRoot.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductRoot.kt"
+        },
+        {
+          "source": "templates/overlays/shells/kotlin/ProductEntryTest.kt",
+          "destination": "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ProductEntryTest.kt"
+        },
+        {
+          "source": "templates/overlays/browse/kotlin/ProductState.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductState.kt"
+        },
+        {
+          "source": "templates/overlays/browse/kotlin/BrowseScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/BrowseScreen.kt"
+        },
+        {
+          "source": "templates/overlays/browse/kotlin/BrowseScreenTest.kt",
+          "destination": "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/BrowseScreenTest.kt"
+        }
+      ],
+      "requiredFiles": [
+        "frontend/kotlin/project/settings.gradle.kts",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductConfiguration.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductRoot.kt",
+        "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ProductEntryTest.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductState.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/BrowseScreen.kt",
+        "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/BrowseScreenTest.kt"
+      ]
+    }
+  }
+}

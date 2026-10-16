@@ -1,6 +1,138 @@
 # Android catalog walkthrough
 
+## Remote Notes recovery
+
+Claim: a lifecycle-owned state model retains original scoped commands through
+lease replacement and refuses late acknowledgements. Origin: connected Notes,
+2026-10-13. Evidence: Android catalog build and three host recovery cases pass.
+Read [state owner](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/RemoteNotesCatalogModel.kt),
+[controls](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/RemoteNotesCatalogCard.kt),
+[lease composition](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/GoSessionCatalogModel.kt)
+and [host checks](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/notes/RemoteNotesCatalogModelTest.kt).
+
+The model publishes owned StateFlow snapshots, admits actions synchronously,
+assigns its LAZY Job before starting it, and checks coroutine activity after IO.
+Each command is stored under the original SessionScope; temporarily inactive
+leases do not discard that command. Rebinding another account cancels the old
+job and clears presented records. The card is keyed by account scope so its
+delete confirmation cannot target a replacement scope.
+
+Example — Conceptual: create → lost acknowledgement → rebind same account's fresh
+lease → receipt lookup → matching evidence → refresh. Tests observe one execute
+call, post-commit read failure without resubmission, and a deliberately noncancellable
+old response after replacement. Host evidence does not establish Android UI
+gesture/IME behavior. Save captures the TextFieldState's current text synchronously
+before admission; snapshotFlow keeps ordinary draft changes in the owner.
+The page is bounded to twenty rows and pending input survives only this owner.
+Related: [Services](../core/services/README.md#remote-notes-and-immutable-receipts)
+and [shared receipt pattern](../../../../../../notes/patterns/command-receipts-and-uncertain-writes.md).
+Next: persisted pending input and a deliberate connected CLI capability selection.
+
 The app now navigates to an injected health example while retaining its generated starter data flow.
+
+## Live notes
+
+Claim: native lifecycle collection follows local commits while the route owns
+source retention and per-reader cancellation. Origin: observation, 2026-10-10.
+Read [reader](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/LiveNotesReader.kt),
+[source owner](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/LiveNotesCatalogModel.kt),
+[screen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/LiveNotesScreen.kt),
+[account consumer](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/AccountAccessPanel.kt)
+and [presentation owner](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/CatalogPresentationModel.kt).
+
+Studio → Open catalog → Live notes combines one writer and two independent
+readers. Device uses separate repository instances targeting live-notes.sqlite;
+Memory shares one repository retained by its route ViewModel. Pause reader two,
+edit/create/delete and resume to read latest state. Storage branches retain
+source bundles; leaving the route discards Memory. Guest/account data stays separate.
+
+LiveNotesReader assigns its lazy Job before starting, owns generation admission
+and distinguishes pause from terminal shutdown. Expected read failures preserve
+prior content, while unexpected defects terminate the current collection and
+reach diagnostics. Both callback generation and session admission are rechecked.
+STARTED lifecycle collection pauses on inactivity and resumes with a fresh read.
+AccountAccessPanel disposes the live projection when the exact lease closes.
+
+The Activity-owned CatalogPresentationModel retains the nested ViewModelStore
+across configuration changes and clears it on catalog dismissal/final destruction.
+An initial test used ComponentActivity with test-installed content; recreation
+correctly removed that content. The corrected test uses the real MainActivity,
+exercising the actual shell, saved route and retained model together.
+
+Eleven Services JVM cases and 29 app JVM cases pass, including four new
+[reader cases](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/notes/LiveNotesReaderTest.kt).
+Native runtime verification covers 25 distinct cases: three SQLite observation,
+three Live notes UI, seventeen existing account/guest/credential/session cases,
+and two shell regressions. All pass on the isolated API 36 emulator. The corrected
+final five-case UI pass observes automatic CRUD delivery, independent pause/resume,
+Memory retention across storage switches and actual Activity recreation, route
+disposal, Device reopening and catalog back/close. Existing account UI checks also
+observe the live reader dropping Alex's content on Sam/expiry and reloading after
+renewal. An intermediate helper incorrectly tried to scroll fixed shell buttons;
+the corrected test uses their actual click semantics.
+
+Logs: `.cache/observation-kotlin-test.log`, `.cache/observation-android-native-final.log`
+and `.cache/observation-android-ui-rerun.log`. The first native log preserves that
+test-helper failure; the final rerun replaces both failed cases and adds Device UI
+coverage. The aggregate result records 25 passes, zero failures/errors/skips.
+The debug APK builds and the isolated emulator is closed after checks. Read
+[native Flow mechanics](../../../substrate/flow-invalidation-and-lifecycle-collection.md)
+and [shared ownership](../../../../../../notes/patterns/current-snapshots-and-subscription-lifetime.md).
+No backend, cross-process observation, background worker, TalkBack, process-death
+Memory retention or physical-device performance is established. Next: what local
+and remote consistency should a product require from an observable cache?
+
+## Durable local notes
+
+Implemented 2026-10-10. **Studio → Open catalog → Local notes** composes
+Device storage and Memory behind one CRUD port, reusing fields, buttons, rows,
+query content and mutation feedback. The UI count stays 112 blocks/30 families.
+
+Read [composition](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/composition/LocalNotesComposition.kt),
+[ViewModel](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/LocalNotesViewModel.kt),
+[screen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/LocalNotesScreen.kt),
+[host checks](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/notes/LocalNotesViewModelTest.kt)
+and [native checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/notes/LocalNotesScreenTest.kt).
+One keyed owner per source belongs to the navigation entry; its draft/memory
+values may survive source switching there, but closing the entry discards them.
+Application-context SQLite records survive owner and process recreation.
+
+The ViewModel validates and marks busy synchronously before launch. Generation
+and cancellation checks gate results/defects. Commit receipts remain separate
+from subsequent query failure; canceled observation does not imply rollback.
+Delete captures a Note for native confirmation. Transient TextFieldState owns
+native IME edits; snapshotFlow supplies feedback and save synchronously flushes
+current text before admission. Programmatic edit/reset explicitly updates it.
+
+All 21 app host cases pass, including four new owner cases for CRUD/guards, late
+commits, failed post-commit read without replay and saving the latest native text
+before draft collection. Eight UI unit cases also pass. Native checks exercise
+real SQLite, source switching, validation, failure/retry, captured deletion,
+route removal/reopening and a rapid Compose key burst: all thirteen focused
+cases pass, including existing Notes/service and app-shell regressions. A separate
+force-stop check observed an app-created note
+after PID 2117 → 2563, with a blank draft, then confirmed its deletion.
+After tightening source replacement to read the owner's current busy value,
+the consumer rebuild and all three Local notes UI cases pass again. The isolated
+emulator was closed after verification.
+
+An early UI test tried to scroll the Back control outside its scrolling content;
+directly clicking it corrected the harness. The rapid keyboard check exposed
+partial text despite passing SetText replacements. Log inspection showed the
+emulator keyboard activating its internal handwriting editor; that observation
+does not isolate an app defect. Closing the panel did not stabilize shell input;
+OS/IME routing remains WORKING. The retained key test covers the Compose pipeline
+and IME action, with that limitation explicit. Native-state ownership and a latest-text admission
+test were added during the investigation. Two subsequent command
+filters used incorrect AppShellTest package names; the final filter uses
+ui.shell. These harness failures are separate from storage behavior.
+
+Read [Data](../core/data/README.md),
+[native helper/input mechanics](../../../substrate/sqlite-helpers-and-nondestructive-recovery.md)
+and [shared lifetime reasoning](../../../../../../notes/patterns/local-commits-and-observation-lifetime.md).
+Other keyboards, TalkBack, older OS/device behavior, backups and power loss remain
+unobserved. Next: how should another live owner observe commits, and what account
+scope is needed before attaching a remote provider?
 
 ## Origin
 
@@ -1332,6 +1464,102 @@ Read [UI walkthrough](../core/ui/README.md#verification-and-code-entry),
 and [behavior](../../../../../../contracts/behavior/ui-components.md#verification-and-code-entry).
 Next: provider challenge identity and deadline reconciliation at the service seam.
 
+## Identity and session
+
+Claim: the gallery exercises one session lifecycle with Device or Memory
+credentials while keeping saved secrets out of public state and form drafts.
+
+Origin/evidence: session foundation, 2026-10-10. core:session is implemented;
+the catalog adds a route without changing the 112 UI blocks/30 families.
+[Composition](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/composition/SessionComposition.kt)
+shares one device Keystore adapter. Each source/route constructs a fresh fixture
+authority, manual clock and controller; source replacement creates a fresh
+Memory vault. remember(provider) retains these dependencies through recomposition.
+
+[SessionCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/SessionCatalogScreen.kt)
+collects public StateFlow with lifecycle awareness and owns native TextFieldState
+drafts. Password uses remember, never rememberSaveable; accepted submission/source
+removal/disposal clears it. Done invokes the same admitted command as the button.
+The screen restores on entry and shuts down its owner on disposal. The app's
+Account tab and guest Local notes remain separate.
+
+Example: sign in as Alex with catalog-demo, leave/reopen, advance 61 seconds,
+renew, replace Alex with Sam, reject renewal and sign out. Changing Memory to
+Device and back discards the memory session. The demo clock advances only when
+requested; this gallery is not real authentication or an automatic refresh loop.
+
+Verification: thirteen JVM session tests, all 21 existing app host tests and
+five focused API 36 native cases pass. Three real Keystore cases cover fresh
+adapter restoration/replacement/random IV/non-export, tamper/unknown-version
+retention and lost-key refusal/explicit clear. Two Compose cases cover password
+validation and IME submission, route restoration with a blank password draft,
+expiry, renewal, account replacement, rejected renewal, sign-out and Memory
+source lifetime. Both consumers build. The first UI harness used performScrollTo
+on a fixed Back button; the corrected harness clicks that button directly.
+Logs: `.cache/session-android-native.log`, `.cache/session-kotlin-tests.log`.
+
+These are real emulator APIs and Compose interactions, not physical hardware,
+locked-device, backup, process-kill, power-loss or assistive-service observations.
+Read [Session](../core/session/README.md),
+[Keystore mechanics](../../../substrate/keystore-encryption-and-atomic-credentials.md)
+and [shared lifetime](../../../../../../notes/patterns/session-scope-and-credential-lifetime.md).
+Continue with [account access](#account-access), then real authority semantics.
+
+## Account access
+
+Claim: a lease-keyed feature can discard its native draft while account records
+remain in a separately retained repository factory. Origin: native account-access
+batch, 2026-10-10; UI counts remain 112 building blocks/30 families.
+
+[SessionCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/SessionCatalogScreen.kt)
+retains AccountNotesRepositories per source beside the controller/clock/authority.
+Device uses a new private account database namespace; guest Local notes stays
+separate. Memory retains a per-account repository until that source/gallery closes.
+The active lease keys
+[AccountAccessPanel](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/AccountAccessPanel.kt).
+It remembers its owner within that lease, collects with lifecycle and disposes it
+when access closes. It supplies no nested scroll: the parent gallery owns scrolling.
+
+[LocalNotesViewModel](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notes/LocalNotesViewModel.kt)
+adds terminal shutdown, invalidating pending publication, canceling owned work and
+clearing StateFlow/native TextFieldState. UI transformation refuses edits after
+admission closes. The original guest stop action remains reusable. The account
+owner is remembered directly rather than retained in a route-wide ViewModelStore,
+so old account editors cannot accumulate there.
+
+[AuthenticatedProbeModel](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/AuthenticatedProbeModel.kt)
+uses a local wire fixture with the real HTTP preparation/problem decoder. Success,
+Unauthorized and Slow do not contact a server; the public report excludes tokens.
+Shutdown clears reports and suppresses pending completion. No 401 replay or
+automatic renewal is introduced.
+
+Observed checks: twenty Session JVM cases, all 25 app JVM cases, both native builds
+and 17 focused Android cases pass, with zero failures/errors/skips. The native
+selection includes three new
+[account database checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/data/AccountNotesRepositoryTest.kt),
+five guest database cases, three Keystore cases, three
+[session gallery checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/session/SessionCatalogScreenTest.kt)
+and three guest Local notes UI cases. Actual gallery interactions save Alex's
+Memory note, discard its draft on switching to empty Sam, reload Alex, observe
+the public HTTP success report, expire during a Slow probe, renew to reload Notes
+and sign out to remove the editor. Existing Device restore/rejection and Memory
+source replacement regressions pass too. Native SQLite checks use isolated test
+namespaces and preserve a separate guest database. The isolated headless API 36
+emulator is closed after the run. Log: `.cache/account-access-android-native.log`.
+
+The JVM
+[owner/gate/probe tests](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/session/AccountAccessTest.kt)
+cover all CRUD lease admission, late accepted writes/errors, terminal native draft
+cleanup and 401/no renewal. These observations establish local behavior, not server
+authorization, a real provider, Notes encryption, OS backup policy, physical-device
+latency, hardware protection or TalkBack traversal. Read
+[Session](../core/session/README.md#authenticated-http),
+[Data](../core/data/README.md#account-collections),
+[native mechanics](../../../substrate/message-digest-and-authenticated-okhttp.md)
+and [shared ownership](../../../../../../notes/patterns/account-partitions-and-leased-work.md).
+Next: connect a real authority with issuer/audience/membership validation and define
+remote writes, renewal policy and production device retention.
+
 ## Shell primitives gallery
 
 Claim: saveable page values above route returns outlive tab/content composition
@@ -1379,3 +1607,149 @@ Related: [UI primitives](../core/ui/README.md#stacks-separators-and-shells),
 [shared ownership](../../../../../../notes/patterns/shell-chrome-and-feature-lifetime.md).
 Next: which values should survive closing a presentation, and how should real
 keyboard/inset policy interact with persistent navigation?
+
+## Product shell variations
+
+Claim: saveable fixture state and native field state above preview branches allow
+five product compositions to retain local actions across routes, themes and
+configuration changes.
+
+Origin: product shell batch, 2026-10-10. Open Studio → Open catalog → Product
+shells. [ProductShellState](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/patterns/ProductShellState.kt)
+defines admitted IDs/actions and independent fixture values.
+[ProductShellCatalogScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/patterns/ProductShellCatalogScreen.kt)
+owns a rememberSaveable JSON-backed value, selected preview/theme and three native
+TextFieldState drafts. The action callback reads current owner state each time;
+explicit Setup reset clears only its name/focus/progress. Closing the whole gallery
+ends its local fixtures.
+
+[ProductShellLayouts](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/patterns/ProductShellLayouts.kt)
+uses Daily's four native tabs, Workspace's SplitPane/DetailShell, Browse's local
+filter/detail/save flow, Canvas tools/layers/export receipts and guided setup.
+Compact workspace, selected Browse detail and unfinished Setup steps take native
+Back before the outer preview exits. A single IME inset shrinks the preview;
+DetailShell keeps actions outside its scrolling body.
+
+Example: edit Canvas title, choose Arrange, add layers to the eight-layer limit,
+preview export twice and recreate the Activity. Input, tool, count and receipts
+are retained. Switch to Setup and return: the profiles remain independent.
+Save/export are local fixture effects. The shared UI count stays 112/30 and new
+component-local names have no Foundry prefix.
+
+[ProductShellStateTest](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/shell/patterns/ProductShellStateTest.kt)
+reads the [shared scenarios](../../../../../../contracts/fixtures/product-shells/scenarios.json)
+and tests saver round-trip. [ProductShellCatalogTest](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/shell/patterns/ProductShellCatalogTest.kt)
+drives real MainActivity routes and controls: independent tab counts, material,
+chooser reopening/closure, native filter/draft retention, saved collection actions,
+bounded layers, setup back/review/reset and Activity recreation. Workspace rotates
+between portrait compact and landscape paired panes, checking non-overlapping
+native semantic bounds and retained completion. Run `:app:testDebugUnitTest` and
+`make shell-ui-test`; `.cache/product-shells-*` contains execution evidence.
+
+Process death, predictive-back animation, fold/hinge, TalkBack, older OS and
+physical-device behavior remain unverified. Independent generated-product output
+is still pending. Read [native mechanics](../../../substrate/compose-bounded-panes-and-navigation.md#product-shell-compositions),
+[shared ownership](../../../../../../notes/patterns/product-shells-and-navigation-ownership.md)
+and [readiness](../../../../../../docs/STARTER-READINESS.md).
+Next: extract a selected shell into a clean independently generated product.
+
+Observed execution: 31 app JVM cases pass, including two new fixture/saver cases.
+The final `make shell-ui-test` reports ten native cases with zero failures/errors/
+skips: five ProductShellCatalogTest cases, two AppShellTest cases, one
+ShellCatalogTest case and two ShellComponentTest cases. The debug APK builds.
+An emulator capture was inspected for Workspace's actual compact header, body,
+glass panels and fixed completion action. API36_Test / Android 16 is the native
+host; `.cache/product-shells-android-ui-final.log` records the complete run.
+
+One intermediate run stalled after rotating back to portrait. A local debugger
+found the test waiting in Espresso's idle/choreographer path while its native
+window was recreating; the rendered app remained responsive. The isolated run
+was stopped. Rotation now uses ActivityScenario and waits for native orientation/
+window focus before querying Compose roots. The focused workspace check and
+complete ten-case rerun pass. This is an observed test synchronization correction,
+not a claim about every platform/version. The final focused Setup check also
+asserts the cleared native EditableText, rather than matching an empty substring.
+
+
+## Physics playground
+
+Added 2026-10-11. Read [PhysicsPlaygroundScreen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/physics/PhysicsPlaygroundScreen.kt),
+[core/physics](../core/physics/README.md), and
+[the native UI tests](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/physics/PhysicsPlaygroundTest.kt).
+The typed PhysicsPlaygroundCatalog entry links the actual numeric module and uses
+safe drawing insets once at navigation. The screen owns a scrollable native Canvas
+and controls; +Y world coordinates are flipped at presentation/input boundaries.
+
+Immutable simulation snapshots live in remember state, with a separately bounded
+trail. Lifecycle RESUMED and manual pause key the frame effect. A new baseline
+excludes suspended wall time. Pointer-down admission uses awaitEachGesture and
+consumes only touches near the Ready ball, allowing ordinary page scrolling
+elsewhere. Release invokes the same capped velocity launch as the native sliders.
+Fresh screen/Activity instances start a new session; no saveable/durable recovery
+is promised.
+
+Five JVM physics cases and the Android native build pass. The first device run
+froze the Compose test clock immediately after navigation, before the route
+transition finished, so it could not find screen nodes. The helper now waits for
+idle and confirms the court before disabling autoAdvance. Focused interactions
+cover pause/resume/scoring/reset, direct drag and target/native slider changes;
+Native drag already passes on the isolated Pixel 9 Pro / Android 15 emulator.
+The next test stalled because ScrollBy animation was waiting on the frozen frame
+clock. The helper now completes navigation/scrolling with autoAdvance enabled,
+then controls the clock only during a shot. The corrected run passes all three device cases on Pixel 9 Pro / Android 15,
+with zero failures/errors/skips: direct drag scores; controlled launch/pause/
+resume/reset retains score; landing-zone native angle/power and gravity changes
+score/reset as specified. A separate ADB server on port 5038 avoids a shared
+server response stall; the original server was not restarted.
+
+Limits: no device FPS/thermal budget, general multi-body/3D engine, persistent
+scores or accepted CLI physics combination. Compare
+[the contract](../../../../../../contracts/behavior/physics-playground.md)
+and [fixed-step ownership](../../../../../../notes/patterns/fixed-step-physics-and-presentation.md).
+
+## Go identity and accounts — 2026-10-13
+
+Account-dependent effects and layout must observe the session snapshot in their
+own Compose scope, rather than only inside nested card content lambdas.
+
+Read [composition](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/composition/SessionComposition.kt),
+[model](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/GoSessionCatalogModel.kt)
+and [screen](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/GoSessionCatalogScreen.kt).
+The real authority uses a separate Keystore namespace per endpoint; the demo
+gallery remains independent. Directory results bind one lease/generation and
+clear when scope changes. Device passwords are ephemeral TextFieldState values.
+
+The first device run updated the Session card but failed to show account choices.
+A delegated `state` getter was read only in child content; the parent computed
+its non-Compose lease/effect key without observing snapshot changes. Eager `.value`
+reads at GoSessionContent's scope fixed that dependency under strong skipping.
+
+Excerpt from the screen:
+
+```kotlin
+// Excerpt: observe the snapshot in the scope that owns lease-driven effects.
+val state = controller.state.collectAsStateWithLifecycle().value
+val directory = model.directory.collectAsStateWithLifecycle().value
+val lease = controller.lease
+LaunchedEffect(lease) { model.clearDirectory(); model.load() }
+```
+
+This does not make delegated state wrong in general. Subscription location matters
+when a parent effect/layout depends on a separate, non-observable controller getter.
+The [device case](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/session/GoSessionCatalogScreenTest.kt)
+now passes real sign-in, account listing/switching, renewal, Keystore restoration
+after route removal and signed-out reopening. One Android 16/API 36 case passed
+with zero failures/skips. The AVD was a read-only isolated instance because the
+original AVD was locked; no saved AVD data was reset. Android process-kill restoration
+is not claimed by this route-removal check.
+
+The [network configuration](../../../../project/app/src/main/res/xml/network_security_config.xml)
+permits cleartext only for loopback domains; all other destinations retain the
+base denial. [Android's primary reference](https://developer.android.com/privacy-and-security/security-config)
+describes domain/base configuration. `make go-native-device-test` owns a temporary
+ADB reverse mapping, removes it afterwards and supplies fixture users in its own
+memory API. HTTPS remains the adapter default; certificate trust is unchanged.
+
+Host OkHttp acceptance supplies two-principal/reuse coverage separately. CLI
+extraction, remote data/sync, physical hardware/TLS deployment and Android process
+relaunch acceptance remain pending. See [checkpoint reasoning](../../../../../../notes/patterns/deployment-authorities-and-rotation-checkpoints.md).

@@ -22,3 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable data object ProductStudioCatalog : NavKey
 
 @Serializable data object CompositorStudioCatalog : NavKey
+
+@Serializable data object LocalNotesCatalog : NavKey
+@Serializable data object SessionCatalog : NavKey
+@Serializable data object GoSessionCatalog : NavKey
+@Serializable data object LiveNotesCatalog : NavKey
+@Serializable data object ProductShellsCatalog : NavKey
+@Serializable data object PhysicsPlaygroundCatalog : NavKey

@@ -25,11 +25,15 @@ var catalogPresented by rememberSaveable { mutableStateOf(false) }
 ```
 
 See [the app walkthrough](../modules/project/app/README.md#four-tab-placeholder-shell)
-for the source. While the catalog is shown, a local ViewModelStoreOwner scopes
-Navigation3 entry models to that presentation. DisposableEffect clears its
-store on removal, including configuration-driven removal. Its feature models
-are therefore recreated after Activity recreation; saved navigation can still
-restore. This deliberately does not promise retained feature drafts.
+for the source. The original slice used a composition-local ViewModelStoreOwner
+that cleared on configuration-driven removal as well as dismissal. The native
+observation slice, 2026-10-10, moves that owner to CatalogPresentationModel, an
+Activity-retained ViewModel. Navigation3 entry models now survive Activity
+recreation; explicit catalog dismissal/final destruction clears the nested store.
+The real MainActivity test observes Memory live Notes and paused-reader selection
+surviving recreation, and route exit discarding those Notes. Read
+[Flow and lifecycle mechanics](flow-invalidation-and-lifecycle-collection.md).
+Individual remember-only drafts still need their own deliberate retention policy.
 
 The bottom bar asks the existing floating surface to render its background.
 Backdrop captures the static wash only; the navigation items are

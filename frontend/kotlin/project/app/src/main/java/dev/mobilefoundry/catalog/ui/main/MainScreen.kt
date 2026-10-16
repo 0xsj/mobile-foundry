@@ -17,6 +17,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import dev.mobilefoundry.catalog.HealthCatalog
+import dev.mobilefoundry.catalog.LocalNotesCatalog
+import dev.mobilefoundry.catalog.LiveNotesCatalog
+import dev.mobilefoundry.catalog.ProductShellsCatalog
+import dev.mobilefoundry.catalog.PhysicsPlaygroundCatalog
+import dev.mobilefoundry.catalog.SessionCatalog
+import dev.mobilefoundry.catalog.GoSessionCatalog
 import dev.mobilefoundry.catalog.NotesCatalog
 import dev.mobilefoundry.catalog.QueryCatalog
 import dev.mobilefoundry.catalog.TokensCatalog
@@ -48,13 +54,19 @@ fun MainScreen(
         modifier = Modifier.semantics { contentDescription = "Glass surfaces" })
     }
     Button(onClick = { onItemClick(TokensCatalog) }) { Text("Tokens") }
+    Button(onClick = { onItemClick(ProductShellsCatalog) }) { Text("Product shells") }
     Button(onClick = { onItemClick(ComponentsCatalog) }) { Text("Components") }
     Button(onClick = { onItemClick(FormsCatalog) }) { Text("Forms and mutations") }
     Button(onClick = { onItemClick(GPUEffectsCatalog) }) { Text("GPU effects") }
+    Button(onClick = { onItemClick(PhysicsPlaygroundCatalog) }) { Text("Physics playground") }
     Button(onClick = { onItemClick(CompositorStudioCatalog) }) { Text("Compositor studio") }
     Button(onClick = { onItemClick(ImageStudioCatalog) }) { Text("Image studio") }
     Button(onClick = { onItemClick(ProductStudioCatalog) }) { Text("Product studio") }
     Button(onClick = { onItemClick(HealthCatalog) }) { Text("HTTP health") }
+    Button(onClick = { onItemClick(LocalNotesCatalog) }) { Text("Local notes") }
+    Button(onClick = { onItemClick(LiveNotesCatalog) }) { Text("Live notes") }
+    Button(onClick = { onItemClick(SessionCatalog) }) { Text("Identity and session") }
+    Button(onClick = { onItemClick(GoSessionCatalog) }) { Text("Go identity and accounts") }
     Button(onClick = { onItemClick(NotesCatalog) }) { Text("Notes service seam") }
     Button(onClick = { onItemClick(QueryCatalog) }) { Text("Async UI patterns") }
     when (state) {

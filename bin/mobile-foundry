@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""Run the local CLI from any working directory or an installed command symlink."""
+from pathlib import Path
+import sys
+
+if sys.version_info < (3, 11):
+    print("mobile-foundry requires Python 3.11+.", file=sys.stderr)
+    raise SystemExit(1)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "cli"))
+from mobile_foundry.cli import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())

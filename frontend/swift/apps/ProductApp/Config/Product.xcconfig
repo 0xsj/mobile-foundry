@@ -1,0 +1,10 @@
+// Keep the source module/scheme name stable while customizing product identity.
+PRODUCT_NAME = ProductApp
+PRODUCT_APP_IDENTIFIER = dev.mobilefoundry.product
+PRODUCT_BUNDLE_IDENTIFIER = $(PRODUCT_APP_IDENTIFIER)
+PRODUCT_DISPLAY_NAME = My Product
+MARKETING_VERSION = 0.1.0
+CURRENT_PROJECT_VERSION = 1
+// Set your own team before building for a physical device or distribution.
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Automatic

@@ -1,0 +1,42 @@
+[
+  {"name":"Independent pages and retained selections","steps":[
+    {"action":"checkIn","expect":{"checkIns":{"Today":1}}},
+    {"action":"daily","id":"Activity","expect":{"dailyPage":"Activity"}},
+    {"action":"checkIn","repeat":2,"expect":{"checkIns":{"Today":1,"Activity":2}}},
+    {"action":"daily","id":"Today","expect":{"dailyPage":"Today","checkIns":{"Today":1,"Activity":2}}},
+    {"action":"workspace","id":"research","expect":{"workspaceItem":"research","workspaceDetail":true}},
+    {"action":"toggleDone","expect":{"completedItems":["research"]}},
+    {"action":"workspaceBack","expect":{"workspaceItem":"research","workspaceDetail":false,"completedItems":["research"]}},
+    {"action":"workspace","id":"release","expect":{"workspaceItem":"release","completedItems":["research"]}},
+    {"action":"toggleDone","expect":{"completedItems":["release","research"]}},
+    {"action":"workspace","id":"research","expect":{"workspaceItem":"research"}},
+    {"action":"toggleDone","expect":{"completedItems":["release"]}},
+    {"action":"browse","id":"city","expect":{"browseItem":"city"}},
+    {"action":"toggleSaved","expect":{"savedItems":["city"]}},
+    {"action":"browse","expect":{"browseItem":null,"savedItems":["city"]}},
+    {"action":"toggleSaved","expect":{"savedItems":["city"]}},
+    {"action":"browse","id":"city","expect":{"browseItem":"city"}},
+    {"action":"toggleSaved","expect":{"savedItems":[]}},
+    {"action":"tool","id":"Arrange","expect":{"canvasTool":"Arrange"}},
+    {"action":"addLayer","repeat":12,"expect":{"layers":8}},
+    {"action":"export","repeat":2,"expect":{"exports":2,"dailyPage":"Today","checkIns":{"Today":1,"Activity":2},"completedItems":["release"]}}
+  ]},
+  {"name":"Admission, guided back and explicit reset","steps":[
+    {"action":"daily","id":"missing","expect":{"dailyPage":"Today"}},
+    {"action":"workspace","id":"missing","expect":{"workspaceItem":"brief","workspaceDetail":false}},
+    {"action":"browse","id":"missing","expect":{"browseItem":null}},
+    {"action":"tool","id":"missing","expect":{"canvasTool":"Select"}},
+    {"action":"focus","id":"missing","expect":{"setupFocus":"Explore"}},
+    {"action":"previousStep","expect":{"setupStep":0}},
+    {"action":"nextStep","expect":{"setupStep":1}},
+    {"action":"focus","id":"Build","expect":{"setupFocus":"Build"}},
+    {"action":"nextStep","expect":{"setupStep":2}},
+    {"action":"previousStep","expect":{"setupStep":1,"setupFocus":"Build"}},
+    {"action":"nextStep","expect":{"setupStep":2}},
+    {"action":"nextStep","expect":{"setupStep":2,"setupFinished":true}},
+    {"action":"previousStep","expect":{"setupStep":2,"setupFinished":true}},
+    {"action":"nextStep","expect":{"setupStep":2,"setupFinished":true}},
+    {"action":"focus","id":"Learn","expect":{"setupFocus":"Build"}},
+    {"action":"resetSetup","expect":{"setupStep":0,"setupFinished":false,"setupFocus":"Explore"}}
+  ]}
+]

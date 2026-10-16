@@ -1,5 +1,13 @@
 # Native foundation architecture
 
+The [remote Notes slice](contracts/behavior/remote-notes.md) supplies separate
+versioned read/write/receipt ports on Swift and Kotlin. Go Notes owns its records
+and atomic receipts, calls a consumer-owned AccountAccess capability, and selects
+memory/PostgreSQL at composition. Native composition supplies an exact lease-bound
+HTTP client; app owners retain pending commands by original scope. This adds
+connected data/CAS recovery, with durable native outboxes and live Notes facts
+still separate work. See [construction](docs/blueprints/remote-notes.md).
+
 Status: Draft. Swift and Kotlin, the reusable component catalog, and preparation
 for demanding graphics are established direction. The boundaries and construction
 order below are proposed implementation guidance.
@@ -24,6 +32,7 @@ a graphics gallery will test rendering integration early.
 | UI system | Semantic tokens, controls, composed patterns, accessibility, motion |
 | App composition | Dependency selection, startup, navigation, deep links, lifecycle wiring |
 | Graphics | Render surfaces, frame scheduling, transient interaction, GPU resource ownership |
+| Physics | Bounded world values, fixed-step integration, contacts and target evaluation |
 
 Features depend on explicit service, repository, or rendering interfaces.
 Concrete networking, storage, platform, and rendering implementations are
@@ -127,6 +136,31 @@ expired access, sign-out, and account switching. Guest use and team membership
 are separate product capabilities rather than required behavior for every app.
 Native authentication callbacks and secure credential storage belong to
 platform adapters.
+
+The [session foundation](contracts/behavior/session.md) implements admitted
+Principal/Account/SessionScope values, a swappable SessionAuthority, a
+CredentialVault seam and native Keychain/Keystore adapters. Controllers restore,
+renew and save credentials before activating account access. Owner/scope epochs
+reject stale results; sign-out waits for prior native work before clearing.
+The catalog uses a local demo authority and manually advanced expiry clock.
+Its sign-in does not authenticate a person or authorize guest Local notes.
+The [account-access slice](contracts/behavior/account-access.md) adds a Session-owned
+AuthenticatedHTTPClient implementing the existing HTTP port, and Data-owned
+account partitions plus a session-bound NotesRepository. Session depends on HTTP;
+Data depends on Session; Services keeps its domain ports independent of both.
+One lease gates admission/publication, while authority/account determines durable
+storage identity. No automatic 401 renewal/replay occurs. Guest Notes remain
+separate, and saved account records remain after sign-out. The inline catalog
+editor is recreated per lease. Real provider authentication, server authorization,
+remote CRUD and sync remain separate work. Read [construction](docs/blueprints/account-access.md).
+
+[Native observation](contracts/behavior/notes-observation.md) adds a separate
+NotesObserver port composed with CRUD only where supported. Swift subscriptions
+and Kotlin Flows publish bounded current snapshots. Process-local SQLite
+invalidations register before initial reads and follow committed writes; native
+handles remain scoped to each operation. Feature owners retain generation/lease
+admission and own pause, fresh resume and terminal cleanup. Account access closure
+clears live content. This is neither a query cache nor remote synchronization.
 
 ## Offline synchronization
 
@@ -250,13 +284,44 @@ their scene or platform requirements apply. Record any shader,
 native-library, or asset-toolchain requirements separately from the Swift and
 Kotlin application baseline.
 
+The [physics playground](contracts/behavior/physics-playground.md) adds a pure
+2D toss capability on Swift/Kotlin, with native catalog Canvas consumers. Gravity,
+normal collision impulses and target evaluation remain independent of renderer
+and UI state. Features own scheduling/pause and receive numeric snapshots. Read
+[construction](docs/blueprints/physics-playground.md) for boundaries and current
+limits. This catalog capability has no independently extracted CLI combination.
+
 ## Backend profiles
 
 The repository reserves three independent profiles: an owned Go API following
-Bento's module conventions, Supabase, and Firebase. Go has architecture
-placeholders; Supabase has a local self-hosted Compose stack; Firebase has a
+Bento's module conventions, Supabase, and Firebase. Go implements the
+[runtime/shared foundation](contracts/behavior/go-runtime.md): explicit module
+assembly, shared errors/configuration/HTTP primitives, health queries and
+listener/readiness/drain lifecycle. The
+[Account/Audit workflow](contracts/behavior/account-audit.md) implements
+owner create/read/rename, scoped evidence, local capabilities and event replay.
+[PostgreSQL persistence](contracts/behavior/postgres-persistence.md) adds owned
+schemas, explicit migrations, atomic outbox/inbox, delivery leases and API recovery.
+[Identity/sessions](contracts/behavior/identity-sessions.md) adds owned authentication,
+credential resolution and principal-scoped Audit.
+[Account scope](contracts/behavior/account-bootstrap.md) adds repeatable personal
+bootstrap and owner-only listing, with device-owned selection through guarded
+lookup. [Native Go adapters](contracts/behavior/go-native-session.md) compose those
+contracts through deployment-bound authorities, rotation checkpoints and a
+lease-bound account directory. Realtime and remote data remain planned.
+Supabase has a local self-hosted Compose stack; Firebase has a
 Compose wrapper around its Local Emulator Suite. Choose which profile the
 first native connected workflow exercises when that slice is specified.
+
+The [backend capability catalog](backend/go/CAPABILITIES.md) separates selectable
+business modules from generic runtime mechanics. Its
+[module boundary policy](contracts/behavior/module-boundaries.md) establishes
+application-owned ports: synchronous versioned capabilities for immediate
+answers, integration events for committed facts, and ephemeral broadcast plus
+Realtime for recoverable client updates. Domains retain their own rules/data;
+module-to-module imports and cross-module store access are prohibited. The first
+adapters run in-process; persistent delivery is verified with PostgreSQL while
+remote routing requires separate implementation and verification.
 
 Owned APIs can share HTTP contracts. Managed SDK adapters must satisfy the
 application's session and repository behavior with their actual service
@@ -414,3 +479,52 @@ not dispatch a change. App composition owns destinations, presentation and
 feature/resource lifetime, including inactive-camera shutdown and catalog-scoped
 owners. Neither shared primitive is a router, session owner or persistence layer.
 The Shells gallery retains per-page fixture values above native content branches.
+
+The separate [Product shells gallery](contracts/behavior/product-shells.md)
+composes those primitives into five product patterns: daily native tabs,
+list/detail workspace, browse/detail collection, canvas/inspector and guided
+setup. App-owned values and native drafts outlive preview/theme/adaptive branches.
+Workspace consumes SplitPane's local-width and large-text policies; compact back
+intent stays in the app. DetailShell reserves actions around a scrolling body.
+The canvas draws a local illustration and counts preview exports. Shared UI gains
+no router or domain/provider dependency. See [construction](docs/blueprints/product-shells.md).
+
+The [clean Daily product entries](contracts/behavior/product-entry.md) are separate
+native apps importing UI → Query → Kernel. Product identity/configuration,
+placeholder screens, tab state and material preference belong to those apps;
+the catalog's fixture owners, permissions and signing inputs are not dependencies.
+The [extraction inventory](templates/README.md) preserves relative source and
+fixture depth and selects a product-only Kotlin settings overlay. Its static
+checker verifies the declared closure. The [local CLI](contracts/behavior/project-cli.md)
+consumes registered inventories, snapshots admitted files, creates an exclusively
+owned output, applies identity/overlays and writes portable guides/provenance.
+Copy safety tests and independent native output runs remain distinct evidence.
+Backend combinations are admitted only after implementation and verification;
+Go is now a verified standalone selection with owned source/fixtures/migrations,
+rewritten module identity and separate Compose namespace. It can accompany native
+profiles as an independent API; generated native auth/data wiring remains separate.
+See [CLI usage](cli/README.md) and [Go extraction](docs/blueprints/go-starter.md).
+
+Optional [local-data output](contracts/behavior/local-data-starter.md) is an
+explicit complete combination inventory selected with `--with local-data`.
+The CLI validates effective overlaid builds and required files before copying;
+it never combines arbitrary overlays implicitly. Local Services/Data select
+guest CRUD and observation without account/HTTP/session dependencies. Product
+overlays own a replaceable Notes exemplar; composition injects its adapter into
+independent CRUD and live-reader consumers. Screen/foreground lifetime pauses
+owned work; persistence belongs to the product's installed container. Default
+Daily output retains UI-only scope.
+
+## Durable local data slice
+
+[Local Notes](contracts/behavior/local-notes.md) implements the Data boundary with
+OS SQLite adapters behind a domain NotesRepository. It composes existing narrow
+read/create ports and adds admitted update/delete commands. Native transactions,
+version-one schema and handle lifetimes stay in Data; query/mutation state, drafts,
+confirmation, reload and result admission stay in the feature. Commit receipts
+survive a failed subsequent read, and cancellation does not establish rollback.
+Memory and device storage feed the same UI. The default guest collection persists
+within the installed app container. Later slices add separate account partitions
+and in-process observation streams; migrations, outbox/reconciliation and remote
+synchronization remain future work. Corrupt or newer stores are refused rather
+than reset automatically.

@@ -71,6 +71,13 @@ storage. A `val ByteArray` alone would only prevent reassigning the reference;
 it would not protect the elements. See the [graphics walkthrough](../modules/project/core/graphics/README.md#product-previews)
 for the actual factories, init checks and mutation-isolation tests.
 
+The 2026-10-10 Session values use the same annotation on Principal, Account and
+SessionScope. Their bounded factories cannot be bypassed with copy. Secret-bearing
+SignIn/SessionGrant/StoredCredential use ordinary classes with redacted toString
+instead of generated data-class descriptions. StoredCredential implements value
+equality explicitly without exposing secret text in assertion descriptions.
+See [Session](../modules/project/core/session/README.md) for actual factories/checks.
+
 ## Used in and related
 
 Use variants when each state has a distinct shape and callers need explicit

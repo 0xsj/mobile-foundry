@@ -16,6 +16,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    sourceSets.getByName("androidTest").assets.srcDir(rootProject.file("../../../contracts/fixtures/local-notes"))
+    sourceSets.getByName("androidTest").assets.srcDir(rootProject.file("../../../contracts/fixtures/account-access"))
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -44,6 +47,11 @@ kotlin {
     jvmToolchain(17)
 }
 
+tasks.withType<Test>().configureEach {
+    systemProperty("notes.observation.fixtures", rootProject.file("../../../contracts/fixtures/notes-observation").absolutePath)
+    systemProperty("product.shell.fixtures", rootProject.file("../../../contracts/fixtures/product-shells").absolutePath)
+}
+
 dependencies {
   implementation(libs.androidx.exifinterface)
   implementation(libs.androidx.camera.camera2)
@@ -52,8 +60,11 @@ dependencies {
   implementation(project(":core:kernel"))
   implementation(project(":core:services"))
   implementation(project(":core:query"))
+  implementation(project(":core:data"))
+  implementation(project(":core:session"))
   implementation(project(":core:ui"))
   implementation(project(":core:graphics"))
+  implementation(project(":core:physics"))
 
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)

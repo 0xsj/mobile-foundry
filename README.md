@@ -26,9 +26,9 @@ remaining idiomatic to their platforms.
 mobile-foundry/
   frontend/
     swift/
-      apps/          # iOS catalog and graphics gallery app
+      apps/          # iOS catalog and clean ProductApp entry
       packages/      # Reusable Swift packages
-    kotlin/project/  # Android catalog and reusable Gradle modules
+    kotlin/project/  # Android catalog, clean product and reusable modules
   backend/
     go/              # Owned API using Bento's Go architecture
     supabase/        # Local self-hosted Supabase stack
@@ -49,7 +49,9 @@ mobile-foundry/
     decisions/       # Architecture decisions
     blueprints/      # Construction specifications for individual slices
   scripts/           # Shared repository tooling
-  templates/         # Future project generation overlays
+  bin/               # mobile-foundry CLI executable
+  cli/               # Source-copy generator, checks and acceptance probes
+  templates/         # Registered inventories and extraction overlays
   projects/          # Product projects consuming the foundation
   experiments/       # Focused technical and graphics investigations
 ```
@@ -59,6 +61,49 @@ placement. [Setup](docs/SETUP.md) provides commands and IDE steps for building
 the Swift and Kotlin projects. [Styles](STYLES.md) explains the Bento-style token,
 theme, and component directory splits. [Architecture](ARCHITECTURE.md) defines the
 proposed behavioral boundaries.
+
+[Starter readiness](docs/STARTER-READINESS.md) tracks when each native/backend
+profile can seed a new product. Swift/Kotlin Daily is now **standalone starter
+ready**: renamed Swift-only, Kotlin-only and combined outputs build/run outside
+the checkout. The [local CLI](cli/README.md) copies those selections; Go
+combinations remain planned.
+
+```sh
+make cli-install
+export PATH="$HOME/.local/bin:$PATH"
+mobile-foundry list
+# Run from an existing directory outside this checkout:
+mobile-foundry init canopy --platform both --app-id com.example.canopy
+# Include the editable, persistent Notes example instead:
+mobile-foundry init field-notes --platform both --with local-data --app-id com.example.fieldnotes
+# Choose adaptive project navigation or browse/search/detail:
+mobile-foundry init workbench --profile native-workspace --platform both --app-id com.example.workbench
+mobile-foundry init collections --profile native-browse --platform swift --app-id com.example.collections
+```
+
+Clean Daily product entries now live in
+[Swift ProductApp](frontend/swift/apps/ProductApp/README.md) and
+[Kotlin product](frontend/kotlin/project/product/README.md). Each owns four tabs,
+placeholder screens, branding inputs and Solid/Glass selection while importing
+only UI and its Query/Kernel closure. Use `make product-ios-generate`,
+`make product-ios-build` or `make product-android-build`; `make starter-check`
+checks the [extraction inventory](templates/README.md).
+
+The optional [local-data combination](contracts/behavior/local-data-starter.md)
+adds a Library Notes form, SQLite CRUD and an independent live reader. It selects
+local Services/Data plus the existing UI/Query/Kernel closure, with no backend or
+auth provider. Product composition chooses the adapter; Notes is an example
+domain you can replace. This combination is also **standalone starter ready**
+for Swift, Kotlin and both, including observed process-relaunch persistence.
+The generated setup guide includes its native checks.
+
+Workspace and Browse are also **standalone starter ready** for Swift, Kotlin or
+both. Workspace adapts between a project list/detail and expanded panes; Browse
+keeps local search when returning from detail. Both use product-owned placeholder
+screens, a Solid/Glass header and the UI/Query/Kernel closure. Daily remains the
+CLI default; local-data is currently a Daily-only option. Native navigation,
+recreation and Workspace phone/tablet checks passed in independent outputs.
+Read [CLI usage](cli/README.md) and [shell behavior](contracts/behavior/shell-starters.md).
 
 The iOS SwiftUI catalog and Android Compose application are initialized, along
 with the Swift kernel package and Kotlin/JVM kernel module. The first kernel
@@ -70,6 +115,39 @@ in either catalog for six injected scenarios without a backend.
 The [notes/query slice](contracts/behavior/notes-query.md) adds interchangeable
 memory/HTTP services and native state owners. Open **Notes service seam** in
 either catalog to exercise content, empty, failure, refresh and cancellation.
+The [local persistence slice](contracts/behavior/local-notes.md) adds
+FoundryData/core:data, a CRUD repository seam and actual SQLite storage. Open
+**Local notes** to create, edit and confirm deletion using Device storage or
+Memory. Saved device notes survive reopening; writes work without a backend.
+Read the [construction guide](docs/blueprints/local-notes.md) and native learning
+step 41 for storage/versioning and commit-versus-observation lifetime.
+The [session foundation](contracts/behavior/session.md) adds swappable authority
+and credential-storage ports, identity/account values, restoration, renewal,
+expiry and sign-out with guards against old session results. Open **Identity
+and session** for Alex/Sam demo accounts, Device/Memory storage and lifecycle
+controls. Device credentials use native Keychain/Keystore. This is a local demo;
+real authentication remains future integration work.
+The [account-access slice](contracts/behavior/account-access.md) adds authenticated
+HTTP and separate local Notes per account. In **Identity and session**, save a
+note as Alex, switch to Sam, then return to Alex. Drafts close with the session;
+Device records remain after sign-out and guest Local notes stay separate. The
+HTTP probe uses labeled local responses and explicit renewal, with no backend.
+Read [construction](docs/blueprints/account-access.md) and native learning step 43.
+The [observation slice](contracts/behavior/notes-observation.md) adds native live
+readers over Memory and SQLite. Open **Live notes**, create/edit/delete a note,
+pause the second reader, then resume it to read current data. **Identity and session**
+also shows an account live reader that closes with its lease. This is local
+observation; backend integration remains separate. Read
+[construction](docs/blueprints/notes-observation.md) and native learning step 44.
+
+Open **Studio → Open catalog → Product shells** for five native starting
+compositions: a daily tabbed app, adaptive workspace, browse/detail collection,
+canvas editor and guided setup. Each has small working local interactions and
+Solid/Glass selection, using the existing UI primitives. Read
+[shell behavior](contracts/behavior/product-shells.md),
+[construction](docs/blueprints/product-shells.md) and native learning step 45.
+They are app-owned examples; Daily has verified CLI extraction, while the other
+four compositions remain candidates for additional starter profiles.
 The [query/UI slice](contracts/behavior/query-ui.md) extracts reusable generic
 state and async presentation into FoundryQuery/FoundryUI and core:query/core:ui.
 Open **Async UI patterns** to select states with a scalar payload; the notes
@@ -155,13 +233,26 @@ together. **Media** includes native paging, per-study ratings/favorites, icon
 actions and artwork overlays; preview values stay caller-owned. Complete graphics
 engines, native storage libraries, and identity/sync implementations remain
 future work. The backend
-profiles are [Go, Supabase, and Firebase](backend/README.md); the Go module is
-reserved for manual initialization, and both provider stacks have Compose setup.
+profiles are [Go, Supabase, and Firebase](backend/README.md). Go has a runnable
+runtime and an [Account/Audit workflow](contracts/behavior/account-audit.md)
+with local capability/event seams and swappable memory/PostgreSQL stores.
+Explicit migrations, API recovery and owned Identity/session authentication are
+verified, including repeatable personal bootstrap and owned-account discovery.
+[Native Go session adapters](contracts/behavior/go-native-session.md) now provide
+real sign-in, account selection, renewal/restoration and sign-out in both catalogs.
+Remote data and backend CLI extraction remain future work. Both provider stacks
+have Compose setup.
 
 The initial app deployment targets are iOS 17 and Android API 24. Review these
 bootstrap baselines when selecting graphics capabilities.
 
 ## Native builds
+
+The catalog's **Physics playground** adds drag-to-throw and alternate aim/launch
+controls, hoop/landing-zone targets, gravity/bounce controls, pause and reset.
+Pure native Physics modules own the actual 2D simulation. Read the
+[construction guide](docs/blueprints/physics-playground.md) and
+[learning pattern](notes/patterns/fixed-step-physics-and-presentation.md).
 
 ```sh
 make kernel-build
@@ -170,6 +261,7 @@ make http-test
 make query-test
 make ui-test
 make graphics-test
+make physics-test
 make assets-check
 make ios-build
 make ios-test
@@ -183,6 +275,18 @@ Use [Setup](docs/SETUP.md) for IDE paths and individual build commands.
 
 ## Local backends
 
+The Go runtime needs no external services:
+
+```sh
+make -C backend/go dev
+```
+
+Open `http://127.0.0.1:8080/v1/health/ready`. Run `make go-check go-test` for
+foundation checks. [Go setup and learning](backend/go/README.md) describes its
+ports, configuration and limits. [Go starter generation](docs/blueprints/go-starter.md)
+is now available through `--backend go`, including backend-only output with
+`--platform none`. Go is standalone ready; connected native extraction follows.
+
 Start the profile you want to explore from the repository root:
 
 ```sh
@@ -194,6 +298,14 @@ Run the corresponding `make -C backend/<profile> down` to stop it while keeping
 data. Supabase setup generates private local credentials. Firebase runs Auth,
 Firestore, and Storage emulators with a demo project. Each profile documents
 its endpoints and native connection requirements.
+
+Account-scoped [remote Notes and receipts](contracts/behavior/remote-notes.md) now
+connect both catalogs to Go through native repository ports. Open **Go identity
+and accounts** to create/edit/delete remote notes and explicitly recover
+unconfirmed writes. Read [setup and ownership](docs/blueprints/remote-notes.md).
+PostgreSQL stores receipt/data atomically; native pending commands currently
+remain transient. Independently generated connected profiles are the next
+starter milestone.
 
 ## Learning notes
 

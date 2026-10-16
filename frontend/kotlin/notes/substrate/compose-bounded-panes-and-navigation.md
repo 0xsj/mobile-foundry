@@ -52,3 +52,39 @@ Read [UI APIs](../modules/project/core/ui/README.md#adaptive-workspaces),
 [shared ownership](../../../../notes/patterns/adaptive-layout-and-navigation-state.md).
 Next: use a real adaptive navigation scaffold for routed destinations, then
 observe tablet/foldable resizing, keyboard traversal and predictive back.
+
+## Product shell compositions
+
+Product shells, 2026-10-10, uses the same pinned native dependencies. Its workspace
+consumes SplitPane with 280 dp for the primary and 420 dp including the token gap
+for the detail, expanding at 700 dp. The detail closure installs compact
+BackHandler only in single-pane mode; Browse and Setup install their own inner
+handlers. The outer preview handler returns to the chooser.
+
+ProductShellCatalogScreen retains small fixture values through rememberSaveable
+and a JSON String Saver. This uses Bundle-compatible output for an app-owned DTO,
+not a general persistence format. IDs, bounded sets and small counters stay in
+that value; editable inputs stay in their own rememberTextFieldState above all
+preview/theme branches. Each action reads the latest mutable owner, preserving
+rapid increments. Start again explicitly edits the native name field once.
+There is no deferred effect rewriting input from a mirrored String.
+
+Google documents [saveable state](https://developer.android.com/develop/ui/compose/state-saving)
+and [state-based input](https://developer.android.com/develop/ui/compose/text/user-input).
+Use minimal saved values; large data belongs in a repository. Our fixture Saver
+reads only this app's saved schema, with no external saved-state import/version
+migration. Process death and future schema changes are separate verification.
+
+Safe-drawing padding belongs to the catalog route. One preview-level imePadding
+shrinks the bounded shell for the keyboard, keeping fixed actions reachable;
+scrolling bodies do not apply another keyboard inset. The local two-pane layout
+does not implement hinge/posture or predictive-back transitions. Google's
+[list/detail navigation scaffold](https://developer.android.com/develop/ui/compose/layouts/adaptive/list-detail)
+is an alternative for products needing that native adaptive navigation behavior.
+
+[The product UI checks](../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/ui/shell/patterns/ProductShellCatalogTest.kt)
+drive the real MainActivity: tabs, native inputs, local actions, back, recreation
+and portrait/landscape pane selection. See [the app evidence](../modules/project/app/README.md#product-shell-variations)
+and [shared reasoning](../../../../notes/patterns/product-shells-and-navigation-ownership.md).
+Next: select a clean generated product entry and verify the chosen navigation
+owner on tablet/foldable and physical keyboard hosts.

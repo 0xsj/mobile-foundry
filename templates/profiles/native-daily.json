@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "native-daily",
+  "status": "standalone",
+  "shell": "daily",
+  "capabilities": ["ui"],
+  "layout": "Preserve repository-relative paths so package dependencies and test fixture depth remain portable.",
+  "exclude": ["**/.build/**", "**/build/**", "**/.gradle/**", "**/.kotlin/**", "**/xcuserdata/**", "**/*.xcuserstate", "**/local.properties", "**/.env*", "**/.DS_Store"],
+  "sharedSources": [
+    "contracts/fixtures/kernel",
+    "contracts/fixtures/query",
+    "contracts/fixtures/ui"
+  ],
+  "platforms": {
+    "swift": {
+      "entry": "frontend/swift/apps/ProductApp/project.yml",
+      "scheme": "ProductApp",
+      "packages": ["FoundryUI", "FoundryQuery", "FoundryKernel"],
+      "sources": [
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/apps/ProductApp/Config",
+        "frontend/swift/apps/ProductApp/Sources",
+        "frontend/swift/apps/ProductApp/Tests",
+        "frontend/swift/apps/ProductApp/README.md",
+        "frontend/swift/packages/FoundryUI/Package.swift",
+        "frontend/swift/packages/FoundryUI/Sources",
+        "frontend/swift/packages/FoundryUI/Tests",
+        "frontend/swift/packages/FoundryQuery/Package.swift",
+        "frontend/swift/packages/FoundryQuery/Sources",
+        "frontend/swift/packages/FoundryQuery/Tests",
+        "frontend/swift/packages/FoundryKernel/Package.swift",
+        "frontend/swift/packages/FoundryKernel/Sources",
+        "frontend/swift/packages/FoundryKernel/Tests"
+      ],
+      "identityFiles": {
+        "build": "frontend/swift/apps/ProductApp/Config/Product.xcconfig",
+        "runtime": "frontend/swift/apps/ProductApp/Sources/ProductConfiguration.swift"
+      },
+      "overlays": []
+    },
+    "kotlin": {
+      "entry": "frontend/kotlin/project/product/build.gradle.kts",
+      "modules": [":product", ":core:ui", ":core:query", ":core:kernel"],
+      "sources": [
+        "frontend/kotlin/project/build.gradle.kts",
+        "frontend/kotlin/project/gradle.properties",
+        "frontend/kotlin/project/gradlew",
+        "frontend/kotlin/project/gradlew.bat",
+        "frontend/kotlin/project/gradle",
+        "frontend/kotlin/project/product/build.gradle.kts",
+        "frontend/kotlin/project/product/product.properties",
+        "frontend/kotlin/project/product/src",
+        "frontend/kotlin/project/product/README.md",
+        "frontend/kotlin/project/core/ui/build.gradle.kts",
+        "frontend/kotlin/project/core/ui/src",
+        "frontend/kotlin/project/core/query/build.gradle.kts",
+        "frontend/kotlin/project/core/query/src",
+        "frontend/kotlin/project/core/kernel/build.gradle.kts",
+        "frontend/kotlin/project/core/kernel/src"
+      ],
+      "identityFiles": {
+        "build": "frontend/kotlin/project/product/product.properties",
+        "label": "frontend/kotlin/project/product/src/main/res/values/strings.xml",
+        "runtime": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductConfiguration.kt"
+      },
+      "overlays": [{
+        "source": "templates/overlays/kotlin/settings.gradle.kts",
+        "destination": "frontend/kotlin/project/settings.gradle.kts"
+      }]
+    }
+  }
+}

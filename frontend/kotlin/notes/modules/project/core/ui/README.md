@@ -4,6 +4,20 @@ The Android UI library renders generic query state with Material controls,
 caller copy and a composable domain content slot. It also owns V1 semantic
 tokens and a scoped provider that adapts MaterialTheme.
 
+## Native text state overload
+
+The 2026-10-10 local-data consumer adds a TextFieldState overload to
+[LabeledTextField](../../../../../project/core/ui/src/main/kotlin/dev/mobilefoundry/ui/components/forms/textfield/LabeledTextField.kt).
+The existing String API remains available. The overload forwards native single-
+line state, keyboard action and input transformation while keeping domain
+validation, focus and submission in the caller. It adds no new component family.
+The [Local notes consumer](../../app/README.md#durable-local-notes) uses it after
+a rapid native-key investigation prompted explicit native editing ownership.
+Read [input mechanics and evidence](../../../../substrate/sqlite-helpers-and-nondestructive-recovery.md#fast-text-feedback).
+Eight existing UI unit cases pass, and the Android consumer builds. The native
+Local notes check saves a complete burst of Compose key events through the IME
+action. OS window routing and other keyboard configurations remain separate checks.
+
 ## Origin and reading order
 
 Extracted 2026-10-08 with AGP 9.0.1, Kotlin 2.3.20, and Compose BOM 2026.03.01.

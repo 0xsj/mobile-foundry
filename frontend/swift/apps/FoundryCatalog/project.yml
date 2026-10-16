@@ -7,12 +7,18 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
 packages:
+  FoundryPhysics:
+    path: ../../packages/FoundryPhysics
   FoundryKernel:
     path: ../../packages/FoundryKernel
   FoundryHTTP:
     path: ../../packages/FoundryHTTP
   FoundryServices:
     path: ../../packages/FoundryServices
+  FoundryData:
+    path: ../../packages/FoundryData
+  FoundrySession:
+    path: ../../packages/FoundrySession
   FoundryQuery:
     path: ../../packages/FoundryQuery
   FoundryUI:
@@ -23,13 +29,23 @@ targets:
   FoundryCatalog:
     type: application
     platform: iOS
+    info:
+      path: Resources/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
     sources:
       - path: Sources
       - path: Resources
     dependencies:
+      - package: FoundryPhysics
       - package: FoundryKernel
       - package: FoundryHTTP
       - package: FoundryServices
+      - package: FoundryData
+      - package: FoundrySession
       - package: FoundryQuery
       - package: FoundryUI
       - package: FoundryGraphics
@@ -60,12 +76,25 @@ targets:
       - package: FoundryKernel
       - package: FoundryHTTP
       - package: FoundryServices
+      - package: FoundryData
+      - package: FoundrySession
       - package: FoundryQuery
       - package: FoundryUI
       - package: FoundryGraphics
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.mobilefoundry.catalog.tests
+        GENERATE_INFOPLIST_FILE: YES
+  FoundryCatalogUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: FoundryCatalog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.mobilefoundry.catalog.uitests
         GENERATE_INFOPLIST_FILE: YES
 schemes:
   FoundryCatalog:
@@ -78,5 +107,6 @@ schemes:
       config: Debug
       targets:
         - FoundryCatalogTests
+        - FoundryCatalogUITests
     archive:
       config: Release

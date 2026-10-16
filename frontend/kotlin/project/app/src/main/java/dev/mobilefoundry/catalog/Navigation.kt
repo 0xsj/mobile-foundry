@@ -12,7 +12,13 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import dev.mobilefoundry.catalog.ui.main.MainScreen
+import dev.mobilefoundry.catalog.ui.physics.PhysicsPlaygroundScreen
 import dev.mobilefoundry.catalog.ui.health.HealthCatalogScreen
+import dev.mobilefoundry.catalog.ui.notes.LocalNotesScreen
+import dev.mobilefoundry.catalog.ui.notes.LiveNotesScreen
+import dev.mobilefoundry.catalog.ui.shell.patterns.ProductShellCatalogScreen
+import dev.mobilefoundry.catalog.ui.session.SessionCatalogScreen
+import dev.mobilefoundry.catalog.ui.session.GoSessionCatalogScreen
 import dev.mobilefoundry.catalog.ui.notes.NotesCatalogScreen
 import dev.mobilefoundry.catalog.ui.query.QueryCatalogScreen
 import dev.mobilefoundry.catalog.ui.tokens.TokenCatalogScreen
@@ -33,6 +39,12 @@ fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) ->
     onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
     entryProvider =
       entryProvider {
+        entry<PhysicsPlaygroundCatalog> {
+          PhysicsPlaygroundScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
+        entry<ProductShellsCatalog> {
+          ProductShellCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding())
+        }
         entry<ComponentsCatalog> {
           ComponentCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
         }
@@ -56,6 +68,18 @@ fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) ->
         }
         entry<QueryCatalog> {
           QueryCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
+        entry<LocalNotesCatalog> {
+          LocalNotesScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
+        entry<LiveNotesCatalog> {
+          LiveNotesScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
+        entry<SessionCatalog> {
+          SessionCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
+        entry<GoSessionCatalog> {
+          GoSessionCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
         }
         entry<NotesCatalog> {
           NotesCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))

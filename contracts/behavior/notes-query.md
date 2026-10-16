@@ -64,5 +64,8 @@ The separate [forms/mutations contract](forms-mutations.md) adds NoteCreator
 without broadening this read port. Its catalog write instance does not update
 this read gallery; shared data ownership and invalidation remain separate work.
 
-Persistent storage, query caches, deduplication, account scoping,
-credential renewal, provider SDK adapters and offline synchronization are deferred.
+The separate [local-data slice](local-notes.md) adds a CRUD NotesRepository that
+also implements this read port, with mutable memory and native SQLite adapters.
+Its Local notes feature coordinates writes and reloads; this injected read-only
+gallery remains unchanged. Query caches, deduplication, authenticated account
+scoping, credential renewal, provider SDK adapters and sync remain deferred.

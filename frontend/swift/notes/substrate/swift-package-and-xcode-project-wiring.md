@@ -141,3 +141,54 @@ hashes, PNG headers, bundled bytes and selection. The unsigned simulator build
 packages the new icon successfully. This does not establish signed-device
 distribution or App Store Connect validation. Separate dark/tinted artwork and
 layered Icon Composer treatment remain optional future work.
+
+## Clean product identity
+
+Claim: generated target wiring and installed product identity can be separate,
+versioned inputs without renaming shared packages or source modules.
+
+Added 2026-10-10 with Xcode 26.2 and XcodeGen 2.46.0. ProductApp's generator
+specification maps Debug/Release to Config/Product.xcconfig. That file supplies
+bundle/display identity, versions and a blank signing team. The generated
+CFBundleDisplayName references PRODUCT_DISPLAY_NAME; runtime configuration reads
+the built metadata. Tests override their bundle identity suffix and product name
+at target level while inheriting the product configuration.
+
+Apple documents [configuration files](https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project)
+and [setting precedence](https://help.apple.com/xcode/mac/current/en.lproj/deva3af9b6ba.html).
+Target Build Settings override xcconfig values; do not duplicate the editable
+app identity in target settings and then assume the config file wins. The source
+module/scheme remains ProductApp. Changing PRODUCT_NAME also changes module and
+test host assumptions, so display name and installed bundle identity are the
+normal branding edits. An alternative is identity directly in project.yml;
+the xcconfig makes the later CLI's product edits smaller and keeps signing input
+separate from reusable build wiring.
+
+Example: edit PRODUCT_DISPLAY_NAME and PRODUCT_APP_IDENTIFIER, regenerate using
+`make product-ios-generate`, then build using `make product-ios-build`. This slice
+tests the default configured metadata; independently renamed output is pending.
+Two hosted checks observe actual UITabBar selection, UISwitch events, retained
+state and built bundle metadata. Keep product state in the window's entry view
+above the scoped theme; the root binding preserves it during style changes.
+Window-session state is not UserDefaults persistence or process restoration.
+
+Read [ProductApp](../modules/apps/ProductApp/README.md) and
+[extraction closure](../../../../notes/patterns/product-entry-and-extraction-closure.md).
+
+## Independent source copies
+
+Observed 2026-10-10, Xcode 26.2 / Swift 6.2.3 / XcodeGen 2.46.0. Generated output
+keeps sibling package and fixture depth, then regenerates Xcode wiring locally.
+An Orbit Lab app with com.example.orbitlab builds without source-checkout links
+and passes its included Kernel/Query/UI checks. Its built plist contains the new
+display name and bundle ID, while module/scheme remains ProductApp.
+
+The first feature imported QueryState/MutationState and Kernel results. Those
+modules were available transitively, but their symbols were not linked into the
+app: compilation succeeded and linking failed. Declare the local package entries
+and link their products explicitly in application/test dependencies, then run
+the generated ios-test target. Three hosted cases pass after that correction.
+This does not require adding domain providers to the empty profile.
+
+Actual source/checks are in the [acceptance probe](../../../../cli/acceptance/README.md);
+read [ProductApp's output record](../modules/apps/ProductApp/README.md#independent-cli-output).

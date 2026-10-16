@@ -1,8 +1,41 @@
 # Mobile Foundry learning notes
 
 Use this index to study the native foundation between implementation sessions.
+
+Latest extraction, 2026-10-13: Go is standalone ready through CLI 0.4.0.
+Read [the CLI walkthrough](modules/cli/README.md), then
+[Go source-copy verification](techniques/go-source-copy-verification.md) and
+[actual output evidence](../docs/blueprints/go-starter.md). Memory/PostgreSQL API
+and generated runner checks pass; both co-located native apps build. Generated
+native auth/data composition remains the next connected-profile gate.
 Swift, Kotlin, and each backend keep the six Bento note categories; shared mobile
 concepts, patterns, and verification techniques live here.
+
+Latest backend slice, 2026-10-13: Identity/Account/Audit have swappable memory/
+PostgreSQL stores, owned credential/session auth and observed API crash/restart
+recovery. Start with
+[the Go reading order](../backend/go/notes/README.md), then
+[transactions, leases and committed cursors](../backend/go/notes/patterns/transactions-leases-and-committed-cursors.md).
+Then read [principal/session/account boundaries](../backend/go/notes/patterns/principal-session-and-account-boundaries.md)
+and [security substrate](../backend/go/notes/substrate/argon2-and-opaque-session-credentials.md).
+Latest Account scope work adds repeatable personal bootstrap, owned listing and
+guarded selection; read [the bootstrap pattern](../backend/go/notes/patterns/idempotent-bootstrap-and-owned-discovery.md)
+for transaction visibility and device scope. The native Go batch now adds real
+URLSession/OkHttp authorities, rotation checkpoints and verified catalog workflows.
+Read [deployment authorities and checkpoints](patterns/deployment-authorities-and-rotation-checkpoints.md)
+for the recovery design. Remote Notes now adds real account-scoped data, versions
+and immutable write receipts. Read [command receipts and uncertain writes](patterns/command-receipts-and-uncertain-writes.md)
+then native reading step 52 and the [Go module](../backend/go/notes/modules/internal/notes/README.md).
+Durable native queues/sync and independently generated backend/native connected
+acceptance remain separate work.
+
+Remote Notes evidence, 2026-10-13: Go formatting/import/vet/build/race checks,
+memory/PostgreSQL concurrency/CAS/rollback/restart checks, shared native receipt
+fixtures and real URLSession/OkHttp write recovery pass. Both catalogs build;
+three recovery owner cases pass per platform, and iOS connected Notes CRUD plus
+workspace/Keychain process relaunch passes. Android Notes gesture/relaunch,
+durable native queues, offline merge and generated connected profiles remain
+separate. Read [the construction guide](../docs/blueprints/remote-notes.md).
 
 ## Start here
 
@@ -56,7 +89,185 @@ concepts, patterns, and verification techniques live here.
     then the native camera walkthroughs and substrate notes. Compare camera access,
     decoded photograph ownership and independent GPU preview lifetime.
 
+17. Read [session scope and credential lifetime](patterns/session-scope-and-credential-lifetime.md),
+    then native reading step 42 and Session/catalog walkthroughs. Compare a saved
+    credential with active access, owner-bound leases and cleanup after late saves.
+
+18. Read [account partitions and leased work](patterns/account-partitions-and-leased-work.md),
+    then native reading step 43 and Session/Data/catalog walkthroughs. Compare
+    persistent account identity, a renewed editor lease and an accepted old write.
+
+19. Read [current snapshots and subscription lifetime](patterns/current-snapshots-and-subscription-lifetime.md),
+    then native reading step 44 and Services/Data/catalog walkthroughs. Compare
+    current state with receipts, independent readers, bounded invalidations and
+    pause versus terminal account cleanup.
+
+20. Read [standalone starter verification](techniques/standalone-starter-verification.md)
+    and [starter readiness](../docs/STARTER-READINESS.md). Compare tested reference
+    behavior with independently generated products; track each native/backend
+    profile's extraction milestone separately.
+
+21. Read [product shells and navigation ownership](patterns/product-shells-and-navigation-ownership.md),
+    then native step 45 and the app walkthroughs. Compare native tabs, adaptive
+    list/detail, filtered browse, canvas tools and guided drafts as app-owned
+    compositions of existing shared UI. Track independent extraction separately.
+
+22. Read [product entry and extraction closure](patterns/product-entry-and-extraction-closure.md),
+    then native step 46 and the new product-app walkthroughs. Compare product
+    configuration/screens with reusable UI, and a validated inventory with a
+    generated app that actually builds/runs outside its source checkout.
+
+23. Read [local CLI and independent source copies](techniques/local-cli-and-independent-source-copies.md),
+    then [CLI usage](../cli/README.md) and native step 47. Trace registration →
+    admitted closure → owned output → identity edits → independent native checks.
+    Compare toolchain observations with actual builds and a first feature probe.
+
+24. Read [explicit capabilities and effective build graphs](techniques/explicit-capabilities-and-effective-build-graphs.md),
+    then [local-data starter behavior](../contracts/behavior/local-data-starter.md)
+    and native step 48. Trace --with selection through local build overlays,
+    injected CRUD/reader consumers and independently persisted product data.
+
+25. Read [shell profiles and state lifetimes](patterns/shell-profiles-and-state-lifetimes.md),
+    then [shell starter behavior](../contracts/behavior/shell-starters.md) and
+    native step 49. Compare retained selection with retained search, layout
+    policy with navigation policy, and profile selection with capability admission.
+
+26. Read [fixed-step physics and presentation](patterns/fixed-step-physics-and-presentation.md),
+    then [toss behavior](../contracts/behavior/physics-playground.md) and native
+    step 50. Compare solver time, contact/scoring geometry, preview copies and
+    foreground/manual-pause scheduling.
+
+27. Follow [Go runtime learning](../backend/go/notes/README.md) through process
+    ownership, interfaces/errors/contexts, module assembly, HTTP projection and
+    Health's query port. Compare a working runtime with business/provider and
+    independently generated backend readiness.
+
 ## Current coverage
+
+Go runtime/shared packages, 2026-10-12: startup, health/query ports, typed errors,
+JSON/problem admission, metadata, configuration, logging and module lifecycle are
+implemented. Architecture/vet/build/race checks and compiled-process smoke passed.
+Business modules and backend CLI integration remain reserved; read
+[the Go notebook](../backend/go/notes/README.md) for evidence and next questions.
+
+Physics playground, 2026-10-11: pure native modules and catalog consumers are
+implemented; five numeric tests pass on each platform and both native apps build.
+Shared shots include swish/rim/landing/miss cases. Two iOS UI interactions and
+three Android device interactions pass; native evidence and limits are recorded
+in the app walkthroughs. CLI physics selection, general 3D
+physics, durable scores and physical-device profiling remain future work.
+
+Workspace/Browse extraction, completed 2026-10-11: CLI 0.3.0 generates Swift,
+Kotlin or both with distinct UI-only navigation/state/screens. All six fresh
+outputs build/run independently. Each iOS output passes three cases; Workspace
+passes four Android cases and Browse three, with zero failures/errors/skips.
+Workspace checks iPad expansion and Android width/large-text reflow; Browse checks
+native search/clear/detail/back and retained state. Shared Swift/Kotlin checks
+pass nineteen/twenty. Twenty-two CLI cases pass. Native captures were inspected.
+Both profiles are standalone UI starter ready; local-data remains Daily-only.
+Read shared step 25/native step 49 and [readiness](../docs/STARTER-READINESS.md).
+
+Optional local data, 2026-10-10: CLI 0.2.0 adds --with local-data for Swift,
+Kotlin and both. All three generated combinations build and pass their native
+checks outside the checkout. Each tested iOS output passes eight cases; each
+Android output passes 26 unit/eleven device cases. Selected Swift packages pass
+30 checks; full reference Services pass eleven each on Swift/Kotlin. Nineteen
+CLI checks pass. Actual process termination/relaunch preserves records on both
+platforms; captures were inspected. Local-data is standalone starter ready,
+without backend/account/sync claims. Follow shared step 24/native step 48 and
+[readiness](../docs/STARTER-READINESS.md) for scoped evidence.
+Final structural checks pass: 242 documents, 2849 local links, 146 native example
+labels and zero failures. `git diff --check` passes. These checks verify document
+structure and whitespace, not native runtime or provider behavior.
+
+CLI extraction, 2026-10-10: list/init/doctor support Swift, Kotlin and both from
+the local Daily profile; Go is planned and refused. Thirteen CLI checks pass;
+the combined generated app builds and passes 19 Swift/20 Kotlin library checks
+plus three hosted iOS and three actual Android feature/navigation cases. Read
+shared step 23/native step 47. Swift-only and Kotlin-only builds, two native cases
+each and inspected launches also pass; the local Daily starter is ready in all
+three combinations. [Readiness](../docs/STARTER-READINESS.md) records limits.
+No backend or new shared component is added.
+Final structural checks pass: 239 documents, 2794 local links, 146 native example
+labels and zero failures. These do not execute examples. `git diff --check` passes.
+
+Clean Daily entries, 2026-10-10: separate Swift ProductApp and Kotlin :product
+compose four placeholder tabs and Solid/Glass with UI → Query → Kernel. Both
+native products build, two hosted iOS checks and two real Android Activity checks
+pass. The source/fixture/module inventory passes and four negative mutation
+probes verify missing closure/fixture and escaping-path detection. Native step
+46/shared step 22 explain configuration, state and extraction ownership. At that
+entry-only slice, profiles remained candidates; the CLI slice above closes that
+independent-output gate. No new shared UI/provider capabilities were added.
+Native launch captures were inspected. The Kotlin product walkthrough records
+an earlier emulator System UI/keyboard startup interruption and its recovery;
+the executed product tests still passed. Documentation validation covers 234
+documents, 2736 local links and 146 native example labels with zero failures;
+it does not execute native examples. `git diff --check` passes.
+
+Product shells, 2026-10-10, adds five native product compositions: Daily,
+Workspace, Browse, Canvas and Setup. Reading step 21 here/native step 45 traces
+navigation/draft ownership above theme and pane branches. Existing UI stays
+112 building blocks/30 families. Both native consumers build; 81 hosted iOS
+cases, 31 Android app JVM cases and ten focused Android shell cases pass.
+Actual captures were inspected. App walkthroughs record the iOS header correction,
+native Android rotation synchronization and scoped evidence/limits. These are
+candidate compositions; CLI overlays and an independent generated build/run
+still gate starter readiness. Device accessibility, physical hardware, process
+death and complete native detail-stack history remain separate work.
+Documentation validation passes 227 documents, 2672 local links and 146 native
+example labels with zero failures; `git diff --check` passes. These checks verify
+structure, links and labels rather than executing conceptual excerpts.
+
+The observation batch, 2026-10-10, adds a separate native NotesObserver capability,
+Memory/SQLite implementations, a two-reader Live notes gallery and an account
+live projection. Start with [subscription lifetime](patterns/current-snapshots-and-subscription-lifetime.md)
+and native step 44. Eleven service tests per platform, fourteen Swift Data cases,
+78 hosted iOS app cases and 29 Android app JVM cases pass. Twenty-five distinct
+focused Android native cases pass, covering SQLite, actual live UI, configuration
+retention, account switching/closure/renewal and existing shell/credential checks.
+Both builds pass; native correction/evidence is recorded in its app walkthrough.
+The adapters observe in-process
+repository commits; remote sync, external SQL/cross-process invalidation and
+physical-device performance remain separate. The UI count stays 112/30.
+Documentation checks pass 222 documents, 2600 local links and 146 native example
+labels with zero failures; `git diff --check` passes. These validate structure,
+links and labels rather than executing conceptual excerpts.
+
+The account-access batch, 2026-10-10, adds Session-owned authenticated HTTP,
+Data-owned account partitions/lease-bound CRUD and inline Account notes/probes.
+Start with [account partitions and leased work](patterns/account-partitions-and-leased-work.md)
+and native step 43. Twenty session tests per platform, eleven Swift Data cases,
+73 hosted iOS app cases, 25 Android JVM app cases and 17 focused Android native
+cases pass. Both builds pass. Native checks cover account storage/reopening,
+guest preservation, actual editor switching/draft clearing and renewal, while
+controlled races cover accepted old writes/results/errors and cancellation.
+The probe and authority remain labeled local fixtures. Real provider validation,
+remote CRUD/sync, Notes encryption and production device-retention decisions
+remain separate. Module walkthroughs record actual evidence and native limits.
+Documentation checks pass 217 documents, 2522 local links and 144 native example
+labels with zero failures; `git diff --check` passes. These checks validate
+structure and labels, not execution of the conceptual excerpts.
+
+The session foundation, 2026-10-10, adds identity/account values, authority/vault
+ports, native credential storage and guarded session owners on both platforms.
+Start with [scope and credential lifetime](patterns/session-scope-and-credential-lifetime.md),
+then native step 42. Thirteen lifecycle checks per platform, 70 hosted iOS app
+cases, 21 Android app host cases and five focused Android native cases pass;
+both consumers build. Keychain tests require ad-hoc simulator signing. Native
+walkthroughs record storage/consumer evidence and remaining limits. Demo sign-in
+does not authenticate a person or authorize guest Notes. Follow reading step 43
+for native account/HTTP seams; real authority and remote sync remain future work.
+
+The first durable-data slice, 2026-10-10, adds swappable Memory/SQLite CRUD Notes
+without increasing the UI count. Start with
+[local commits and observation lifetime](patterns/local-commits-and-observation-lifetime.md),
+then native reading step 41, Data and Local notes walkthroughs. Six Swift Data
+checks, nine Swift Services regressions, 67 hosted iOS app cases, 21 Android app
+host cases, eight Android UI unit cases and thirteen focused Android checks pass.
+Both consumers build. A separate Android force-stop/relaunch observation covers
+durability; its notebook records input scope and the unresolved emulator IME routing.
+Account data scope, observation and remote sync remain separate work.
 
 The twenty-fourth UI batch closes all originally reserved UI leaves (112 building
 blocks, 30 families). Start with [shell chrome and feature lifetime](patterns/shell-chrome-and-feature-lifetime.md),
@@ -256,10 +467,19 @@ Identity, account, persistence, sync, broader UI controls, and richer graphics
 remain planned capabilities.
 Their learning notes will arrive with actual implementation or investigation.
 
-Backend profiles were scaffolded 2026-10-08. Go has reserved module layers and
-no `go.mod`; the provider notebooks record local stack configuration and the
-checks performed. Provider setup alone does not establish native session,
-repository, or synchronization behavior.
+Backend profiles were scaffolded 2026-10-08. The Go runtime/shared foundation
+was implemented 2026-10-12; the Account/Audit memory workflow followed on
+2026-10-13. Provider notebooks
+record local stack configuration and checks. Provider setup alone does not
+establish native session, repository, or synchronization behavior.
+
+The 2026-10-12 [backend capability inventory](../backend/go/CAPABILITIES.md) and
+[module boundary policy](../contracts/behavior/module-boundaries.md) establish
+selectable ownership and three communication seams. Read the
+[Go pattern investigation](../backend/go/notes/patterns/ports-and-module-composition.md)
+for synchronous ports, committed facts and live hints. The later
+[Account/Audit implementation](../backend/go/notes/README.md) supplies memory
+capability/event execution. Persistent/remote/live runtimes remain planned.
 
 ## Selection and overlay batch
 

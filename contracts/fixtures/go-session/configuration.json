@@ -1,0 +1,121 @@
+[
+  {
+    "input": "https://API.EXAMPLE.test:443/v1/",
+    "local": false,
+    "valid": true,
+    "canonical": "https://api.example.test/v1",
+    "authority": "go.identity.v1.35db56e58bb61a9cc919bd2fd69b1c4e561dcb4dd16c88fba31c13c7c4361060"
+  },
+  {
+    "input": "https://api.example.test/v1",
+    "local": false,
+    "valid": true,
+    "canonical": "https://api.example.test/v1",
+    "authority": "go.identity.v1.35db56e58bb61a9cc919bd2fd69b1c4e561dcb4dd16c88fba31c13c7c4361060"
+  },
+  {
+    "input": "http://127.0.0.1:8080/v1",
+    "local": true,
+    "valid": true,
+    "canonical": "http://127.0.0.1:8080/v1",
+    "authority": "go.identity.v1.23280c6fb65872c409a89783c1aa6b12b6be5520a067ac0e2a9c125fc32ddc0b"
+  },
+  {
+    "input": "http://localhost:80/v1/",
+    "local": true,
+    "valid": true,
+    "canonical": "http://localhost/v1",
+    "authority": "go.identity.v1.a3710cd483bf8653a287f302683a9f4e954e36e7559e385a2796f03361995c91"
+  },
+  {
+    "input": "http://[::1]:8080/v1",
+    "local": true,
+    "valid": true,
+    "canonical": "http://[::1]:8080/v1",
+    "authority": "go.identity.v1.ba7ad2399e5beb1fec3b48e3284aaf20a3027c6e3fd9699f28d8367c4434a128"
+  },
+  {
+    "input": "https://api.example.test:8443/api/v1",
+    "local": false,
+    "valid": true,
+    "canonical": "https://api.example.test:8443/api/v1",
+    "authority": "go.identity.v1.65d95ca1285d0880de0f3d81637e251ad77e8068a67a5d8d3e083579ac7edd9d"
+  },
+  {
+    "input": "http://127.0.0.1:8080/v1",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "http://10.0.2.2:8080/v1",
+    "local": true,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "http://192.168.1.2:8080/v1",
+    "local": true,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://u:p@api.example.test/v1",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://api.example.test/v1?x=1",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://api.example.test/v1#x",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://api.example.test/v1/../other",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://api.example.test/v1/%2e%2e",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://api.example.test/v1//other",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": " https://api.example.test/v1",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  },
+  {
+    "input": "https://api.example.test:0/v1",
+    "local": false,
+    "valid": false,
+    "canonical": null,
+    "authority": null
+  }
+]

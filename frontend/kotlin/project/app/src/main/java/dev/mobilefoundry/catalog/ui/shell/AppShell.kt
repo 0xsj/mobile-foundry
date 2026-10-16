@@ -14,9 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.mobilefoundry.catalog.MainNavigation
 import dev.mobilefoundry.catalog.R
 import dev.mobilefoundry.catalog.ui.camera.CameraScreen
@@ -44,15 +43,12 @@ fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
     var cameraPhoto by remember { mutableStateOf<RasterImage?>(null) }
     val tab = ShellTab.entries.firstOrNull { it.name == selectedId } ?: ShellTab.HOME
     val tokens = FoundryTheme.tokens
+    val catalogOwner: CatalogPresentationModel = viewModel()
 
     if (catalogPresented) {
         // Scope entry ViewModels to this presentation instead of the whole Activity.
-        val owner = remember { object : ViewModelStoreOwner {
-            override val viewModelStore = ViewModelStore()
-        } }
-        DisposableEffect(owner) { onDispose { owner.viewModelStore.clear() } }
-        CompositionLocalProvider(LocalViewModelStoreOwner provides owner) {
-            MainNavigation(glassTheme, onGlassThemeChange, onExit = { catalogPresented = false })
+        CompositionLocalProvider(LocalViewModelStoreOwner provides catalogOwner) {
+            MainNavigation(glassTheme, onGlassThemeChange, onExit = { catalogOwner.dismiss(); catalogPresented = false })
         }
     } else {
         AppShellLayout(Modifier.fillMaxSize(), background = {

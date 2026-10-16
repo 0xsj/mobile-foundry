@@ -88,3 +88,11 @@ Shared command/response and mutation fixtures, native service/state-owner tests,
 and Compose device checks establish the stated behaviors. iOS execution is
 checked on the simulator. Builds alone do not establish screen-reader quality,
 every large-text/keyboard configuration, or physical-device behavior.
+
+## Local repository consumer
+
+[Local Notes](local-notes.md) adds a SQLite-backed CRUD repository implementing
+NoteCreator, with its own coordinated query/mutation feature. The injected Forms
+gallery remains an independent command example. Local Notes reloads its repository
+after commit and preserves the receipt if the subsequent read fails; this does
+not add persistence, invalidation or replay policy to shared MutationState.

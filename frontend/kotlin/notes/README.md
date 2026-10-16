@@ -178,6 +178,77 @@ notes for Kotlin mechanics and framework behavior. This notebook follows
     [Shells gallery](modules/project/app/README.md#shell-primitives-gallery).
     Compare bounded content/navigation, inset ownership and retained page values.
 
+41. Read [local commits and observation lifetime](../../../notes/patterns/local-commits-and-observation-lifetime.md),
+    then [SQLite helper/recovery mechanics](substrate/sqlite-helpers-and-nondestructive-recovery.md),
+    [Data](modules/project/core/data/README.md) and
+    [Local notes](modules/project/app/README.md#durable-local-notes).
+    Trace admitted CRUD, durable identity, transient drafts and separate commit/read phases.
+
+42. Read [session scope and credential lifetime](../../../notes/patterns/session-scope-and-credential-lifetime.md),
+    then [Keystore encryption](substrate/keystore-encryption-and-atomic-credentials.md),
+    [Session](modules/project/core/session/README.md) and
+    [Identity and session](modules/project/app/README.md#identity-and-session).
+    Trace restoration, persistence before activation, expiry and the sign-out barrier.
+
+43. Read [account partitions and leased work](../../../notes/patterns/account-partitions-and-leased-work.md),
+    then [MessageDigest and authenticated OkHttp](substrate/message-digest-and-authenticated-okhttp.md),
+    [Session](modules/project/core/session/README.md#authenticated-http),
+    [Data](modules/project/core/data/README.md#account-collections) and
+    [Account access](modules/project/app/README.md#account-access).
+    Trace stable account filenames, one leased request and native draft disposal.
+
+44. Read [current snapshots and subscription lifetime](../../../notes/patterns/current-snapshots-and-subscription-lifetime.md),
+    then [Flow invalidation and lifecycle](substrate/flow-invalidation-and-lifecycle-collection.md),
+    [Services](modules/project/core/services/README.md#live-read-capability),
+    [Data](modules/project/core/data/README.md#live-local-observation) and
+    [Live notes](modules/project/app/README.md#live-notes).
+    Trace cold subscriptions, owned current state, committed invalidations and
+    Activity/route/lease cleanup.
+
+45. Read [product shell ownership](../../../notes/patterns/product-shells-and-navigation-ownership.md),
+    then [native adaptation](substrate/compose-bounded-panes-and-navigation.md#product-shell-compositions)
+    and [the five shell variations](modules/project/app/README.md#product-shell-variations).
+    Trace the saveable owner/native inputs through tabs, adaptive panes, Back
+    and Activity recreation. Compare these examples with generated-product readiness.
+
+46. Read [product entry and extraction closure](../../../notes/patterns/product-entry-and-extraction-closure.md),
+    then [build identity](substrate/gradle-and-android-bootstrap.md#clean-product-identity)
+    and [product module](modules/project/product/README.md). Trace the separate app,
+    saved state, branding and product-only module overlay. Keep independent CLI
+    generation/build/run as the remaining readiness gate.
+
+47. Read [local source-copy CLI](../../../notes/techniques/local-cli-and-independent-source-copies.md),
+    then [independent output](modules/project/product/README.md#independent-cli-output)
+    and [launcher/toolchain separation](substrate/gradle-and-android-bootstrap.md#gradle-launcher-and-compilation-toolchain).
+    Trace generated identity, product-only settings and a real first-feature action.
+
+48. Read [explicit capabilities](../../../notes/techniques/explicit-capabilities-and-effective-build-graphs.md),
+    then [local-data output](modules/project/product/README.md#optional-local-data-output).
+    Trace effective Gradle overlays, extension imports, native editing admission,
+    STARTED collection and Activity versus fresh-process persistence checks.
+
+49. Read [shell profiles/state lifetimes](../../../notes/patterns/shell-profiles-and-state-lifetimes.md),
+    then [Workspace/Browse output](modules/project/product/README.md#workspace-and-browse-output).
+    Trace listSaver identity admission, state above theme/pane branches, system
+    Back, width/font-scale changes and actual Activity recreation checks.
+
+50. Read [fixed-step physics](../../../notes/patterns/fixed-step-physics-and-presentation.md),
+    then [core/physics](modules/project/core/physics/README.md) and the
+    [app playground](modules/project/app/README.md#physics-playground).
+    Trace private copy visibility, immutable snapshots, original pointer-down
+    admission, display timestamps and lifecycle/manual-pause cancellation.
+
+51. Read [deployment authorities and rotation checkpoints](../../../notes/patterns/deployment-authorities-and-rotation-checkpoints.md),
+    then core/session's Go walkthrough and catalog example. Compare real-time
+    transport, checkpoint recovery and lifecycle-owned account pages.
+
+52. Read [command receipts and uncertain writes](../../../notes/patterns/command-receipts-and-uncertain-writes.md),
+then [Services](modules/project/core/services/README.md#remote-notes-and-immutable-receipts)
+and [catalog recovery](modules/project/app/README.md#remote-notes-recovery).
+Compare historical evidence, admitted classes, real-time HTTP tests and cancellation
+after a noncooperative dependency. Host/state checks and the catalog build pass;
+Android Notes UI gestures and durable native queue behavior remain unverified.
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -194,6 +265,96 @@ Paths mirror the Kotlin root, including `project/`: `project/app/` maps to
 paths; module walkthroughs link their actual use.
 
 ## Current coverage
+
+Workspace/Browse output, completed 2026-10-11: CLI 0.3.0 creates independent
+Kotlin-only and combined products for each shell. All four debug builds pass;
+Workspace passes four native cases per output and Browse three, with zero
+failures/errors/skips. Actual Activity navigation/material/recreation, system
+Back, search/clear and bounded width/font-scale reflow pass. Android captures
+were inspected. Shared Kernel/Query/UI checks pass 9/3/8. Step 49 explains
+listSaver, separate selection/presentation values and pane-scoped test locators.
+Both profiles are standalone UI starter ready; data/providers, release signing
+and physical-device behavior require their own capabilities/checks.
+
+Optional local-data output, 2026-10-10: CLI 0.2.0 generates combined and Kotlin-only
+renamed products; each builds and passes 26 unit/eleven device cases with zero
+failures/errors/skips. The product drives native validation/CRUD/confirmation/
+live count/recreation; Data exercises real SQLite, cross-instance observation
+and non-destructive storage failures. A separate control-driven write followed
+by force-stop/PID absence/launch retains the note and count; the capture was
+inspected. The initial emulator System UI startup timeout was identified by its
+am_anr event and cleared with Wait before that check. Full Services passes eleven
+regressions after source separation. Reading step 48 records imports/build/lifetime
+findings. Local-data is standalone ready; provider/account/sync, release signing,
+older OS/physical devices and backup/restore remain separate.
+
+CLI extraction, 2026-10-10: Kotlin-only and combined Daily products are standalone
+starter ready. Both renamed outputs build/run outside the checkout with inspected
+captures; two Kotlin-only and three combined Activity cases pass with zero failures/
+errors/skips. Copied Kernel/Query/UI checks pass (9/3/8). A fresh Kotlin-only build
+passes without task-cache reuse. Reading step 47 explains identity, portable module/
+fixture selection, first-feature actions and launcher JDK versus compilation JDK.
+Durable preferences, release signing and connected providers remain separate.
+See [readiness](../../../docs/STARTER-READINESS.md).
+
+Clean product entry, 2026-10-10: :product debug/test APKs build and two actual
+MainActivity checks pass with zero failures/skips, including all four tabs,
+material retention through Activity recreation and product branding/permissions.
+Reading step 46 explains installed identity versus R namespace and native saved
+state. Candidate inventory validation and four negative mutation probes pass.
+That entry-only slice did not verify generation; CLI acceptance above now supplies
+that evidence. Durable preferences, physical devices and release signing remain
+separate; catalog/shared UI counts remain unchanged.
+
+Product shells, 2026-10-10, adds five app-owned compositions with Solid/Glass,
+saveable tab/item values and native browse/canvas/setup drafts. Read step 45.
+Both consumers build; 31 app JVM cases and ten focused native shell cases pass,
+including five new real-Activity product flows and five existing shell regressions.
+The workspace check observes portrait/landscape reflow and retained completion;
+inputs/actions exercise real native controls and Activity recreation. The UI
+count stays 112/30. Independent generation, process death, fold/predictive back,
+TalkBack, older OS and physical-device behavior remain separate.
+
+Native observation, 2026-10-10, adds NotesObserver/Flow, Memory and SQLite live
+snapshots, Live notes and an account live reader. Step 44 explains bounded state,
+structured cleanup and retained catalog owners. Eleven Services JVM cases and
+29 app JVM cases pass; 25 distinct focused native cases pass after correcting the
+test host/navigation helper. Runtime checks cover SQLite, actual live CRUD,
+pause/resume, Activity recreation, Device reopening, account closure/renewal and
+shell/credential regressions. The debug APK builds; details are in the app walkthrough.
+The source covers in-process repository commits; cross-process/external SQL,
+remote synchronization and physical-device performance remain separate.
+
+The account-access batch, 2026-10-10, adds authenticated HTTP and account-scoped
+local Notes with a lease-keyed inline editor and local response probe. Step 43
+explains digest naming, owned Bearer headers, explicit 401 renewal and stale work.
+Twenty Session JVM cases, all 25 app JVM cases and 17 focused native cases pass;
+both builds pass. Actual OkHttp/loopback and Android SQLite establish native
+request/storage behavior; actual Compose interactions cover account switching,
+draft clearing, retained Memory records, expiry during a probe and renewal.
+JVM gates establish accepted-write/late-error suppression. A real provider,
+TLS membership validation, backup policy, physical devices and TalkBack remain
+unobserved. Next: choose a provider and connect remote account CRUD.
+
+The session foundation, 2026-10-10, adds core:session, native Keystore encryption
+and Identity and session. Reading step 42 traces scope leases, saved credential
+admission and cleanup after late saves. All thirteen JVM session checks, 21 app
+host cases and five focused API 36 native cases pass; both apps build. Native
+checks cover encrypted files/lost keys/tampering and actual Compose form, IME,
+route restoration, expiry, renewal, account replacement and sign-out. The handoff
+distinguishes emulator evidence from unmeasured device lock, backup and hardware.
+Continue with step 43; next integration work is real authority semantics and remote CRUD.
+
+The first durable-data slice adds core:data and a swappable CRUD NotesRepository
+(2026-10-10). Reading step 41 traces actual SQLite records through existing
+feature/UI seams. All 21 app host checks, eight UI unit checks and thirteen
+focused Android checks pass; both native consumers build. A separate force-stop/
+relaunch observation exercises durable records. The substrate
+and app walkthroughs distinguish real-file evidence, native fast text feedback
+and harness corrections. Shell-key routing through the emulator handwriting
+panel remains WORKING; the retained burst test covers Compose key dispatch and
+IME-action admission. Account scope, observation, later migrations and remote
+sync remain future work.
 
 The twenty-fourth UI batch closes the reserved UI leaves (112 building blocks,
 30 families): VerticalStack, HorizontalStack, SectionDivider and AppShell, plus
@@ -546,3 +707,13 @@ four Android activity checks, nineteen existing Android component regressions,
 and four UI unit checks per platform pass. Notes validation passes. Module
 walkthroughs distinguish scoped reruns, native control/gesture observations and
 remaining coverage limits.
+
+
+## Physics playground evidence
+
+Completed 2026-10-11. Five numeric cases pass per platform and both native apps
+build. Two iPhone 17 Pro / iOS 26.2 UI cases and three Pixel 9 Pro / Android 15
+device cases pass with zero failures/skips. They exercise real drag, alternate
+launch controls, pause/resume/scoring/reset, and Android target/slider changes.
+Module walkthroughs record the test-clock/compiler corrections and evidence
+limits. Physics remains a catalog capability rather than an accepted CLI feature.

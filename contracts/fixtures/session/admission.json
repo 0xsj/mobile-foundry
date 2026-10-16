@@ -1,0 +1,22 @@
+{
+  "commands": [
+    {"login":" Alex@example.test ","password":"catalog-demo","valid":true,"normalizedLogin":"alex@example.test"},
+    {"login":"sam@example.test","password":"  kept  ","valid":true,"normalizedLogin":"sam@example.test"},
+    {"login":"","password":"catalog-demo","valid":false,"field":"login"},
+    {"login":"  \n","password":"catalog-demo","valid":false,"field":"login"},
+    {"login":"alex@example.test","password":"","valid":false,"field":"password"}
+  ],
+  "scopes": [
+    {"authority":"catalog-demo.v1","principal":"alex","account":"alex-personal","valid":true},
+    {"authority":"","principal":"alex","account":"alex-personal","valid":false},
+    {"authority":"catalog-demo.v1","principal":"a/b","account":"alex-personal","valid":false},
+    {"authority":"catalog-demo.v1","principal":"alex","account":"💡","valid":false}
+  ],
+  "credentials": [
+    {"version":1,"authority":"catalog-demo.v1","principal":"alex","account":"alex-personal","refreshToken":"demo.refresh.alex.opaque","valid":true},
+    {"version":2,"authority":"catalog-demo.v1","principal":"alex","account":"alex-personal","refreshToken":"opaque","valid":false},
+    {"version":1,"authority":"catalog-demo.v1","principal":"alex","account":"alex-personal","refreshToken":"","valid":false},
+    {"version":1,"authority":"catalog-demo.v1","principal":"alex","account":"alex-personal","refreshToken":"not a token","valid":false}
+  ],
+  "expiries": [{"value":1700000060000,"valid":true},{"value":0,"valid":false},{"value":-1,"valid":false}]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "authority": "catalog-demo.v1",
+    "principal": "alex",
+    "account": "alex-personal",
+    "identifier": "ab170e02d363282776748a5fd9dee7bed7c47d9f263337c7831c829889a42c4c"
+  },
+  {
+    "authority": "catalog-demo.v1",
+    "principal": "sam",
+    "account": "sam-personal",
+    "identifier": "35a5f3acba7c96630593c4a869cd8a3751d0e7d4d601d2957e45f926bd2bafc0"
+  },
+  {
+    "authority": "catalog-demo.v1",
+    "principal": "other-member",
+    "account": "alex-personal",
+    "identifier": "ab170e02d363282776748a5fd9dee7bed7c47d9f263337c7831c829889a42c4c"
+  },
+  {
+    "authority": "other",
+    "principal": "alex",
+    "account": "alex-personal",
+    "identifier": "8f3512eb0c54302832e3517b6eca13bc9af7a2c631ee9142907f62a71673c47c"
+  },
+  {
+    "authority": "catalog-demo.v1",
+    "principal": "alex",
+    "account": "Alex-personal",
+    "identifier": "0d7bc83ad0b11c886f5bb72ff698e65557706ba646035e000760698c5329fc45"
+  },
+  {
+    "authority": "a.b",
+    "principal": "person",
+    "account": "c",
+    "identifier": "3f3a2e96b50d76aa886653e48e261f2fdc8b2c1ee397eb24126a7626798bce09"
+  },
+  {
+    "authority": "a",
+    "principal": "person",
+    "account": "b.c",
+    "identifier": "3597f23dcee4c679d83c91f650146adf2c76baf9e2ce8c3246aaa8d714a5d2f1"
+  },
+  {
+    "authority": "..",
+    "principal": "person",
+    "account": ".",
+    "identifier": "925a324a10bc92b7c1dc401f6e9c936b1fd877fc53e308b40cd9cb200a851936"
+  }
+]

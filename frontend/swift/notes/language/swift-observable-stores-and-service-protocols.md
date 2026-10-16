@@ -55,6 +55,20 @@ not by itself forward caller cancellation, so the store uses
 store when it disappears. A dependency ignoring cancellation can delay settlement;
 generation checks still keep its late result out of current state.
 
+## Session ownership extension
+
+The 2026-10-10 session owner uses the same Observation/MainActor separation.
+Snapshots are observed, while secret grants, task handles, generations and
+dependencies are ignored. Derived lease checks still validate expiry at use.
+Its app model retains the clock/authority/controller as one @State reference;
+new view values must not pair fresh fixture dependencies with an old controller.
+
+Sign-out awaits the cancelled predecessor before clearing its vault. Shutdown
+advances generation and permanently closes that owner while retaining credentials
+for a fresh owner. It does not await the predecessor or promise cancellation
+rolls back native work. [Session walkthrough](../modules/packages/FoundrySession/README.md)
+links controlled continuation tests for those distinct behaviors.
+
 ## Used in and related
 
 Use this pattern for a small feature with an injected asynchronous dependency.

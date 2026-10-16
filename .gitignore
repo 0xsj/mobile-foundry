@@ -28,6 +28,8 @@ local.properties
 # Shared generated output
 .cache/
 node_modules/
+__pycache__/
+*.pyc
 
 # Keep application dependency locks, Gradle wrappers, Xcode projects,
 # source assets, and portable fixtures versioned.

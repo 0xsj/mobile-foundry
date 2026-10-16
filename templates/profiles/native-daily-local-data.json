@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "id": "native-daily",
+  "status": "standalone",
+  "shell": "daily",
+  "capabilities": [
+    "ui",
+    "local-data"
+  ],
+  "layout": "Preserve repository-relative paths so package dependencies and test fixture depth remain portable.",
+  "exclude": [
+    "**/.build/**",
+    "**/build/**",
+    "**/.gradle/**",
+    "**/.kotlin/**",
+    "**/xcuserdata/**",
+    "**/*.xcuserstate",
+    "**/local.properties",
+    "**/.env*",
+    "**/.DS_Store"
+  ],
+  "sharedSources": [
+    "contracts/fixtures/kernel",
+    "contracts/fixtures/query",
+    "contracts/fixtures/ui",
+    "contracts/fixtures/local-notes"
+  ],
+  "platforms": {
+    "swift": {
+      "entry": "frontend/swift/apps/ProductApp/project.yml",
+      "scheme": "ProductApp",
+      "packages": [
+        "FoundryUI",
+        "FoundryQuery",
+        "FoundryKernel",
+        "FoundryServices",
+        "FoundryData"
+      ],
+      "sources": [
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/apps/ProductApp/Config",
+        "frontend/swift/apps/ProductApp/Sources",
+        "frontend/swift/apps/ProductApp/Tests",
+        "frontend/swift/apps/ProductApp/README.md",
+        "frontend/swift/packages/FoundryUI/Package.swift",
+        "frontend/swift/packages/FoundryUI/Sources",
+        "frontend/swift/packages/FoundryUI/Tests",
+        "frontend/swift/packages/FoundryQuery/Package.swift",
+        "frontend/swift/packages/FoundryQuery/Sources",
+        "frontend/swift/packages/FoundryQuery/Tests",
+        "frontend/swift/packages/FoundryKernel/Package.swift",
+        "frontend/swift/packages/FoundryKernel/Sources",
+        "frontend/swift/packages/FoundryKernel/Tests",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesService.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/CreateNote.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesRepository.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesObserver.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/NotesObservationTests.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/SQLiteNotesRepository.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/NotesChanges.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLiteNotesRepositoryTests.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLiteObservationTests.swift"
+      ],
+      "identityFiles": {
+        "build": "frontend/swift/apps/ProductApp/Config/Product.xcconfig",
+        "runtime": "frontend/swift/apps/ProductApp/Sources/ProductConfiguration.swift"
+      },
+      "overlays": [
+        {
+          "source": "templates/overlays/local-data/swift/project.yml",
+          "destination": "frontend/swift/apps/ProductApp/project.yml"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/ServicesPackage.swift",
+          "destination": "frontend/swift/packages/FoundryServices/Package.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/DataPackage.swift",
+          "destination": "frontend/swift/packages/FoundryData/Package.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/LibraryScreen.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/LibraryScreen.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/LocalNotesStore.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Notes/LocalNotesStore.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/LiveNotesStore.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Notes/LiveNotesStore.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/NotesComposition.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Composition/NotesComposition.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/LocalNotesStoreTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/LocalNotesStoreTests.swift"
+        },
+        {
+          "source": "templates/overlays/local-data/swift/LocalNotesUITests.swift",
+          "destination": "frontend/swift/apps/ProductApp/UITests/LocalNotesUITests.swift"
+        }
+      ],
+      "requiredFiles": [
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesService.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/CreateNote.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesRepository.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesObserver.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/NotesObservationTests.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/SQLiteNotesRepository.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/NotesChanges.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLiteNotesRepositoryTests.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLiteObservationTests.swift",
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/packages/FoundryServices/Package.swift",
+        "frontend/swift/packages/FoundryData/Package.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/LibraryScreen.swift",
+        "frontend/swift/apps/ProductApp/Sources/Notes/LocalNotesStore.swift",
+        "frontend/swift/apps/ProductApp/Sources/Notes/LiveNotesStore.swift",
+        "frontend/swift/apps/ProductApp/Sources/Composition/NotesComposition.swift",
+        "frontend/swift/apps/ProductApp/Tests/LocalNotesStoreTests.swift",
+        "frontend/swift/apps/ProductApp/UITests/LocalNotesUITests.swift"
+      ]
+    },
+    "kotlin": {
+      "entry": "frontend/kotlin/project/product/build.gradle.kts",
+      "modules": [
+        ":product",
+        ":core:ui",
+        ":core:query",
+        ":core:kernel",
+        ":core:services",
+        ":core:data"
+      ],
+      "sources": [
+        "frontend/kotlin/project/build.gradle.kts",
+        "frontend/kotlin/project/gradle.properties",
+        "frontend/kotlin/project/gradlew",
+        "frontend/kotlin/project/gradlew.bat",
+        "frontend/kotlin/project/gradle",
+        "frontend/kotlin/project/product/build.gradle.kts",
+        "frontend/kotlin/project/product/product.properties",
+        "frontend/kotlin/project/product/src",
+        "frontend/kotlin/project/product/README.md",
+        "frontend/kotlin/project/core/ui/build.gradle.kts",
+        "frontend/kotlin/project/core/ui/src",
+        "frontend/kotlin/project/core/query/build.gradle.kts",
+        "frontend/kotlin/project/core/query/src",
+        "frontend/kotlin/project/core/kernel/build.gradle.kts",
+        "frontend/kotlin/project/core/kernel/src",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesService.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/CreateNote.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesRepository.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesObserver.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/NotesObservationTest.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLiteNotesRepository.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/NotesChanges.kt"
+      ],
+      "identityFiles": {
+        "build": "frontend/kotlin/project/product/product.properties",
+        "label": "frontend/kotlin/project/product/src/main/res/values/strings.xml",
+        "runtime": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductConfiguration.kt"
+      },
+      "overlays": [
+        {
+          "source": "templates/overlays/local-data/kotlin/settings.gradle.kts",
+          "destination": "frontend/kotlin/project/settings.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/product.gradle.kts",
+          "destination": "frontend/kotlin/project/product/build.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/services.gradle.kts",
+          "destination": "frontend/kotlin/project/core/services/build.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/data.gradle.kts",
+          "destination": "frontend/kotlin/project/core/data/build.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/LibraryScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/LibraryScreen.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/NotesComposition.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/notes/NotesComposition.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/LocalNotesViewModel.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/notes/LocalNotesViewModel.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/LiveNotesReader.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/notes/LiveNotesReader.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/LocalNotesViewModelTest.kt",
+          "destination": "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/notes/LocalNotesViewModelTest.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/LocalNotesScreenTest.kt",
+          "destination": "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/LocalNotesScreenTest.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/ProductEntryTest.kt",
+          "destination": "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ProductEntryTest.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/LocalNotesRepositoryTest.kt",
+          "destination": "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/LocalNotesRepositoryTest.kt"
+        },
+        {
+          "source": "templates/overlays/local-data/kotlin/NotesObservationTest.kt",
+          "destination": "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/NotesObservationTest.kt"
+        }
+      ],
+      "requiredFiles": [
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesService.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/CreateNote.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesRepository.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesObserver.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/NotesObservationTest.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLiteNotesRepository.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/NotesChanges.kt",
+        "frontend/kotlin/project/settings.gradle.kts",
+        "frontend/kotlin/project/product/build.gradle.kts",
+        "frontend/kotlin/project/core/services/build.gradle.kts",
+        "frontend/kotlin/project/core/data/build.gradle.kts",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/LibraryScreen.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/notes/NotesComposition.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/notes/LocalNotesViewModel.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/notes/LiveNotesReader.kt",
+        "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/notes/LocalNotesViewModelTest.kt",
+        "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/LocalNotesScreenTest.kt",
+        "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ProductEntryTest.kt",
+        "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/LocalNotesRepositoryTest.kt",
+        "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/NotesObservationTest.kt"
+      ]
+    }
+  },
+  "requiredSharedFiles": [
+    "contracts/fixtures/local-notes/repository.json"
+  ]
+}

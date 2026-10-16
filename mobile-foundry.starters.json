@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "native-daily",
+      "manifest": "templates/profiles/native-daily.json"
+    },
+    {
+      "id": "native-workspace",
+      "manifest": "templates/profiles/native-workspace.json"
+    },
+    {
+      "id": "native-browse",
+      "manifest": "templates/profiles/native-browse.json"
+    }
+  ],
+  "backends": [
+    {
+      "id": "go",
+      "status": "standalone",
+      "manifest": "templates/backends/go.json"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "local-data",
+      "status": "standalone"
+    }
+  ],
+  "combinations": [
+    {
+      "profile": "native-daily",
+      "capabilities": [
+        "local-data"
+      ],
+      "manifest": "templates/profiles/native-daily-local-data.json"
+    }
+  ]
+}

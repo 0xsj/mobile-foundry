@@ -1,60 +1,285 @@
-# Go reference backend
+# Go backend foundation
 
-This is the owned API profile, following Bento's modular Go architecture.
-Directories are reserved; there is no Go module or executable yet.
+A runnable runtime, reusable packages and an Account → Audit workflow with
+swappable memory/PostgreSQL stores. Memory needs no running services; PostgreSQL
+uses pgx v5.11.0. Identity adds owned password/session authentication through
+explicit `AUTH_MODE=identity`. The module is initialized as
+`github.com/0xsj/mobile-foundry/backend`; retain that import path until deliberately
+renaming the backend. Go 1.27.1 is the checked toolchain.
 
-## Initialize the module
+## Run
 
-From this folder, choose the import path you want to keep:
+From this directory:
 
 ```sh
-cd /Users/sj/Desktop/dev/builds/mobile-foundry/backend/go
-go mod init mobilefoundry/backend
+make dev
 ```
 
-`mobilefoundry/backend` is a local module path. Use your eventual repository
-URL instead if you want a publishable import path. Run `go mod tidy` after
-adding the first source and dependency. The command is `go mod init`; Git is
-already initialized at the Mobile Foundry repository root.
+The server defaults to `127.0.0.1:8080`. In another terminal:
 
-## Reserved layout
+```sh
+curl -i http://127.0.0.1:8080/v1/health/live
+curl -i http://127.0.0.1:8080/v1/health/ready
+```
+
+Both return `{"status":"ok"}` while the process is serving and selected
+readiness probes succeed. Ctrl-C or SIGTERM starts a graceful drain. The native
+HealthService can use `http://127.0.0.1:8080/v1` as its base; catalog composition
+still selects its existing fixtures.
+
+Configuration is read once at startup. `.env.example` documents the defaults;
+`make dev` does not load `.env` implicitly. Export settings or load a trusted
+local file in your shell:
+
+```sh
+HTTP_ADDR=127.0.0.1:8081 LOG_FORMAT=json make dev
+```
+
+`APP_ENV` accepts development/test/production; `LOG_FORMAT` console/json;
+`LOG_LEVEL` debug/info/warn/error. Invalid values fail startup. Production mode
+only selects a configuration label; deployment policy is separate from storage
+and the explicitly selected authentication mode.
+
+## Exercise Account and Audit
+
+The default credential resolver denies authentication. To select the explicit
+single-principal development fixture:
+
+```sh
+DEV_AUTH_TOKEN=local-example-token \
+DEV_PRINCIPAL_ID=00000000-0000-4000-8000-000000000001 make dev
+```
+
+In another terminal:
+
+```sh
+curl -i http://127.0.0.1:8080/v1/accounts/bootstrap \
+  -H 'Authorization: Bearer local-example-token' \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Personal workspace"}'
+curl -i 'http://127.0.0.1:8080/v1/accounts?limit=20' \
+  -H 'Authorization: Bearer local-example-token'
+```
+
+Use the returned `id` in the paths below:
+
+```sh
+curl -i http://127.0.0.1:8080/v1/accounts/ACCOUNT_ID \
+  -H 'Authorization: Bearer local-example-token'
+curl -i -X PATCH http://127.0.0.1:8080/v1/accounts/ACCOUNT_ID \
+  -H 'Authorization: Bearer local-example-token' \
+  -H 'Content-Type: application/json' -H 'If-Match: "1"' \
+  -d '{"name":"Renamed workspace"}'
+curl -i http://127.0.0.1:8080/v1/accounts/ACCOUNT_ID/audit \
+  -H 'Authorization: Bearer local-example-token'
+```
+
+Bootstrap returns 201 for the first personal account and 200 for repeats, even
+after rename; it never overwrites the current name. `POST /v1/accounts` creates
+additional owner workspaces independently. Use the guarded GET by ID to validate
+a selected account. Selection stays on each device, with no server-global switch.
+Read [account scope behavior](../../contracts/behavior/account-bootstrap.md).
+
+Account writes commit independently of Audit delivery, which normally catches
+up on the next 100 ms poll. A stale version returns 409. The fixture has no
+sign-in/expiry/renewal; production use and non-loopback binding are refused.
+With default memory storage, all accounts, evidence and delivery markers are
+lost on process exit. PostgreSQL retains committed records and recovers pending delivery.
+Read [workflow behavior](../../contracts/behavior/account-audit.md) and
+[HTTP v1](../../contracts/http/account-audit-v1.md) for limits and admission.
+
+## Use PostgreSQL
+
+From `backend/go`:
+
+```sh
+make db-up
+make migrate
+make migrate-check
+STORAGE=postgres DEV_AUTH_TOKEN=local-example-token \
+DEV_PRINCIPAL_ID=00000000-0000-4000-8000-000000000001 make dev
+```
+
+Use the same Account/Audit requests above. The local stack binds PostgreSQL to
+`127.0.0.1:58432`; Make exports its development-only `DATABASE_URL` default.
+Shell settings override it. Outside Make, supply the URL explicitly. Optional
+`ACCOUNT_DATABASE_URL`/`AUDIT_DATABASE_URL`/`IDENTITY_DATABASE_URL`/`NOTES_DATABASE_URL`
+override it per module. Empty explicit
+overrides fail admission. Server startup checks embedded migration checksums;
+only `make migrate` applies them. Add numbered files rather than editing applied SQL.
+
+`make db-down` stops the owned stack and retains its volume. Neither setup nor
+tests reset existing databases. `make integration-test` uses a separate disposable
+container, exercises atomicity/replay/CAS and forced API crash recovery, then
+removes only that container. Docker must be available for these targets.
+With installed PostgreSQL tools, run the same isolated tests without Docker:
+
+```sh
+POSTGRES_TEST_MODE=local POSTGRES_BIN_DIR=/opt/homebrew/bin make integration-test
+```
+
+Omit `POSTGRES_BIN_DIR` when `initdb`, `pg_ctl` and `psql` are on PATH. This creates
+and removes its own temporary cluster, uses a random loopback port and never
+connects to an existing local cluster. Trust authentication is confined to that
+temporary test fixture. PostgreSQL 18.6 Docker and local 14.24 were observed.
+Read [persistence semantics](../../contracts/behavior/postgres-persistence.md)
+for leases, committed cursors, cancellation and uncertain write outcomes.
+
+## Use Identity
+
+For a memory auth workflow from this directory:
+
+```sh
+AUTH_MODE=identity make dev
+```
+
+For durable auth, apply the current migrations, then run:
+
+```sh
+make migrate
+AUTH_MODE=identity STORAGE=postgres make dev
+```
+
+With the API running, register and sign in:
+
+```sh
+curl -i http://127.0.0.1:8080/v1/identity/register \
+  -H 'Content-Type: application/json' \
+  -d '{"login":"alex","display_name":"Alex","password":"a long local passphrase"}'
+curl -i http://127.0.0.1:8080/v1/identity/sign-in \
+  -H 'Content-Type: application/json' \
+  -d '{"login":"alex","password":"a long local passphrase"}'
+```
+
+Use the returned access token as Bearer authorization for Account requests,
+`GET /v1/identity/me` and `GET /v1/principals/me/audit`. Renew through
+`POST /v1/identity/renew` with `{"refresh_token":"RETURNED_REFRESH_TOKEN"}`;
+sign out through `/v1/identity/sign-out` with that same body shape. Renewal
+rotates both tokens; reuse of a consumed refresh token revokes its session.
+Do not blindly retry a renewal after losing its response.
+
+Registration creates a principal only. After sign-in, use the returned access
+token to call `POST /v1/accounts/bootstrap` with `{"name":"Personal"}`, or list
+and validate an owned account using the requests above. Grants contain no selected
+account; [native Go authorities](../../contracts/behavior/go-native-session.md) now
+compose the account scope separately. On restoration/renewal they checkpoint the
+rotation, then validate the stored account rather than silently choose a new default.
+`IDENTITY_DATABASE_URL` overrides the common URL. The migrator includes Identity
+when that URL is configured, and API startup checks the selected histories.
+
+Default auth remains deny. Paired DEV settings retain the fixture workflow when
+AUTH_MODE is omitted; explicit fixture selection is `AUTH_MODE=development`.
+Fixture credentials cannot be mixed with Identity mode. Read
+[Identity behavior](../../contracts/behavior/identity-sessions.md) and
+[HTTP v1](../../contracts/http/identity-sessions-v1.md) for exact input, expiry,
+revocation, admission and write-uncertainty policies. This is not a complete
+production identity service or OAuth/OIDC server.
+
+## Implemented layout
 
 ```text
-cmd/server/                  # Process startup and concrete composition
+cmd/server/                     # Signals, configuration, selected module builders
+cmd/migrate/                    # Explicit migration application/read-only check
+migrations/<module>/            # Embedded SQL and independent checksum histories
+infra/local/                    # Owned local PostgreSQL Compose stack
+internal/server/                # Listener, HTTP composition, readiness/drain lifecycle
+internal/health/
+  app/query/                    # Readiness query and its injected probe port
+  transport/http/v1/            # Public live/ready endpoints
+  module.go                     # Handler wiring
+  build.go                      # Process probe → application port adapter
+internal/architecture/          # AST import rules and policy regression checks
 pkg/
-  errors/                    # Failure vocabulary and public projection
-  clock/                     # Time interfaces and implementations
-  id/                        # Identifiers
-  env/                       # Configuration parsing
-  logger/                    # Logging boundary
-  httpx/                     # HTTP support
-  principal/                 # Request identity and authority values
-  events/                    # Envelopes and delivery mechanics
-  persistence/postgres/      # Shared PostgreSQL infrastructure
-internal/
-  architecture/              # Boundary checks when implemented
-  identity/
-  account/
-  audit/
-migrations/                  # Schema changes owned by each module
-scripts/                     # Backend commands when needed
-tests/integration/           # Cross-module verification
-notes/                       # Learning walkthroughs and findings
+  errors/                       # Typed conditions, wrapping, public projection
+  clock/                        # Clock port and system implementation
+  id/                           # Canonical UUID values and random generator port
+  env/                          # Injectable environment source
+  config/                       # Validated startup settings
+  logger/                       # Standard slog console/JSON configuration
+  httpx/                        # JSON/problem responses, input/header admission
+  principal/                    # Credential resolver port; fail-closed default
+  module/                       # Runtime, unit builders, registration/readiness/cleanup
+  persistence/postgres/         # Pool, transaction and migration mechanics
 ```
 
-Identity, Account, and Audit each reserve `domain`, `app/command`, `app/query`,
-`infra/postgres`, `infra/events`, `infra/capabilities`, `transport/http/v1`, and
-`transport/capability/v1`. Identity also reserves security and mail adapters.
-The folders contain `.gitkeep` files, not pretend implementations.
+Account and Audit implement the business-module shape:
 
-Module composition will live in `internal/<module>/module.go` and `build.go`.
-Keep pure domain rules inward, application ports explicit, and adapters chosen
-at composition. Go uses ordinary error returns; public projection must keep
-private diagnostics out of wire responses. See [backend rules](../AGENTS.md)
-and [Bento conventions](../../../bento/backend/CONVENTIONS.md).
+```text
+internal/<module>/
+  domain/                       # Values, rules and transitions
+  app/command/                  # Write use cases
+  app/query/                    # Read use cases
+  app/                          # Application-owned ports and conditions
+  infra/<adapter>/              # Memory, PostgreSQL or external port implementation
+  transport/http/v1/            # Wire admission and projection
+  module.go                     # Inject ports into handlers
+  build.go                      # Select concrete adapters
+```
 
-Start one process with the modules needed by the first connected workflow.
-Add database services and other Go infrastructure when that implementation
-begins; the provider stacks are independent development profiles.
+Dependency direction is transport/infra → application → domain. The process
+selects `module.Builder` functions; their `module.Unit` values register routes,
+probe readiness and release owned resources. A handler receives a narrow port,
+not a provider SDK or a dependency container. Health is a runtime exemplar with
+no business aggregate or write command.
 
-[Learning notes](notes/README.md) will explain each implemented slice.
+Account implements create/read/rename and owner access, repeatable personal
+bootstrap, owner-filtered listing, an atomic state/outbox store and a capability
+provider. Audit implements admitted event
+consumption, atomic evidence/inbox deduplication and scoped paginated
+reads through its own AccountAccess port. `pkg/capability` supplies local routing;
+`pkg/events` supplies independent memory delivery and an owned polling worker.
+
+Each owner has memory/PostgreSQL stores selected in `build.go`/`postgres.go`.
+The process supplies module-specific connection settings and migration artifacts.
+Identity implements principals, Argon2id credential verification, opaque sessions,
+rotation/reuse revocation, a credential capability and selected Audit facts.
+Notes implements scoped paged reads, version-guarded CRUD and atomically committed
+command receipts through consumer-owned AccountAccess. See
+[the contract](../../contracts/behavior/remote-notes.md) and
+[native setup](../../docs/blueprints/remote-notes.md). PostgreSQL receipts survive
+API restart/deletion; native pending input is currently transient.
+Membership management and sockets remain planned. CLI backend extraction is
+implemented and independently verified; see [Go starter](../../docs/blueprints/go-starter.md).
+Account rename enforces CAS and rejects Idempotency-Key; Notes requires an
+admitted command key for writes. `principal.Deny` authenticates nobody.
+
+## Planned capability catalog
+
+The [capability catalog](CAPABILITIES.md) lists selectable Identity, Account,
+Audit and optional connected/commercial modules, their data ownership and
+construction order. The [module boundary policy](../../contracts/behavior/module-boundaries.md)
+establishes application-owned ports, versioned synchronous capabilities,
+committed integration facts and recoverable realtime hints. Start in-process;
+select remote adapters when their contracts and authentication are verified.
+The memory/PostgreSQL Account/Audit subset is implemented; the larger catalog, remote
+adapters and CLI combinations remain planned.
+
+## Verify and learn
+
+```sh
+make check
+make test
+make smoke
+make db-check
+make integration-test
+```
+
+`check` verifies formatting, architecture, vet and build. `test` runs the suite
+with the race detector, including real loopback HTTP requests, readiness failure,
+active-request draining, forced shutdown, private failure projection and the
+Account/Audit workflow. `smoke` builds temporary binaries, starts only its own
+loopback processes and checks HTTP/evidence, logs, restart loss and shutdown.
+`integration-test` additionally runs the real disposable database suite and
+compiled-process persistence/recovery checks; `test` alone skips database cases.
+Identity checks cover the same store scenarios on memory/PostgreSQL, session
+expiry/rotation races, rollback/leases, real HTTP scope, API crash restoration,
+durable revocation/sign-out and raw-credential absence from stored rows/events/logs.
+The last verification used local mode after Docker's VM filesystem became
+read-only; Docker needs recovery before `db-up` can run on this host.
+
+Read the [runtime contract](../../contracts/behavior/go-runtime.md),
+[HTTP contract](../../contracts/http/runtime-v1.md), and
+[Go learning order](notes/README.md). The runtime is implemented in this checkout;
+the independently generated Go backend is standalone ready through CLI 0.4.0.
+Native catalog integration is verified; generated native auth/data composition
+remains tracked in [starter readiness](../../docs/STARTER-READINESS.md).

@@ -178,6 +178,79 @@ linked language and tool notes to understand the choices. This notebook follows
     [Shells gallery](modules/apps/FoundryCatalog/README.md#shell-primitives-gallery).
     Compare bounded content/navigation, inset ownership and retained page values.
 
+41. Read [local commits and observation lifetime](../../../notes/patterns/local-commits-and-observation-lifetime.md),
+    then [SQLite actor/handle mechanics](substrate/sqlite-actors-and-scoped-handles.md),
+    [Data](modules/packages/FoundryData/README.md) and
+    [Local notes](modules/apps/FoundryCatalog/README.md#durable-local-notes).
+    Trace admitted CRUD, durable identity, transient drafts and separate commit/read phases.
+
+42. Read [session scope and credential lifetime](../../../notes/patterns/session-scope-and-credential-lifetime.md),
+    then [Keychain accessibility](substrate/keychain-credentials-and-accessibility.md),
+    [Session](modules/packages/FoundrySession/README.md) and
+    [Identity and session](modules/apps/FoundryCatalog/README.md#identity-and-session).
+    Trace restoration, persistence before activation, expiry and the sign-out barrier.
+
+43. Read [account partitions and leased work](../../../notes/patterns/account-partitions-and-leased-work.md),
+    then [CryptoKit and authenticated URLSession](substrate/cryptokit-partitions-and-authenticated-urlsession.md),
+    [Session](modules/packages/FoundrySession/README.md#authenticated-http),
+    [Data](modules/packages/FoundryData/README.md#account-collections) and
+    [Account access](modules/apps/FoundryCatalog/README.md#account-access).
+    Trace a stable account partition, one leased request and terminal editor cleanup.
+
+44. Read [current snapshots and subscription lifetime](../../../notes/patterns/current-snapshots-and-subscription-lifetime.md),
+    then [native stream cleanup](substrate/async-stream-buffering-and-subscription-cleanup.md),
+    [Services](modules/packages/FoundryServices/README.md#live-read-capability),
+    [Data](modules/packages/FoundryData/README.md#live-local-observation) and
+    [Live notes](modules/apps/FoundryCatalog/README.md#live-notes).
+    Trace current snapshots, register-before-read invalidation, independent readers
+    and terminal account cleanup.
+
+45. Read [product shell ownership](../../../notes/patterns/product-shells-and-navigation-ownership.md),
+    then [native adaptation](substrate/swiftui-bounded-panes-and-navigation.md#product-shell-compositions)
+    and [the five shell variations](modules/apps/FoundryCatalog/README.md#product-shell-variations).
+    Trace gallery bindings through tabs, detail intent, native inputs and
+    theme/layout branches. Compare these examples with generated-product readiness.
+
+46. Read [product entry and extraction closure](../../../notes/patterns/product-entry-and-extraction-closure.md),
+    then [build identity](substrate/swift-package-and-xcode-project-wiring.md#clean-product-identity)
+    and [ProductApp](modules/apps/ProductApp/README.md). Trace the separate entry,
+    window state, configuration and UI/Query/Kernel selection. Keep independent
+    CLI generation/build/run as the remaining readiness gate.
+
+47. Read [local source-copy CLI](../../../notes/techniques/local-cli-and-independent-source-copies.md),
+    then [independent output](modules/apps/ProductApp/README.md#independent-cli-output)
+    and [explicit package links](substrate/swift-package-and-xcode-project-wiring.md#independent-source-copies).
+    Trace generated branding, portable fixtures and an injected first feature.
+
+48. Read [explicit capabilities](../../../notes/techniques/explicit-capabilities-and-effective-build-graphs.md),
+    then [local-data output](modules/apps/ProductApp/README.md#optional-local-data-output).
+    Compare explicit local package links, injected writer/reader state, native
+    confirmation, background cancellation and fresh-process persistence checks.
+
+49. Read [shell profiles/state lifetimes](../../../notes/patterns/shell-profiles-and-state-lifetimes.md),
+    then [Workspace/Browse output](modules/apps/ProductApp/README.md#workspace-and-browse-output).
+    Trace value state above theme/pane branches, selection versus detail flags,
+    search focus and actual native navigation/width checks in generated apps.
+
+50. Read [fixed-step physics](../../../notes/patterns/fixed-step-physics-and-presentation.md),
+    then [FoundryPhysics](modules/packages/FoundryPhysics/README.md) and the
+    [app playground](modules/apps/FoundryCatalog/README.md#physics-playground).
+    Trace mutating snapshots, a copied preview, explicit CGFloat conversion,
+    cancellable task baselines, and native drag/control tests.
+
+51. Read [deployment authorities and rotation checkpoints](../../../notes/patterns/deployment-authorities-and-rotation-checkpoints.md),
+    then the Session Go walkthrough and catalog example. Compare a real issuer,
+    a saved account, confirmed persistence and public activation.
+
+52. Read [command receipts and uncertain writes](../../../notes/patterns/command-receipts-and-uncertain-writes.md),
+then [Services](modules/packages/FoundryServices/README.md#remote-notes-and-immutable-receipts)
+and [catalog recovery](modules/apps/FoundryCatalog/README.md#remote-notes-recovery).
+Compare historical evidence, exact UTF-8 confirmation, and cancel/result admission
+through renewal/account replacement. Native HTTP and catalog state checks pass;
+durable device queues and generated connected products remain separate work.
+The connected iOS UI case also passes create/relaunch/edit/delete/sign-out under
+the selected real Go workspace, with zero failures/skips (2026-10-13).
+
 ## Findings by lifespan
 
 | Directory | Subject |
@@ -194,6 +267,88 @@ Paths mirror the Swift root: `apps/FoundryCatalog/` maps to
 transferable notes describe the mechanism without local source paths.
 
 ## Current coverage
+
+Workspace/Browse output, completed 2026-10-11: CLI 0.3.0 creates independent
+Swift-only and combined products for each shell. All four builds and three cases
+per output pass with zero failures/skips. Workspace checks compact navigation/
+rotation on iPhone and simultaneous panes on iPad; Browse checks actual search,
+clear/empty results, detail/back and material. Exported captures were inspected.
+Copied UI/Query/Kernel checks pass 9/3/7. Step 49 explains selected overlays,
+state lifetimes and native accessibility locator corrections. Both profiles are
+standalone UI starter ready; durable data/provider/release/device checks remain
+separate capabilities.
+
+Optional local-data output, 2026-10-10: CLI 0.2.0 generates combined and Swift-only
+renamed products; each builds and passes eight native cases with zero failures/
+skips. Seven hosted cases exercise navigation/identity and CRUD owners; the UI
+case drives validation/create/edit/canceled deletion, process relaunch and
+confirmed deletion, checking the independent live count. Its relaunch capture
+was inspected. Selected packages pass 30 cases (Kernel 7 / Query 3 / UI 9 /
+local Services 2 / local Data 9); full Services regressions pass eleven after
+HTTP source separation. Reading step 48 explains local overlays and ownership.
+The combination is standalone starter ready; physical devices, release signing,
+account/remote synchronization and backup/restore remain separate.
+
+CLI extraction, 2026-10-10: Swift-only and combined Daily products are standalone
+starter ready. Both renamed outputs build/run outside the checkout with inspected
+captures; two Swift-only and three combined hosted cases pass with zero failures/
+skips. Copied Kernel/Query/UI checks pass (7/3/9). Reading step 47 explains identity,
+portable fixtures and explicit package links for an injected first feature.
+Release signing/icons, older OS/device behavior and connected providers remain
+separate. See [readiness](../../../docs/STARTER-READINESS.md).
+
+Clean product entry, 2026-10-10: ProductApp builds without the catalog target and
+two hosted iOS checks pass with zero failures/skips. Product configuration,
+four placeholder screens and per-window theme/tab state are separate from the
+gallery. Reading step 46 explains xcconfig precedence, source versus installed
+identity and preserved source/fixture depth. Candidate inventory validation and
+four negative mutation probes pass. That entry-only slice did not establish an
+independent product; the CLI acceptance above now supplies that evidence. Durable
+preferences, distribution icon/signing and physical-device behavior remain separate.
+
+Product shells, 2026-10-10, adds five app-owned compositions with Solid/Glass,
+independent tab/item values, browse/canvas/setup drafts and width adaptation.
+Read step 45. Both native consumers build; all 81 hosted iOS app cases pass,
+including the portable scenario, explicit setup reset and actual native tabs/
+workspace adaptation. Rendered previews were inspected; a compressed iOS preview
+header was corrected with a reserved top inset; its UISwitch bounds are asserted
+for every profile and rendered captures supply separate visual evidence.
+The shared UI count stays 112/30. Independent generation, full iOS touch journeys,
+physical device/iPad assessment and native detail-stack history remain separate.
+
+Native observation, 2026-10-10, adds NotesObserver/NotesSubscription, Memory and
+SQLite live snapshots, Live notes and an account live reader. Step 44 explains
+bounded state, cleanup and native lifecycle ownership. Eleven Services tests,
+fourteen Data tests and 78 hosted app cases pass; the final simulator build passes.
+Native/model checks cover multiple readers, bursts, cancellation/unused streams,
+read failures, late defects, lease admission and source retention. Manual gallery
+taps, process death, external SQL and physical-device performance remain unobserved.
+
+The account-access batch, 2026-10-10, adds authenticated HTTP and account-scoped
+local Notes with an inline lease-keyed editor and local response probe. Step 43
+explains stable digest naming, owned Bearer headers, explicit 401 renewal policy
+and stale-result gates. All twenty Session cases, eleven Data cases and 73 hosted
+app cases pass; both native builds pass. Native URLSession uses a URLProtocol
+fixture; Data uses actual temporary SQLite files. App checks observe terminal
+draft cleanup, accepted late writes and probe disposal, alongside prior Keychain
+and app regressions. iOS field taps, real TLS/provider authorization, backup and
+physical devices remain unobserved. Next: a connected provider and remote account CRUD.
+
+The session foundation, 2026-10-10, adds FoundrySession, native Keychain storage
+and Identity and session. Reading step 42 traces scope leases, saved credential
+admission and cleanup after late saves. All thirteen package checks and 70
+hosted app cases pass, including three real Keychain cases; both apps build.
+Simulator targets use ad-hoc signing so Keychain is exercised. The app handoff
+records the unsigned-run failure and separates native storage/model execution
+from unobserved iOS field taps, locking, backups and physical-device behavior.
+Continue with step 43; next integration work is real authority semantics and remote CRUD.
+
+The first durable-data slice adds FoundryData and a swappable CRUD NotesRepository
+(2026-10-10). Reading step 41 traces actual SQLite records through the existing
+feature/UI seams. Six Swift Data checks, nine Services regressions and all 67
+hosted iOS app cases pass; both native consumers build. Fresh-file/owner evidence
+is distinct from Android's separately observed process relaunch. Account scope,
+database observation, later migrations and remote sync remain future work.
 
 The twenty-fourth UI batch closes the reserved UI leaves (112 building blocks,
 30 families): VerticalStack, HorizontalStack, SectionDivider and AppShell, plus
@@ -552,3 +707,13 @@ four Android activity checks, nineteen existing Android component regressions,
 and four UI unit checks per platform pass. Notes validation passes. Module
 walkthroughs distinguish scoped reruns, native control/gesture observations and
 remaining coverage limits.
+
+
+## Physics playground evidence
+
+Completed 2026-10-11. Five numeric cases pass per platform and both native apps
+build. Two iPhone 17 Pro / iOS 26.2 UI cases and three Pixel 9 Pro / Android 15
+device cases pass with zero failures/skips. They exercise real drag, alternate
+launch controls, pause/resume/scoring/reset, and Android target/slider changes.
+Module walkthroughs record the test-clock/compiler corrections and evidence
+limits. Physics remains a catalog capability rather than an accepted CLI feature.

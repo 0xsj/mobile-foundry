@@ -1,5 +1,9 @@
 # Native project setup
 
+For the implemented Go session/account integration, follow
+[Go native setup](blueprints/go-native-session.md). It documents backend startup,
+registration, native endpoint/credential selection and actual integration checks.
+
 The SwiftUI iOS app, Compose Android app, and native kernel, HTTP, services, query, UI and graphics
 packages/modules are initialized. Do not rerun project initialization commands in
 these existing directories.
@@ -38,6 +42,57 @@ The Android shortcuts default to Android Studio's bundled JDK and the SDK at
 make android-build FOUNDRY_ANDROID_JAVA_HOME="/path/to/jdk" \
   FOUNDRY_ANDROID_SDK="/path/to/android-sdk"
 ```
+
+## Clean product apps
+
+The separate Daily entries are [Swift ProductApp](../frontend/swift/apps/ProductApp/README.md)
+and [Kotlin product](../frontend/kotlin/project/product/README.md). They use shared
+UI/Query/Kernel without catalog features. From the repository root:
+
+```sh
+make product-ios-generate
+make product-ios-build
+make product-ios-test
+make product-android-build
+make product-android-ui-test
+make starter-check
+```
+
+iOS checks use the configured simulator; Android interaction checks require an
+attached emulator/device. The existing Java/SDK and iOS destination overrides
+apply. Each app README gives commands from its own folder and the branding edits.
+The Swift product has a blank signing team and needs an AppIcon before
+distribution. The Kotlin product has a vector launcher placeholder and no release
+signing configuration. To copy a new product, use the local CLI below.
+
+## Create an independent product
+
+From this repository root:
+
+```sh
+make cli-install
+export PATH="$HOME/.local/bin:$PATH"
+mobile-foundry list
+```
+
+Then, from an existing output parent outside this checkout:
+
+```sh
+mobile-foundry doctor --platform both
+mobile-foundry init canopy --platform both --app-id com.example.canopy
+cd canopy
+make help
+```
+
+Use `--platform swift` or `kotlin` to select one app, and `--display-name` for
+branding. Add `--with local-data` for the persistent Library Notes example,
+CRUD, observation and local Services/Data modules. Omit it for empty UI screens.
+Output is `PARENT/NAME`; an existing destination is refused. Follow its
+own SETUP.md for builds/tests. Python 3.11+ runs the generator; initialization
+does not download dependencies. Add `--backend go` for an independent API, or use
+`--platform none --backend go` for API-only output. `--go-module` selects its import
+identity. Read [Go starter setup](blueprints/go-starter.md).
+Read [CLI usage](../cli/README.md) and [readiness](STARTER-READINESS.md) for scope.
 
 ## Swift kernel package
 
@@ -356,13 +411,14 @@ The profiles are independent. Start whichever one the current experiment uses.
 Docker Desktop must be running for the two Compose profiles.
 
 ```sh
-cd /Users/sj/Desktop/dev/builds/mobile-foundry/backend/go
-go mod init mobilefoundry/backend
+cd backend/go
+AUTH_MODE=identity make dev
 ```
 
-Choose a repository import path instead if desired. This creates only `go.mod`;
-the reserved Go directories contain no executable or dependencies yet. See
-[Go layout](../backend/go/README.md).
+The working API has Identity, Account, Audit and Notes with memory/PostgreSQL
+providers. Its go.mod is already initialized. Use the CLI to select an independent
+copy and its own module path; see [Go starter setup](blueprints/go-starter.md)
+and [Go layout](../backend/go/README.md).
 
 Supabase requires OpenSSL and Node.js on the host for one-time key generation:
 
@@ -427,7 +483,127 @@ mutation values. `make ios-test` and `make android-test` cover feature execution
 [the contract](../contracts/behavior/forms-mutations.md) and
 [learning handoff](../notes/patterns/forms-and-mutation-ownership.md).
 
+## Local Notes persistence
+
+Open Studio → Open catalog → Local notes. Device storage is the default;
+Memory uses the same CRUD screen with transient records. Try creating/editing,
+canceling then confirming deletion, closing the route and relaunching the app.
+
+```sh
+make data-test
+make data-ui-test  # Android device/emulator required
+make ios-test     # iOS simulator required; includes the consumer checks
+```
+
+See [construction and seam usage](blueprints/local-notes.md) and native reading
+step 41. These commands exercise files/state/UI, not backend or sync behavior.
+
+## Identity and session
+
+Open Studio → Open catalog → Identity and session. Device is the default.
+Use `alex@example.test` or `sam@example.test` and password `catalog-demo`.
+Sign in, close/reopen the gallery to restore, advance the manual clock by 61
+seconds, renew, reject renewal and sign out. Memory discards its saved session
+when the source/screen is replaced. Password drafts clear after submission/exit.
+These fixture accounts do not authenticate a person or authorize Local notes.
+
+```sh
+make session-test
+make session-ui-test  # Android device/emulator required
+make ios-test         # includes actual isolated Keychain checks
+```
+
+The iOS simulator build/test targets use local ad-hoc signing (`CODE_SIGN_IDENTITY=-`).
+That enables actual Keychain checks without changing distribution signing settings.
+
+Read [construction](blueprints/session.md), [behavior](../contracts/behavior/session.md)
+and native notebook step 42. A real authority and remote account
+data authorization require the next connected slice.
+
+## Live local readers
+
+Open Studio → Open catalog → Live notes. Create, edit and delete a note while
+watching both readers. Pause the second, write again, then resume it. Device
+storage uses a dedicated SQLite collection; Memory lasts for the route and
+survives storage switches/configuration changes. Leaving the route discards it.
+Identity and session also shows a current-account live reader after sign-in.
+
+```sh
+make observation-test
+make observation-ui-test  # Android emulator/device required
+make ios-generate
+make ios-test             # hosted reader/state-owner checks
+```
+
+Read [behavior](../contracts/behavior/notes-observation.md),
+[construction](blueprints/notes-observation.md) and native reading step 44.
+Notifications cover repository commits in this process; explicit restart or
+foreground resume reads current storage. This does not connect a backend.
+
+## Account access
+
+The same Identity and session gallery now includes Account notes and an
+Authenticated HTTP probe while access is active. Sign in as Alex, create a note,
+leave an unsaved draft, then sign in as Sam. Sam has a separate collection and
+an empty editor. Return to Alex to reload its saved note. Advance time to close
+the editor, then renew to reopen it. Signing out retains Device account records;
+Memory retains them only until its source/gallery closes. Guest Local notes stay
+separate. Source selection controls credentials and account Notes together.
+
+The probe offers Success, Unauthorized and Slow response. It uses a local wire
+fixture, with no network/server connection. Unauthorized is one failure and does
+not renew or replay automatically. Closing a lease removes its probe report.
+
+```sh
+make account-test
+make ios-test
+make account-ui-test # Android device/emulator required
+```
+
+Read [account construction](blueprints/account-access.md),
+[behavior](../contracts/behavior/account-access.md) and native notebook step 43.
+AuthenticatedHTTPClient accepts the native URLSession/OkHttp transport for a
+future provider. HTTPS is required by default; allowLocalHTTP explicitly permits
+loopback development only. This batch adds no backend/provider or remote sync.
+
+## Product shell variations
+
+Open **Studio → Open catalog → Product shells** on either native app. Choose
+Daily app, Workspace, Browse and collect, Canvas studio or Guided setup. Use
+Glass to change material; Back to shells returns to the chooser while retaining
+each profile's local state. Closing the whole gallery discards its fixture state.
+
+Daily check-ins belong to their selected tab. Workspace opens project details,
+supports completion and shows both panes at sufficient available width. Browse
+filters local collections and saves them in the preview. Canvas lets you change
+its title/tool, add up to eight layers and count preview exports. Setup retains
+name/focus through back/review and clears both with Start again. These are local
+interactions; the canvas example does not export a file.
+
+```sh
+make ios-generate
+make ios-build
+make ios-test
+cd frontend/kotlin/project
+./gradlew :app:testDebugUnitTest
+cd ../../..
+make shell-ui-test # Android emulator/device required
+```
+
+Use the configured JDK/SDK environment from the Android setup instructions for
+the direct Gradle command. Read [behavior](../contracts/behavior/product-shells.md),
+[construction](blueprints/product-shells.md) and native notebook step 45.
+
 ## Version control
+
+For a separate product, use the [local CLI](../cli/README.md) from a directory
+outside this checkout. Daily is the default; choose `--profile native-workspace`
+for adaptive project navigation or `--profile native-browse` for search/detail.
+Both support `--platform swift`, `kotlin` or `both` and a Solid/Glass header.
+Their generated SETUP/Makefile includes only the selected platform commands and
+shell checks. Local-data remains an optional Daily combination. Read
+[shell starter behavior](../contracts/behavior/shell-starters.md) and native
+reading step 49 for ownership, verification and customization.
 
 Run Git commands from `mobile-foundry`, keeping both platforms and shared
 contracts in one repository. Keep native project files, dependency locks,

@@ -1,0 +1,488 @@
+{
+  "nowMillis": 1791849600000,
+  "ownerID": "00000000-0000-4000-8000-000000000001",
+  "grant": {
+    "authority_id": "go.identity.v1",
+    "principal": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "login": "alex",
+      "display_name": "Alex"
+    },
+    "session_id": "00000000-0000-4000-8000-000000000201",
+    "session_version": 1,
+    "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+    "access_expires_at": "2026-10-13T00:15:00.123456Z",
+    "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+  },
+  "account": {
+    "id": "00000000-0000-4000-8000-000000000101",
+    "owner_id": "00000000-0000-4000-8000-000000000001",
+    "name": "Personal",
+    "version": 1,
+    "created_at": "2026-10-13T00:00:00.123456Z",
+    "updated_at": "2026-10-13T00:00:00.123456Z"
+  },
+  "cases": [
+    {
+      "name": "valid grant",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": true
+    },
+    {
+      "name": "valid account",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Personal",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": true
+    },
+    {
+      "name": "wrong authority",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "other",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "expired access",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:00:00Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "offset timestamp",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00+00:00",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid date",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-02-30T00:15:00Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "fraction precision",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.1234567Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "newline timestamp",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00Z\n",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "refresh before access",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-10-13T00:05:00Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "wrong token purpose",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "token newline",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "noncanonical token",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "quoted generation",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": "1",
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "zero generation",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 0,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "oversized generation",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 9007199254740992,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "foreign owner",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000002",
+        "name": "Personal",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "zero UUID",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Personal",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "UUID newline",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101\n",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Personal",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "blank name",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": " ",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "noncanonical name",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": " Personal ",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "control name",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Per\nsonal",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "backwards microseconds",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Personal",
+        "version": 1,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123455Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "zero version",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Personal",
+        "version": 0,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "fraction version",
+      "kind": "account",
+      "status": 200,
+      "body": {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "owner_id": "00000000-0000-4000-8000-000000000001",
+        "name": "Personal",
+        "version": 1.5,
+        "created_at": "2026-10-13T00:00:00.123456Z",
+        "updated_at": "2026-10-13T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "uppercase principal",
+      "kind": "grant",
+      "status": 200,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-00000000000A",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    },
+    {
+      "name": "wrong success status",
+      "kind": "grant",
+      "status": 201,
+      "body": {
+        "authority_id": "go.identity.v1",
+        "principal": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "login": "alex",
+          "display_name": "Alex"
+        },
+        "session_id": "00000000-0000-4000-8000-000000000201",
+        "session_version": 1,
+        "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "refresh_token": "r1.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBA",
+        "access_expires_at": "2026-10-13T00:15:00.123456Z",
+        "refresh_expires_at": "2026-11-12T00:00:00.123456Z"
+      },
+      "valid": false
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "token": "access.secret",
+    "valid": true
+  },
+  {
+    "token": "a-._~+/z==",
+    "valid": true
+  },
+  {
+    "token": "bad:token",
+    "valid": false
+  },
+  {
+    "token": "a=b",
+    "valid": false
+  },
+  {
+    "token": "=",
+    "valid": false
+  },
+  {
+    "token": "bad,token",
+    "valid": false
+  }
+]

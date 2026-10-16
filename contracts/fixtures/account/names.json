@@ -1,0 +1,9 @@
+[
+  {"input":"  Personal workspace  ","valid":true,"canonical":"Personal workspace"},
+  {"input":"İstanbul çalışma alanı","valid":true,"canonical":"İstanbul çalışma alanı"},
+  {"input":"","valid":false},
+  {"input":" \t\n ","valid":false},
+  {"input":"Account\nname","valid":false},
+  {"input":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","valid":true,"canonical":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  {"input":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","valid":false}
+]

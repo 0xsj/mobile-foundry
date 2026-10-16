@@ -175,6 +175,12 @@ callbacks; they never choose service adapters or create feature state owners.
 See [shell behavior](../contracts/behavior/app-shell.md),
 [construction](blueprints/app-shell.md), and [Styles](../STYLES.md).
 
+**Product shells** is a separate app gallery composing these blocks into daily,
+workspace, browse/detail, canvas and guided-setup layouts. It adds no shared
+component family; the count remains 112/30. See
+[product shell behavior](../contracts/behavior/product-shells.md) and
+[construction](blueprints/product-shells.md).
+
 Native graphics adapters remain in FoundryGraphics/core/graphics. Image studio,
 Product studio and Compositor studio are app examples, not UI components.
 Camera capture and photo admission are also app features. Camera and Image

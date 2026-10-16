@@ -106,3 +106,65 @@ Use one wrapper and version catalog for the catalog's growing native modules.
 Revisit these observations when plugins, toolchains, SDK baselines, dependency
 resolution, or sharing configuration change. The module walkthrough links the
 actual settings, view model, screen, and tests.
+
+## Clean product identity
+
+Claim: Android installed identity, source namespace and resource branding can be
+separate product inputs while reusable modules keep their original names.
+
+Added 2026-10-10 with AGP 9.0.1 / Gradle 9.1.0 / Kotlin 2.3.20. The separate
+product module reads applicationId/version from product.properties using Gradle's
+file-content provider and java.util.Properties. Namespace stays
+dev.mobilefoundry.product, which generates R independently of applicationId.
+MainActivity has a fully qualified manifest class name. Runtime app_name supplies
+both the launcher label and the Today screen's display name.
+Google documents [application ID and namespace](https://developer.android.com/build/configure-app-module);
+Gradle documents [file-content providers](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileContents.html).
+An alternative is direct literals in build.gradle.kts; the small properties file
+makes later generator identity edits explicit. Resource branding remains Android
+XML so normal escaping/localization rules apply.
+
+Example: edit product.properties and src/main/res/values/strings.xml, then run
+`../gradlew -p .. :product:assembleDebug` from the product folder. Namespace/source
+refactoring is optional and separate. ProductRoot keeps selected ID and material
+in rememberSaveable owners above themed branches; native Activity recreation
+restores them. This is saved instance state, not durable user preferences.
+
+Observed: default product debug/test APKs build with configuration cache stored.
+Two actual MainActivity checks pass for four tabs, material changes, recreation,
+runtime label and absence of camera/internet permissions. Independently renamed
+output is unverified. The future settings overlay selects only product/ui/query/
+kernel; wrapper, version catalog and relative fixture locations must travel with
+those modules. Do not copy local.properties or SDK/cache paths as source inputs.
+
+Read [product module](../modules/project/product/README.md) and
+[extraction closure](../../../../notes/patterns/product-entry-and-extraction-closure.md).
+
+## Gradle launcher and compilation toolchain
+
+Claim: the JVM running Gradle and the JDK compiling application/library source
+are separate selections; a toolchain declaration does not override stale JAVA_HOME.
+
+Observed 2026-10-10 with Gradle 9.1.0 / AGP 9.0.1 / Android Studio's JDK 21.0.6.
+The copied projects declare jvmToolchain(17) and Java source/target 17. The launcher
+uses JAVA_HOME or Android Studio's selected JVM; Gradle resolves the compilation
+toolchain separately. The settings retain the Foojay resolver for missing JDKs.
+Gradle documents [toolchain selection](https://docs.gradle.org/current/userguide/toolchains.html),
+[Java 25 support in 9.1](https://docs.gradle.org/9.1.0/release-notes.html) and
+[its launcher version progression](https://blog.gradle.org/gradle-is-javamaxxing).
+
+The CLI doctor originally saw a nonexistent JAVA_HOME pointing at an old JDK 11.
+With Studio's actual JDK 21 selected, native build/unit/Activity checks pass.
+Doctor accepts launcher versions 17–25 for the pinned Gradle and reports the
+configured compilation toolchain separately. It does not download or prove that
+toolchain available; a real build provides that evidence. The earlier table's
+17 describes compilation, not a claim that Studio's launcher is version 17.
+
+Example: pass ANDROID_JAVA_HOME and ANDROID_SDK to generated Make commands, or
+set JAVA_HOME/ANDROID_HOME deliberately in the terminal. Keep local.properties,
+SDK locations and caches out of copied source. Product-only settings plus the
+checked wrapper/version catalog and retained fixture depth built the generated
+Orbit Lab independently. Its feature screen imports dev.mobilefoundry.product.R
+explicitly even when the installed app ID is com.example.orbitlab.
+Read [the product output record](../modules/project/product/README.md#independent-cli-output)
+and [CLI usage](../../../../cli/README.md).

@@ -30,4 +30,7 @@ plugins {
 }
 
 rootProject.name = "FoundryCatalog"
-include(":app", ":core:kernel", ":core:http", ":core:services", ":core:query", ":core:ui", ":core:graphics")
+include(":app", ":core:kernel", ":core:http", ":core:services", ":core:query", ":core:data", ":core:ui", ":core:graphics")
+include(":core:session")
+include(":product")
+include(":core:physics")

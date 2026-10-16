@@ -51,3 +51,41 @@ Read [UI APIs](../modules/packages/FoundryUI/README.md#adaptive-workspaces),
 [shared ownership](../../../../notes/patterns/adaptive-layout-and-navigation-state.md).
 Next: observe actual iPad resizing, keyboard focus and native navigation-stack
 restoration before adopting this pattern in a routed editor.
+
+## Product shell compositions
+
+Product shells, 2026-10-10, uses the same toolchain and SplitPane API for an
+app-owned workspace. The preview fills a bounded AppShell viewport, with a
+280-point primary and a 420-point detail/gutter budget. It expands at 700 points;
+accessibility Dynamic Type still chooses one pane. DetailShell reserves a fixed
+header/footer around a scrolling body. Native TabBar owns Daily's bottom safe
+area; the host does not add another inset around it.
+
+ProductShellCatalogView's @State owns all profile values above NavigationLink
+previews. Child Bindings mutate that owner; Solid/Glass material changes keep the
+content identity. Setup/canvas input uses existing native focus bindings and
+clears focus before advancing/resetting. Browse returns to the same filter value.
+SwiftUI's keyboard safe area adjusts available layout; this slice does not own a
+second keyboard-height notification system.
+
+The preview's Back/Glass controls occupy a top safeAreaInset on the product
+content. That native inset reserves measured chrome space before laying out
+the shell. A sibling flexible VStack alone let DetailShell consumers squeeze or
+overlap the row. An initial fixed-size row improved Workspace/Setup, but visual
+capture still exposed Canvas overlap; the measured native inset is the final
+composition. The header belongs to the app host, not shared DetailShell.
+
+The local compact back button changes detail intent. A native NavigationSplitView
+or per-destination NavigationStack is the alternative when the product requires
+native navigation history, deep links or interactive detail back gestures. The
+present example deliberately uses bounded composition inside the catalog route.
+
+[The hosted product checks](../../apps/FoundryCatalog/Tests/ProductShellTests.swift)
+inspect Daily's actual UITabBar labels/selection and the workspace's native scroll
+containers at compact, expanded and accessibility-size bounds, retaining selection
+and completion. They also mount/capture all five actual compositions. Geometry
+on a hosted simulator is separate from real iPad resizing, VoiceOver or a complete
+iOS touch/keyboard journey. See [the app evidence](../modules/apps/FoundryCatalog/README.md#product-shell-variations)
+and [shared reasoning](../../../../notes/patterns/product-shells-and-navigation-ownership.md).
+Next: select a composition for independent extraction, then choose its real
+native navigation/restoration policy rather than copying the gallery owner.

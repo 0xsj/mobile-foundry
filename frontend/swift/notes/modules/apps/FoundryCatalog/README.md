@@ -1,6 +1,118 @@
 # Swift catalog walkthrough
 
+## Remote Notes recovery
+
+Claim: draft/version/command ownership remains above the view and exact lease-bound
+adapter. Origin: connected Notes, 2026-10-13. Evidence: native build and three
+focused recovery cases pass in the hosted catalog suite.
+Read [state owner](../../../../apps/FoundryCatalog/Sources/Notes/RemoteNotesCatalogModel.swift),
+[controls](../../../../apps/FoundryCatalog/Sources/Notes/RemoteNotesCatalogCard.swift),
+[lease composition](../../../../apps/FoundryCatalog/Sources/Session/GoSessionCatalogModel.swift)
+and [state tests](../../../../apps/FoundryCatalog/Tests/RemoteNotesCatalogTests.swift).
+
+MainActor serializes synchronous action admission before the Task starts.
+The app retains an admitted command by SessionScope, so renewal replaces the
+HTTP lease without replacing its key or target. The per-scope map is transient.
+An acknowledgement is admitted only after cancellation checks and input/scope
+confirmation; a post-commit read failure retains the receipt. Account-keyed card
+identity drops old delete confirmation state on scope replacement.
+
+Example — Conceptual: create → lost response → renew same scope → Check write
+receipt → clear matching pending input → refresh. The state test observes that
+only one execute call occurred. Other cases exercise failed follow-up reads and
+a noncooperative late old-account acknowledgement. Route closure discards this
+owner, so process-safe recovery requires a future device outbox.
+Used in Go identity and accounts, below the account directory. The card shows
+only the first twenty records; the service owns paged reads.
+Related: [Services](../../packages/FoundryServices/README.md#remote-notes-and-immutable-receipts)
+and [command receipts](../../../../../../notes/patterns/command-receipts-and-uncertain-writes.md).
+Next: durable pending input and independently generated connected products.
+
+Observed execution, 2026-10-13: one iPhone 17 Pro / iOS 26.2 connected UI case
+passes with zero failures/skips. It creates a remote note, terminates/relaunches
+the app, restores the selected workspace through Keychain, reads/edits/deletes
+that same remote note, then signs out and confirms saved-session removal on
+another relaunch. URLSession lost-acknowledgement acceptance passes separately.
+The UI harness first exposed an automation issue: isHittable remained true for
+Sign out behind translucent navigation chrome. A frame-bounded, bidirectional
+scroll helper (with lazy element admission) fixed the tap; session code was
+unchanged. Failed result bundles are retained for diagnosis. This verifies the
+observed simulator workflow, not physical-device cost or persistent pending input.
+
 The catalog composes an HTTP health service with an injected wire transport and displays loading, admitted domain data, and public failures.
+
+## Live notes
+
+Claim: the feature owns collection lifetime while a swappable source publishes
+current local state. Origin: native foundation observation, 2026-10-10.
+Read [reader](../../../../apps/FoundryCatalog/Sources/Notes/LiveNotesStore.swift),
+[source owner](../../../../apps/FoundryCatalog/Sources/Notes/LiveNotesCatalogModel.swift),
+[gallery](../../../../apps/FoundryCatalog/Sources/Notes/LiveNotesCatalogView.swift),
+[account consumer](../../../../apps/FoundryCatalog/Sources/Session/AccountAccessPanel.swift)
+and [checks](../../../../apps/FoundryCatalog/Tests/LiveNotesStoreTests.swift).
+
+Studio → Open catalog → Live notes combines one CRUD writer with two independent
+readers. Device uses separate repository instances targeting LiveNotes/notes.sqlite;
+Memory shares one repository retained above provider branches. Pause the second,
+create/edit/delete with the writer and resume it to see current state. Guest and
+account databases remain separate. No new UI primitive/family is added.
+
+The MainActor reader starts one task, defers subscription cancellation and gates
+values/errors by generation and optional lease. Expected read failures retain
+prior content; subsequent snapshots can recover. Shutdown clears data permanently.
+Scene inactivity/view disappearance pause, and foreground resume rereads. The
+explicit second-reader pause remains in its source bundle. AccountAccessPanel
+keys the live projection to its lease and disposes it with the editor.
+
+All 78 hosted iOS cases pass, including five new checks for the shared CRUD/pause
+scenario, failure recovery, late defects, admission closure/reentrant diagnostics
+and retained route Memory/fresh Device sources. Separate native packages pass
+eleven Services/fourteen Data tests. Final build passes. Logs:
+`.cache/observation-ios-test.log`, `.cache/observation-ios-build.log`,
+`.cache/observation-swift-services.log`, `.cache/observation-swift-data.log`.
+The xcresult records zero failures/skips on iPhone 17 Pro Simulator, iOS 26.2.
+
+This is native/model execution, not manual SwiftUI field taps, VoiceOver,
+process-kill restoration, older OS or physical-device performance. In-process
+notifications do not provide remote synchronization. Read
+[native mechanics](../../../substrate/async-stream-buffering-and-subscription-cleanup.md)
+and [shared ownership](../../../../../../notes/patterns/current-snapshots-and-subscription-lifetime.md).
+Next: choose an actual product's observable cache or durable outbox requirement.
+
+## Durable local notes
+
+Implemented 2026-10-10. **Studio → Open catalog → Local notes** composes
+Device storage and Memory behind one CRUD port, reusing the existing fields,
+buttons, rows, query content and mutation feedback. The UI catalog remains
+112 building blocks/30 families.
+
+Read [composition](../../../../apps/FoundryCatalog/Sources/Composition/LocalNotesComposition.swift),
+[store](../../../../apps/FoundryCatalog/Sources/Notes/LocalNotesStore.swift),
+[view](../../../../apps/FoundryCatalog/Sources/Notes/LocalNotesView.swift), then
+[owner checks](../../../../apps/FoundryCatalog/Tests/LocalNotesStoreTests.swift).
+The private SQLite URL belongs to composition; the view never receives handles.
+Source identity replaces the Swift feature owner, stopping observation and
+discarding drafts/memory values. Device records remain in the app container.
+
+Admission validates and marks busy synchronously before starting a task. Query
+and mutation phases are independent: a write receipt survives a failed reload.
+Each result/defect checks its generation after suspension. Stop invalidates that
+generation and cancels owned work, without asserting rollback. Native deletion
+captures a Note for explicit confirmation. New note abandons the edit draft.
+
+Three new hosted tests exercise Memory/SQLite CRUD and guards, a cancellation-
+ignoring late commit, and acknowledgement followed by failed read without replay.
+All 67 hosted iOS app cases pass; the simulator app builds. Six Data real-file
+tests pass separately. Native SQLite/draft lifetime is exercised through new
+owners, but an iOS process-kill, physical-device keyboard/VoiceOver and storage
+pressure experiment remain separate checks.
+
+Read [Data](../../packages/FoundryData/README.md),
+[native handles](../../../substrate/sqlite-actors-and-scoped-handles.md),
+[shared reasoning](../../../../../../notes/patterns/local-commits-and-observation-lifetime.md)
+and [behavior](../../../../../../contracts/behavior/local-notes.md).
+Next: how should another live screen receive a committed change without sharing
+this screen's draft, and how should guest records acquire account ownership?
 
 ## Origin
 
@@ -1384,6 +1496,106 @@ Read [UI walkthrough](../../packages/FoundryUI/README.md#verification-and-code-e
 and [behavior](../../../../../../contracts/behavior/ui-components.md#verification-and-code-entry).
 Next: authoritative provider challenges/deadlines and scoped mutation outcomes.
 
+## Identity and session
+
+Claim: the gallery exercises one session lifecycle with Device or Memory
+credentials while keeping saved secrets out of public state and form drafts.
+
+Origin/evidence: session foundation, 2026-10-10. FoundrySession is implemented;
+the catalog adds a Foundation route without changing the 112 UI blocks/30 families.
+[Composition](../../../../apps/FoundryCatalog/Sources/Composition/SessionComposition.swift)
+shares one device Keychain actor. Each source/route gets a fresh memory vault or
+the shared device vault plus its own fixture authority and manual clock.
+[SessionCatalogModel](../../../../apps/FoundryCatalog/Sources/Session/SessionCatalogModel.swift)
+retains those dependencies with the controller; storing them as fresh view lets
+beside a retained @State controller would allow their clocks to diverge after
+SwiftUI reconstructs a view value.
+
+[SessionCatalogView](../../../../apps/FoundryCatalog/Sources/Session/SessionCatalogView.swift)
+owns ephemeral login/password fields and focus. Accepted submission clears its
+password; source replacement and screen exit also clear it. Existing fields,
+cards and actions render public identity/account/failure copy. The controller
+restores on appearance and permanently shuts down on exit, retaining Device
+credentials. Delayed fixture actions cannot revive the closed owner.
+
+Example: open Identity and session, sign in as Alex with catalog-demo, close
+and reopen, advance 61 seconds and renew. Sign in as Sam, reject renewal and
+sign out. Memory uses the same controller and is discarded on source replacement.
+The fixture notice explains that no identity is authenticated and guest Local
+notes are separate. The Account tab remains a placeholder.
+
+Verification: all 70 hosted app cases pass, including three actual isolated
+Keychain cases for fresh-adapter load/update/clear, accessibility/synchronization,
+malformed/future data retention and the app model's restore/expiry/renew/reject/
+sign-out flow. Both native consumers build. Thirteen package lifecycle tests
+pass separately. Native simulator signing is ad hoc; the unsigned run failed
+only its three Keychain cases and is documented in the substrate note.
+Logs: `.cache/session-ios-tests.log`, `.cache/session-swift-tests.log`.
+
+These checks exercise native storage and app ownership, not iOS login taps,
+keyboard/AutoFill, VoiceOver, process kill, device locking, backup or physical
+hardware. A CUA simulator inspection was attempted but timed out; no manual
+iOS session interaction is claimed. Read [Session](../../packages/FoundrySession/README.md),
+[Keychain mechanics](../../../substrate/keychain-credentials-and-accessibility.md)
+and [shared lifetime](../../../../../../notes/patterns/session-scope-and-credential-lifetime.md).
+Continue with [account access](#account-access), then real authority semantics.
+
+## Account access
+
+Claim: saved account records and short-lived editor/probe ownership can share
+the same gallery without sharing their lifetime. Origin: native account-access
+batch, 2026-10-10; UI counts remain 112 building blocks/30 families.
+
+[SessionCatalogModel](../../../../apps/FoundryCatalog/Sources/Session/SessionCatalogModel.swift)
+now retains an AccountNotesRepositories factory with its controller/fixture
+dependencies. Device uses Application Support/AccountNotes/v1, separate from the
+guest LocalNotes path. Memory caches collections only for this source owner.
+[AccountAccessPanel](../../../../apps/FoundryCatalog/Sources/Session/AccountAccessPanel.swift)
+is inline and keyed by the full Hashable lease. Access closure removes it;
+renewal/account return creates a new editor and reloads the retained repository.
+An inline consumer avoids shutting the parent session down via a detail push.
+
+[LocalNotesStore](../../../../apps/FoundryCatalog/Sources/Notes/LocalNotesStore.swift)
+adds terminal shutdown alongside its reusable stop action. Terminal disposal
+invalidates work, cancels it and clears draft/edit ID/touched state, query and
+mutation. Deferred edits/refresh/save cannot revive it. Delete targets and focus
+belong to the panel and clear when removed. Existing guest stop behavior remains.
+
+[AuthenticatedProbeStore](../../../../apps/FoundryCatalog/Sources/Session/AuthenticatedProbeStore.swift)
+owns a one-attempt fixture transport, response choice and public report. The real
+HTTP preparation/problem decoder sees Success/Unauthorized/Slow responses;
+no network/server is contacted and the UI labels this clearly. Reports contain
+only method/path/status/account/request metadata. Lease replacement disposes
+pending work and removes its report. Renewal stays an explicit lifecycle action.
+
+Example: save as Alex, enter an unsaved draft, switch to Sam, then return to Alex.
+Sam is empty; Alex's saved record returns under a new editor with an empty draft.
+Advance time, renew, and sign out. Device data remains; Memory vanishes when its
+source/gallery is replaced. Hash naming supplies no encryption or authorization.
+
+Observed checks: all 73 hosted iOS cases pass with zero failures/skips, including
+three isolated Keychain cases and the three new editor/probe cases in
+[LocalNotesStoreTests](../../../../apps/FoundryCatalog/Tests/LocalNotesStoreTests.swift)
+and [AccountProbeTests](../../../../apps/FoundryCatalog/Tests/AccountProbeTests.swift).
+Separate packages pass twenty Session and eleven Data cases. Native build passes.
+Logs: `.cache/account-access-ios-test.log`, `.cache/account-access-swift-session.log`,
+`.cache/account-access-swift-data.log`; the xcresult records all 73 cases.
+
+An arm64 Swift 6.2.3 IR-generation crash occurred when a MainActor bound String
+setter was passed directly to Binding. Explicit callback closures, matching the
+existing guest editor, compiled and the tests passed. This is a versioned compiler
+observation, not a claim that all actor-bound methods are invalid. An overlapping
+build also hit Xcode's database lock; final build/test jobs ran sequentially.
+
+These checks observe model/Keychain/SQLite behavior rather than iOS editor taps,
+AutoFill, VoiceOver, process kill, device backups or physical hardware. Read
+[Session](../../packages/FoundrySession/README.md#authenticated-http),
+[Data](../../packages/FoundryData/README.md#account-collections),
+[native mechanics](../../../substrate/cryptokit-partitions-and-authenticated-urlsession.md)
+and [shared ownership](../../../../../../notes/patterns/account-partitions-and-leased-work.md).
+Next: choose a real provider, configure issuer/audience and account membership,
+then define remote write/refresh uncertainty and data retention.
+
 ## Shell primitives gallery
 
 Claim: keeping page values above tab content and chrome branches makes layout
@@ -1429,3 +1641,121 @@ Related: [UI primitives](../../packages/FoundryUI/README.md#stacks-separators-an
 [shared ownership](../../../../../../notes/patterns/shell-chrome-and-feature-lifetime.md).
 Next: what should a closed catalog preserve, and how should a deep link select
 a tab before entering its feature stack?
+
+## Product shell variations
+
+Claim: five bounded app-owned compositions reuse the same UI primitives while
+keeping profile navigation, drafts and local actions independently owned.
+
+Origin: product shell batch, 2026-10-10. Open Studio → Open catalog → Product
+shells. [ProductShellState](../../../../apps/FoundryCatalog/Sources/Shell/Patterns/ProductShellState.swift)
+defines known profile/item/action values and pure admitted fixture transitions.
+[ProductShellCatalogView](../../../../apps/FoundryCatalog/Sources/Shell/Patterns/ProductShellCatalogView.swift)
+owns the value and theme above its NavigationLink previews. The viewport fills
+AppShell and returns explicitly to the chooser. Closing the gallery ends its
+local owner.
+
+[ProductShellLayouts](../../../../apps/FoundryCatalog/Sources/Shell/Patterns/ProductShellLayouts.swift)
+composes native Daily TabBar pages, Workspace SplitPane/DetailShell, Browse search
+and details, a local Canvas inspector and an AuthShell-based guided setup inside
+DetailShell. Workspace selection/completion survive pane changes; Browse keeps
+its filter on detail return. Canvas title/tool/layers and preview export count
+are retained. Setup binds the name, chooses a focus, reviews, finishes and resets
+explicitly. Fixed actions stay outside scrolling bodies.
+
+Example: check in on Today and Activity independently, complete Research, save
+City notebooks after filtering, add canvas layers and then complete setup. Leave
+and reopen each preview, toggle Glass and revisit its state. These are candidate
+product shapes; save/export affect local values rather than disk or a provider.
+Component names retain the no-prefix convention; the shared UI count stays 112/30.
+
+[ProductShellTests](../../../../apps/FoundryCatalog/Tests/ProductShellTests.swift)
+reads the [portable scenarios](../../../../../../contracts/fixtures/product-shells/scenarios.json),
+checks setup-specific reset, inspects Daily's real native tab selection and
+workspace scroll containers at compact/expanded/accessibility sizes, and captures
+each actual composed preview. The host retains Research selection/completion
+across layout changes. Native check commands are `make ios-build` and
+`make ios-test`; `.cache/product-shells-*` contains execution/capture evidence.
+
+Hosted execution does not establish every iOS tap/gesture, VoiceOver, process
+death, physical device/iPad behavior or independent starter output. The current
+compact detail is explicit intent within the preview rather than a native detail
+stack. Read [native mechanics](../../../substrate/swiftui-bounded-panes-and-navigation.md#product-shell-compositions),
+[shared ownership](../../../../../../notes/patterns/product-shells-and-navigation-ownership.md)
+and [readiness](../../../../../../docs/STARTER-READINESS.md).
+Next: extract a selected shell into a clean independently generated product.
+
+Observed execution: all 81 hosted cases pass, zero failures/skips, on iPhone 17
+Pro / iOS 26.2 Simulator. The final test build includes the shared SplitPane
+composition. Initial visual captures exposed a compressed outer Back/Glass row
+in DetailShell consumers. A fixed-size row improved Workspace/Setup but Canvas
+still overlapped it in capture. A measured top safeAreaInset reserves the final
+chrome region; the test asserts the actual UISwitch lies inside
+the host bounds for every profile. Corrected captures are in
+`.cache/product-shell-previews`; execution is `.cache/product-shells-ios-test-final.log`.
+These are actual hosted layouts, with a synthetic 390×760-point viewport, rather
+than a claim of manual iOS navigation/keyboard or physical-device verification.
+
+
+## Physics playground
+
+Added 2026-10-11. Read [PhysicsPlaygroundView](../../../../apps/FoundryCatalog/Sources/Physics/PhysicsPlaygroundView.swift),
+[the numeric module](../../packages/FoundryPhysics/README.md), and
+[the native UI tests](../../../../apps/FoundryCatalog/UITests/PhysicsPlaygroundUITests.swift).
+The Graphics catalog section exposes the route, while Sources/Physics owns its
+input/timing/drawing. Existing shared UI tokens and Card/ActionButton provide
+controls; a native Canvas draws the bounded world.
+
+The screen owns simulation, aiming, a 70-position trail and manual pause. Only
+Ready-ball drags launch. Angle/power controls use the same launch boundary.
+Changing physics resets the ball; New throw retains totals, while changing targets
+clears them. Scene phase/presence and flight phase key the cancellable task. A
+copied simulation generates the aim preview. Extracted view builders keep generic
+inference bounded, with explicit CGFloat-to-Double conversion at gesture admission.
+
+Observed acceptance: both numeric suites pass five cases and both native apps
+build. Two XCTest UI interactions pass on iPhone 17 Pro / iOS 26.2: drag/release
+makes a basket, reset retains 1/1, alternate native controls launch, pause remains
+stable for a wall-clock wait, and resume makes a basket. The retained screenshot
+was inspected for target controls, court/net/board/ball/preview, score, actions and
+scrolling aim controls. Initial test compilation required putting the XCUI test
+class on MainActor under Swift 6.
+
+Limits: iOS native landing-zone/slider gestures, background transitions, VoiceOver,
+all text sizes, tablets and device cost are not exhaustively exercised by this
+focused run. Session values are not persisted; 3D/spin/multiple bodies and CLI
+physics extraction remain future work. See [the contract](../../../../../../contracts/behavior/physics-playground.md)
+and [fixed-step ownership](../../../../../../notes/patterns/fixed-step-physics-and-presentation.md).
+
+## Go identity and accounts — 2026-10-13
+
+A separate real-HTTP gallery can reuse the existing controller/vault/lease seams
+while keeping demo credentials, account rows and network ownership distinct.
+
+Read [composition](../../../../apps/FoundryCatalog/Sources/Composition/SessionComposition.swift),
+[model](../../../../apps/FoundryCatalog/Sources/Session/GoSessionCatalogModel.swift)
+and [view](../../../../apps/FoundryCatalog/Sources/Session/GoSessionCatalogView.swift).
+Device vaults are cached by deployment-bound authority ID; Memory is owner-local.
+The view configures its provider explicitly, clears password drafts on actions/
+closure and cancels directory work on lease change. The model admits only the
+captured current lease before publishing account pages, and closes its native
+URLSession transport with the controller. It does not implement remote Notes.
+
+Conceptual example: select another owned workspace, renew, terminate the app,
+reopen the same API and restore the stored workspace rather than a personal default.
+The [actual UI test](../../../../apps/FoundryCatalog/UITests/GoSessionUITests.swift)
+performs that sequence using Keychain and the owned Go API, then signs out and
+observes signed-out restoration after another process relaunch. One iPhone 17 Pro /
+iOS 26.2 case passed with zero failures/skips. Host URLSession acceptance supplies
+additional two-principal denial/reuse coverage; it does not replace this device run.
+
+The catalog [Info configuration](../../../../apps/FoundryCatalog/project.yml)
+preserves release version/signing/orientations and adds scoped local networking.
+[Apple's key reference](https://developer.apple.com/documentation/bundleresources/information-property-list/nsapptransportsecurity/nsallowslocalnetworking)
+describes that ATS exception. Library admission still independently requires HTTPS
+or explicit loopback HTTP; no certificate bypass is introduced. The example's
+simulator loopback API is not a physical-device deployment.
+
+`make go-native-device-test` supplies an isolated memory API and fixture accounts.
+CLI extraction, remote CRUD/sync, real TLS deployment and physical-device/network
+cut experiments remain pending. Read [checkpoint reasoning](../../../../../../notes/patterns/deployment-authorities-and-rotation-checkpoints.md).
