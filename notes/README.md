@@ -1,5 +1,33 @@
 # Mobile Foundry learning notes
 
+Workspace follow-up, 2026-10-17: start with [construction/evidence](../docs/blueprints/native-workspaces.md), then the linked current-state/receipt pattern and Session/product walkthroughs. CLI 0.18.0 adds owner create/rename with explicit uncertainty review.
+
+Registration follow-up, 2026-10-17: start with [construction/evidence](../docs/blueprints/native-registration.md), then its linked profile/session separation pattern and Session/product walkthroughs. The port confirms a profile; explicit sign-in separately opens Personal.
+
+Read-cache follow-up, 2026-10-17: start with [construction/evidence](../docs/blueprints/notes-read-cache.md), then the linked checkpoint pattern and Services/Data/product walkthroughs. Cached content is advisory; fresh reads and durable pending commands keep separate gates.
+
+Native lifecycle/live follow-up, 2026-10-17: read [construction/evidence](../docs/blueprints/native-identity-live.md), then [coalesced reads behind pending writes](patterns/live-invalidation-and-pending-writes.md). Swift/Kotlin now have reusable recovery and live-hint ports with product-owned presentation.
+
+Backend foundation follow-up, 2026-10-17: start with
+[setup/evidence](../docs/blueprints/backend-connected-foundations.md), then
+[bounded live hints](../backend/go/notes/patterns/bounded-live-hints.md),
+[credential checkpoints](../backend/go/notes/patterns/identity-challenges-and-checkpoints.md)
+and [portable restore mechanics](../backend/go/notes/substrate/portable-container-and-quiesced-backups.md).
+CLI 0.14.0 selects the backend implementation and operational commands. Native
+socket consumers and recovery forms still need independent product selection.
+
+Pending Notes follow-up, 2026-10-17: start with
+[intent before external effect](patterns/persist-intent-before-external-effect.md),
+then [construction/evidence](../docs/blueprints/pending-notes.md). CLI 0.13.0 selects
+native disk recovery in connected Daily products; recovery stays explicit.
+
+Connected-starter follow-up, 2026-10-17: read
+[composition versus co-location](patterns/connected-products-and-composition.md),
+then [CLI 0.12.0 setup and independent evidence](../docs/blueprints/go-connected-starter.md).
+Daily + go-connected selects native sign-in/accounts and remote Notes through the
+existing ports. Local-only shells remain unchanged; the pending follow-up above
+adds command persistence. Native Files/inbox/push selection remains separate.
+
 Recovery follow-up, 2026-10-17: read
 [why the original outcome remains](../backend/go/notes/patterns/recovery-preserves-the-original-outcome.md)
 and [backend construction/evidence](../docs/blueprints/push-job-recovery.md).

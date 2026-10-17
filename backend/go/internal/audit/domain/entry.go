@@ -36,12 +36,14 @@ func New(e Evidence, now time.Time) (Entry, error) {
 		switch e.Action {
 		case "identity.principal.registered":
 			validScope = e.SessionID == "" && e.Version == 1 && e.Reason == ""
+		case "identity.email.verified", "identity.password.changed", "identity.password.recovered":
+			validScope = e.SessionID == "" && e.Version >= 2 && e.Reason == ""
 		case "identity.session.issued":
 			validScope = e.SessionID.Valid() && e.Version == 1 && e.Reason == ""
 		case "identity.session.renewed":
 			validScope = e.SessionID.Valid() && e.Version >= 2 && e.Reason == ""
 		case "identity.session.revoked":
-			validScope = e.SessionID.Valid() && e.Version >= 2 && (e.Reason == "sign_out" || e.Reason == "refresh_reuse")
+			validScope = e.SessionID.Valid() && e.Version >= 2 && (e.Reason == "sign_out" || e.Reason == "refresh_reuse" || e.Reason == "password_change" || e.Reason == "password_reset")
 		}
 	}
 	if !e.EventID.Valid() || !validScope || !e.ActorID.Valid() || e.Version == 0 || e.Version > 1<<53-1 || e.OccurredAt.Year() < 1970 || e.OccurredAt.Year() > 9999 || e.OccurredAt.Location() != time.UTC || !e.OccurredAt.Equal(e.OccurredAt.Truncate(time.Microsecond)) || now.Year() < 1970 || now.Year() > 9999 {

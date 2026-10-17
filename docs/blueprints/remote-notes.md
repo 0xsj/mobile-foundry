@@ -26,8 +26,9 @@ The app owns recovery commands. Keep command identity and full admitted input
 before dispatch. After an uncertain acknowledgement, use Check write receipt;
 if necessary, Retry original write. These controls preserve the key and target.
 Current catalog recovery input survives renewal and account switching only while
-the owner remains alive. Process-safe pending recovery requires a future native
-outbox; committed server receipts already survive PostgreSQL API restart.
+the owner remains alive. The generated Daily + go-connected product now selects
+[durable pending recovery](pending-notes.md); the catalog owner remains transient.
+Committed server receipts already survive PostgreSQL API restart.
 
 Read [the contract](../../contracts/behavior/remote-notes.md) before swapping
 providers. Implement RemoteNotesRepository's versions and receipts rather than
@@ -57,6 +58,7 @@ POSTGRES_TEST_MODE=local POSTGRES_BIN_DIR=/opt/homebrew/bin make integration-tes
 
 Start learning with [command receipts](../../notes/patterns/command-receipts-and-uncertain-writes.md),
 then the [Go walkthrough](../../backend/go/notes/modules/internal/notes/README.md)
-and native Services/app notes, reading step 52. This is a connected catalog
-foundation; CLI extraction and independently built connected products remain
-separate readiness milestones.
+and native Services/app notes, reading step 52. The catalog remains the reference
+foundation. [Daily's connected starter](go-connected-starter.md) now independently
+extracts sessions/accounts/remote Notes and single-slot pending recovery. Automatic
+sync and additional connected feature selections remain separate readiness milestones.

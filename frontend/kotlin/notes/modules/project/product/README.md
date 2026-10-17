@@ -176,3 +176,123 @@ Read [Gradle product identity](../../../substrate/gradle-and-android-bootstrap.m
 and [starter readiness](../../../../../../docs/STARTER-READINESS.md).
 Next: how should CLI output select a new application ID while preserving source
 namespace and portable Gradle/fixture wiring?
+
+## Connected Daily output
+
+CLI 0.12.0 selects [connected product overlays](../../../../../../templates/overlays/go-connected/kotlin)
+only with Daily + go-connected + Go. The source :product remains UI-only. Read
+ConnectionConfiguration → ConnectedViewModel/ConnectedSessionModel → ProductRoot →
+AccountScreen/LibraryScreen. Product-only settings select HTTP/Session and a narrow
+remote Services closure; no catalog app, local SQLite, provider SDK or push worker
+is required by the native product.
+
+The Activity ViewModel owns one controller across recreation and constructs the
+Keystore vault from Application. [Lifetime/networking reasoning](../../../substrate/connected-product-lifetime.md)
+explains the framework mechanics. ConnectedSessionModel remains a plain class with
+injected scope/authority/vault/transport. It collects session state, detaches before
+session actions, then binds each new exact lease. Foreground return revalidates
+expiry/refetches; no automatic renewal or write replay is selected. Password input
+uses remember rather than rememberSaveable and clears on submit/epoch changes.
+
+RemoteNotesStore supplies app-owned paging, draft/receipt and pending-command state
+behind RemoteNotesRepository. Its three unit cases cover lost response through
+renewal, confirmed-write/read failure and late completion after account replacement.
+The source contract/repository remain shared; this product does not depend on the
+catalog's UI owner. In CLI 0.12.0 pending commands were process-local; the follow-up below adds disk recovery.
+
+[The copied driver](../../../../../../scripts/connected_acceptance.py) runs two
+instrumentation stages against its own copied API. It explicitly force-stops the
+installed app between stages; the second must restore the selected workspace and
+fetch the server note, then verify account isolation/deletion/sign-out. Recreation
+is tested separately. [Construction/evidence](../../../../../../docs/blueprints/go-connected-starter.md)
+and [readiness](../../../../../../docs/STARTER-READINESS.md) record the observed gate.
+Study next: why is a retained ViewModel insufficient for recovering a pending write
+when a new process successfully restores its refresh credential?
+
+## Durable recovery follow-up — 2026-10-17
+
+CLI 0.13.0 injects SQLitePendingNotesStore into connected product composition.
+RemoteNotesStore loads the journal before enabling writes, stages before HTTP and
+settles the receipt before clearing pending. Storage failure requires reload; a
+missing receipt keeps pending. Bind/refresh/process restore never automatically
+resends. Five owner cases include a newly constructed owner, lost stage acknowledgement,
+failed receipt persistence and a late reply after account replacement.
+
+Read [pending construction and actual process evidence](../../../../../../docs/blueprints/pending-notes.md)
+and [intent-before-effect reasoning](../../../../../../notes/patterns/persist-intent-before-external-effect.md).
+The generated selection copies only the journal adapter from Data; unsaved drafts
+remain temporary and the catalog's recovery owner is independent. Next: a product
+read cache/offline launch needs an explicit policy beyond durable command input.
+
+
+## Identity forms and live Notes — 2026-10-17
+
+Claim: the product owns secret drafts, uncertain credential transitions and
+foreground reconnect policy; shared services own protocol seams. Origin: CLI 0.15.0.
+The go-connected overlays add IdentitySettingsModel and native security forms.
+Passwords/codes exist only in transient view state/submitted work and clear on
+submit, epoch change, background and dismissal. Dismissing an in-flight password
+change closes local access. Generation checks suppress its late reply even after
+a replacement session signs in; storage-clear failure retains existing refusal rules.
+
+Conceptual: a failed response after password change cannot tell the app whether
+the server changed the credential. It signs out locally and asks for a new sign-in
+or explicit recovery instead of retrying a mutation.
+
+ConnectedSessionModel binds account live hints to the current lease and foreground
+lifetime. Six attempts with bounded backoff/jitter precede manual Reconnect. Notes
+coalesces hints behind reads/writes and never replays a pending change. Actual
+product acceptance checks external writes, email codes and post-recovery sign-in,
+separately from prior process-restore checks. Read [setup and dated evidence](../../../../../../docs/blueprints/native-identity-live.md) and [read/write ordering](../../../../../../notes/patterns/live-invalidation-and-pending-writes.md).
+Next: choose registration/contact-change policy or read caching deliberately; no
+provider/deployment or automatic synchronization follows from these screens.
+
+## Read-only remote snapshots — 2026-10-17
+
+Claim: cached presentation must stay distinct from authoritative loaded state. Origin: connected read-cache slice. Read [owner overlay](../../../../../../templates/overlays/go-connected/kotlin/RemoteNotesStore.kt) and [owner checks](../../../../../../templates/overlays/go-connected/kotlin/RemoteNotesStoreTest.kt).
+
+The product restores its journal before a saved page, compares command/status checkpoints and labels cached content with saved time. It can show that page before HTTP completes and on unavailable/timeout results; only a fresh page plus readable journal enables writes. Auth refusal hides content and suppresses fallback for that binding. Cache warnings never replace successful HTTP content. Remove saved copy affects only this account; sign-out cancels publication and hides content immediately.
+
+Gotchas: the 24-hour window controls usability with lazy cleanup, not scheduled erasure. Private backup-excluded storage is not an offline authentication grant. Later pages/cursors and automatic write replay remain outside this capability.
+
+Actual verification and versions are tracked in [construction/evidence](../../../../../../docs/blueprints/notes-read-cache.md). Continue with [checkpoint reasoning](../../../../../../notes/patterns/cached-content-and-command-checkpoints.md). Next: what product requirement would justify offline startup or a multi-page synchronization cursor?
+
+## Native registration — 2026-10-17
+
+Claim: onboarding navigation and credential issuance need separate owners and outcomes. Origin: connected registration slice. Read [presentation owner](../../../../../../templates/overlays/go-connected/kotlin/RegistrationModel.kt) and [owner checks](../../../../../../templates/overlays/go-connected/kotlin/RegistrationModelTest.kt).
+
+Account opens a separate registration sheet, avoiding mixed sign-in/new-password field grouping. The model owns busy/outcome/generation/epoch, while the form owns a transient password. Successful submission disables further submit until a newly opened form. Continue passes only the login hint; sign-in needs password re-entry. Current authenticated binding clears obsolete registration state. Background/dismissal invalidates pending publication and warns that creation may still have committed.
+
+Gotchas: duplicate login is not ownership proof; cancellation is not rollback; this endpoint has no command receipt/idempotency key. Never put registration passwords into the Notes journal/cache or replay them on restore. The native ASCII login subset is deliberate and tested, rather than inferred from platform lowercase/trim defaults.
+
+Actual verification and versions are recorded in [construction/evidence](../../../../../../docs/blueprints/native-registration.md). Continue with [profile versus session](../../../../../../notes/patterns/registration-is-not-session-issuance.md). Next: where should a product place invitations, verified-contact requirements and approval before granting an account?
+
+
+## Owner workspace follow-up — 2026-10-17
+
+Claim: metadata editing uses versioned observations without silently changing
+selected data scope. Origin: the CLI 0.18.0 workspace slice. Read
+[construction and independent evidence](../../../../../../docs/blueprints/native-workspaces.md), then
+[the source](../../../../../../templates/overlays/go-connected/kotlin/WorkspaceModel.kt) and
+[the focused checks](../../../../../../templates/overlays/go-connected/kotlin/WorkspaceModelTest.kt).
+
+AccountName counts Unicode scalars and retains exact normalization. The provider
+read/create/rename port is swappable; its Go adapter adds UUID/owner/strong-ETag
+and exact command confirmation. Product owners require a fresh read before rename,
+block queued double submissions, and retain interrupted-create uncertainty before
+cleanup. A fresh page plus explicit duplicate-risk choice enables a new create;
+it does not prove the earlier command's outcome. Rename changes display metadata,
+not a lease, vault or pending Notes checkpoint. Drafts/warnings are process-local.
+
+Conceptual flow:
+
+```text
+current observation → If-Match rename → conflict → fresh read → user review
+```
+
+Six owner cases per native platform cover input, duplicate submit, read gates,
+uncertain creation, generation replacement and exact-lease rejection. Boundary
+and actual Go port tests establish their separate guarantees; device evidence and
+limits are recorded in the construction guide. See
+[current state versus command receipts](../../../../../../notes/patterns/current-state-is-not-a-command-receipt.md). Next: should this product
+require durable Account command receipts or membership/invitation policy?

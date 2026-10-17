@@ -134,3 +134,8 @@ Notes facts are not yet selected into Audit or Realtime. There is no cross-devic
 live observation, merge policy, background scheduler, durable native queue,
 Supabase/Firebase implementation, production capacity/retention claim, or
 independently generated connected starter in this slice.
+
+The generated Daily + go-connected composition additionally selects the
+[durable pending Notes contract](pending-notes.md). That bounded single-slot
+journal preserves original input across process restart for manual recovery;
+it does not change the catalogs’ transient owners or establish automatic sync.

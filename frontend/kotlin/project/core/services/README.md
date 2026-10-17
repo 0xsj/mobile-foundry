@@ -1,5 +1,7 @@
 # Services core
 
+[NotesReadCache](../../../../../contracts/behavior/notes-read-cache.md) adds bounded advisory first-page snapshots, strict admission and a Memory adapter. It has no HTTP or session behavior; generated product owners compare journal checkpoints and gate cached presentation.
+
 [Remote Notes](../../../../../contracts/behavior/remote-notes.md) adds separate
 versioned read/write/receipt ports and an injected HTTP adapter. Local CRUD keeps
 its unversioned behavior. Real Go acceptance is `make go-native-test` at repo root.

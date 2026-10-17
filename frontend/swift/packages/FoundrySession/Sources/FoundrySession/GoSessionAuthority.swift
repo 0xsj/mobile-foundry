@@ -25,13 +25,17 @@ public struct GoSessionAuthority: AccountSelectingAuthority {
         case .personal(let name): guard GoSessionWire.name(name) else { return .failure(configuration) }
         case .existing(let identity): guard GoSessionWire.uuid(identity) else { return .failure(configuration) }
         }
-        let digest = SHA256.hash(data: Data("go.identity.v1\n\(canonical)".utf8)).map { String(format: "%02x", $0) }.joined()
+        let authorityID = deploymentID(canonical)
         return DefaultHTTPClient.create(baseURL: canonical, transport: transport, timeoutMilliseconds: timeoutMilliseconds).map {
-            Self(id: "go.identity.v1.\(digest)", baseURL: canonical, client: $0, selection: selection, now: now)
+            Self(id: authorityID, baseURL: canonical, client: $0, selection: selection, now: now)
         }
     }
     private static let configuration = Failure.internalError(.init(message: "Use a valid HTTPS API base, or explicitly enabled loopback HTTP, and an admitted account selection.", code: "session.go_configuration"))
-    private static func canonicalBase(_ value: String, allowLocalHTTP: Bool) -> String? {
+    static func deploymentID(_ canonical: String) -> String {
+        let digest = SHA256.hash(data: Data("go.identity.v1\n\(canonical)".utf8)).map { String(format: "%02x", $0) }.joined()
+        return "go.identity.v1.\(digest)"
+    }
+    static func canonicalBase(_ value: String, allowLocalHTTP: Bool) -> String? {
         guard value == value.trimmingCharacters(in: .whitespacesAndNewlines), let parts = URLComponents(string: value),
               let scheme = parts.scheme?.lowercased(), let rawHost = parts.host?.lowercased(), parts.user == nil, parts.password == nil,
               parts.query == nil, parts.fragment == nil, parts.port == nil || (1...65535).contains(parts.port!) else { return nil }

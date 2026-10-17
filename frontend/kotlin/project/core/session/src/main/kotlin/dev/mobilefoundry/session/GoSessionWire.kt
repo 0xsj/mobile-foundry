@@ -13,8 +13,10 @@ internal object GoSessionWire {
         override fun toString() = "GoTokens(<redacted>)"
     }
     fun uuid(value: String) = value != "00000000-0000-0000-0000-000000000000" && value.matches(Regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
-    fun name(value: String) = value.isNotEmpty() && value.codePointCount(0, value.length) <= 80 && value == value.trim() &&
-        value.codePoints().noneMatch { it in 0xD800..0xDFFF || Character.getType(it) == Character.CONTROL.toInt() }
+    fun name(value: String): Boolean {
+        val admitted = AccountName.make(value)
+        return admitted is Outcome.Ok && admitted.value.value == value
+    }
     fun token(value: String, prefix: String) = value.length == 46 && value.matches(Regex("$prefix\\.[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]"))
     fun JsonObject.string(key: String) = (get(key) as? JsonPrimitive)?.takeIf { it.isString }?.content
     fun version(value: JsonElement?): Long? {

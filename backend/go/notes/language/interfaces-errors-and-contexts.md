@@ -56,3 +56,27 @@ and query failure; this conceptual example was not compiled as a standalone app.
 Related: [module assembly](../modules/pkg/module/README.md),
 [errors](../modules/pkg/errors/README.md), and
 [ports/composition](../patterns/ports-and-module-composition.md).
+
+## Independent lifetimes — 2026-10-17
+
+Claim: detaching cancellation transfers responsibility for cleanup; it does not
+make work safe to leave unbounded. Origin: WebSocket and SMTP adapters, with
+real socket lifetime/shutdown tests and race-enabled adapter checks on Go 1.27.1.
+
+[The socket handler](../../internal/realtime/transport/websocket/v1/handler.go)
+uses context.WithoutCancel only after admission, then adds a ten-minute timeout,
+bounded checks/writes and explicit module Stop. Request values remain available,
+but the ordinary fifteen-second cancellation no longer owns the connection.
+WithoutCancel also drops the inherited deadline. Copying it into ordinary HTTP
+operations would defeat request cancellation without supplying a replacement.
+
+[SMTP](../../internal/identity/infra/email/smtp.go) uses context.AfterFunc to close
+the original network connection when its operation is canceled. Its closure
+captures that original connection value before a TLS wrapper replaces the local
+variable. Conceptual: capturing a variable that is subsequently reassigned can
+race the callback; capture the intended resource instead. Stopping an AfterFunc
+does not itself join an already-running callback, so the callback touches only
+the independently safe connection Close operation.
+
+Related: [bounded hints](../patterns/bounded-live-hints.md). Next: identify the
+replacement lifetime owner before detaching any new work from its caller.

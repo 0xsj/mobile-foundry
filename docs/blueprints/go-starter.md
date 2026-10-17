@@ -1,8 +1,7 @@
 # Generate a Go starter
 
-Status: standalone backend ready, CLI 0.11.0, recovery follow-up 2026-10-17. Connected native catalog
-behavior is verified separately; generated native auth/data UI remains the next
-capability.
+Status: standalone backend ready through CLI 0.12.0, connected follow-up 2026-10-17. Daily can now select [connected native sessions/accounts/Notes](go-connected-starter.md)
+through --with go-connected. Backend co-location alone retains local shell behavior.
 
 [Owned job recovery](push-job-recovery.md) now adds explicit cancellation before
 sending and one linked replacement per eligible source. Independent CLI 0.11.0

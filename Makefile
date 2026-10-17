@@ -72,7 +72,7 @@ cli-install:
 
 .PHONY: product-ios-generate product-ios-build product-ios-test product-android-build product-android-ui-test starter-check
 
-.PHONY: help kernel-build kernel-test http-test query-test data-test data-ui-test observation-test observation-ui-test session-test session-ui-test account-test account-ui-test shell-ui-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
+.PHONY: help kernel-build kernel-test http-test query-test data-test data-ui-test pending-notes-ui-test observation-test observation-ui-test session-test session-ui-test account-test account-ui-test shell-ui-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
 
 help:
 	@echo 'make remote-notifications-ios-test Verify injected remote and local iOS opens'
@@ -94,6 +94,7 @@ help:
 	@echo 'make http-test       Run Swift and Kotlin HTTP and domain service tests'
 	@echo 'make query-test      Run Swift and Kotlin query/mutation value tests'
 	@echo 'make data-test       Run Swift storage and native service/state-owner tests'
+	@echo 'make pending-notes-ui-test  Run Android SQLite pending-recovery checks'
 	@echo 'make data-ui-test    Run Android SQLite and Local notes UI tests on a device'
 	@echo 'make observation-test Run local repository observation and reader unit checks'
 	@echo 'make observation-ui-test Run Android live readers and account lifecycle checks'
@@ -163,6 +164,11 @@ data-ui-test:
 		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
 		./gradlew :app:connectedDebugAndroidTest \
 		-Pandroid.testInstrumentationRunnerArguments.class=dev.mobilefoundry.catalog.data.LocalNotesRepositoryTest,dev.mobilefoundry.catalog.ui.notes.LocalNotesScreenTest
+
+pending-notes-ui-test:
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :core:data:connectedDebugAndroidTest
 
 ui-test:
 	swift test --package-path frontend/swift/packages/FoundryUI

@@ -14,6 +14,14 @@ adds owned metadata/content, receipts and Audit facts with native catalog consum
 into an account/principal inbox with read state and media preferences. Remote module routing and other business
 modules remain planned/reserved.
 
+[Realtime](../../contracts/behavior/realtime.md) now supplies native-bearer,
+account-scoped Notes refetch hints through bounded local broadcast.
+[Core identity lifecycle](../../contracts/behavior/identity-recovery.md) adds
+verified recovery contacts, reset/change and atomic session revocation.
+[Portable operations](../../contracts/behavior/backend-operations.md) adds a
+private container API, metrics, explicit maintenance and database/object restore.
+Daily go-connected now selects [native socket/recovery forms](../../contracts/behavior/native-identity-live.md). External provider delivery remains separate.
+
 [Push dispatch](../../contracts/behavior/push-dispatch.md) now has an optional
 internal preview command with exact target reads, a versioned Identity session
 gate and guarded invalid-address cleanup. Provider outcomes are injected for
@@ -49,7 +57,7 @@ remain explicit. This does not add cross-session administrator authority.
 | Audit | Selected activity/security evidence, actor attribution and scoped evidence queries | Consumes Identity/Account and other committed facts through its own receiving adapters | Connected core |
 | Notes | Replaceable versioned data exemplar and immutable command receipts | Authorizes through consumer-owned AccountAccess; owns memory/PostgreSQL data and replay | Connected reference feature |
 | Authorization | Permission vocabulary, scoped roles, grants and permission decisions | Uses declared ownership/membership inputs; provides explicit permission decisions | When account roles alone are insufficient |
-| Realtime | Authorized subscriptions, connection lifetime and recoverable live updates | Consumes events, maps hints, broadcasts to WebSocket gateways | Live connected experiences |
+| Realtime | Authorized subscriptions, connection lifetime and recoverable live updates | Consumer-owned AccountAccess/Feed; Notes post-commit Changes port maps to bounded local broadcast | Native-bearer Notes hints implemented; one API replica; broker, presence and browser-ticket adapters separate |
 | Notifications | Account/principal inbox, read state, media preference, installations and optional provider/queued previews with owned recovery | Consumes Files/Identity facts; queries AccountAccess and Identity eligibility through owned ports | Inbox/registry, APNs/FCM, queued manual previews and explicit cancel/replacement implemented; live cloud acceptance, fanout and provider-result retries remain separate. Generic native open admission is verified independently. |
 | Files | Metadata, ownership, upload/download admission, immutable content and deletion | Checks owner access; selects memory/private-directory Objects and memory/PostgreSQL Store; publishes selected Audit facts | Implemented local media foundation; folders, processing and quotas remain planned |
 | Billing | Provider customer/purchase references, verified purchases, subscriptions and payment lifecycle | Publishes verified commercial facts; adapters own provider protocols | Paid products |
@@ -91,9 +99,10 @@ contracts. A search index or cache can also be an adapter within its owner.
 | `persistence/postgres` | Implemented | Verified pools, bounded transactions, uncertain-commit projection and checksummed migrations; schemas/repositories stay module-owned |
 | `capability` | Local registry/invoker implemented | Versioned invocation, validation, caller policy and cooperative deadlines; remote adapter planned |
 | `events` | Local delivery/dispatcher implemented | Envelopes and independent consumers; memory/PostgreSQL outbox/inbox stored by their owners; broker transport planned |
-| `broadcast` | Planned | Bounded ephemeral publish/subscribe fan-out |
+| `broadcast` | Bounded local hub implemented | Coalesced one-slot invalidations, global/per-owner limits and explicit release/close; cross-process adapter separate |
 | `jobs` / scheduling | Serial cooperative polling implemented; general scheduling planned | Notifications owns preview state, claim fencing and retry decisions; generic worker owns cadence/start/stop only |
-| Telemetry/service authentication | Planned as needed | Operation observation and authenticated remote module calls |
+| `telemetry` | Private bounded HTTP metrics implemented | Fixed method/status counters and handler timing, no user-controlled labels; distributed tracing separate |
+| Service authentication | Planned as needed | Authenticated remote module calls |
 
 Health is the implemented runtime exemplar. It owns live/ready HTTP projection,
 with no business aggregate. `httpx` idempotency/ETag readers do not implement
@@ -137,22 +146,23 @@ Account now supplies [personal bootstrap and owned discovery](../../contracts/be
 with device-owned selection through guarded lookup and migration/restart evidence.
 See [construction](../../docs/blueprints/account-audit.md). Next:
 
-1. Extract and independently verify a connected native/backend combination.
-   Standalone Go extraction is verified through CLI 0.4.0; native shells can be
-   co-located with the API but their auth/data composition remains the next gate.
-   Catalog sessions/accounts and remote Notes CAS/receipt recovery are verified;
-   durable native pending input, merge rules and synchronization need deliberate
-   additional capabilities.
-2. Add optional Realtime: account-scoped changed hints, bounded connections,
-   reconnect and HTTP refetch. Push, presence and collaboration extend this
-   contract independently.
+1. Daily + go-connected now selects native sessions/accounts and remote Notes in
+   independently generated Swift/Kotlin products; read
+   [construction and scope](../../docs/blueprints/go-connected-starter.md).
+   Other shells and native Files/inbox/push remain explicit future combinations.
+   One durable pending slot per scope now has process-recovery acceptance.
+   Multi-item conflict/merge and synchronization need domain-specific rules.
+2. Realtime now supplies account-scoped changed hints and bounded connections.
+   Daily go-connected selects native lifecycle consumers; see its separate
+   [execution](../../docs/blueprints/native-identity-live.md). Presence,
+   collaboration and multi-replica fanout are independent.
 3. Register only independently verified backend combinations in the CLI; Go's
    full implemented-module selection has passed this gate.
    Follow [starter readiness](../../docs/STARTER-READINESS.md) for that evidence.
 
 Identity supplies the trusted principal for the tested backend workflow. Account
-membership/invitations, recovery, richer auth providers and connected native
-starter acceptance remain separate. Development credentials remain an independent fixture.
+membership/invitations, contact changes, richer auth providers and additional connected native
+starter combinations remain separate. Development credentials remain an independent fixture.
 
 Read [module communication](../../contracts/behavior/module-boundaries.md), then
 the [Go pattern note](notes/patterns/ports-and-module-composition.md) for the

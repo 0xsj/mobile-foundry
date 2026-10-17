@@ -121,6 +121,9 @@ func restoreSession(row pgx.Row) (domain.Session, error) {
 	return domain.RestoreSession(v)
 }
 func (s *Store) Issue(ctx context.Context, session domain.Session, metadata events.Metadata) error {
+	return s.issue(ctx, session, "", metadata)
+}
+func (s *Store) issue(ctx context.Context, session domain.Session, expected string, metadata events.Metadata) error {
 	v := session.Snapshot()
 	if _, err := domain.RestoreSession(v); err != nil {
 		return err
@@ -129,6 +132,13 @@ func (s *Store) Issue(ctx context.Context, session domain.Session, metadata even
 		return domain.ErrState
 	}
 	return storage.Transaction(ctx, s.pool, func(tx pgx.Tx) error {
+		p, e := lockPrincipal(ctx, tx, v.PrincipalID)
+		if e != nil {
+			return e
+		}
+		if expected != "" && p.Snapshot().PasswordHash != expected {
+			return domain.ErrCredential
+		}
 		_, err := tx.Exec(ctx, "INSERT INTO identity.sessions(id,principal_id,generation,access_digest,refresh_digest,created_at,updated_at,access_expires_at,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)", v.ID.String(), v.PrincipalID.String(), int64(v.Generation), v.AccessDigest, v.RefreshDigest, v.CreatedAt, v.UpdatedAt, v.AccessExpiresAt, v.ExpiresAt)
 		if err != nil {
 			return err

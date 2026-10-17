@@ -1,8 +1,9 @@
 # Go native session construction and setup
 
 The Swift/Kotlin adapters implement [session/account integration](../../contracts/behavior/go-native-session.md)
-behind authority/directory ports. The catalog is the current runnable consumer;
-generated connected-product profiles remain unregistered.
+behind authority/directory ports. The catalogs remain reference consumers;
+Daily's [connected starter](go-connected-starter.md) now selects those contracts
+in independently generated Swift/Kotlin products.
 
 ## Run the backend
 
@@ -74,5 +75,6 @@ observe Keychain restoration after process relaunch; Android currently observes
 Keystore restoration after route removal, not process-kill restoration.
 
 [Remote Notes and receipts](remote-notes.md) now implement connected data behind
-the current account lease. Offline sync, production identity features and
-independent backend/native extraction remain separate milestones.
+the current account lease. Daily connected extraction is verified separately in
+the linked construction guide. Offline sync, production identity features and
+additional backend/native combinations remain separate milestones.

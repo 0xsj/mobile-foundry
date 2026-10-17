@@ -5,6 +5,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/0xsj/mobile-foundry/backend/pkg/broadcast"
 	"github.com/0xsj/mobile-foundry/backend/pkg/capability"
 	"github.com/0xsj/mobile-foundry/backend/pkg/clock"
 	"github.com/0xsj/mobile-foundry/backend/pkg/events"
@@ -13,6 +14,7 @@ import (
 )
 
 type Runtime struct {
+	Signals      *broadcast.Hub
 	Clock        clock.Clock
 	IDs          id.Generator
 	Capabilities *capability.Registry

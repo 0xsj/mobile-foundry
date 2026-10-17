@@ -1,5 +1,24 @@
 # Kotlin learning notes
 
+Workspace follow-up, 2026-10-17: start with [construction/evidence](../../../docs/blueprints/native-workspaces.md), then the linked current-state/receipt pattern and Session/product walkthroughs. CLI 0.18.0 adds owner create/rename with explicit uncertainty review.
+
+Registration follow-up, 2026-10-17: read [Unicode scalar/byte bounds](language/kotlin-unicode-scalars-and-byte-bounds.md), then start with [construction/evidence](../../../docs/blueprints/native-registration.md), then its linked profile/session separation pattern and Session/product walkthroughs. The port confirms a profile; explicit sign-in separately opens Personal.
+
+Read-cache follow-up, 2026-10-17: start with [construction/evidence](../../../docs/blueprints/notes-read-cache.md), then the linked checkpoint pattern and Services/Data/product walkthroughs. Cached content is advisory; fresh reads and durable pending commands keep separate gates.
+
+Native lifecycle/live follow-up, 2026-10-17: start with [construction/evidence](../../../docs/blueprints/native-identity-live.md), then [live invalidation with pending writes](../../../notes/patterns/live-invalidation-and-pending-writes.md). CLI 0.15.0 selects the Daily product forms and socket consumers; other shells/catalog UI remain separate.
+
+Pending Notes follow-up, 2026-10-17: read
+[native SQLite configuration and strict decoding](substrate/sqlite-helpers-and-nondestructive-recovery.md#pending-journal-follow-up--2026-10-17),
+then Data/product walkthroughs and [actual evidence](../../../docs/blueprints/pending-notes.md).
+
+Connected-starter follow-up, 2026-10-17: read
+[product composition](modules/project/product/README.md#connected-daily-output),
+[ViewModel/process lifetime](substrate/connected-product-lifetime.md) and
+[independent setup/evidence](../../../docs/blueprints/go-connected-starter.md).
+The product selects real session/accounts/Notes behind ports. Activity retention
+and killed-process native-vault restoration have separate checks.
+
 Remote-preview follow-up, 2026-10-17: read
 [receipt/open identity](../../../notes/patterns/remote-notification-admission-and-open-identity.md),
 the Services/app remote sections, then [construction and native evidence](../../../docs/blueprints/remote-notifications.md).

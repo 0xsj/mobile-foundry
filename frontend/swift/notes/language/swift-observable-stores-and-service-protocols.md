@@ -77,3 +77,33 @@ See [provider seams](../../../../notes/patterns/transport-service-and-screen.md#
 and [owned cancellation](../../../../notes/concepts/deadlines-and-owned-cancellation.md).
 Primary references: [Swift concurrency](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 and [Observation](https://developer.apple.com/documentation/observation).
+
+## Computed admission needs an observed input
+
+Origin: connected product extraction, 2026-10-17. A credential grant is deliberately
+observation-ignored; a computed lease that reads only that grant does not register
+an observable dependency for SwiftUI. A view which chooses its signed-out branch
+using only that lease can stay on the branch after authentication changes.
+
+Read the public observable snapshot when deciding which branch to render, then
+use the lease for actual request admission. This preserves credential privacy and
+makes presentation reactive. The computed property itself is not a notification
+source; its tracked inputs matter. The product presentation check hosts Library
+before sign-in, then observes native form fields appear/disappear through the
+controller lifecycle. See the [product walkthrough](../modules/apps/ProductApp/README.md#connected-daily-output)
+for source and independently observed behavior.
+
+
+## Socket cancellation follow-up — 2026-10-17
+
+The LiveSocketTransport protocol is Sendable; its URLSession implementation creates
+and owns one ephemeral native session per watch. withTaskCancellationHandler closes
+the socket when the owner task is canceled, and defer invalidates the session on
+all exits. A small actor serializes message sequence admission; MainActor checks
+the exact lease before handing a hint to observable product state. This separates
+native callback/resource safety from the account's presentation authority.
+
+Conceptual: canceling a watch does not retroactively stop an already queued
+callback, so Task cancellation and the session/generation predicate both matter.
+Known network refusal becomes a public failure; unexpected defects propagate.
+Read [source](../../packages/FoundrySession/Sources/FoundrySession/AccountLiveHints.swift) and [observed acceptance](../../../../docs/blueprints/native-identity-live.md).

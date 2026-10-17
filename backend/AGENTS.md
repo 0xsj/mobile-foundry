@@ -35,7 +35,9 @@ Domains never invoke another module or share its store. Keep local/remote
 validation and caller policy consistent. Dependency failures are not successful
 negative answers. Add contracts and acceptance evidence with each implemented
 seam. Assembly now registers capabilities/subscriptions, verifies requirements,
-freezes registries and starts owned workers. Broadcast/remote adapters remain planned.
+freezes registries and starts owned workers. A bounded in-process broadcast hub and
+native-bearer WebSocket edge now implement [recoverable hints](../contracts/behavior/realtime.md).
+Remote module routing and cross-process broadcast adapters remain separate.
 
 The [Account/Audit memory slice](../contracts/behavior/account-audit.md) is
 implemented. Preserve state/outbox and evidence/inbox atomicity, write-time
@@ -66,7 +68,25 @@ The [remote Notes slice](../contracts/behavior/remote-notes.md) adds owner-scope
 data through AccountAccess and atomic command receipts. Scope receipts by account,
 principal and command; authorize replays; preserve the v1 fingerprint encoding.
 Replay precedes CAS/existence. Keep Notes SQL separate from Account/Identity stores.
-No Notes Audit/Realtime facts or native durable queue are established yet.
+Notes publishes lossy dirty hints after confirmed store success; these are not
+durable integration facts. Daily's connected native selection retains one pending
+command per original scope, with explicit recovery rather than automatic sync.
+
+The [core identity lifecycle](../contracts/behavior/identity-recovery.md) adds
+verified recovery contacts, single-use checkpointed challenges and password
+mutation. Compare credential checkpoints under the principal lock, serialize
+session issuance with password mutation, and commit challenge consumption,
+revocation and required facts atomically. Preserve v1 revocation reasons;
+password-related reasons use the separate v2 event contract. Anonymous reset
+lookup/mail runs after bounded queue admission, independently of public response
+timing. Never log addresses, challenges or SMTP credentials.
+
+The [portable operational profile](../contracts/behavior/backend-operations.md)
+keeps API/database/metrics private behind an explicit trusted proxy. Migrations
+remain explicit; close sockets and workers before pools. Select one API replica
+for the local hub. Backup database and private objects under API quiescence and
+verify restores only into unused owned namespaces. Maintenance currently prunes
+expired challenges; broader retention/erasure needs owner-specific product policy.
 
 Read [Bento conventions](../../bento/backend/CONVENTIONS.md) and
 [module authoring](../../bento/backend/MODULE-AUTHORING.md) when implementing

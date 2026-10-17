@@ -104,3 +104,15 @@ func TestAuthenticationSelection(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestOperationalConfigAdmission(t *testing.T) {
+	for _, values := range []map[string]string{{"POSTGRES_POOL_MAX_CONNS": "0"}, {"POSTGRES_POOL_MAX_CONNS": "129"}, {"POSTGRES_POOL_MAX_CONNS": "eight"}, {"METRICS_ADDR": "bad"}, {"TRUSTED_PROXY_CIDRS": "anywhere"}, {"IDENTITY_MAIL_CONFIG": "private.json"}} {
+		if _, err := Load(source(values)); err == nil {
+			t.Fatal("admitted invalid operational config", values)
+		}
+	}
+	c, err := Load(source(map[string]string{"POSTGRES_POOL_MAX_CONNS": "12", "METRICS_ADDR": "127.0.0.1:9090", "TRUSTED_PROXY_CIDRS": "127.0.0.1/32", "AUTH_MODE": "identity", "IDENTITY_MAIL_CONFIG": "private.json"}))
+	if err != nil || c.PostgresPoolMax != 12 {
+		t.Fatal(c, err)
+	}
+}

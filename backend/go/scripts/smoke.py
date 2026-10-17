@@ -37,7 +37,7 @@ def server(binary, fixture=False, database_url=None, crash=False, principal_id=I
         reservation.bind(("127.0.0.1", 0))
         port = reservation.getsockname()[1]
     environment = dict(os.environ)
-    environment.update(APP_ENV="development", HTTP_ADDR=f"127.0.0.1:{port}", LOG_FORMAT="json", LOG_LEVEL="info", DEV_AUTH_TOKEN="", DEV_PRINCIPAL_ID="", PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false")
+    environment.update(APP_ENV="development", HTTP_ADDR=f"127.0.0.1:{port}", LOG_FORMAT="json", LOG_LEVEL="info", DEV_AUTH_TOKEN="", DEV_PRINCIPAL_ID="", PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false", IDENTITY_MAIL_CONFIG="", METRICS_ADDR="", TRUSTED_PROXY_CIDRS="")
     environment.update(STORAGE="memory", AUTH_MODE="development" if fixture else "deny", DATABASE_URL="", ACCOUNT_DATABASE_URL="", AUDIT_DATABASE_URL="",IDENTITY_DATABASE_URL="",NOTES_DATABASE_URL="")
     if identity:
         environment["AUTH_MODE"] = "identity"
@@ -115,7 +115,7 @@ def main():
             assert request(base, "HEAD", path, token=TOKEN)[2] == b""
         with server(binary, fixture=True) as base:
             assert request(base, "GET", path, token=TOKEN)[0] == 404, "memory profile unexpectedly survived restart"
-        environment = dict(os.environ, APP_ENV="production", DEV_AUTH_TOKEN=TOKEN, DEV_PRINCIPAL_ID=IDENTITY, PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false")
+        environment = dict(os.environ, APP_ENV="production", DEV_AUTH_TOKEN=TOKEN, DEV_PRINCIPAL_ID=IDENTITY, PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false", IDENTITY_MAIL_CONFIG="", METRICS_ADDR="", TRUSTED_PROXY_CIDRS="")
         refused = subprocess.run([str(binary)], cwd=ROOT, env=environment, capture_output=True, text=True, timeout=5)
         assert refused.returncode == 1 and TOKEN not in refused.stderr, "production fixture was accepted/leaked"
     print("process smoke: deny default, create/read/rename/audit, stale conflict, metadata, HEAD, private logs, restart loss, SIGTERM and production refusal passed")

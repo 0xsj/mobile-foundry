@@ -1,5 +1,13 @@
 # Go backend foundation
 
+CLI 0.14.0 extends this starter with account-scoped WebSocket refetch hints,
+email verification, password recovery/change and a portable Docker deployment.
+Start with [setup, commands and verification](../../docs/blueprints/backend-connected-foundations.md).
+SMTP uses explicit private configuration. Apply new Identity/Audit migrations
+before upgrading retained PostgreSQL. CLI 0.15.0 selects
+[native consumers/forms](../../docs/blueprints/native-identity-live.md) for Daily
+go-connected; external provider delivery still requires explicit configuration.
+
 Recovery follow-up, 2026-10-17: [cancel/replace setup](../../docs/blueprints/push-job-recovery.md)
 adds owner-scoped cancellation, explicit replacement and direct-child readback.
 Apply Notifications 0004 before an existing API starts. The source outcome remains
@@ -262,8 +270,10 @@ Notes implements scoped paged reads, version-guarded CRUD and atomically committ
 command receipts through consumer-owned AccountAccess. See
 [the contract](../../contracts/behavior/remote-notes.md) and
 [native setup](../../docs/blueprints/remote-notes.md). PostgreSQL receipts survive
-API restart/deletion; native pending input is currently transient.
-Membership management and sockets remain planned. CLI backend extraction is
+API restart/deletion. Connected Daily retains pending input in a native SQLite
+journal; the catalog examples remain transient. Realtime sends lossy hints through
+the local hub. Membership management and cross-process fanout remain separate.
+CLI backend extraction is
 implemented and independently verified; see [Go starter](../../docs/blueprints/go-starter.md).
 Account rename enforces CAS and rejects Idempotency-Key; Notes requires an
 admitted command key for writes. `principal.Deny` authenticates nobody.
@@ -299,8 +309,9 @@ compiled-process persistence/recovery checks; `test` alone skips database cases.
 Identity checks cover the same store scenarios on memory/PostgreSQL, session
 expiry/rotation races, rollback/leases, real HTTP scope, API crash restoration,
 durable revocation/sign-out and raw-credential absence from stored rows/events/logs.
-The last verification used local mode after Docker's VM filesystem became
-read-only; Docker needs recovery before `db-up` can run on this host.
+The 2026-10-17 foundation verification uses disposable PostgreSQL 18.6 Docker and
+an isolated container backup/restore run. Earlier local-mode observations are
+retained in their dated blueprints; they do not describe the current Docker state.
 
 Read the [runtime contract](../../contracts/behavior/go-runtime.md),
 [HTTP contract](../../contracts/http/runtime-v1.md), and

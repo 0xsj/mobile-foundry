@@ -42,7 +42,7 @@ func run(check bool) error {
 		if err != nil {
 			return err
 		}
-		pool, err := postgres.Open(ctx, postgres.Config{URL: owner.url})
+		pool, err := postgres.Open(ctx, postgres.Config{URL: owner.url, MaxConns: configuration.PostgresPoolMax})
 		if err != nil {
 			return err
 		}

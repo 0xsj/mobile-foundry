@@ -285,7 +285,10 @@ Open `http://127.0.0.1:8080/v1/health/ready`. Run `make go-check go-test` for
 foundation checks. [Go setup and learning](backend/go/README.md) describes its
 ports, configuration and limits. [Go starter generation](docs/blueprints/go-starter.md)
 is now available through `--backend go`, including backend-only output with
-`--platform none`. Go is standalone ready; connected native extraction follows.
+`--platform none`. Go is standalone ready. Daily can now explicitly select
+[connected native composition](docs/blueprints/go-connected-starter.md) with
+`--with go-connected --backend go`: Account handles real sessions/workspaces and
+Library supplies remote Notes. Local shells remain available without that selection.
 
 Start the profile you want to explore from the repository root:
 
@@ -303,9 +306,11 @@ Account-scoped [remote Notes and receipts](contracts/behavior/remote-notes.md) n
 connect both catalogs to Go through native repository ports. Open **Go identity
 and accounts** to create/edit/delete remote notes and explicitly recover
 unconfirmed writes. Read [setup and ownership](docs/blueprints/remote-notes.md).
-PostgreSQL stores receipt/data atomically; native pending commands currently
-remain transient. Independently generated connected profiles are the next
-starter milestone.
+PostgreSQL stores receipt/data atomically. The catalogs keep transient recovery
+owners; [connected product generation](docs/blueprints/go-connected-starter.md)
+selects a private [pending-change journal](docs/blueprints/pending-notes.md) that
+survives app termination. Recovery is explicit. Native Files/inbox/push, read caches
+and automatic offline synchronization remain separate selections.
 
 ## Learning notes
 
@@ -318,6 +323,23 @@ shared mobile findings live in root `notes`.
 implementation slice leaves a reading handoff. [AGENTS.md](AGENTS.md) carries
 that requirement into future sessions. Run `make notes-check` to check links,
 module paths, and native example labels.
+
+## Connected account security and live reads
+
+Daily + go-connected includes [native recovery, verification, password changes and
+live Notes reads](docs/blueprints/native-identity-live.md). Account opens transient
+security forms; Library refreshes after account-scoped WebSocket hints. Services
+remain replaceable through narrow ports. Configure private backend SMTP for real
+email delivery; these foreground hints do not provide automatic offline sync.
+
+## Connected backend foundations
+
+The Go starter now includes [WebSocket hints, core identity flows and portable
+Docker operations](docs/blueprints/backend-connected-foundations.md). Live hints
+request an authorized HTTP refetch; verification/reset/change use private SMTP
+configuration. The operational profile supplies explicit migrations, private
+metrics and tested database/private-file backup and restore. Native socket
+consumers and recovery forms are separate additions.
 
 ## Connected media example
 

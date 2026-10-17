@@ -8,9 +8,10 @@ import (
 )
 
 type Write struct {
-	Store  app.Store
-	Access app.AccountAccess
-	IDs    id.Generator
+	Changes app.Changes
+	Store   app.Store
+	Access  app.AccountAccess
+	IDs     id.Generator
 }
 
 func (h Write) Handle(ctx context.Context, actor, account id.ID, input domain.Write) (domain.Receipt, error) {
@@ -38,6 +39,9 @@ func (h Write) Handle(ctx context.Context, actor, account id.ID, input domain.Wr
 	result, err := h.Store.Apply(ctx, account, actor, input, candidate)
 	if err == nil && (!result.Valid() || result.CommandID != input.CommandID || result.AccountID != account || result.PrincipalID != actor || result.Action != input.Action || result.Title != input.Title || (input.Action != domain.Create && (result.NoteID != input.NoteID || result.Version != input.Expected+1))) {
 		return domain.Receipt{}, domain.ErrState
+	}
+	if err == nil && h.Changes != nil {
+		h.Changes.Changed(account)
 	}
 	return result, err
 }

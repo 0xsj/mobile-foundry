@@ -106,8 +106,10 @@ def validate_profile(profile, root):
         if profile["shell"] not in {"daily", "workspace", "browse"}:
             raise ProfileError("Supported generated shells are daily, workspace and browse.")
         capabilities = profile.get("capabilities")
-        if capabilities not in (["ui"], ["ui", "local-data"]):
-            raise ProfileError("Supported inventories select UI or UI + local-data.")
+        if capabilities not in (["ui"], ["ui", "local-data"], ["ui", "go-connected"]):
+            raise ProfileError("Supported inventories select UI, UI + local-data or UI + go-connected.")
+        if "go-connected" in capabilities and (profile["shell"] != "daily" or profile.get("requiresBackend") != "go"):
+            raise ProfileError("go-connected requires the Daily shell and the Go backend.")
         if not isinstance(profile.get("exclude"), list) or not all(isinstance(item, str) for item in profile["exclude"]):
             errors.append("Profile exclusions must be strings.")
         shared = profile["sharedSources"]
@@ -156,7 +158,14 @@ def validate_profile(profile, root):
                 effective(value)
                 if not covered(value):
                     errors.append(f"{name}: required capability file absent from inventory: {value}")
-            for fixture in ("kernel", "query", "ui") + (("local-notes",) if "local-data" in capabilities else ()):
+            if "go-connected" in capabilities:
+                value = platform.get("connectionFile")
+                if not covered(value):
+                    errors.append(f"{name}: missing product connection configuration")
+            fixtures = ("kernel", "query", "ui") + (("local-notes",) if "local-data" in capabilities else ())
+            if "go-connected" in capabilities:
+                fixtures += ("http", "session", "account-access", "go-session", "remote-notes", "pending-notes")
+            for fixture in fixtures:
                 if f"contracts/fixtures/{fixture}" not in shared:
                     errors.append(f"{name}: missing {fixture} test fixtures")
             graph = {}

@@ -22,7 +22,7 @@ func BuildPostgres(ctx context.Context, config storage.Config, schema storage.Sc
 			pool.Close()
 			return module.Unit{}, err
 		}
-		unit := New(adapter.New(pool), capabilities.Client{Invoker: runtime.Capabilities.Client(Schema)}, runtime.IDs, runtime.Principals)
+		unit := New(adapter.New(pool), capabilities.Client{Invoker: runtime.Capabilities.Client(Schema)}, runtime.IDs, runtime.Principals, signals{runtime.Signals})
 		unit.Ready = pool.Ping
 		unit.Close = func() error { pool.Close(); return nil }
 		return unit, nil

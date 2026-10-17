@@ -39,3 +39,6 @@ func Authorize(ctx context.Context, access AccountAccess, actor, account id.ID) 
 	}
 	return nil
 }
+
+// Changes emits optional, lossy invalidation only after a confirmed store result.
+type Changes interface{ Changed(id.ID) }

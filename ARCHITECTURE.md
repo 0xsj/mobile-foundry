@@ -8,6 +8,18 @@ HTTP client; app owners retain pending commands by original scope. This adds
 connected data/CAS recovery, with durable native outboxes and live Notes facts
 still separate work. See [construction](docs/blueprints/remote-notes.md).
 
+The explicit [connected Daily starter](contracts/behavior/go-connected-starter.md)
+selects those session/account/Notes ports in independently copied Swift/Kotlin
+products. Backend co-location alone preserves local shell behavior. Product
+composition owns exact-lease rebinding, native vaults and app lifetime; no catalog
+route or provider SDK is required by the selected product.
+
+[Native workspace management](contracts/behavior/native-workspaces.md) keeps
+versioned Account observations/commands behind a separate port from session
+issuance and selected scope. Creates leave selection explicit; metadata renames
+preserve Notes intent. Missing replies require current-state review without
+inventing a receipt or implicit replay.
+
 Status: Draft. Swift and Kotlin, the reusable component catalog, and preparation
 for demanding graphics are established direction. The boundaries and construction
 order below are proposed implementation guidance.
@@ -308,7 +320,17 @@ credential resolution and principal-scoped Audit.
 bootstrap and owner-only listing, with device-owned selection through guarded
 lookup. [Native Go adapters](contracts/behavior/go-native-session.md) compose those
 contracts through deployment-bound authorities, rotation checkpoints and a
-lease-bound account directory. Realtime and remote data remain planned.
+lease-bound account directory. Notes now supplies remote data/receipts; Daily's
+connected selection retains pending input before HTTP. The
+[Realtime edge](contracts/behavior/realtime.md) supplies bounded account-scoped
+refetch hints through an application-owned feed, with a replaceable local hub.
+Hints carry no record content and do not replace HTTP snapshots or reconciliation.
+[Core identity flows](contracts/behavior/identity-recovery.md) add checkpointed
+verification/recovery and atomic password/session changes. New revocation reasons
+use v2 facts; independent Audit/Notifications adapters own their interpretations.
+[Portable operations](contracts/behavior/backend-operations.md) adds a private
+container API behind Caddy, bounded metrics, explicit migration/maintenance and
+quiesced database/object backups with isolated restore verification.
 Supabase has a local self-hosted Compose stack; Firebase has a
 Compose wrapper around its Local Emulator Suite. Choose which profile the
 first native connected workflow exercises when that slice is specified.
@@ -623,3 +645,27 @@ explicit duplicate acknowledgement for uncertain sources. The original outcome
 remains intact, and a unique source link prevents competing replacement IDs from
 creating multiple children. No generic worker policy, module boundary or native
 navigation authority changes; default runtime selection remains off.
+
+## Durable pending Notes in connected products
+
+Services owns the recovery port and admitted command records; Data supplies native
+SQLite adapters. The Daily + go-connected composition stages exact input before
+HTTP, retains pending evidence across termination and settles a matching receipt
+before clearing it. Recovery is explicit and bound to original deployment, user
+and account. Read [the contract](contracts/behavior/pending-notes.md); this bounded
+single-slot journal does not add automatic sync or upgrade the catalogs’ transient
+gallery state owners.
+
+
+## Native lifecycle and recoverable live reads
+
+Daily go-connected selects IdentityRecovery and AccountLiveHints separately from
+SessionAuthority and CRUD. Recovery separates public code/reset operations from
+exact-lease authenticated contact/verification/password changes. Product owners
+clear secret drafts, guard late replies and close access on uncertain password
+changes. Live consumers bind the canonical deployment/account/current lease,
+release native sockets on background/renewal and perform bounded reconnects.
+Notes queues authoritative reads behind accepted writes and journal settlement;
+a hint cannot execute or confirm a pending command. Read
+[behavior](contracts/behavior/native-identity-live.md) and
+[construction/evidence](docs/blueprints/native-identity-live.md).

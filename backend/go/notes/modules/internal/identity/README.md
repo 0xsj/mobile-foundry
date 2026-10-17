@@ -1,5 +1,12 @@
 # Identity orchestration and owned session state
 
+Core lifecycle follow-up, 2026-10-17: continue with
+[verification/recovery/password changes](recovery.md) and
+[credential checkpoints](../../../patterns/identity-challenges-and-checkpoints.md).
+Memory/PostgreSQL conformance and local SMTP/container recovery extend the earlier
+session evidence below. Contact changes, MFA/OIDC/passkeys, distributed abuse
+controls and native recovery forms remain separate.
+
 ## Session eligibility follow-up — 2026-10-17
 
 Claim: Notifications can ask whether a bound session remains live without using
@@ -95,8 +102,9 @@ passes, including compiled API SIGKILL, restored sessions, rotation/reuse,
 durable revocation/sign-out and raw-secret absence from rows/events/logs.
 Account now has [bootstrap/discovery](../../../../../../contracts/behavior/account-bootstrap.md)
 without an Identity store dependency. [Native Go adapters](../../../../../../contracts/behavior/go-native-session.md)
-now compose that scope. Verification/recovery, OAuth/passkeys,
-distributed abuse control, retention or generated backend acceptance is supplied.
+now compose that scope. Verification/recovery and generated backend acceptance
+are supplied by later follow-ups, not by this initial session run. OAuth/passkeys,
+distributed abuse control and broader retention remain separate.
 No Identity PostgreSQL 18.6 run is claimed from the earlier Account/Audit slice.
 
 Related: [behavior](../../../../../../contracts/behavior/identity-sessions.md),

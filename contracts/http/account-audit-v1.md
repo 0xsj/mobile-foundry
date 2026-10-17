@@ -20,7 +20,8 @@ Account shape: `id`, `owner_id`, `name`, `version`, `created_at`, `updated_at`.
 IDs are canonical UUID strings; version is a positive JSON-safe integer;
 timestamps are UTC RFC 3339 with at most six fractional digits. JSON body admits
 only `name`. GoSessionAuthority and HTTPAccountDirectory now implement native
-bootstrap/guarded selection/discovery; general Account mutations remain future.
+bootstrap/guarded selection/discovery; Daily go-connected now selects native AccountManagement create/read/rename forms;
+see [native workspace behavior](../behavior/native-workspaces.md).
 
 Bootstrap is safe to repeat with a valid name: the first committed name wins,
 and repeats return current state without renaming or emitting another fact.

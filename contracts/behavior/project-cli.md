@@ -7,6 +7,8 @@ selects `local-data`. Backend `none` remains default; Go is independently verifi
 and available, including API-only output. Its [extraction contract](go-starter.md)
 defines module identity, source closure, migrations, namespace and acceptance.
 Native shells with Go remain unconnected until a native provider capability is selected.
+Daily's [go-connected capability](go-connected-starter.md) selects real native
+Identity/accounts/remote Notes composition; it requires the Go backend.
 
 ## Commands and inputs
 
@@ -16,6 +18,8 @@ Native shells with Go remain unconnected until a native provider capability is s
 | `init NAME --platform swift\|kotlin\|both` | Copy the selected combination into `OUTPUT/NAME`; OUTPUT is an existing parent and defaults to the terminal's current directory. |
 | `--profile native-daily\|native-workspace\|native-browse` | Select a registered inventory; Daily remains the default. Workspace/Browse select UI-only placeholder navigation with their own tests. |
 | `--with local-data` | Select the registered Daily/UI/local-data combination. Omission keeps the UI-only starter. Unknown, repeated, planned or unregistered combinations are refused before output creation. |
+| `--with go-connected --backend go` | Select Daily with native Go sign-in, accounts and remote Notes, including device credential storage and copied acceptance. Refuses local-data/other shells. |
+| `--api-base-url URL` | Public deployment endpoint for go-connected only. Defaults to Debug loopback 8080/v1; HTTPS or explicit loopback HTTP, with strict admission. |
 | `--backend none\|go` | Default frontend-only mode or a separately configured Go API. Planned/unknown backends are refused before writing output. |
 | `--platform none --backend go` | Backend-only output; refuses native profile/capability/app-ID/signing inputs. |
 | `--go-module DOMAIN/PATH` | Go module identity; requires --backend go. Default example.com/NAME/backend; conservative lowercase path admission. |

@@ -95,3 +95,20 @@ Next reading: how should an installation token be rebound after sign-out, and ho
 should outbound acknowledgements survive uncertain APNs/FCM acceptance?
 
 Installation follow-up, 2026-10-17: continue with [installation ownership](installations.md) for independent proof, versioned session handoff, target uniqueness and atomic revocation tombstones. The registry is backend metadata; native OS token owners and outbound delivery still need separate slices.
+
+
+## Password revocation follow-up — 2026-10-17
+
+Claim: a consumer can preserve session-target cleanup while a producer adds a
+new schema, without importing producer state or widening v1's reason vocabulary.
+The [Identity receiver](../../../../internal/notifications/infra/events/identity.go)
+admits password_change/password_reset only through identity.session.revoked.v2,
+then maps into its own SessionRevocation input. Its existing atomic inbox,
+retirement tombstone and token clearing still apply. Audit makes an independent
+interpretation; neither reaction is a direct Identity repository call.
+
+[Compatibility tests](../../../../tests/identity_recovery_events_test.go) exercise
+v2 cleanup and reject new reasons sent under v1. The broader memory/PostgreSQL
+suite checks the existing registry/inbox atomicity separately. See
+[versioned facts](../../../../../../contracts/events/identity-recovery-v1.md).
+Next: verify the same admitted contracts before replacing local delivery with a broker.

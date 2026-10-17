@@ -69,3 +69,47 @@ physical-device, power-loss or storage-pressure experiment.
 and [local observation lifetime](../../../../notes/patterns/local-commits-and-observation-lifetime.md).
 Next: when should a dedicated storage executor replace cooperative actor work,
 and what independent evidence would justify connection pooling or WAL?
+
+## Pending journal follow-up — 2026-10-17
+
+Claim: the actor can compare/stage/settle a recovery slot inside a short native
+transaction without carrying its C pointers across HTTP. The pending adapter
+uses BEGIN IMMEDIATE, DELETE journaling and FULL synchronous, and verifies numeric
+PRAGMA settings. Four real-file tests pass on macOS: reopen/terminal CAS, all scope
+partitions/capacity, rollback/corruption/schema refusal and competing instances.
+See [Data](../modules/packages/FoundryData/README.md#durable-pending-notes).
+
+Swift 6 rejected a closure that captured both an actor-isolated checking helper
+and an OpaquePointer inside withUnsafeBytes/withCString: “sending statement risks
+causing data races.” Return only the C status from the synchronous borrowed-buffer
+closure, then check it outside. This follows the earlier text-binding shape and
+keeps self out of the pointer closure. No unchecked Sendable annotation is needed.
+
+```swift
+// Excerpt: SQLitePendingNotesStore.write borrows bytes only for the bind call.
+let status = bytes.withUnsafeBytes { raw in
+    sqlite3_bind_blob(statement, 4, raw.baseAddress, Int32(raw.count),
+        unsafeBitCast(-1, to: sqlite3_destructor_type.self))
+}
+try check(status, SQLITE_OK)
+```
+
+No transaction spans await/network work; cancellation can still arrive after
+commit, so the owner reloads rather than assuming rollback. These checks establish
+process/file behavior, not measured sudden-power-loss durability or flash budgets.
+
+## Separate read cache — 2026-10-17
+
+Claim: short native transactions can bound an advisory cache without weakening journal retention. Origin: account read-cache slice on the same native toolchains; independent OS/device evidence is recorded in [construction/evidence](../../../../docs/blueprints/notes-read-cache.md). Read [the adapter](../../packages/FoundryData/Sources/FoundryData/SQLiteNotesReadCache.swift).
+
+The actor keeps statements/borrowed bytes inside one operation. A second schema marker prevents accidental cache operations on the pending journal file. Timestamp/partition metadata is checked against the strict decoded payload before use; SQLite eviction runs in the same transaction as insertion. The owner checks task cancellation again after the actor returns.
+
+```swift
+// Excerpt: SQLiteNotesReadCache.load makes expiry cleanup scope-local.
+guard let snapshot = try read(db, scope) else { return nil }
+guard snapshot.isUsable(at: nowMilliseconds) else {
+    try remove(db, scope); return nil
+}
+```
+
+A custom corruption/refusal path keeps stored bytes rather than inventing an empty cache. Optional cache failure returns a separate warning; journal storage keeps its stricter write gate. Lazy expiry is not scheduled secure deletion, and these tests do not establish power-loss or flash-throughput budgets. Next: should an actual product require eager account erasure or OS-backed encryption beyond container protection?

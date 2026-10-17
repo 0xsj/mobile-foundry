@@ -1,0 +1,87 @@
+[
+  {
+    "name": "ready_then_changed",
+    "frames": [
+      {
+        "type": "ready",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": true
+      },
+      {
+        "type": "changed",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": true
+      }
+    ],
+    "hints": 2
+  },
+  {
+    "name": "changed_before_ready",
+    "frames": [
+      {
+        "type": "changed",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": true
+      }
+    ],
+    "hints": 0
+  },
+  {
+    "name": "foreign_account",
+    "frames": [
+      {
+        "type": "ready",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000003",
+        "refetch": true
+      }
+    ],
+    "hints": 0
+  },
+  {
+    "name": "extra_data",
+    "frames": [
+      {
+        "type": "ready",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": true,
+        "private": true
+      }
+    ],
+    "hints": 0
+  },
+  {
+    "name": "duplicate_ready",
+    "frames": [
+      {
+        "type": "ready",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": true
+      },
+      {
+        "type": "ready",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": true
+      }
+    ],
+    "hints": 1
+  },
+  {
+    "name": "wrong_refetch_type",
+    "frames": [
+      {
+        "type": "ready",
+        "resource": "notes",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "refetch": "true"
+      }
+    ],
+    "hints": 0
+  }
+]

@@ -67,3 +67,35 @@ The module walkthrough supplies actual source and check links.
 [Outcome payloads](kotlin-outcomes-and-owned-payloads.md),
 [UI state types](kotlin-sealed-ui-states-and-data-classes.md), and
 [OkHttp and effect lifetime](../substrate/okhttp-and-compose-effect-lifetime.md).
+
+
+## Finally and early stale-result returns — 2026-10-17
+
+Claim: finally runs on early return, so an unconditional flag reset can discard
+information needed to classify an interrupted operation. Origin: WorkspaceModel's
+six state checks on Kotlin 2.3.20/coroutines 1.10.2. The primary
+[exception reference](https://kotlinlang.org/docs/exceptions.html#finally-block)
+describes scope cleanup; the owner tests establish our result-publication policy.
+
+Excerpt from the submitted operation's cleanup:
+
+```kotlin
+// Excerpt: WorkspaceModel submitted-operation cleanup.
+if (expected == generation) {
+    if (creating && !controller.isCurrent(lease)) uncertainOwner = owner(lease)
+    mutableState.value = state.value.copy(busy = false); creating = false; task = null
+}
+```
+
+This block is inside finally. A return@launch after the lease check still executes
+it. The first version reset creating before any stale-lease path retained the
+original uncertainty; its focused test failed. Record that evidence before clearing
+the flag. The generation guard prevents cleanup from overwriting a replacement
+operation. No suspending cleanup is needed here. A plain suspendCoroutine test
+double deliberately finishes late, demonstrating why ensureActive plus current
+lease/generation checks are separate from provider cooperation.
+
+Used in the app-owned workspace overlay; the reusable service still propagates
+cancellation. Read [the shared pattern](../../../../notes/patterns/current-state-is-not-a-command-receipt.md)
+and [execution evidence](../../../../docs/blueprints/native-workspaces.md).
+Next: which facts must finally preserve even when success is no longer publishable?

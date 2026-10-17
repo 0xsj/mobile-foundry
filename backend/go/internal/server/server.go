@@ -16,9 +16,11 @@ import (
 	"github.com/0xsj/mobile-foundry/backend/pkg/httpx"
 	"github.com/0xsj/mobile-foundry/backend/pkg/id"
 	"github.com/0xsj/mobile-foundry/backend/pkg/module"
+	"github.com/0xsj/mobile-foundry/backend/pkg/telemetry"
 )
 
 type Server struct {
+	metrics         *telemetry.Recorder
 	http            *http.Server
 	units           *module.Assembly
 	ready           atomic.Bool
@@ -31,7 +33,7 @@ func New(configuration config.Runtime, log *slog.Logger, units *module.Assembly)
 	if log == nil || units == nil || configuration.ShutdownTimeout <= 0 {
 		return nil, apperrors.New(apperrors.Invalid, "server.invalid", "invalid server dependencies")
 	}
-	server := &Server{units: units, shutdownTimeout: configuration.ShutdownTimeout}
+	server := &Server{metrics: telemetry.New(), units: units, shutdownTimeout: configuration.ShutdownTimeout}
 	mux := http.NewServeMux()
 	if err := units.Register(mux); err != nil {
 		return nil, err
@@ -63,10 +65,11 @@ func New(configuration config.Runtime, log *slog.Logger, units *module.Assembly)
 	if err := healthAssembly.Register(mux); err != nil {
 		return nil, err
 	}
-	server.http = &http.Server{Addr: configuration.Address, Handler: httpx.Boundary(mux, id.Random{}, log), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 20 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
+	server.http = &http.Server{Addr: configuration.Address, Handler: server.metrics.Wrap(httpx.Boundary(httpx.TrustedProxy(mux, configuration.TrustedProxyCIDRs), id.Random{}, log)), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 20 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 	return server, nil
 }
 
+func (server *Server) Metrics() http.Handler { return server.metrics }
 func (server *Server) Handler() http.Handler { return server.http.Handler }
 
 // Serve owns listener and units, and runs once. Cancellation starts a graceful

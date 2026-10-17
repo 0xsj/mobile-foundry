@@ -161,3 +161,129 @@ Read [build wiring and product identity](../../../substrate/swift-package-and-xc
 and [starter readiness](../../../../../../docs/STARTER-READINESS.md).
 Next: how should generated output select its own bundle ID/team and verify a
 first feature while preserving reusable API names?
+
+## Connected Daily output
+
+CLI 0.12.0 adds the optional [product overlays](../../../../../../templates/overlays/go-connected/swift).
+The source ProductApp remains the UI-only default. Read ConnectionConfiguration →
+ConnectionComposition/ConnectedSessionModel → ProductRootView → AccountScreen and
+LibraryScreen. The inventory selects HTTP/Session and a narrow remote Services
+closure rather than importing the catalog app or local SQLite.
+
+ConnectedSessionModel constructs the existing SessionController with a deployment-
+and installed-app-scoped Keychain vault. Session actions detach feature work before
+changing credentials. Snapshot/scene changes bind an exact fresh lease, even for
+same-account renewal. Account discovery has its own cancellable request generation.
+Library's RemoteNotesStore owns scoped pending commands, receipts, drafts and page
+state behind RemoteNotesRepository. Its three owner tests exercise acknowledgement
+loss through renewal, receipt retention through a failed refresh and late completion
+after account replacement. In CLI 0.12.0 pending commands/drafts were process-local; the follow-up below
+adds disk recovery for commands.
+
+Library admission must read controller.snapshot.phase. The credential grant behind
+controller.lease is deliberately observation-ignored; checking only that computed
+lease left an eagerly created tab on its signed-out branch. The presentation test
+hosts Library before sign-in and verifies actual native fields appear/disappear on
+sign-in/sign-out. This complements the separate real API workflow.
+
+FocusState closes the form keyboard when a sign-in or write is submitted; it does
+not cancel that write. Read [Apple's reference](https://developer.apple.com/documentation/swiftui/focusstate)
+for the focus binding mechanism. UI acceptance must reveal a lazy Form row before
+asserting its enabled state. The initial test checked an off-screen Title field;
+revealing the row corrected that test admission, without increasing its timeout.
+
+[The copied driver](../../../../../../scripts/connected_acceptance.py) starts the
+copied API, exercises real screens and terminates/relaunches the application before
+checking the selected workspace and Notes again. Refer to
+[actual independent evidence](../../../../../../docs/blueprints/go-connected-starter.md)
+and [readiness](../../../../../../docs/STARTER-READINESS.md) for the current claim.
+Native-vault restore does not make command drafts durable. Study next: what must be
+persisted before dispatch to recover a missing acknowledgement after process death?
+
+## Durable recovery follow-up — 2026-10-17
+
+CLI 0.13.0 injects SQLitePendingNotesStore into connected product composition.
+RemoteNotesStore loads the journal before enabling writes, stages before HTTP and
+settles the receipt before clearing pending. Storage failure requires reload; a
+missing receipt keeps pending. Bind/refresh/process restore never automatically
+resends. Five owner cases include a newly constructed owner, lost stage acknowledgement,
+failed receipt persistence and a late reply after account replacement.
+
+Read [pending construction and actual process evidence](../../../../../../docs/blueprints/pending-notes.md)
+and [intent-before-effect reasoning](../../../../../../notes/patterns/persist-intent-before-external-effect.md).
+The generated selection copies only the journal adapter from Data; unsaved drafts
+remain temporary and the catalog's recovery owner is independent. Next: a product
+read cache/offline launch needs an explicit policy beyond durable command input.
+
+
+## Identity forms and live Notes — 2026-10-17
+
+Claim: the product owns secret drafts, uncertain credential transitions and
+foreground reconnect policy; shared services own protocol seams. Origin: CLI 0.15.0.
+The go-connected overlays add IdentitySettingsModel and native security forms.
+Passwords/codes exist only in transient view state/submitted work and clear on
+submit, epoch change, background and dismissal. Dismissing an in-flight password
+change closes local access. Generation checks suppress its late reply even after
+a replacement session signs in; storage-clear failure retains existing refusal rules.
+
+Conceptual: a failed response after password change cannot tell the app whether
+the server changed the credential. It signs out locally and asks for a new sign-in
+or explicit recovery instead of retrying a mutation.
+
+ConnectedSessionModel binds account live hints to the current lease and foreground
+lifetime. Six attempts with bounded backoff/jitter precede manual Reconnect. Notes
+coalesces hints behind reads/writes and never replays a pending change. Actual
+product acceptance checks external writes, email codes and post-recovery sign-in,
+separately from prior process-restore checks. Read [setup and dated evidence](../../../../../../docs/blueprints/native-identity-live.md) and [read/write ordering](../../../../../../notes/patterns/live-invalidation-and-pending-writes.md).
+Next: choose registration/contact-change policy or read caching deliberately; no
+provider/deployment or automatic synchronization follows from these screens.
+
+## Read-only remote snapshots — 2026-10-17
+
+Claim: cached presentation must stay distinct from authoritative loaded state. Origin: connected read-cache slice. Read [owner overlay](../../../../../../templates/overlays/go-connected/swift/RemoteNotesStore.swift) and [owner checks](../../../../../../templates/overlays/go-connected/swift/RemoteNotesStoreTests.swift).
+
+The product restores its journal before a saved page, compares command/status checkpoints and labels cached content with saved time. It can show that page before HTTP completes and on unavailable/timeout results; only a fresh page plus readable journal enables writes. Auth refusal hides content and suppresses fallback for that binding. Cache warnings never replace successful HTTP content. Remove saved copy affects only this account; sign-out cancels publication and hides content immediately.
+
+Gotchas: the 24-hour window controls usability with lazy cleanup, not scheduled erasure. Private backup-excluded storage is not an offline authentication grant. Later pages/cursors and automatic write replay remain outside this capability.
+
+Actual verification and versions are tracked in [construction/evidence](../../../../../../docs/blueprints/notes-read-cache.md). Continue with [checkpoint reasoning](../../../../../../notes/patterns/cached-content-and-command-checkpoints.md). Next: what product requirement would justify offline startup or a multi-page synchronization cursor?
+
+## Native registration — 2026-10-17
+
+Claim: onboarding navigation and credential issuance need separate owners and outcomes. Origin: connected registration slice. Read [presentation owner](../../../../../../templates/overlays/go-connected/swift/RegistrationModel.swift) and [owner checks](../../../../../../templates/overlays/go-connected/swift/RegistrationModelTests.swift).
+
+Account opens a separate registration sheet, avoiding mixed sign-in/new-password field grouping. The model owns busy/outcome/generation/epoch, while the form owns a transient password. Successful submission disables further submit until a newly opened form. Continue passes only the login hint; sign-in needs password re-entry. Current authenticated binding clears obsolete registration state. Background/dismissal invalidates pending publication and warns that creation may still have committed.
+
+Gotchas: duplicate login is not ownership proof; cancellation is not rollback; this endpoint has no command receipt/idempotency key. Never put registration passwords into the Notes journal/cache or replay them on restore. The native ASCII login subset is deliberate and tested, rather than inferred from platform lowercase/trim defaults.
+
+Actual verification and versions are recorded in [construction/evidence](../../../../../../docs/blueprints/native-registration.md). Continue with [profile versus session](../../../../../../notes/patterns/registration-is-not-session-issuance.md). Next: where should a product place invitations, verified-contact requirements and approval before granting an account?
+
+
+## Owner workspace follow-up — 2026-10-17
+
+Claim: metadata editing uses versioned observations without silently changing
+selected data scope. Origin: the CLI 0.18.0 workspace slice. Read
+[construction and independent evidence](../../../../../../docs/blueprints/native-workspaces.md), then
+[the source](../../../../../../templates/overlays/go-connected/swift/WorkspaceModel.swift) and
+[the focused checks](../../../../../../templates/overlays/go-connected/swift/WorkspaceModelTests.swift).
+
+AccountName counts Unicode scalars and retains exact normalization. The provider
+read/create/rename port is swappable; its Go adapter adds UUID/owner/strong-ETag
+and exact command confirmation. Product owners require a fresh read before rename,
+block queued double submissions, and retain interrupted-create uncertainty before
+cleanup. A fresh page plus explicit duplicate-risk choice enables a new create;
+it does not prove the earlier command's outcome. Rename changes display metadata,
+not a lease, vault or pending Notes checkpoint. Drafts/warnings are process-local.
+
+Conceptual flow:
+
+```text
+current observation → If-Match rename → conflict → fresh read → user review
+```
+
+Six owner cases per native platform cover input, duplicate submit, read gates,
+uncertain creation, generation replacement and exact-lease rejection. Boundary
+and actual Go port tests establish their separate guarantees; device evidence and
+limits are recorded in the construction guide. See
+[current state versus command receipts](../../../../../../notes/patterns/current-state-is-not-a-command-receipt.md). Next: should this product
+require durable Account command receipts or membership/invitation policy?

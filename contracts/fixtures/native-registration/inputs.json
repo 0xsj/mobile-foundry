@@ -1,0 +1,196 @@
+[
+  {
+    "name": "ASCII case and trim",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex.example+1",
+      "display_name": "Alex Example"
+    }
+  },
+  {
+    "name": "Go Unicode whitespace",
+    "input": {
+      "login": "ALEX　",
+      "display_name": " Alex ",
+      "password": "private passphrase"
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex",
+      "display_name": "Alex"
+    }
+  },
+  {
+    "name": "minimum login",
+    "input": {
+      "login": "ab",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "maximum login",
+    "input": {
+      "login": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": true,
+    "expected": {
+      "login": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "Alex Example"
+    }
+  },
+  {
+    "name": "too long login",
+    "input": {
+      "login": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "leading punctuation",
+    "input": {
+      "login": "_alex",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "ASCII subset rejects Unicode simple-case aliases",
+    "input": {
+      "login": "Kelvin",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "display controls",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "Alex\nExample",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "empty trimmed display",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": " 　",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "display counts scalars",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱",
+      "password": "private passphrase"
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex.example+1",
+      "display_name": "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱"
+    }
+  },
+  {
+    "name": "too long display",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "short password",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": "aaaaaaaaaaa"
+    },
+    "valid": false
+  },
+  {
+    "name": "minimum scalars",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": "éééééé"
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex.example+1",
+      "display_name": "Alex Example"
+    }
+  },
+  {
+    "name": "maximum UTF8 bytes",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱"
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex.example+1",
+      "display_name": "Alex Example"
+    }
+  },
+  {
+    "name": "too many UTF8 bytes",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱"
+    },
+    "valid": false
+  },
+  {
+    "name": "password preserves spaces and NUL",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": " a\u0000private password "
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex.example+1",
+      "display_name": "Alex Example"
+    }
+  },
+  {
+    "name": "login embedded newline",
+    "input": {
+      "login": "alex\nexample",
+      "display_name": "  Alex Example  ",
+      "password": "private passphrase"
+    },
+    "valid": false
+  },
+  {
+    "name": "password no trimming",
+    "input": {
+      "login": "  ALEX.Example+1  ",
+      "display_name": "  Alex Example  ",
+      "password": "            "
+    },
+    "valid": true,
+    "expected": {
+      "login": "alex.example+1",
+      "display_name": "Alex Example"
+    }
+  }
+]

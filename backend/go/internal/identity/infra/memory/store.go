@@ -24,6 +24,9 @@ type delivery struct {
 	delivered, dead bool
 }
 type Store struct {
+	contacts   map[id.ID]domain.Contact
+	challenges map[string]domain.Challenge
+	revisions  map[id.ID]uint64
 	mu         sync.Mutex
 	ids        id.Generator
 	principals map[id.ID]domain.Principal
@@ -36,7 +39,7 @@ type Store struct {
 }
 
 func New(ids id.Generator) *Store {
-	return &Store{ids: ids, principals: map[id.ID]domain.Principal{}, logins: map[string]id.ID{}, sessions: map[id.ID]domain.Session{}, refresh: map[string]reference{}, access: map[string]id.ID{}, outbox: map[id.ID]delivery{}}
+	return &Store{contacts: make(map[id.ID]domain.Contact), challenges: make(map[string]domain.Challenge), revisions: make(map[id.ID]uint64), ids: ids, principals: map[id.ID]domain.Principal{}, logins: map[string]id.ID{}, sessions: map[id.ID]domain.Session{}, refresh: map[string]reference{}, access: map[string]id.ID{}, outbox: map[id.ID]delivery{}}
 }
 func (s *Store) ByLogin(ctx context.Context, login string) (domain.Principal, bool, error) {
 	s.mu.Lock()
@@ -97,12 +100,16 @@ func (s *Store) Register(ctx context.Context, p domain.Principal, metadata event
 		return err
 	}
 	s.principals[v.ID], s.logins[v.Login] = p, v.ID
+	s.revisions[v.ID] = 1
 	s.append(m)
 	return nil
 }
 func (s *Store) Issue(ctx context.Context, session domain.Session, metadata events.Metadata) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	return s.issue(ctx, session, metadata)
+}
+func (s *Store) issue(ctx context.Context, session domain.Session, metadata events.Metadata) error {
 	v := session.Snapshot()
 	if _, err := domain.RestoreSession(v); err != nil {
 		return err

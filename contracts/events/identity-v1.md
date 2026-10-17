@@ -1,5 +1,8 @@
 # Identity lifecycle facts v1
 
+Core recovery adds [new principal lifecycle names and session-revoked v2](identity-recovery-v1.md).
+The existing v1 revocation reason vocabulary below remains unchanged.
+
 Producer: `identity`. Independent receivers: `audit.identity` and, for session
 revocation, `notifications.identity`. Publication is
 after the producer state/outbox commit, through the existing Publisher port.

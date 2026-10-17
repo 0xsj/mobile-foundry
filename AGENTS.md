@@ -43,7 +43,16 @@ Keep registration explicit, copying independent, output ownership exclusive and
 source unchanged. Go extraction is verified and registered; preserve its owned
 module rewrite/import ordering, fixtures/migrations and Compose namespace.
 Generated native shells and Go remain independently composed until a connected
-capability passes its own acceptance. Follow [CLI usage](cli/README.md).
+capability passes its own acceptance. Daily's explicit
+[go-connected selection](contracts/behavior/go-connected-starter.md) composes
+Identity/accounts/remote Notes through native ports. Preserve exact-lease binding,
+deployment-bound device credentials and [durable pending Notes](contracts/behavior/pending-notes.md).
+Persist exact input before HTTP, settle receipts before clearing pending and never
+automatically replay on restore. Keep unreadable stores; require reload before
+new writes and guard terminal replacement by original command ID. Never infer
+Files/inbox/push/sync selection from backend co-location; independently exercise
+generated screens and process restoration before promoting readiness.
+Follow [CLI usage](cli/README.md).
 Optional product data implements [local-data starter behavior](contracts/behavior/local-data-starter.md).
 Keep capability combinations explicit, validate effective overlaid build files,
 and preserve the UI-only default. Local-data selection includes guest SQLite
@@ -74,6 +83,38 @@ photo ownership and GPU resources; stop capture when its viewfinder is inactive.
 Other app areas remain scaffolds.
 Implement capabilities in reviewable slices rather than treating planned
 behavior as already available.
+
+The Go [Realtime](contracts/behavior/realtime.md),
+[core identity lifecycle](contracts/behavior/identity-recovery.md) and
+[portable operations](contracts/behavior/backend-operations.md) contracts extend
+the backend starter. Keep live hints separate from durable events/sync and
+preserve versioned revocation vocabularies. SMTP configuration stays private and
+out of generated copies. Native socket consumers and recovery forms require
+their own selected source closure and independent product acceptance.
+
+Daily go-connected selects [native registration](contracts/behavior/native-registration.md).
+Keep profile confirmation separate from session issuance and personal-account
+bootstrap. Clear transient passwords, make sign-in explicit and never replay
+registration automatically after uncertainty. Check both owner generation and
+session epoch before publishing late results.
+
+Daily go-connected selects [native workspace management](contracts/behavior/native-workspaces.md).
+Keep versioned account observations separate from session grants. Preserve exact
+leases and strong rename preconditions, require fresh readback after conflicts
+or uncertainty, and never invent Account receipts or replay non-idempotent creates.
+Creating/renaming does not silently switch scope or reset pending Notes intent.
+
+Daily go-connected selects [read-only Notes caching](contracts/behavior/notes-read-cache.md).
+Keep cache storage separate from pending intent, restore/compare journal checkpoints
+before fallback, label saved pages and require fresh reads before new writes.
+Cache failures are optional warnings; they cannot bypass session or journal gates.
+
+Daily go-connected now selects [native lifecycle/live ports](contracts/behavior/native-identity-live.md).
+Keep public recovery separate from exact-lease authenticated operations, clear
+password/code drafts on submit/background/dismissal and never replay mutations.
+Treat interrupted password changes as credential uncertainty. Live hints must
+match the deployment/account and queue reads behind active writes/settlement;
+never cancel or replay a pending write in response to a hint.
 
 Reusable UI components and their component-local types use descriptive names
 without a `Foundry` prefix, such as `ActionButton`, `LabeledTextField`, `Card`,

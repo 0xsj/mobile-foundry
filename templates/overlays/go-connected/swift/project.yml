@@ -1,0 +1,108 @@
+name: ProductApp
+options:
+  minimumXcodeGenVersion: 2.46.0
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+packages:
+  FoundryUI:
+    path: ../../packages/FoundryUI
+  FoundryKernel:
+    path: ../../packages/FoundryKernel
+  FoundryQuery:
+    path: ../../packages/FoundryQuery
+  FoundryServices:
+    path: ../../packages/FoundryServices
+  FoundryHTTP:
+    path: ../../packages/FoundryHTTP
+  FoundrySession:
+    path: ../../packages/FoundrySession
+  FoundryData:
+    path: ../../packages/FoundryData
+targets:
+  ProductApp:
+    type: application
+    platform: iOS
+    info:
+      path: Config/Info.plist
+      properties:
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations: {}
+    sources:
+      - path: Sources
+    configFiles:
+      Debug: Config/Product.xcconfig
+      Release: Config/Product.xcconfig
+    dependencies:
+      - package: FoundryUI
+      - package: FoundryKernel
+      - package: FoundryQuery
+      - package: FoundryServices
+      - package: FoundrySession
+      - package: FoundryHTTP
+      - package: FoundryData
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: $(PRODUCT_DISPLAY_NAME)
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+  ProductAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    configFiles:
+      Debug: Config/Product.xcconfig
+      Release: Config/Product.xcconfig
+    dependencies:
+      - target: ProductApp
+      - package: FoundryUI
+      - package: FoundryKernel
+      - package: FoundryQuery
+      - package: FoundryServices
+      - package: FoundrySession
+      - package: FoundryHTTP
+      - package: FoundryData
+    settings:
+      base:
+        PRODUCT_NAME: ProductAppTests
+        PRODUCT_BUNDLE_IDENTIFIER: $(PRODUCT_APP_IDENTIFIER).tests
+        GENERATE_INFOPLIST_FILE: YES
+  ProductAppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    configFiles:
+      Debug: Config/Product.xcconfig
+      Release: Config/Product.xcconfig
+    dependencies:
+      - target: ProductApp
+    settings:
+      base:
+        PRODUCT_NAME: ProductAppUITests
+        PRODUCT_BUNDLE_IDENTIFIER: $(PRODUCT_APP_IDENTIFIER).uitests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  ProductApp:
+    build:
+      targets:
+        ProductApp: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - ProductAppTests
+        - ProductAppUITests
+    archive:
+      config: Release

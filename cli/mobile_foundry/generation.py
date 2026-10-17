@@ -13,6 +13,7 @@ import subprocess
 import xml.etree.ElementTree as ET
 
 from . import VERSION
+from .connections import connection_base, configure_connection
 from .documents import write_documents
 from .profiles import ProfileError, admitted_path, relative_path
 
@@ -64,6 +65,8 @@ def excluded(relative, patterns):
     if any(part in EXCLUDED_NAMES for part in path.parts) or path.suffix.lower() in EXCLUDED_SUFFIXES:
         return True
     name = path.name
+    if name.lower().endswith((".private.json", ".private.yaml", ".private.yml")):
+        return True
     if name.lower() in {"push.local.json", "service-account.json", "serviceaccountkey.json"} or name.lower().endswith(".service-account.json"):
         return True
     if (name == ".env" or name.startswith(".env.") or name.endswith(".env")) and not name.endswith((".example", ".sample", ".template")):
@@ -207,9 +210,13 @@ def configure_backend(destination, selection, inputs, files):
     if count != 1:
         raise ProfileError("Expected one owned Compose project name; inventory drifted.")
     compose.write_text(text.replace("mobile_foundry", "app"), encoding="utf-8")
+    production = destination / "backend/go/Makefile"
+    production.write_text(production.read_text().replace("PROD_PROJECT ?= mobile-foundry-prod", "PROD_PROJECT ?= " + inputs.name + "-prod"), encoding="utf-8")
 
 
-def create_project(root, profile, manifest_path, inputs, output, backend=None):
+
+def create_project(root, profile, manifest_path, inputs, output, backend=None, api_base_url=None):
+    base = connection_base(profile, backend, api_base_url)
     if not inputs.platforms and backend is None:
         raise ProfileError("--platform none requires a backend.")
     if bool(inputs.platforms) != bool(profile):
@@ -251,6 +258,7 @@ def create_project(root, profile, manifest_path, inputs, output, backend=None):
             path.chmod(0o755 if item.executable else 0o644)
         if profile:
             configure_product(destination, profile, inputs)
+            configure_connection(destination, profile, inputs, base)
         if backend:
             configure_backend(destination, backend, inputs, backend_files)
         if backend:
@@ -265,7 +273,9 @@ def create_project(root, profile, manifest_path, inputs, output, backend=None):
             "createdAt": datetime.now(timezone.utc).isoformat(), "source": provenance,
         }
         if backend:
-            metadata.update(goModule=backend.module, backendModules=backend.profile["modules"], nativeBackendConnection="unconnected" if profile else None)
+            metadata.update(goModule=backend.module, backendModules=backend.profile["modules"], nativeBackendConnection="go-connected" if base else "unconnected" if profile else None)
+        if base:
+            metadata["apiBaseURL"] = base
         (destination / "mobile-foundry.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
         return destination
     except BaseException:

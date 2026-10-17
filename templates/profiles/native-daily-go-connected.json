@@ -1,0 +1,420 @@
+{
+  "schemaVersion": 1,
+  "id": "native-daily",
+  "status": "standalone",
+  "shell": "daily",
+  "capabilities": [
+    "ui",
+    "go-connected"
+  ],
+  "layout": "Preserve repository-relative paths so package dependencies and test fixture depth remain portable.",
+  "exclude": [
+    "**/.build/**",
+    "**/build/**",
+    "**/.gradle/**",
+    "**/.kotlin/**",
+    "**/xcuserdata/**",
+    "**/*.xcuserstate",
+    "**/local.properties",
+    "**/.env*",
+    "**/.DS_Store"
+  ],
+  "sharedSources": [
+    "contracts/fixtures/kernel",
+    "contracts/fixtures/query",
+    "contracts/fixtures/ui",
+    "contracts/fixtures/http",
+    "contracts/fixtures/session",
+    "contracts/fixtures/account-access",
+    "contracts/fixtures/go-session",
+    "contracts/fixtures/remote-notes",
+    "scripts/connected_acceptance.py",
+    "contracts/fixtures/pending-notes",
+    "scripts/local_mail_capture.py",
+    "contracts/fixtures/native-lifecycle",
+    "contracts/fixtures/notes-read-cache",
+    "contracts/fixtures/native-registration",
+    "contracts/fixtures/account"
+  ],
+  "platforms": {
+    "swift": {
+      "entry": "frontend/swift/apps/ProductApp/project.yml",
+      "scheme": "ProductApp",
+      "packages": [
+        "FoundryUI",
+        "FoundryQuery",
+        "FoundryKernel",
+        "FoundryHTTP",
+        "FoundryServices",
+        "FoundrySession",
+        "FoundryData"
+      ],
+      "sources": [
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/apps/ProductApp/Config",
+        "frontend/swift/apps/ProductApp/Sources",
+        "frontend/swift/apps/ProductApp/Tests",
+        "frontend/swift/apps/ProductApp/README.md",
+        "frontend/swift/packages/FoundryUI/Package.swift",
+        "frontend/swift/packages/FoundryUI/Sources",
+        "frontend/swift/packages/FoundryUI/Tests",
+        "frontend/swift/packages/FoundryQuery/Package.swift",
+        "frontend/swift/packages/FoundryQuery/Sources",
+        "frontend/swift/packages/FoundryQuery/Tests",
+        "frontend/swift/packages/FoundryKernel/Package.swift",
+        "frontend/swift/packages/FoundryKernel/Sources",
+        "frontend/swift/packages/FoundryKernel/Tests",
+        "frontend/swift/packages/FoundryHTTP/Package.swift",
+        "frontend/swift/packages/FoundryHTTP/Sources",
+        "frontend/swift/packages/FoundryHTTP/Tests",
+        "frontend/swift/packages/FoundrySession/Package.swift",
+        "frontend/swift/packages/FoundrySession/Sources",
+        "frontend/swift/packages/FoundrySession/Tests",
+        "frontend/swift/packages/FoundryServices/Package.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesService.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/CreateNote.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/RemoteNotes.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/HTTPRemoteNotesRepository.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/RemoteNotesTests.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/GoNativeNotesTests.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/PendingNotes.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/PendingNotesTests.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/SQLitePendingNotesStore.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLitePendingNotesTests.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesReadCache.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/NotesReadCacheTests.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/SQLiteNotesReadCache.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLiteNotesReadCacheTests.swift"
+      ],
+      "identityFiles": {
+        "build": "frontend/swift/apps/ProductApp/Config/Product.xcconfig",
+        "runtime": "frontend/swift/apps/ProductApp/Sources/ProductConfiguration.swift"
+      },
+      "overlays": [
+        {
+          "source": "templates/overlays/go-connected/swift/project.yml",
+          "destination": "frontend/swift/apps/ProductApp/project.yml"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/ProductRootView.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/ProductRootView.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/AccountScreen.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/AccountScreen.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/LibraryScreen.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/LibraryScreen.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/ConnectionConfiguration.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Connection/ConnectionConfiguration.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/ConnectedSessionModel.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Connection/ConnectedSessionModel.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/RemoteNotesStore.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Notes/RemoteNotesStore.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/RemoteNotesStoreTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/RemoteNotesStoreTests.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/ConnectedUITests.swift",
+          "destination": "frontend/swift/apps/ProductApp/UITests/ConnectedUITests.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/SessionPresentationTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/SessionPresentationTests.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/DataPackage.swift",
+          "destination": "frontend/swift/packages/FoundryData/Package.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/IdentitySettingsModel.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Connection/IdentitySettingsModel.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/IdentitySettingsView.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/IdentitySettingsView.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/RegistrationModel.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Connection/RegistrationModel.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/RegistrationView.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/RegistrationView.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/RegistrationModelTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/RegistrationModelTests.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/WorkspaceModel.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Connection/WorkspaceModel.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/WorkspaceView.swift",
+          "destination": "frontend/swift/apps/ProductApp/Sources/Screens/WorkspaceView.swift"
+        },
+        {
+          "source": "templates/overlays/go-connected/swift/WorkspaceModelTests.swift",
+          "destination": "frontend/swift/apps/ProductApp/Tests/WorkspaceModelTests.swift"
+        }
+      ],
+      "connectionFile": "frontend/swift/apps/ProductApp/Sources/Connection/ConnectionConfiguration.swift",
+      "requiredFiles": [
+        "frontend/swift/apps/ProductApp/project.yml",
+        "frontend/swift/apps/ProductApp/Sources/ProductRootView.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/AccountScreen.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/LibraryScreen.swift",
+        "frontend/swift/apps/ProductApp/Sources/Connection/ConnectionConfiguration.swift",
+        "frontend/swift/apps/ProductApp/Sources/Connection/ConnectedSessionModel.swift",
+        "frontend/swift/apps/ProductApp/Sources/Notes/RemoteNotesStore.swift",
+        "frontend/swift/apps/ProductApp/Tests/RemoteNotesStoreTests.swift",
+        "frontend/swift/apps/ProductApp/UITests/ConnectedUITests.swift",
+        "frontend/swift/packages/FoundryServices/Package.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesService.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/CreateNote.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/RemoteNotes.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/HTTPRemoteNotesRepository.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/RemoteNotesTests.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/GoNativeNotesTests.swift",
+        "frontend/swift/apps/ProductApp/Tests/SessionPresentationTests.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/PendingNotes.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/PendingNotesTests.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/SQLitePendingNotesStore.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLitePendingNotesTests.swift",
+        "frontend/swift/packages/FoundryData/Package.swift",
+        "frontend/swift/apps/ProductApp/Sources/Connection/IdentitySettingsModel.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/IdentitySettingsView.swift",
+        "frontend/swift/packages/FoundryServices/Sources/FoundryServices/NotesReadCache.swift",
+        "frontend/swift/packages/FoundryServices/Tests/FoundryServicesTests/NotesReadCacheTests.swift",
+        "frontend/swift/packages/FoundryData/Sources/FoundryData/SQLiteNotesReadCache.swift",
+        "frontend/swift/packages/FoundryData/Tests/FoundryDataTests/SQLiteNotesReadCacheTests.swift",
+        "frontend/swift/apps/ProductApp/Sources/Connection/RegistrationModel.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/RegistrationView.swift",
+        "frontend/swift/apps/ProductApp/Tests/RegistrationModelTests.swift",
+        "frontend/swift/apps/ProductApp/Sources/Connection/WorkspaceModel.swift",
+        "frontend/swift/apps/ProductApp/Sources/Screens/WorkspaceView.swift",
+        "frontend/swift/apps/ProductApp/Tests/WorkspaceModelTests.swift",
+        "frontend/swift/packages/FoundrySession/Sources/FoundrySession/AccountManagement.swift",
+        "frontend/swift/packages/FoundrySession/Tests/FoundrySessionTests/AccountManagementTests.swift",
+        "frontend/swift/packages/FoundrySession/Tests/FoundrySessionTests/GoNativeAccountTests.swift"
+      ]
+    },
+    "kotlin": {
+      "entry": "frontend/kotlin/project/product/build.gradle.kts",
+      "modules": [
+        ":product",
+        ":core:ui",
+        ":core:query",
+        ":core:kernel",
+        ":core:http",
+        ":core:services",
+        ":core:session",
+        ":core:data"
+      ],
+      "sources": [
+        "frontend/kotlin/project/build.gradle.kts",
+        "frontend/kotlin/project/gradle.properties",
+        "frontend/kotlin/project/gradlew",
+        "frontend/kotlin/project/gradlew.bat",
+        "frontend/kotlin/project/gradle",
+        "frontend/kotlin/project/product/build.gradle.kts",
+        "frontend/kotlin/project/product/product.properties",
+        "frontend/kotlin/project/product/src",
+        "frontend/kotlin/project/product/README.md",
+        "frontend/kotlin/project/core/ui/build.gradle.kts",
+        "frontend/kotlin/project/core/ui/src",
+        "frontend/kotlin/project/core/query/build.gradle.kts",
+        "frontend/kotlin/project/core/query/src",
+        "frontend/kotlin/project/core/kernel/build.gradle.kts",
+        "frontend/kotlin/project/core/kernel/src",
+        "frontend/kotlin/project/core/http/build.gradle.kts",
+        "frontend/kotlin/project/core/http/src",
+        "frontend/kotlin/project/core/session/build.gradle.kts",
+        "frontend/kotlin/project/core/session/src",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesService.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/CreateNote.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/RemoteNotes.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/HTTPRemoteNotesRepository.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/RemoteNotesTest.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/GoNativeNotesTest.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/PendingNotes.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/PendingNotesTest.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLitePendingNotesStore.kt",
+        "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/SQLitePendingNotesTest.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesReadCache.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/NotesReadCacheTest.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCache.kt",
+        "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCacheTest.kt"
+      ],
+      "identityFiles": {
+        "build": "frontend/kotlin/project/product/product.properties",
+        "label": "frontend/kotlin/project/product/src/main/res/values/strings.xml",
+        "runtime": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductConfiguration.kt"
+      },
+      "overlays": [
+        {
+          "source": "templates/overlays/go-connected/kotlin/settings.gradle.kts",
+          "destination": "frontend/kotlin/project/settings.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/services.gradle.kts",
+          "destination": "frontend/kotlin/project/core/services/build.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/product.gradle.kts",
+          "destination": "frontend/kotlin/project/product/build.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/AndroidManifest.xml",
+          "destination": "frontend/kotlin/project/product/src/main/AndroidManifest.xml"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/DebugManifest.xml",
+          "destination": "frontend/kotlin/project/product/src/debug/AndroidManifest.xml"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/network_security_config.xml",
+          "destination": "frontend/kotlin/project/product/src/debug/res/xml/network_security_config.xml"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/ProductRoot.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductRoot.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/AccountScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/AccountScreen.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/LibraryScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/LibraryScreen.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/ConnectionConfiguration.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/ConnectionConfiguration.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/ConnectedSessionModel.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/ConnectedSessionModel.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/RemoteNotesStore.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/RemoteNotesStore.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/RemoteNotesStoreTest.kt",
+          "destination": "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/connection/RemoteNotesStoreTest.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/ProductEntryTest.kt",
+          "destination": "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ProductEntryTest.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/ConnectedScreenTest.kt",
+          "destination": "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ConnectedScreenTest.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/data.gradle.kts",
+          "destination": "frontend/kotlin/project/core/data/build.gradle.kts"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/IdentitySettingsModel.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/IdentitySettingsModel.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/IdentitySettingsScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/IdentitySettingsScreen.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/RegistrationModel.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/RegistrationModel.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/RegistrationScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/RegistrationScreen.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/RegistrationModelTest.kt",
+          "destination": "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/connection/RegistrationModelTest.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/WorkspaceModel.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/WorkspaceModel.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/WorkspaceScreen.kt",
+          "destination": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/WorkspaceScreen.kt"
+        },
+        {
+          "source": "templates/overlays/go-connected/kotlin/WorkspaceModelTest.kt",
+          "destination": "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/connection/WorkspaceModelTest.kt"
+        }
+      ],
+      "connectionFile": "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/ConnectionConfiguration.kt",
+      "requiredFiles": [
+        "frontend/kotlin/project/settings.gradle.kts",
+        "frontend/kotlin/project/core/services/build.gradle.kts",
+        "frontend/kotlin/project/product/build.gradle.kts",
+        "frontend/kotlin/project/product/src/main/AndroidManifest.xml",
+        "frontend/kotlin/project/product/src/debug/AndroidManifest.xml",
+        "frontend/kotlin/project/product/src/debug/res/xml/network_security_config.xml",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/ProductRoot.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/AccountScreen.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/LibraryScreen.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/ConnectionConfiguration.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/ConnectedSessionModel.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/RemoteNotesStore.kt",
+        "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/connection/RemoteNotesStoreTest.kt",
+        "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ProductEntryTest.kt",
+        "frontend/kotlin/project/product/src/androidTest/kotlin/dev/mobilefoundry/product/ConnectedScreenTest.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesService.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/CreateNote.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/RemoteNotes.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/HTTPRemoteNotesRepository.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/RemoteNotesTest.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/GoNativeNotesTest.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/PendingNotes.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/PendingNotesTest.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLitePendingNotesStore.kt",
+        "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/SQLitePendingNotesTest.kt",
+        "frontend/kotlin/project/core/data/build.gradle.kts",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/IdentitySettingsModel.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/IdentitySettingsScreen.kt",
+        "frontend/kotlin/project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesReadCache.kt",
+        "frontend/kotlin/project/core/services/src/test/kotlin/dev/mobilefoundry/services/NotesReadCacheTest.kt",
+        "frontend/kotlin/project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCache.kt",
+        "frontend/kotlin/project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCacheTest.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/RegistrationModel.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/RegistrationScreen.kt",
+        "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/connection/RegistrationModelTest.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/connection/WorkspaceModel.kt",
+        "frontend/kotlin/project/product/src/main/kotlin/dev/mobilefoundry/product/screens/WorkspaceScreen.kt",
+        "frontend/kotlin/project/product/src/test/kotlin/dev/mobilefoundry/product/connection/WorkspaceModelTest.kt",
+        "frontend/kotlin/project/core/session/src/main/kotlin/dev/mobilefoundry/session/AccountManagement.kt",
+        "frontend/kotlin/project/core/session/src/test/kotlin/dev/mobilefoundry/session/AccountManagementTest.kt",
+        "frontend/kotlin/project/core/session/src/test/kotlin/dev/mobilefoundry/session/GoNativeAccountTest.kt"
+      ]
+    }
+  },
+  "requiresBackend": "go",
+  "requiredSharedFiles": [
+    "scripts/connected_acceptance.py",
+    "contracts/fixtures/go-session/configuration.json",
+    "contracts/fixtures/remote-notes/receipts.json",
+    "contracts/fixtures/pending-notes/records.json",
+    "scripts/local_mail_capture.py",
+    "contracts/fixtures/native-lifecycle/hints.json",
+    "contracts/fixtures/notes-read-cache/snapshots.json",
+    "contracts/fixtures/native-registration/inputs.json",
+    "contracts/fixtures/account/names.json"
+  ]
+}

@@ -64,3 +64,19 @@ or live network-cut-at-COMMIT test is supplied. See
 [transaction/lease pattern](../../../../patterns/transactions-leases-and-committed-cursors.md)
 and [pgx substrate](../../../../substrate/pgx-and-postgresql.md).
 Next: how should a write receipt reconcile an uncertain create without replaying it?
+
+## Pool and restore follow-up — 2026-10-17
+
+Claim: pool limits must be assessed across selected modules because each owns a
+separate pool. Config now admits MaxConns 1..128, with zero selecting the default
+eight for direct package callers. Runtime configuration rejects zero; idle
+connections expire after thirty minutes. Existing connection/statement/lock
+budgets remain. Eight pools at eight connections can consume sixty-four database
+connections; a per-module maximum is not a process-wide cap.
+
+The current disposable suite passes on Docker PostgreSQL 18.6. Portable operations
+also verifies quiesced common-database/private-files backup and an unused-project
+restore, separately from transaction conformance. Earlier unverified-backup limits
+above refer to the original slice. Hosted failover, role isolation and live
+network-cut-at-COMMIT testing remain separate. Read
+[current execution](../../../../../../../docs/blueprints/backend-connected-foundations.md).

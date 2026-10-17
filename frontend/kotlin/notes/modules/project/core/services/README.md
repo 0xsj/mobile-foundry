@@ -361,3 +361,29 @@ limits are separate in [the construction guide](../../../../../../../docs/bluepr
 This package never imports APNs/FCM, starts an auth request or changes an inbox
 preference. Related: [navigation-hint reasoning](../../../../../../../notes/patterns/device-notifications-and-navigation-hints.md).
 Next: what current account/session admission does a remote inbox destination need?
+
+## Pending Notes models and port
+
+Claim: recovery identity belongs to admitted command input and original scope,
+not a token or screen lifetime. Origin: pending Notes, 2026-10-17. Read
+[models/port/Memory](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/PendingNotes.kt),
+[shared cases](../../../../../../../contracts/fixtures/pending-notes/records.json) and
+[construction](../../../../../../../docs/blueprints/pending-notes.md).
+
+The immutable record checks exact input and consistent pending/confirmed/rejected
+state. Its owned versioned JSON envelope admits only expected fields and models,
+strict UTF-8 and bounded bytes. Memory implements the same replay, terminal-CAS,
+capacity and stale-settlement rules as disk while remaining deliberately transient.
+Three service cases cover shared admission/round-trip, exact-input
+replay/CAS/scope/capacity and immutable terminal results. Disk and generated-product checks are separate evidence.
+Next: keep future queue ordering/retention outside this single-slot contract.
+
+## Read-only remote snapshots — 2026-10-17
+
+Claim: a bounded saved page can be an optional capability without changing remote CRUD or command receipts. Origin: connected read-cache slice. Read [snapshot/port](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotesReadCache.kt) and [shared vectors](../../../../../../../contracts/fixtures/notes-read-cache/snapshots.json).
+
+The immutable snapshot admits distinct IDs, a saved timestamp and the journal command/status checkpoint. PendingNotesScope supplies the already-admitted deployment/principal/account tuple; no session authority enters this port. Memory supplies parity/eviction/expiry checks. SQLite is selected only at composition.
+
+Gotchas: the 24-hour window controls usability with lazy cleanup, not scheduled erasure. Private backup-excluded storage is not an offline authentication grant. Later pages/cursors and automatic write replay remain outside this capability.
+
+Actual verification and versions are tracked in [construction/evidence](../../../../../../../docs/blueprints/notes-read-cache.md). Continue with [checkpoint reasoning](../../../../../../../notes/patterns/cached-content-and-command-checkpoints.md). Next: what product requirement would justify offline startup or a multi-page synchronization cursor?

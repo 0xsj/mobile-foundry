@@ -1,0 +1,470 @@
+[
+  {
+    "name": "pending exact bytes",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": true
+  },
+  {
+    "name": "update",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "update",
+        "note_id": "00000000-0000-4000-8000-000000000002",
+        "title": "Café\u0000🧱",
+        "expected_version": 3
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": true
+  },
+  {
+    "name": "delete",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "delete",
+        "note_id": "00000000-0000-4000-8000-000000000002",
+        "title": "",
+        "expected_version": 3
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": true
+  },
+  {
+    "name": "confirmed",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "confirmed",
+      "receipt": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "note_id": "00000000-0000-4000-8000-000000000004",
+        "title": "Café\u0000🧱",
+        "version": 1
+      },
+      "rejection": null
+    },
+    "valid": true
+  },
+  {
+    "name": "known refusal",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "rejected",
+      "receipt": null,
+      "rejection": "notes.version_conflict"
+    },
+    "valid": true
+  },
+  {
+    "name": "future format",
+    "record": {
+      "format": "pending-notes.v2",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "unknown status",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "sending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "wrong scope",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000099"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "unknown root field",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null,
+      "extra": true
+    },
+    "valid": false
+  },
+  {
+    "name": "unknown command field",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null,
+        "extra": true
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "bad ID",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "../bad",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "create version",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": 1
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "unknown refusal",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "rejected",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "empty title",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": null,
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "receipt owner",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "confirmed",
+      "receipt": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "principal_id": "00000000-0000-4000-8000-000000000099",
+        "note_id": "00000000-0000-4000-8000-000000000004",
+        "title": "Café\u0000🧱",
+        "version": 1
+      },
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "receipt canonical equivalent title",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "confirmed",
+      "receipt": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "note_id": "00000000-0000-4000-8000-000000000004",
+        "title": "Café\u0000🧱",
+        "version": 1
+      },
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "receipt version",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "confirmed",
+      "receipt": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "note_id": "00000000-0000-4000-8000-000000000004",
+        "title": "Café\u0000🧱",
+        "version": 2
+      },
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "pending with receipt",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "pending",
+      "receipt": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "note_id": "00000000-0000-4000-8000-000000000004",
+        "title": "Café\u0000🧱",
+        "version": 1
+      },
+      "rejection": null
+    },
+    "valid": false
+  },
+  {
+    "name": "confirmed with refusal",
+    "record": {
+      "format": "pending-notes.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "command": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "note_id": null,
+        "title": "Café\u0000🧱",
+        "expected_version": null
+      },
+      "status": "confirmed",
+      "receipt": {
+        "command_id": "00000000-0000-4000-8000-000000000001",
+        "action": "create",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "note_id": "00000000-0000-4000-8000-000000000004",
+        "title": "Café\u0000🧱",
+        "version": 1
+      },
+      "rejection": "notes.not_found"
+    },
+    "valid": false
+  }
+]

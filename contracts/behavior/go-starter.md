@@ -3,7 +3,7 @@
 Status: implemented and independently accepted, CLI 0.4.0, 2026-10-13.
 
 `--backend go` selects the explicit backend inventory. It includes runtime/Health,
-Identity, Account, Audit and Notes, their owned stores/migrations/tests and portable
+Identity, Account, Audit, Notes, Files, Notifications and Realtime, their owned stores/migrations/tests and portable
 process/database tooling. Supabase/Firebase, reserved modules and notebooks are
 unselected. Native profile selection remains independent; Daily/Workspace/Browse
 can accompany Go without implicit native auth/data wiring. Daily local-data
@@ -39,21 +39,30 @@ copies no live .env/credentials. Migrations remain explicit and immutable.
 
 Generated Make exposes go-dev/build/check/test/smoke, database config/up/down,
 migrate/check and disposable integration commands alongside native commands.
+CLI 0.14.0 additionally exposes operations acceptance and explicit production
+config/build/database/migrate/up/down/maintenance/backup/restore commands. Public
+production examples are selected explicitly; private SMTP/provider files are
+excluded. See [the operational boundary](backend-operations.md) and
+[current evidence](../../docs/blueprints/backend-connected-foundations.md).
 The development runner explicitly selects AUTH_MODE=identity; binary config
 still defaults to deny. Memory is default; persistent storage is PostgreSQL.
 The generated guides describe ports, registration, scopes/versions/receipts,
 environment ownership and deliberate production work. Co-location is stated
-explicitly as unconnected native/backend composition.
+explicitly as unconnected native/backend composition unless the registered
+[go-connected capability](go-connected-starter.md) selects native session/account/
+Notes wiring.
 
 Provenance adds backend/module/module-list inputs and backend inventory hash to
 the selected raw source digest. API-only output has null native profile/app ID
 and an empty platform list. A combined copy records nativeBackendConnection as
-unconnected. No source checkout absolute path is embedded. Source copies do not
+unconnected, or go-connected with its public apiBaseURL when explicitly selected.
+No source checkout absolute path is embedded. Source copies do not
 receive subsequent foundation changes automatically.
 
 Independent evidence includes actual compiled memory API, auth/account isolation,
 Notes CRUD/CAS/receipt replay, renewal/sign-out, PostgreSQL migration and killed
 process recovery, and builds of both co-located native apps. Current Go backend
-readiness is standalone; connected native profile acceptance remains separate.
+readiness is standalone; the connected Daily profile has its own separate native
+acceptance in [connected construction](../../docs/blueprints/go-connected-starter.md).
 See [setup/evidence](../../docs/blueprints/go-starter.md) and
 [CLI behavior](project-cli.md).

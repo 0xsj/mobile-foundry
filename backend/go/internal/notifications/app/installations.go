@@ -78,7 +78,7 @@ type SessionRevocation struct {
 }
 
 func (r SessionRevocation) Validate() error {
-	if !r.EventID.Valid() || !r.PrincipalID.Valid() || !r.SessionID.Valid() || r.Version < 2 || r.Version > 1<<53-1 || (r.Reason != "sign_out" && r.Reason != "refresh_reuse") || r.OccurredAt.IsZero() || r.OccurredAt.Year() < 1970 || r.OccurredAt.Year() > 9999 {
+	if !r.EventID.Valid() || !r.PrincipalID.Valid() || !r.SessionID.Valid() || r.Version < 2 || r.Version > 1<<53-1 || (r.Reason != "sign_out" && r.Reason != "refresh_reuse" && r.Reason != "password_change" && r.Reason != "password_reset") || r.OccurredAt.IsZero() || r.OccurredAt.Year() < 1970 || r.OccurredAt.Year() > 9999 {
 		return ErrInput
 	}
 	return nil

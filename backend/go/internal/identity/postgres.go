@@ -2,7 +2,9 @@ package identity
 
 import (
 	"context"
+	"errors"
 
+	"github.com/0xsj/mobile-foundry/backend/internal/identity/app"
 	adapter "github.com/0xsj/mobile-foundry/backend/internal/identity/infra/postgres"
 	"github.com/0xsj/mobile-foundry/backend/internal/identity/infra/security"
 	"github.com/0xsj/mobile-foundry/backend/pkg/events"
@@ -11,6 +13,9 @@ import (
 )
 
 func BuildPostgres(ctx context.Context, configuration storage.Config, schema storage.Schema) module.Builder {
+	return BuildPostgresWithMail(ctx, configuration, schema, nil)
+}
+func BuildPostgresWithMail(ctx context.Context, configuration storage.Config, schema storage.Schema, mail app.Mailer) module.Builder {
 	return func(runtime module.Runtime) (module.Unit, error) {
 		if runtime.Clock == nil || runtime.IDs == nil || runtime.Principals == nil || runtime.Events == nil || schema.Name != Schema {
 			return module.Unit{}, events.ErrInvalid
@@ -32,9 +37,21 @@ func BuildPostgres(ctx context.Context, configuration storage.Config, schema sto
 			pool.Close()
 			return module.Unit{}, err
 		}
-		unit := New(store, passwords, security.Tokens{}, security.NewGate(), runtime)
+		unit := New(store, passwords, security.Tokens{}, security.NewGate(), runtime, mail)
 		worker := events.NewWorker(&events.Dispatcher{Outbox: store, Delivery: runtime.Events})
-		unit.Ready, unit.Start, unit.Stop = store.Ready, worker.Start, worker.Close
+		start, stop := unit.Start, unit.Stop
+		unit.Ready = store.Ready
+		unit.Start = func() error {
+			if err := worker.Start(); err != nil {
+				return err
+			}
+			if err := start(); err != nil {
+				_ = worker.Close()
+				return err
+			}
+			return nil
+		}
+		unit.Stop = func() error { return errors.Join(stop(), worker.Close()) }
 		unit.Close = func() error { pool.Close(); return nil }
 		return unit, nil
 	}

@@ -1,0 +1,460 @@
+[
+  {
+    "name": "admitted first page",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "empty page",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": []
+    },
+    "valid": true
+  },
+  {
+    "name": "pending checkpoint",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": "00000000-0000-4000-8000-000000000001:pending",
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "confirmed checkpoint",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": "00000000-0000-4000-8000-000000000001:confirmed",
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "foreign scope",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.other",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "unknown format",
+    "snapshot": {
+      "format": "notes-read-cache.v2",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "extra field",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ],
+      "token": "not-admitted"
+    },
+    "valid": false
+  },
+  {
+    "name": "fractional timestamp",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1234.5,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "boolean timestamp",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": true,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "string timestamp",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": "1800000000000",
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "zero timestamp",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 0,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "unbounded timestamp",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 9007199254740992,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "duplicate identity",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "extra note field",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1,
+          "credential": "not-admitted"
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "zero version",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 0
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "unknown checkpoint",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": "00000000-0000-4000-8000-000000000001:replayed",
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "Café\u0000🧱",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "twenty one rows",
+    "snapshot": {
+      "format": "notes-read-cache.v1",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "saved_at_ms": 1800000000000,
+      "checkpoint": null,
+      "notes": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000002",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000003",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000004",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000005",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000006",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000007",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000008",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000011",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000012",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000013",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000014",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000015",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000016",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000017",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000018",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000019",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000020",
+          "title": "note",
+          "version": 1
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000021",
+          "title": "note",
+          "version": 1
+        }
+      ]
+    },
+    "valid": false
+  }
+]

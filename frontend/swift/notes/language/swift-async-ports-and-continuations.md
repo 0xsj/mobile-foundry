@@ -66,3 +66,37 @@ The HTTP module walkthrough links the concrete source and tests.
 [Protocols and opaque returns](swift-protocols-and-opaque-return-types.md),
 [Result values](swift-result-and-failure-values.md), and
 [URLSession ownership](../substrate/urlsession-and-view-task-lifetime.md).
+
+
+## Scope-exit cleanup and stale leases — 2026-10-17
+
+Claim: defer handles an early return, but cleanup still needs the operation's
+original owner evidence. Origin: WorkspaceModel's late-create tests, Swift 6.2.3.
+The primary [Control Flow reference](https://github.com/swiftlang/swift-book/blob/main/TSPL.docc/LanguageGuide/ControlFlow.md#defer)
+describes execution when leaving a scope. Our state checks establish the local
+ordering; they do not prove remote rollback.
+
+Excerpt from the submitted operation's cleanup:
+
+```swift
+// Excerpt: WorkspaceModel submitted-operation cleanup.
+defer {
+    if expected == generation {
+        if creating && !controller.isCurrent(lease) { uncertainOwner = owner(lease) }
+        isBusy = false; creating = false; task = nil
+    }
+}
+```
+
+The guard after await may return because the exact lease expired or changed.
+Cleanup first records possible creation under the captured owner, then clears the
+in-flight flag. Checking generation prevents an obsolete task from clearing a
+replacement task's busy state. Canceling a task alone cannot establish whether
+its HTTP mutation committed. An alternative is repeating cleanup on every return;
+that makes omissions easier as branches grow.
+
+Used in the app-owned workspace overlay. Read
+[the pattern](../../../../notes/patterns/current-state-is-not-a-command-receipt.md)
+and [construction/evidence](../../../../docs/blueprints/native-workspaces.md),
+including the paired Kotlin finally case. Next: which cleanup facts must survive
+before releasing an in-flight owner, and which must never cross a generation?

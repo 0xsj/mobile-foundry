@@ -64,3 +64,25 @@ Related: [Services](../modules/project/core/services/README.md#live-read-capabil
 and [shared reasoning](../../../../notes/patterns/current-snapshots-and-subscription-lifetime.md).
 Next: when does a product need Room invalidation, shared caching or foreground
 refresh beyond this explicit in-process adapter?
+
+
+## Owned socket callbacks — 2026-10-17
+
+Claim: a callbackFlow must own native cleanup and bound queued callbacks, while
+protocol/scope admission stays in its service layer. Origin: account live hints,
+OkHttp 5.4.0 and coroutines 1.10.2. Read [adapter](../../project/core/session/src/main/kotlin/dev/mobilefoundry/session/AccountLiveHints.kt).
+
+Native callbacks only trySend text; the collector validates ordered ready/changed
+frames on the session's executor. Sixteen queued callbacks are allowed; overflow
+closes the connection rather than accumulating messages. awaitClose cancels the
+socket, evicts its dedicated pool and shuts down its executor. The feature owner
+cancels collection on background/lease change and applies generation guards to
+presentation. Known IOException is sanitized; cancellation remains cancellation.
+
+Conceptual: a late old-session onMessage may reach a closed channel, but cannot
+populate a replacement account through an old collector. Text size is checked
+after OkHttp has materialized a callback; it is not an arbitrary-peer allocation
+cap. Dedicated explicit API selection and backend bounds remain relevant.
+Real native acceptance separately observes ready/changed and local SMTP lifecycle;
+see [dated run](../../../../docs/blueprints/native-identity-live.md).
+Next: keep broker/push/background scheduling separate from this foreground flow.

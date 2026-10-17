@@ -1,13 +1,41 @@
 # Project extraction profiles
 
+CLI 0.18.0 selects workspace create/rename forms behind AccountManagement, strong
+version checks and explicit read/review after uncertainty. See [setup and evidence](../docs/blueprints/native-workspaces.md).
+
+CLI 0.17.0 adds explicit connected registration owners/forms and shared admission
+vectors. Session sources/tests contain IdentityRegistration and its HTTP adapter;
+product overlays keep separate sign-in and transient password drafts. See
+[scope and execution](../docs/blueprints/native-registration.md).
+
+CLI 0.16.0 selects read-only first-page Notes caching behind a Services port and
+separate native SQLite adapters. The connected inventory includes strict snapshot
+vectors, checkpoint/owner checks and outage/process-restart UI acceptance. Read
+[scope and execution](../docs/blueprints/notes-read-cache.md). CLI 0.15.0's
+[security forms/live reads](../docs/blueprints/native-identity-live.md) remain
+selected. Other shells/catalog screens keep their own capability closure.
+
 [Go backend inventory](backends/go.json) selects implemented runtime/Health,
-Identity, Account, Audit and Notes sources, tests, migrations, scripts and the
+Identity, Account, Audit, Notes, Files, Notifications and Realtime sources, tests, migrations, scripts and the
 Account fixture. [Go overlays](overlays/go) supply portable Identity-enabled Make
 defaults and an environment example. The CLI rewrites the Go module/import-policy
 prefix and ordinary import ordering, isolates Compose by product name, and writes
 independent setup/build commands. No reserved modules or repository-only notebooks
 are copied. It supports API-only or co-located native output; connected native
 composition remains a separate capability. See [construction](../docs/blueprints/go-starter.md).
+
+CLI 0.14.0 also selects core identity lifecycle and portable Docker operations.
+Public deployment examples are selected individually; private mail/provider
+configuration is excluded. Generated root commands include operations acceptance
+and explicit production migration/backup/restore. Read
+[the new scope and evidence](../docs/blueprints/backend-connected-foundations.md).
+
+[native-daily-go-connected.json](profiles/native-daily-go-connected.json) explicitly
+selects native Go sessions/accounts and remote Notes. Its
+[product overlays](overlays/go-connected) include exact-lease composition, device
+vaults, forms/receipt recovery and an install-once process-restoration driver.
+It requires `--backend go`; a public API base is the only additional deployment
+input. See [connected construction/evidence](../docs/blueprints/go-connected-starter.md).
 
 [native-daily.json](profiles/native-daily.json) inventories the first local UI
 profile: clean Swift `apps/ProductApp` and Kotlin `project/product` entries,
@@ -78,3 +106,9 @@ refused. Read [behavior](../contracts/behavior/local-data-starter.md) and
 Reusable source stays in the native modules; templates own extraction metadata
 and configuration overlays. Follow [starter readiness](../docs/STARTER-READINESS.md)
 for independent generated-product acceptance before announcing readiness.
+
+CLI 0.13.0 extends the connected Daily inventory with PendingNotesStore, its shared
+fixtures and a narrow Data selection for SQLite recovery. A new product saves the
+original command before HTTP and restores it for explicit receipt lookup/retry.
+Read [the journal boundary](../contracts/behavior/pending-notes.md) and
+[actual evidence](../docs/blueprints/pending-notes.md).

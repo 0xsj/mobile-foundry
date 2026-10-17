@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+*.private.json
+*.pem
+*.key
+.cache
+.data
+bin
+infra/production/secrets
+backups

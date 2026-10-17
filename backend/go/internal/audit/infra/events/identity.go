@@ -13,7 +13,7 @@ import (
 const IdentityConsumer = "audit.identity"
 
 func SubscribeIdentity(recorder Recorder) events.Subscription {
-	return events.Subscription{Consumer: IdentityConsumer, Names: []string{"identity.principal.registered.v1", "identity.session.issued.v1", "identity.session.renewed.v1", "identity.session.revoked.v1"}, Handle: func(ctx context.Context, message events.Envelope) error {
+	return events.Subscription{Consumer: IdentityConsumer, Names: []string{"identity.principal.registered.v1", "identity.session.issued.v1", "identity.session.renewed.v1", "identity.session.revoked.v1", "identity.session.revoked.v2", "identity.email.verified.v1", "identity.password.changed.v1", "identity.password.recovered.v1"}, Handle: func(ctx context.Context, message events.Envelope) error {
 		if message.Validate() != nil || message.Producer != "identity" || message.AccountID != "" {
 			return events.ErrInvalid
 		}
@@ -29,7 +29,13 @@ func SubscribeIdentity(recorder Recorder) events.Subscription {
 		if data.PrincipalID != message.ActorID || data.Version != message.Version {
 			return events.ErrInvalid
 		}
-		e := domain.Evidence{EventID: message.ID, ActorID: message.ActorID, Action: strings.TrimSuffix(message.Name, ".v1"), Version: message.Version, OccurredAt: message.OccurredAt, RequestID: message.Metadata.RequestID, CorrelationID: message.Metadata.CorrelationID, PrincipalID: data.PrincipalID, SessionID: data.SessionID, Reason: data.Reason}
+		if message.Name == "identity.session.revoked.v1" && (data.Reason != "sign_out" && data.Reason != "refresh_reuse") {
+			return events.ErrInvalid
+		}
+		if message.Name == "identity.session.revoked.v2" && (data.Reason != "password_change" && data.Reason != "password_reset") {
+			return events.ErrInvalid
+		}
+		e := domain.Evidence{EventID: message.ID, ActorID: message.ActorID, Action: strings.TrimSuffix(strings.TrimSuffix(message.Name, ".v1"), ".v2"), Version: message.Version, OccurredAt: message.OccurredAt, RequestID: message.Metadata.RequestID, CorrelationID: message.Metadata.CorrelationID, PrincipalID: data.PrincipalID, SessionID: data.SessionID, Reason: data.Reason}
 		return recorder.Handle(ctx, IdentityConsumer, e)
 	}}
 }

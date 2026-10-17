@@ -41,6 +41,14 @@ alone could close Audit's pool while Account was still delivering to it.
 The lifecycle test observes both Stop calls before either Close call and checks
 one-time cleanup. A failed builder still owns its partial resources.
 
+Realtime/identity follow-up, 2026-10-17: Runtime now carries the generic bounded
+Signals hub. Module-local adapters choose keys; domains and handlers do not use
+Runtime as a service locator. Realtime Stop closes/joins hijacked sockets, and
+Identity Stop joins its bounded ephemeral reset worker alongside event delivery.
+Both precede any module pool closure. Actual socket and queue tests exercise
+shutdown; see [Realtime](../../internal/realtime/README.md) and
+[Identity recovery](../../internal/identity/recovery.md).
+
 Related: [ports/composition](../../../patterns/ports-and-module-composition.md),
 [language](../../../language/interfaces-errors-and-contexts.md). Next: which
 store semantics must conformance tests specify before swapping a provider?

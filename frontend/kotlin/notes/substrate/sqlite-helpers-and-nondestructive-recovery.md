@@ -84,3 +84,48 @@ backup/restore and power-loss behavior remain unobserved.
 and [local observation lifetime](../../../../notes/patterns/local-commits-and-observation-lifetime.md).
 Next: which explicit migrations preserve released data, and when should multiple
 screen owners share database observation instead of separate reloads?
+
+## Pending journal follow-up — 2026-10-17
+
+Claim: SQL configuration needs native execution checks as well as compilation.
+The pending adapter opens a short-lived SQLiteDatabase on Dispatchers.IO, supplies
+a refusing corruption handler and compares/stages/settles under one transaction.
+It uses DELETE journaling and FULL synchronous, checking their selected values.
+Read [Data](../modules/project/core/data/README.md#durable-pending-notes).
+
+On Pixel_9_Pro / Android 15, execSQL("PRAGMA busy_timeout=2000") failed with
+“Queries can be performed using SQLiteDatabase query or rawQuery methods only.”
+The pragma returns a row. Consuming it with rawQuery and checking 2000 fixes the
+actual native failure. The four native recovery cases then pass: reopen/terminal
+CAS, scope partitions/capacity, rollback/corruption/future schema and competing
+instances. A successful JVM build could not establish any of those database facts.
+
+```kotlin
+// Excerpt: consume the selected timeout from the result-bearing PRAGMA.
+db.rawQuery("PRAGMA busy_timeout=2000", null).use {
+    if (!it.moveToFirst() || it.getLong(0) != 2_000L) throw InvalidStore()
+}
+```
+
+The journal's UTF-8 decoder also uses CodingErrorAction.REPORT: the ordinary
+ByteArray.toString(Charsets.UTF_8) replacement behavior could turn corrupt bytes
+into a different admitted note title. Shared record cases plus malformed bytes
+inside valid JSON verify refusal. These are Android 15/native-file and JVM codec
+observations, not claims about power-loss durability or automatic offline sync.
+[SQLite PRAGMA reference](https://sqlite.org/pragma.html#pragma_busy_timeout).
+
+## Separate read cache — 2026-10-17
+
+Claim: short native transactions can bound an advisory cache without weakening journal retention. Origin: account read-cache slice on the same native toolchains; independent OS/device evidence is recorded in [construction/evidence](../../../../docs/blueprints/notes-read-cache.md). Read [the adapter](../../project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCache.kt).
+
+Dispatchers.IO owns native operations under the adapter mutex; SQLite still coordinates distinct instances. Cursor use closes before eviction deletes begin. The implementation uses update/insert and bound scope arguments rather than requiring a newer SQLite UPSERT syntax across supported Android versions. The owner checks coroutine cancellation after every storage suspension.
+
+```kotlin
+// Excerpt: SQLiteNotesReadCache.load makes expiry cleanup scope-local.
+val snapshot = read(db, scope)
+if (snapshot != null && !snapshot.isUsable(nowMilliseconds)) {
+    remove(db, scope); null
+} else snapshot
+```
+
+A custom corruption/refusal path keeps stored bytes rather than inventing an empty cache. Optional cache failure returns a separate warning; journal storage keeps its stricter write gate. Lazy expiry is not scheduled secure deletion, and these tests do not establish power-loss or flash-throughput budgets. Next: should an actual product require eager account erasure or OS-backed encryption beyond container protection?

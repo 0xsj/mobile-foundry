@@ -1,5 +1,7 @@
 # FoundryData
 
+SQLiteNotesReadCache implements the optional [account read cache](../../../../contracts/behavior/notes-read-cache.md) in a separate backup-excluded database. NotesReadCache remains swappable with Memory; cache expiry/eviction cannot remove pending commands. Generated connected Daily selects this adapter explicitly.
+
 Native device-local storage adapters implementing domain ports from FoundryServices.
 SQLiteNotesRepository uses the OS SQLite library, actor isolation and scoped
 connections/statements; no ORM or UI dependency. Init takes a private file URL

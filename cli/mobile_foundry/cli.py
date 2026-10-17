@@ -24,6 +24,7 @@ def parser():
     init.add_argument("--with", dest="capabilities", action="append", default=[], metavar="CAPABILITY", help="Add a registered capability (for example local-data)")
     init.add_argument("--backend", default="none")
     init.add_argument("--go-module", help="Go domain/path module identity; requires --backend go")
+    init.add_argument("--api-base-url", help="Public API base for go-connected; defaults to Debug loopback http://127.0.0.1:8080/v1")
     init.add_argument("--output", default=".", help="Existing parent directory; output is PARENT/NAME")
     init.add_argument("--source", default=str(DEFAULT_SOURCE))
     init.add_argument("--display-name")
@@ -101,11 +102,13 @@ def main(argv=None):
             choices = list(profile["platforms"]) + (["both"] if set(profile["platforms"]) == {"swift", "kotlin"} else [])
             platform = choose(args.platform, choices, "platform")
         inputs = ProductInputs.admit(args.name, platform, args.display_name, args.app_id, args.ios_team)
-        destination = create_project(root, profile, manifest_path, inputs, args.output, backend=backend)
+        destination = create_project(root, profile, manifest_path, inputs, args.output, backend=backend, api_base_url=args.api_base_url)
         print(f"Created {destination}\nProfile: {identity or 'backend only'}\nPlatforms: {', '.join(inputs.platforms) or 'none'}\nCapabilities: {', '.join(profile['capabilities']) if profile else 'backend modules'}\nBackend: {args.backend}\nApp ID: {inputs.app_id or 'none'}")
         if backend:
             print(f"Go module: {backend.module}\nModules: {', '.join(backend.profile['modules'])}")
-            if profile:
+            if profile and "go-connected" in profile["capabilities"]:
+                print("Native sign-in, accounts and remote Notes are connected to Go. Read SETUP.md for the API endpoint and device workflow.")
+            elif profile:
                 print("Native shells and API are independent; session/data UI wiring is not selected.")
         print("Read SETUP.md for build/test/run commands. Dependencies are not installed automatically.")
         return 0

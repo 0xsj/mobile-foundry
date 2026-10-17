@@ -13,6 +13,9 @@ import (
 )
 
 type Runtime struct {
+	PostgresPoolMax                               int32
+	MetricsAddress                                string
+	TrustedProxyCIDRs                             string
 	Environment, Address, LogFormat, LogLevel     string
 	ShutdownTimeout                               time.Duration
 	DevelopmentToken                              string
@@ -22,6 +25,7 @@ type Runtime struct {
 	NotesDatabaseURL                              string
 	FilesDatabaseURL, FilesDirectory              string
 	NotificationsDatabaseURL                      string
+	IdentityMailConfig                            string
 	PushConfigFile                                string
 	PushJobsEnabled                               bool
 }
@@ -38,6 +42,25 @@ func Load(source env.Source) (Runtime, error) {
 		Environment: source.String("APP_ENV", "development"), Address: source.String("HTTP_ADDR", "127.0.0.1:8080"),
 		LogFormat: source.String("LOG_FORMAT", "console"), LogLevel: source.String("LOG_LEVEL", "info"),
 		ShutdownTimeout: 10 * time.Second,
+	}
+	poolMax, err := strconv.Atoi(source.String("POSTGRES_POOL_MAX_CONNS", "8"))
+	if err != nil || poolMax < 1 || poolMax > 128 {
+		return Runtime{}, invalid("POSTGRES_POOL_MAX_CONNS must be 1..128")
+	}
+	configuration.PostgresPoolMax = int32(poolMax)
+	configuration.MetricsAddress = source.String("METRICS_ADDR", "")
+	if configuration.MetricsAddress != "" {
+		if _, _, err := net.SplitHostPort(configuration.MetricsAddress); err != nil {
+			return Runtime{}, invalid("invalid METRICS_ADDR")
+		}
+	}
+	configuration.TrustedProxyCIDRs = source.String("TRUSTED_PROXY_CIDRS", "")
+	if configuration.TrustedProxyCIDRs != "" {
+		for _, value := range strings.Split(configuration.TrustedProxyCIDRs, ",") {
+			if _, _, err := net.ParseCIDR(value); err != nil {
+				return Runtime{}, invalid("invalid TRUSTED_PROXY_CIDRS")
+			}
+		}
 	}
 	configuration.Storage = source.String("STORAGE", "memory")
 	configuration.Authentication = source.String("AUTH_MODE", "deny")
@@ -122,6 +145,10 @@ func Load(source env.Source) (Runtime, error) {
 	}
 	if configuration.Authentication == "development" && configuration.DevelopmentToken == "" {
 		return Runtime{}, invalid("development authentication requires paired fixture credentials")
+	}
+	configuration.IdentityMailConfig = source.String("IDENTITY_MAIL_CONFIG", "")
+	if configuration.IdentityMailConfig != "" && configuration.Authentication != "identity" {
+		return Runtime{}, invalid("IDENTITY_MAIL_CONFIG requires owned Identity")
 	}
 	configuration.PushConfigFile = source.String("PUSH_CONFIG_FILE", "")
 	queued := source.String("PUSH_JOBS_ENABLED", "false")

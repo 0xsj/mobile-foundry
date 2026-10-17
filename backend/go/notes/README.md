@@ -1,5 +1,16 @@
 # Go backend learning notes
 
+Connected-foundation follow-up, 2026-10-17: read
+[bounded hints](patterns/bounded-live-hints.md),
+[credential checkpoints](patterns/identity-challenges-and-checkpoints.md),
+[Realtime](modules/internal/realtime/README.md),
+[Identity recovery](modules/internal/identity/recovery.md), then
+[containers/backups](substrate/portable-container-and-quiesced-backups.md) and
+[setup/evidence](../../../docs/blueprints/backend-connected-foundations.md).
+The backend now implements native-bearer WebSockets, core identity lifecycle and
+portable Docker operations. Native socket consumers/recovery forms, broker fanout,
+external provider delivery and product-specific retention remain separate.
+
 Recovery follow-up, 2026-10-17: read
 [preserved outcomes](patterns/recovery-preserves-the-original-outcome.md),
 [explicit boolean presence](language/explicit-json-boolean-presence.md),
@@ -97,8 +108,9 @@ versioned tool or dependency findings in `substrate`.
 13. Read [Notes commands/queries and receipts](modules/internal/notes/README.md),
 then [shared acknowledgement recovery](../../../notes/patterns/command-receipts-and-uncertain-writes.md).
 Memory/PostgreSQL conformance, atomic receipt-finalization rollback, CAS/replay
-and killed API recovery now pass. Notes stays a replaceable exemplar; native
-durable outboxes, Notes facts/live hints and backend extraction remain separate.
+and killed API recovery now pass. Notes stays a replaceable exemplar. Daily now
+selects a single-slot durable pending journal; backend extraction and lossy live
+hints are implemented. Multi-item sync and durable Notes facts remain separate.
 
 15. [Selecting domains for mobile products](patterns/mobile-capability-selection.md)
     separates candidate installation/notification/media/purchase ownership from
@@ -175,9 +187,10 @@ Read [the cross-platform checkpoint pattern](../../../notes/patterns/deployment-
 These new native checks use an owned memory API; they do not replace PostgreSQL
 recovery evidence or establish a generated connected profile.
 
-Remote routing, Realtime and a generated connected native profile remain pending.
-Remote Notes and standalone Go CLI generation are implemented as described above.
-Next: close the documented convention gaps and verify generated native/backend wiring.
+Remote routing remains pending. Realtime and generated Daily + go-connected now
+have their own later evidence in the follow-ups above; the earlier historical
+checks do not establish those capabilities. Remote Notes and standalone Go CLI
+generation are implemented. Next: select native live/recovery UI and product policy.
 Database failover, role isolation,
 operational replay/retention and actual network-cut commit uncertainty remain
 unverified. Documentation checks validate links and mirrored paths separately.

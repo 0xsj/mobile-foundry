@@ -15,6 +15,7 @@ var ErrCapacity = apperrors.New(apperrors.Unavailable, "identity.memory_capacity
 var ErrBusy = apperrors.New(apperrors.RateLimited, "identity.attempt_limited", "identity attempt budget exhausted").WithPublic("Wait briefly before trying again.")
 
 type Store interface {
+	IssueChecked(context.Context, domain.Session, string, events.Metadata) error
 	ByLogin(context.Context, string) (domain.Principal, bool, error)
 	ByID(context.Context, id.ID) (domain.Principal, bool, error)
 	Register(context.Context, domain.Principal, events.Metadata) error

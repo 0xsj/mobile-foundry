@@ -108,3 +108,33 @@ encryption, remote tenancy, automatic wipe, backup audit or synchronization foll
 Read [digest/transport mechanics](../../../../substrate/message-digest-and-authenticated-okhttp.md)
 and [shared ownership](../../../../../../../notes/patterns/account-partitions-and-leased-work.md).
 Next: which retention policy and connected collection should a provider expose?
+
+## Durable pending Notes
+
+Claim: a service-owned recovery port can use native disk transactions without
+turning local CRUD into remote sync. Origin: pending Notes, 2026-10-17. Read the
+[adapter](../../../../../project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLitePendingNotesStore.kt) and [real-file tests](../../../../../project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/SQLitePendingNotesTest.kt), then
+[construction/evidence](../../../../../../../docs/blueprints/pending-notes.md).
+
+One slot per deployment/principal/account retains the original command and either
+pending, a confirmed receipt, or a known refusal. Stage saves before HTTP and
+compares exact replay before terminal CAS. Settle matches the original command
+again. Transactions close before network work; capacity is bounded and corrupt/
+future data is kept and refused. This adapter is selected by the connected product
+overlay, while the catalog retains its earlier transient owner.
+
+Four native cases cover reopen/terminal replacement and stale confirmation, all
+scope dimensions/capacity, forced settlement rollback/corruption/future schemas,
+and independent-instance contention. Failed storage blocks writes until reload.
+No automatic replay, read cache, multi-item ordering or erasure policy is supplied.
+Next: what explicit retention/migration rule does a real product require?
+
+## Read-only remote snapshots — 2026-10-17
+
+Claim: optional read-cache eviction belongs in a different database from durable pending commands. Origin: connected read-cache slice. Read [adapter](../../../../../project/core/data/src/main/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCache.kt) and [native checks](../../../../../project/core/data/src/androidTest/kotlin/dev/mobilefoundry/data/SQLiteNotesReadCacheTest.kt).
+
+The cache marker/schema refuses unknown or corrupt stores, including a journal file accidentally used as a cache. A transaction admits/replaces one bounded payload, preserves newer timestamps and evicts oldest snapshots above capacity. Scope predicates bind all three tuple fields. Load checks the indexed timestamp against the admitted payload; expiry or a future clock timestamp removes only that scoped entry.
+
+Gotchas: the 24-hour window controls usability with lazy cleanup, not scheduled erasure. Private backup-excluded storage is not an offline authentication grant. Later pages/cursors and automatic write replay remain outside this capability.
+
+Actual verification and versions are tracked in [construction/evidence](../../../../../../../docs/blueprints/notes-read-cache.md). Continue with [checkpoint reasoning](../../../../../../../notes/patterns/cached-content-and-command-checkpoints.md). Next: what product requirement would justify offline startup or a multi-page synchronization cursor?

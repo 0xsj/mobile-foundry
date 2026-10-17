@@ -24,10 +24,14 @@ class GoSessionAuthority private constructor(override val id: String, val baseUr
             timeoutMilliseconds: Long = 15_000, allowLocalHTTP: Boolean = false, now: () -> Long = System::currentTimeMillis): AppResult<GoSessionAuthority> {
             val canonical = canonicalBase(baseUrl, allowLocalHTTP) ?: return Outcome.Err(configuration)
             if (!(when (selection) { is GoAccountSelection.Personal -> GoSessionWire.name(selection.name); is GoAccountSelection.Existing -> GoSessionWire.uuid(selection.accountId) })) return Outcome.Err(configuration)
-            val digest = MessageDigest.getInstance("SHA-256").digest("go.identity.v1\n$canonical".toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it.toInt() and 255) }
-            return DefaultHTTPClient.create(canonical, transport, timeoutMilliseconds).map { GoSessionAuthority("go.identity.v1.$digest", canonical, it, selection, now) }
+            val authorityId = deploymentId(canonical)
+            return DefaultHTTPClient.create(canonical, transport, timeoutMilliseconds).map { GoSessionAuthority(authorityId, canonical, it, selection, now) }
         }
-        private fun canonicalBase(value: String, allowLocalHTTP: Boolean): String? {
+        internal fun deploymentId(canonical: String): String {
+            val digest = MessageDigest.getInstance("SHA-256").digest("go.identity.v1\n$canonical".toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it.toInt() and 255) }
+            return "go.identity.v1.$digest"
+        }
+        internal fun canonicalBase(value: String, allowLocalHTTP: Boolean): String? {
             if (value != value.trim()) return null
             val parts = try { URI(value) } catch (_: java.net.URISyntaxException) { return null }
             val scheme = parts.scheme?.lowercase(Locale.ROOT) ?: return null

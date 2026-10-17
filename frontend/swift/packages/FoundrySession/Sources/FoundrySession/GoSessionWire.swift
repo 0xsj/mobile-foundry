@@ -15,9 +15,8 @@ enum GoSessionWire {
         value.range(of: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", options: .regularExpression) != nil
     }
     static func name(_ value: String) -> Bool {
-        !value.isEmpty && value.unicodeScalars.count <= 80 &&
-        value == value.trimmingCharacters(in: .whitespacesAndNewlines) &&
-        value.unicodeScalars.allSatisfy { $0.properties.generalCategory != .control }
+        guard case .success(let name) = AccountName.make(value) else { return false }
+        return name.value.utf8.elementsEqual(value.utf8)
     }
     static func token(_ value: String, prefix: String) -> Bool {
         value.utf8.count == 46 && value.range(of: "^\(prefix)\\.[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$", options: .regularExpression) != nil

@@ -72,7 +72,7 @@ def main():
         raise RuntimeError("POSTGRES_TEST_MODE must be docker or local")
     database = docker_database if mode == "docker" else local_database
     with database() as (url, psql):
-        environment = dict(os.environ, STORAGE="postgres", AUTH_MODE="deny", PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false", DATABASE_URL=url, ACCOUNT_DATABASE_URL="", AUDIT_DATABASE_URL="",IDENTITY_DATABASE_URL="",NOTES_DATABASE_URL="",
+        environment = dict(os.environ, STORAGE="postgres", AUTH_MODE="deny", PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false", IDENTITY_MAIL_CONFIG="", METRICS_ADDR="", TRUSTED_PROXY_CIDRS="", DATABASE_URL=url, ACCOUNT_DATABASE_URL="", AUDIT_DATABASE_URL="",IDENTITY_DATABASE_URL="",NOTES_DATABASE_URL="",
                            TEST_POSTGRES_URL=url, TEST_POSTGRES_DISPOSABLE="1", DEV_AUTH_TOKEN="", DEV_PRINCIPAL_ID="")
         # Empty module overrides deliberately mean empty in application config;
         # omit them here so each falls back to the common database URL.

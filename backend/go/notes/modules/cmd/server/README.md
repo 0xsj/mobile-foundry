@@ -58,3 +58,23 @@ rotation/reuse and revocation across process exits without raw-secret logs.
 Native authorities now connect through the established Account contract; see
 [integration](../../../../../../contracts/behavior/go-native-session.md).
 Next: remote data and independently generated backend/native acceptance.
+
+## Portable operations follow-up — 2026-10-17
+
+Claim: startup must own every listener and background resource, including those
+outside the ordinary HTTP request lifecycle. The builder list now also includes
+Notes, Files, Notifications and Realtime. The process supplies a local Signals
+hub and optional private metrics listener. A metrics bind failure refuses startup;
+later listener failure cancels the process. Realtime Stop joins hijacked sockets
+before pools close. The SMTP reset worker has the same ownership boundary.
+
+The explicit trusted-proxy wrapper accepts one forwarded client address only
+from configured CIDRs; untrusted peers cannot choose the rate-admission key.
+The portable Caddy edge overwrites that header. Configuration admits an explicit
+per-module PostgreSQL pool bound, default eight connections per module, rather
+than letting every module use an unreviewed driver default.
+
+Source checks, private metrics/proxy tests and owned container acceptance support
+these claims. Read [operations and evidence](../../../../../../docs/blueprints/backend-connected-foundations.md).
+Public certificates, actual host sizing and external monitoring remain deployment
+work; a local acceptance run does not establish those outcomes.

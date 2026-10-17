@@ -25,6 +25,10 @@
     {
       "id": "local-data",
       "status": "standalone"
+    },
+    {
+      "id": "go-connected",
+      "status": "standalone"
     }
   ],
   "combinations": [
@@ -34,6 +38,13 @@
         "local-data"
       ],
       "manifest": "templates/profiles/native-daily-local-data.json"
+    },
+    {
+      "profile": "native-daily",
+      "capabilities": [
+        "go-connected"
+      ],
+      "manifest": "templates/profiles/native-daily-go-connected.json"
     }
   ]
 }

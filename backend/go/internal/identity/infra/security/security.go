@@ -83,6 +83,12 @@ func (p *Passwords) Dummy(ctx context.Context, password string) error {
 type Tokens struct{}
 
 func prefix(kind string) string {
+	if kind == domain.VerifyEmail {
+		return "e1."
+	}
+	if kind == domain.ResetPassword {
+		return "p1."
+	}
 	if kind == "access" {
 		return "a1."
 	}

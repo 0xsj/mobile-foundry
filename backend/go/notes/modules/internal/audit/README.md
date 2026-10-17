@@ -96,3 +96,15 @@ compares the actual previous encoding. Receiver checks exercise scope/malformed
 facts/replay; HTTP and PostgreSQL process checks observe safe scoped evidence
 and recovered Identity facts. Account access tests continue to pass.
 Read [scope distinction](../../../patterns/principal-session-and-account-boundaries.md).
+
+## Identity lifecycle follow-up — 2026-10-17
+
+Claim: extending domain evidence need not silently extend a closed wire schema.
+The Identity receiver admits the new principal lifecycle v1 names and password
+revocation v2. It maps v1/v2 revocations to the existing canonical Audit action,
+but checks each schema's separate reason vocabulary. No contact, digest or hash
+enters evidence. Migration 0004 extends owned evidence constraints without editing
+applied SQL or changing old fingerprints. See [contract](../../../../../../contracts/events/identity-recovery-v1.md)
+and [receiver compatibility tests](../../../../tests/identity_recovery_events_test.go).
+Memory/PostgreSQL lifecycle tests verify required-fact rollback and safe evidence.
+Next: retain schema-specific admission when another authentication method adds facts.

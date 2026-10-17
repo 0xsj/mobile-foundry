@@ -17,6 +17,10 @@ func Message(f domain.Fact, metadata events.Metadata, ids id.Generator) (events.
 		if f.SessionID != "" || f.Version != 1 || f.Reason != "" {
 			return events.Envelope{}, domain.ErrState
 		}
+	case "email.verified", "password.changed", "password.recovered":
+		if f.SessionID != "" || f.Version < 2 || f.Reason != "" {
+			return events.Envelope{}, domain.ErrState
+		}
 	case "session.issued":
 		if !f.SessionID.Valid() || f.Version != 1 || f.Reason != "" {
 			return events.Envelope{}, domain.ErrState
@@ -26,7 +30,7 @@ func Message(f domain.Fact, metadata events.Metadata, ids id.Generator) (events.
 			return events.Envelope{}, domain.ErrState
 		}
 	case "session.revoked":
-		if !f.SessionID.Valid() || f.Version < 2 || (f.Reason != "sign_out" && f.Reason != "refresh_reuse") {
+		if !f.SessionID.Valid() || f.Version < 2 || (f.Reason != "sign_out" && f.Reason != "refresh_reuse" && f.Reason != "password_change" && f.Reason != "password_reset") {
 			return events.Envelope{}, domain.ErrState
 		}
 	default:
@@ -45,7 +49,11 @@ func Message(f domain.Fact, metadata events.Metadata, ids id.Generator) (events.
 	if err != nil {
 		return events.Envelope{}, err
 	}
-	message := events.Envelope{ID: identity, Name: "identity." + f.Action + ".v1", Producer: "identity", ActorID: f.PrincipalID, Version: f.Version, OccurredAt: f.OccurredAt, Metadata: metadata, Data: data}
+	schema := "v1"
+	if f.Action == "session.revoked" && (f.Reason == "password_change" || f.Reason == "password_reset") {
+		schema = "v2"
+	}
+	message := events.Envelope{ID: identity, Name: "identity." + f.Action + "." + schema, Producer: "identity", ActorID: f.PrincipalID, Version: f.Version, OccurredAt: f.OccurredAt, Metadata: metadata, Data: data}
 	if err := message.Validate(); err != nil {
 		return events.Envelope{}, err
 	}

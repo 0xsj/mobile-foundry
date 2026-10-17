@@ -1,5 +1,42 @@
 # Local project CLI
 
+CLI 0.18.0 selects workspace create/rename forms behind AccountManagement, strong
+version checks and explicit read/review after uncertainty. See [setup and evidence](../docs/blueprints/native-workspaces.md).
+
+CLI 0.17.0 adds native Create account forms through IdentityRegistration in
+Daily + go-connected. Success leads to explicit sign-in; passwords remain transient
+and lost acknowledgements never trigger automatic registration replay. Read
+[registration setup and evidence](../docs/blueprints/native-registration.md).
+Existing [read caching](../docs/blueprints/notes-read-cache.md) and
+[security/live reads](../docs/blueprints/native-identity-live.md) remain selected.
+
+CLI 0.14.0 adds [backend live hints, core identity flows and portable Docker
+operations](../docs/blueprints/backend-connected-foundations.md) to every Go
+selection. The generated Makefile includes operations acceptance and explicit
+production build/migrate/backup/restore targets. Private mail/provider settings
+are excluded; no cloud account or public deployment is created.
+
+The CLI includes `--with go-connected --backend go` for Daily for Swift, Kotlin or
+both. Account provides real Go sign-in/restore/renewal, workspace selection and
+sign-out; Library provides remote Notes CRUD, paging and explicit receipt recovery.
+See [connected setup and acceptance](../docs/blueprints/go-connected-starter.md).
+
+```sh
+mobile-foundry init canopy --platform both --with go-connected --backend go \
+  --app-id com.example.canopy --go-module github.com/your-org/canopy/backend
+cd canopy
+make go-dev
+```
+
+Register a development user using SETUP.md, then sign in from Account. Optional
+`--api-base-url` defaults to `http://127.0.0.1:8080/v1` for Debug; Release requires
+HTTPS. Android emulator/USB needs an owned ADB reverse mapping. The selected apps
+use native secure credential storage and the existing ports. Pending writes stay
+in a private SQLite journal before HTTP, including manual recovery after process
+restart. Unsaved drafts stay transient; multi-item sync and native Files/inbox/push
+are separate selections. Read [journal behavior](../contracts/behavior/pending-notes.md).
+Local-data + go-connected and connected Workspace/Browse are not registered.
+
 CLI 0.11.0 includes [owned push-job recovery](../docs/blueprints/push-job-recovery.md),
 its 0004 migration, atomic adapters and old-row upgrade checks. Generated setup
 explains cancel-before-sending, one linked replacement per source and explicit
@@ -87,8 +124,8 @@ Identity; the bare binary retains deny as its default.
 
 Add `--backend go` to a native command to include an independent API alongside
 Daily/Workspace/Browse, including Daily local-data. Native screens retain their
-chosen local behavior. Auth/account/remote-data UI wiring is the next generated
-capability; co-location does not establish a connected native starter.
+chosen local behavior. Add `--with go-connected` on Daily to select the connected
+composition above; backend co-location alone does not connect a shell.
 
 Each output has its own Compose name/volume. Set POSTGRES_PORT when starting
 another local database; Make's default DATABASE_URL follows it. The generated
@@ -114,8 +151,9 @@ Read [shell starter behavior](../contracts/behavior/shell-starters.md).
 
 Only registered combinations are admitted. `--with` is repeatable for future
 capabilities, but repeated IDs, unknown IDs and unsupported combinations fail
-before copying. Session/HTTP/graphics selection and Canvas/Setup shells remain future
-extractions. The local-data combination includes no networking or authentication.
+before copying. Session/HTTP selection is included in go-connected. Graphics and
+Canvas/Setup shells remain future extractions. The local-data combination includes
+no networking or authentication.
 
 Names use 1–80 lowercase letters/digits/hyphens, starting with a letter and ending
 with a letter/digit. Default display name is the title-cased name; default app ID

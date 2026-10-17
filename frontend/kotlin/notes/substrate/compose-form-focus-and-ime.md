@@ -75,3 +75,11 @@ form abstraction is justified.
 Related: [StateFlow and ports](../language/kotlin-service-interfaces-and-stateflow.md),
 [cancellation](../language/kotlin-suspending-ports-and-cancellation.md), and
 [shared mutation ownership](../../../../notes/patterns/forms-and-mutation-ownership.md).
+
+## Separate registration drafts — 2026-10-17
+
+Claim: a registration password can remain a transient native draft without being forwarded into sign-in or saved state. Origin: connected registration form on the existing toolchains; [actual device evidence](../../../../docs/blueprints/native-registration.md) distinguishes exercised UI from lifecycle source inspection. Read [form](../../../../templates/overlays/go-connected/kotlin/RegistrationScreen.kt).
+
+The separate modal uses remember for password drafts, never rememberSaveable or a ViewModel password property. The form observes controller epoch, clears on ON_STOP and unregisters its lifecycle observer in onDispose. Both lifecycle paths cancel publication through the model; they do not promise remote rollback. Continue transfers only login.
+
+Widget disabling is not the concurrency guard: the owner synchronously admits one attempt and blocks resubmission after success until a new form is opened. A server-created identity can outlive a dismissed form. Next: verify credential-provider and accessibility behavior on target signed devices before claiming release-quality onboarding.

@@ -20,21 +20,28 @@ var (
 	ErrCommitUnknown = apperrors.New(apperrors.Unavailable, "postgres.commit_unknown", "transaction commit outcome is unknown").WithPublic("The write outcome is uncertain. Read current state before trying again.")
 )
 
-type Config struct{ URL string }
+type Config struct {
+	URL      string
+	MaxConns int32
+}
 
 func (Config) String() string   { return "postgres.Config{redacted}" }
 func (Config) GoString() string { return "postgres.Config{redacted}" }
 
 // Open validates a live connection. Its caller owns Close.
 func Open(ctx context.Context, configuration Config) (*pgxpool.Pool, error) {
-	if configuration.URL == "" {
+	if configuration.URL == "" || configuration.MaxConns < 0 || configuration.MaxConns > 128 {
 		return nil, ErrConfiguration
 	}
 	options, err := pgxpool.ParseConfig(configuration.URL)
 	if err != nil {
 		return nil, ErrConfiguration.WithCause(err)
 	}
-	options.MaxConns = 8
+	options.MaxConns = configuration.MaxConns
+	if options.MaxConns == 0 {
+		options.MaxConns = 8
+	}
+	options.MaxConnIdleTime = 30 * time.Minute
 	options.ConnConfig.ConnectTimeout = 5 * time.Second
 	options.ConnConfig.RuntimeParams["timezone"] = "UTC"
 	options.ConnConfig.RuntimeParams["statement_timeout"] = "5000"

@@ -3,7 +3,13 @@
 The user requested an explicit handoff when a project/profile becomes a good
 foundation for a new product. Assess each selected native/backend profile
 independently and report milestone changes during development handoffs.
-Last assessment: 2026-10-17, after owned push-job recovery and independent CLI 0.11.0 extraction. Native generic receipt/open admission remains catalog-verified. Live provider acceptance/device delivery, token issuance and native connected-profile readiness remain separate.
+Last assessment: 2026-10-17. Daily + go-connected now has independent Swift/Kotlin
+CLI 0.18.0 owner workspace create/rename and explicit conflict/uncertainty review,
+alongside registration, scoped caching, verification/reset/change forms and live
+Notes reads. Secure restore and durable pending-command acceptance remain required
+and pass. Go retains its separate 0.14.0 PostgreSQL/Docker recovery baseline.
+Cold offline sign-in, automatic sync, additional feature selections and live
+provider/release-device acceptance remain separate.
 
 ## Readiness levels
 
@@ -59,16 +65,18 @@ production guarantee for the whole catalog.
 | Swift Browse | **Standalone starter ready** through mobile-foundry 0.3.0; retained local search and detail/back. | Ready for UI products; replace placeholder collections and add chosen providers later. |
 | Kotlin Workspace | **Standalone starter ready** through mobile-foundry 0.3.0; native Back, saveable state and adaptive panes. | Ready for UI products; durable records and deep navigation need separate capabilities. |
 | Kotlin Browse | **Standalone starter ready** through mobile-foundry 0.3.0; saveable search/detail and native Back. | Ready for UI products; collection persistence/provider operations are separate capabilities. |
+| Swift Daily + go-connected + Go | **Connected starter ready** through CLI 0.18.0: independent native sign-in/accounts, Notes/receipts, renewal, Keychain/process and pending-journal recovery, verification/reset/change forms, foreground live reads, read-only saved first pages, native registration/explicit sign-in and owner workspace create/rename with explicit recovery. | Ready to start connected Notes-shaped products. Add contact-change/invitation policy, offline startup/automatic sync, deployment/signing and selected additional native features deliberately. |
+| Kotlin Daily + go-connected + Go | **Connected starter ready** through CLI 0.18.0: independent sign-in/account isolation/Notes, renewal, recreation, killed-process Keystore/pending recovery, verification/reset/change forms, foreground live reads, read-only saved first pages, native registration/explicit sign-in and owner workspace create/rename with explicit recovery. | Ready to start connected Notes-shaped products. Native queues/background sync, other provider adapters, release/device checks and additional features remain separate. |
 | Swift/Kotlin Physics | **Catalog capability verified**: pure 2D modules, native court/control consumers, five numeric cases per platform and five total native interactions. | Register a deliberate CLI feature combination and independently verify generated output before recommending physics-enabled starters. |
-| Swift/Kotlin Go session | **Catalog integration verified**: deployment-bound authority, real HTTP/account scope, rotation checkpoints, discovery/switching and actual native-vault workflows. | Independently generated connected products remain required; Android process relaunch is not claimed from route restoration. |
-| Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, Files and Notifications verified against Go through URLSession/OkHttp; catalog owners build and pass recovery/replacement tests. Inbox read/settings recover through authoritative refresh. | Select/extract a connected CLI combination and independently verify generated products. Durable queues, live hints and system push remain separate; inbox gestures against a real API are not established by host/state tests. |
+| Swift/Kotlin Go session | **Catalog integration verified**: deployment-bound authority, real HTTP/account scope, rotation checkpoints, discovery/switching and actual native-vault workflows. | Daily + go-connected supplies independent generated acceptance separately below. Other shells and providers remain separate selections; route restoration alone still does not establish process recovery. |
+| Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, Files and Notifications verified against Go through URLSession/OkHttp; catalog owners build and pass recovery/replacement tests. Inbox read/settings recover through authoritative refresh. | Daily + go-connected selects remote Notes. Generated native Files/inbox, multi-item queues and system push remain separate; catalog host/state tests do not establish those product workflows. |
 | Swift/Kotlin system notifications | **Catalog capability verified**: explicit OS permission/settings, local previews and bounded app-owned open navigation. iOS warm/cold opens and Android real content PendingIntent/recreation checks pass. | Live provider integration/sending, remote scoped destinations, Android cold process acceptance and independent CLI selection remain separate. |
 | Swift/Kotlin remote previews | **Catalog capability verified**: strict provider-payload admission, foreground receipt without navigation and generic tap routing; Apple simulator warm/cold opens and Android actual PendingIntent/launcher/recreation checks pass. | Verify live signed-device APNs/FCM delivery and Android killed-process FCM entry. Account-scoped destinations and independently generated connected profiles remain separate. Read [construction/evidence](blueprints/remote-notifications.md). |
 | Swift/Kotlin provider tokens | **Catalog foundation candidate**: swappable collection ports, app-only APNs/FCM adapters, process-local rotation and explicit registry handoff; host/native adapter and default missing-setup UI checks pass. | Configure signing/Firebase and verify actual issued tokens on devices. Sending, remote opens, FID sender semantics and generated connected CLI selection remain separate. Read [setup/evidence](blueprints/push-tokens.md). |
 | Swift/Kotlin installation registry | **Catalog foundation verified**: secure app/deployment proof vaults, exact-lease registry ports, guarded explicit registration and readback; native Keychain/Keystore and real Go HTTP handoff/renewal/retirement checks pass. | Live provider token acquisition/configuration, sending, remote scoped routes and independently generated connected combinations remain separate. |
 | Go push dispatch/providers | **Foundation candidate**: exact-session dispatch and conditional retirement plus real APNs/FCM adapters and opt-in guarded manual preview. Local TLS, memory/PostgreSQL HTTP and independently extracted checks pass. | Configure private provider credentials and verify cloud acceptance/device delivery. Durable queues, fanout, retry receipts and native remote opens remain separate. |
 | Go queued previews/recovery | **Foundation candidate**: immutable jobs, fenced claims, guarded enqueue/status/cancel/replacement, bounded preflight backoff and retained uncertainty verified in memory/PostgreSQL and an independent copy. | Live provider acceptance, fanout, provider-result retry classification, retention/erasure/cross-session administration and native queue UI remain separate. |
-| Go backend | **Standalone starter ready** through CLI 0.11.0: independently generated API, auth/account/data/inbox/installation workflows, optional provider/jobs/recovery source, race checks and PostgreSQL upgrade/crash recovery. | Ready to start Go APIs. Live provider acceptance and generated connected products remain separate; auth recovery, roles and deployment remain deliberate product work. |
+| Go backend | **Standalone starter ready** through CLI 0.14.0: independently generated API, account-scoped WebSocket hints, core identity lifecycle, existing auth/data/inbox/installation/provider/job seams, race/PostgreSQL recovery and Docker/email/backup/restore acceptance. | Ready to start Go APIs with the tested portable baseline. Configure real hosting/SMTP and chosen product policy. Daily selects native socket/recovery UI through its separate acceptance. Richer roles/auth, multi-replica fanout and external delivery need deliberate extensions. |
 | Supabase integration | Local development stack present; native provider adapters/policies unconnected. | Real auth/account/remote Notes adapters and policies, then connected starter verification. |
 | Firebase auth/data integration | Local emulator setup present; native auth/data adapters and rules unconnected. FCM token adapters are assessed separately above. | Real auth/account/remote data adapters and rules, then connected starter verification. |
 
@@ -90,6 +98,164 @@ four negative inventory probes covering missing dependencies/fixtures and an
 escaping path. See the [Swift product handoff](../frontend/swift/notes/modules/apps/ProductApp/README.md)
 and [Kotlin product handoff](../frontend/kotlin/notes/modules/project/product/README.md).
 Those initial runs used this checkout and did not establish standalone readiness.
+
+## Native workspace acceptance — 2026-10-17
+
+CLI 0.18.0's untouched `workspaces-ready` output at
+`/private/tmp/mobile-workspaces-final-2e2xbabf/workspaces-ready`, identity
+`com.example.workspacesready`, module
+`github.com/example/workspaces-ready/backend`, passes its own full connected
+acceptance with exit 0. **36 iOS checks and all ten Android UI stages pass with
+zero failures/skips**, on iPhone 17 Pro/iOS 26.2 and Pixel 9 Pro/Android 15.
+Selected host checks pass: Swift Session 11 / Services 3 / Data 7; Kotlin Session
+11 / Services 3 / product state 27. Seven Android SQLite instrumentation cases
+also pass. All 51 selected source/overlay/fixture hashes remain unchanged and
+match the checkout after execution.
+
+Actual forms create without switching, select explicitly, retain Notes under
+stable account IDs, rename with a strong version, refuse a competing rename,
+read back a committed rename with a lost reply and explicitly review a committed
+create with a lost reply. Proxies verify exact strong preconditions, one attempt
+per named Account operation and no implicit replay. The state suites require a
+new review after every uncertain create, reject stale-lease results and preserve
+original-owner uncertainty. Secure selected-account and pending Notes process
+restoration, registration, identity recovery, live reads and cached outage
+recovery still pass in the same generated apps.
+
+Reports: `.cache/connected-ios/Results/connected-1792269824439184000.xcresult`,
+`.cache/connected-android` and Gradle test-results inside the generated output;
+runner log `/private/tmp/mobile-workspaces-ready-final.log`. Host and UI fixtures
+use separate owned API processes, preserving production guards. The generated
+source files were not patched after extraction. CLI's 32 cases, inventory and
+notes checks pass separately. Read [construction, setup and learning order](blueprints/native-workspaces.md).
+
+This preserves connected Daily starter readiness. Account warnings remain
+process-local; Account has no command receipts, automatic replay, invitations,
+membership, roles or deletion workflow. Source-only/catalog behavior, other
+provider/shell selections, offline startup and release/device delivery keep
+separate acceptance requirements.
+
+## Native registration acceptance — 2026-10-17
+
+CLI 0.17.0's untouched `registration-verified` output at
+`/private/tmp/mobile-registration-verified-yz2nc6d9/registration-verified`, identity
+`com.example.registrationverified`, module
+`github.com/example/registration-verified/backend`, passes its own full connected
+acceptance. **29 iOS checks, eight Android UI stages, seven selected SQLite tests
+per platform and 21 Android product-state cases pass with zero failures/skips**
+on iPhone 17 Pro/iOS 26.2 and Pixel 9 Pro/Android 15. Four boundary cases per
+platform and actual Go port checks also pass.
+
+Real forms register unseeded users and require explicit sign-in. Newly issued
+credentials restore Personal/Notes after process termination. Duplicate input
+cannot change the original password. A committed registration reply is lost;
+proxy counters establish one attempt/commit and recovery through explicit sign-in.
+Original identity/socket/mail, cached reads and pending one-commit recovery still
+pass. Read [scope, learning findings and evidence](blueprints/native-registration.md#observed-verification--2026-10-17).
+
+Both connected Daily profiles remain ready with this selected scope. Registration
+is separate from authenticated access and Personal bootstrap. Contact change,
+invitation/role/approval policy, account deletion, MFA/OIDC/passkeys and release/
+physical-device acceptance remain additional product capabilities. Earlier dated
+evidence below retains its original scope.
+
+## Native read-cache acceptance — 2026-10-17
+
+CLI 0.16.0's untouched `read-cache-final` output at
+`/private/tmp/mobile-read-cache-final-pomd2psd/read-cache-final`, identity
+`com.example.readcachefinal`, module `github.com/example/read-cache-final/backend`,
+passes its own complete connected driver. **22 iOS checks, six Android UI stages,
+seven SQLite cases per platform and fifteen Kotlin product-state cases pass with
+zero failures/skips** on iPhone 17 Pro/iOS 26.2 and Pixel 9 Pro/Android 15.
+The owned read outage proves saved first-page rendering after process restart,
+read-only gating, account isolation, explicit removal and fresh recovery. Existing
+identity/socket/mail and original pending-command/one-commit checks still pass.
+Read [scope, learning findings and actual evidence](blueprints/notes-read-cache.md#observed-verification--2026-10-17).
+
+Both Daily + go-connected profiles remain connected starter ready with this
+selected capability. Cache content requires a current authenticated binding;
+cold restore still requires the API. Automatic sync, offline writes, multi-command
+queues, additional feature selections and release/device acceptance remain
+separate. Earlier dated evidence below retains its original scope.
+
+## Native lifecycle/live acceptance — 2026-10-17
+
+CLI 0.15.0's untouched `native-foundations` output at
+`/private/tmp/mobile-native-foundations-2o0f4kjn/native-foundations`, identity
+`com.example.nativefoundations`, module `github.com/example/native-foundations/backend`,
+passes its own complete connected driver. Thirteen iOS checks on iPhone 17 Pro/iOS
+26.2 and four Android stages on Pixel 9 Pro/Android 15 execute without failures or
+skips. Real SMTP capture and native HTTP/sockets establish verification/reset/change,
+revoked access and external-write live reads. Prior pending command/process recovery
+assertions remain required and pass. Seven Android state tests and source/CLI checks
+pass separately. Read [scope, findings and evidence](blueprints/native-identity-live.md#observed-verification--2026-10-17).
+
+Swift and Kotlin Daily + go-connected remain connected starter ready, now including
+this selected scope. External SMTP delivery, production deployment, other shells,
+registration/contact changes, multi-item sync and additional native selections
+remain separate. Earlier dated evidence below retains its original scope.
+
+## Backend live/identity/operations acceptance — 2026-10-17
+
+Backend 0.14.0 evidence: the unmodified independent `service-ready` output at
+`/private/tmp/mobile-backend-complete-mjdo0i5l/service-ready`, module
+`github.com/example/service-ready/backend`, passes its own check/race/smoke,
+disposable PostgreSQL 18.6 and freshly built container operations acceptance.
+Read [the complete scope and observed run](blueprints/backend-connected-foundations.md#observed-verification--2026-10-17).
+Local SMTP capture and tested restore establish the portable backend baseline;
+no cloud rollout or new native screen acceptance is inferred.
+
+## Durable pending recovery acceptance — 2026-10-17
+
+CLI 0.13.0 adds one native journal slot per original deployment/principal/account.
+Stage commits before HTTP; settlement commits the matching receipt before clearing
+pending. Recovery stays explicit and unreadable stores block new writes.
+
+Final independent output is
+`/private/tmp/mobile-pending-starter-4hc0bs4d/recovery-verified`, identity
+`com.example.recoveryverified`, module `github.com/example/recovery-verified/backend`.
+Its copied driver passes real API and screen scenarios on iPhone 17 Pro/iOS 26.2
+and Pixel_9_Pro/Android 15. Both retain original command IDs through process restart,
+recover a withheld committed receipt, keep an unforwarded change pending after
+receipt 404 and explicitly retry identical input. The proxy checks one commit per
+scenario. iOS executes one UI case and Android three install-once instrumentation
+stages, each without failure/skip. Native storage, owner, CLI and fixture checks
+are recorded in [pending evidence](blueprints/pending-notes.md#observed-verification--2026-10-17).
+
+Daily + go-connected remains **connected starter ready** for Swift and Kotlin.
+This adds durable manual recovery, not offline auth/reads, a multi-item outbox,
+automatic sync, merging, erasure or a migration framework. Catalog gallery owners
+remain transient. Existing local-only and backend-ready profiles are unchanged.
+
+## Connected Daily acceptance — 2026-10-17
+
+CLI 0.12.0 registers `--with go-connected --backend go` only for Daily, on Swift,
+Kotlin or both. API co-location alone preserves the local shell. The selection
+copies HTTP/Session and narrow remote Notes Services, app-owned connection/screens,
+secure vault composition and its own acceptance driver. The public endpoint is
+strictly admitted, configured in app source and recorded in provenance; no user
+account, provider credential or live worker is provisioned.
+
+Final independent output is `/private/tmp/mobile-connected-starter-z3ieecjs/launch-ready`,
+module `github.com/example/launch-ready/backend`, installed identity
+`com.example.launchready`. Its own connected driver passes on iPhone 17 Pro/iOS
+26.2 and Pixel_9_Pro/Android 15. Seven hosted iOS, two Android entry and both Android
+write/restore stages pass without failures/skips. Ordinary Android units have
+64 passes and two expected external-API skips; the owned driver separately runs
+the real API methods. All 32 CLI cases, generated Go check/race/smoke, starter
+inventory and documentation checks pass. Detailed evidence and limits are recorded
+in [connected construction](blueprints/go-connected-starter.md). Actual native
+workflows verify sign-in, Personal bootstrap, owned workspace selection, renewal,
+remote Notes CRUD, account isolation and sign-out. iOS terminates/relaunches the
+application and restores the selected workspace through Keychain. Android installs
+once, uses two non-skipped instrumentation runs separated by force-stop, and
+restores through the actual Keystore record; Activity recreation is separate.
+
+This establishes a starting point for connected products with the selected scope.
+The shell uses one iOS scene and one Android task entry. Production registration/
+recovery, roles, multi-item native pending queues, merge/sync, Files/inbox/push product
+selection, multiwindow coordination and release deployment/signing remain deliberate
+extensions. Server restart durability requires the existing PostgreSQL setup.
 
 ## Installation-enabled Go acceptance — 2026-10-17
 

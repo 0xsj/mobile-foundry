@@ -57,8 +57,8 @@ def validate_backend(profile, root):
     try:
         if profile.get("schemaVersion") != 1 or profile.get("id") != "go" or profile.get("status") not in {"candidate", "standalone"}:
             raise ProfileError("Expected a registered schemaVersion 1 Go backend inventory.")
-        if profile.get("directory") != "backend/go" or profile.get("modules") != ["health", "identity", "account", "audit", "notes", "files", "notifications"]:
-            raise ProfileError("This Go profile selects Health, Identity, Account, Audit, Notes, Files and Notifications.")
+        if profile.get("directory") != "backend/go" or profile.get("modules") != ["health", "identity", "account", "audit", "notes", "files", "notifications", "realtime"]:
+            raise ProfileError("This Go profile selects Health, Identity, Account, Audit, Notes, Files, Notifications and Realtime.")
         sources, shared, required, exclusions = (profile[key] for key in ("sources", "sharedSources", "requiredFiles", "exclude"))
         if any(not isinstance(items, list) or not all(isinstance(item, str) for item in items) or len(items) != len(set(items)) for items in (sources, shared, required, exclusions)):
             raise ProfileError("Backend source, shared, required and exclusion lists must contain unique strings.")

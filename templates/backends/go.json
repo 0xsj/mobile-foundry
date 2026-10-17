@@ -12,7 +12,8 @@
     "audit",
     "notes",
     "files",
-    "notifications"
+    "notifications",
+    "realtime"
   ],
   "exclude": [
     "**/.gitkeep"
@@ -38,7 +39,16 @@
     "backend/go/Makefile",
     "backend/go/.env.example",
     "backend/go/infra/local/compose.yaml",
-    "backend/go/infra/push/example.json"
+    "backend/go/infra/push/example.json",
+    "backend/go/internal/realtime",
+    "backend/go/cmd/maintenance",
+    "backend/go/cmd/healthcheck",
+    "backend/go/Dockerfile",
+    "backend/go/.dockerignore",
+    "backend/go/infra/production/compose.yaml",
+    "backend/go/infra/production/Caddyfile",
+    "backend/go/infra/production/.env.example",
+    "backend/go/infra/production/mail.example.json"
   ],
   "sharedSources": [
     "contracts/fixtures/account/names.json"
@@ -118,7 +128,25 @@
     "backend/go/tests/push_job_recovery_test.go",
     "backend/go/tests/push_job_recovery_http_test.go",
     "backend/go/tests/push_job_recovery_postgres_test.go",
-    "backend/go/tests/push_job_recovery_migration_test.go"
+    "backend/go/tests/push_job_recovery_migration_test.go",
+    "backend/go/internal/realtime/module.go",
+    "backend/go/pkg/broadcast/hub.go",
+    "backend/go/internal/identity/app/recovery.go",
+    "backend/go/migrations/identity/0002_recovery.sql",
+    "backend/go/migrations/audit/0004_identity_recovery.sql",
+    "backend/go/tests/identity_recovery_test.go",
+    "backend/go/tests/identity_recovery_http_test.go",
+    "backend/go/tests/realtime_test.go",
+    "backend/go/cmd/maintenance/main.go",
+    "backend/go/cmd/healthcheck/main.go",
+    "backend/go/Dockerfile",
+    "backend/go/.dockerignore",
+    "backend/go/infra/production/compose.yaml",
+    "backend/go/infra/production/Caddyfile",
+    "backend/go/infra/production/.env.example",
+    "backend/go/infra/production/mail.example.json",
+    "backend/go/scripts/operations_acceptance.py",
+    "backend/go/scripts/backup.py"
   ],
   "overlays": [
     {

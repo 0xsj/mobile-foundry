@@ -16,8 +16,14 @@ dependencies {
     testImplementation(libs.okhttp.mockwebserver)
 }
 tasks.withType<Test>().configureEach {
+    inputs.file(rootProject.file("../../../contracts/fixtures/account/names.json"))
+    systemProperty("account.names.fixtures", rootProject.file("../../../contracts/fixtures/account").absolutePath)
+    inputs.file(rootProject.file("../../../contracts/fixtures/native-registration/inputs.json"))
+    systemProperty("native.registration.fixtures", rootProject.file("../../../contracts/fixtures/native-registration").absolutePath)
     systemProperty("session.fixtures", rootProject.file("../../../contracts/fixtures/session").absolutePath)
     systemProperty("account.fixtures", rootProject.file("../../../contracts/fixtures/account-access").absolutePath)
     systemProperty("go.session.fixtures", rootProject.file("../../../contracts/fixtures/go-session").absolutePath)
     systemProperty("go.session.test.base", providers.environmentVariable("GO_SESSION_TEST_BASE").getOrElse(""))
+    systemProperty("native.lifecycle.fixtures", rootProject.file("../../../contracts/fixtures/native-lifecycle").absolutePath)
+    systemProperty("go.lifecycle.mail.base", providers.environmentVariable("GO_LIFECYCLE_MAIL_BASE").getOrElse(""))
 }

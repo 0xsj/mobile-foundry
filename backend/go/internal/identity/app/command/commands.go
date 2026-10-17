@@ -99,7 +99,7 @@ func (h SignIn) Handle(ctx context.Context, login, password string, metadata eve
 	if err != nil {
 		return app.Grant{}, err
 	}
-	if err := h.Store.Issue(ctx, s, metadata); err != nil {
+	if err := h.Store.IssueChecked(ctx, s, p.Snapshot().PasswordHash, metadata); err != nil {
 		return app.Grant{}, err
 	}
 	return app.NewGrant(p, s, access, refresh), nil
