@@ -15,7 +15,7 @@ type Access interface {
 }
 
 func Provide(access Access) capability.Provision {
-	return capability.Provision{Name: Name, Callers: []string{"audit", "notes"}, Handler: func(ctx context.Context, wire json.RawMessage) (any, error) {
+	return capability.Provision{Name: Name, Callers: []string{"audit", "notes", "files"}, Handler: func(ctx context.Context, wire json.RawMessage) (any, error) {
 		var input struct {
 			PrincipalID string `json:"principal_id"`
 			AccountID   string `json:"account_id"`

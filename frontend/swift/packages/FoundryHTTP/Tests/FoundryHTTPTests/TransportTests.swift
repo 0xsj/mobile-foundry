@@ -9,17 +9,20 @@ private final class StubState: @unchecked Sendable {
     private var mode: Mode = .success
     private var begins = 0
     private var stops = 0
-    func reset(_ mode: Mode) { lock.lock(); self.mode = mode; begins = 0; stops = 0; lock.unlock() }
-    func start() -> Mode { lock.lock(); defer { lock.unlock() }; begins += 1; return mode }
-    func stop() { lock.lock(); stops += 1; lock.unlock() }
+    private var generation = 0
+    private var stopped: Set<ObjectIdentifier> = []
+    func reset(_ mode: Mode) { lock.lock(); self.mode = mode; begins = 0; stops = 0; generation += 1; stopped = []; lock.unlock() }
+    func start() -> (Mode, Int) { lock.lock(); defer { lock.unlock() }; begins += 1; return (mode, generation) }
+    func stop(_ identity: ObjectIdentifier, generation: Int) { lock.lock(); defer { lock.unlock() }; if generation == self.generation && stopped.insert(identity).inserted { stops += 1 } }
     var counts: (Int, Int) { lock.lock(); defer { lock.unlock() }; return (begins, stops) }
 }
 private final class StubProtocol: URLProtocol, @unchecked Sendable {
     static let state = StubState()
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    private var generation = 0
     override func startLoading() {
-        let mode = Self.state.start()
+        let (mode, generation) = Self.state.start(); self.generation = generation
         if case .wait = mode { return }
         if case .offline = mode { client?.urlProtocol(self, didFailWithError: URLError(.notConnectedToInternet)); return }
         let status = 200
@@ -28,7 +31,7 @@ private final class StubProtocol: URLProtocol, @unchecked Sendable {
         client?.urlProtocol(self, didLoad: Data("{\"status\":\"ok\"}".utf8))
         client?.urlProtocolDidFinishLoading(self)
     }
-    override func stopLoading() { Self.state.stop() }
+    override func stopLoading() { Self.state.stop(ObjectIdentifier(self), generation: generation) }
 }
 
 @Suite(.serialized) struct TransportTests {

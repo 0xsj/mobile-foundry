@@ -12,6 +12,7 @@ import (
 
 	"github.com/0xsj/mobile-foundry/backend/internal/account"
 	"github.com/0xsj/mobile-foundry/backend/internal/audit"
+	"github.com/0xsj/mobile-foundry/backend/internal/files"
 	"github.com/0xsj/mobile-foundry/backend/internal/identity"
 	"github.com/0xsj/mobile-foundry/backend/internal/notes"
 	"github.com/0xsj/mobile-foundry/backend/internal/server"
@@ -64,6 +65,7 @@ func run(ctx context.Context) error {
 	accountBuilder, auditBuilder := module.Builder(account.Build), module.Builder(audit.Build)
 	identityBuilder := module.Builder(identity.Build)
 	notesBuilder := module.Builder(notes.Build)
+	filesBuilder := module.Builder(files.Build)
 	startup, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 	if configuration.Storage == "postgres" {
@@ -82,6 +84,11 @@ func run(ctx context.Context) error {
 			return err
 		}
 		notesBuilder = notes.BuildPostgres(startup, postgres.Config{URL: configuration.NotesDatabaseURL}, notesSchema)
+		filesSchema, err := postgres.Load(migrations.Files, files.Schema)
+		if err != nil {
+			return err
+		}
+		filesBuilder = files.BuildPostgres(startup, postgres.Config{URL: configuration.FilesDatabaseURL}, filesSchema, configuration.FilesDirectory)
 		if configuration.Authentication == "identity" {
 			schema, err := postgres.Load(migrations.Files, identity.Schema)
 			if err != nil {
@@ -92,7 +99,7 @@ func run(ctx context.Context) error {
 	} else {
 		log.Warn("memory storage enabled; data is lost on process exit")
 	}
-	builders := []module.Builder{accountBuilder, auditBuilder, notesBuilder}
+	builders := []module.Builder{accountBuilder, auditBuilder, notesBuilder, filesBuilder}
 	if configuration.Authentication == "identity" {
 		builders = append(builders, identityBuilder)
 	}

@@ -31,9 +31,32 @@ import FoundryKernel
         }
         var headers = options.headers; headers["authorization"] = "Bearer \(token)"
         let forwarded = RequestOptions(timeoutMilliseconds: options.timeoutMilliseconds, correlationID: options.correlationID,
-            query: options.query, headers: headers, body: options.body, ifMatch: options.ifMatch, idempotencyKey: options.idempotencyKey)
+            query: options.query, headers: headers, body: options.body, ifMatch: options.ifMatch, idempotencyKey: options.idempotencyKey, binaryBody: options.binaryBody)
         do {
             let answer = try await client.requestEntity(method, path: path, options: forwarded)
+            try Task.checkCancellation()
+            return session.isCurrent(lease) ? answer : .failure(SessionFailures.scopeChanged)
+        } catch {
+            try Task.checkCancellation()
+            if error is CancellationError { throw error }
+            guard session.isCurrent(lease) else { return .failure(SessionFailures.scopeChanged) }
+            throw error
+        }
+    }
+    public func requestBytes(_ method: HTTPMethod, path: String, options: RequestOptions = .init()) async throws -> AppResult<BinaryEntity> {
+        try Task.checkCancellation()
+        guard let token = session.accessToken(for: lease) else { return .failure(SessionFailures.scopeChanged) }
+        guard !options.headers.keys.contains(where: { $0.lowercased() == "authorization" }) else {
+            return .failure(.invalid(.init(message: "Authorization is owned by the session.", code: "session.authorization_override"), fields: [:]))
+        }
+        guard token.range(of: "^[A-Za-z0-9._~+/-]+=*$", options: .regularExpression) != nil else {
+            return .failure(.internalError(.init(message: "The access credential is not a Bearer token.", code: "session.invalid_access_token")))
+        }
+        var headers = options.headers; headers["authorization"] = "Bearer \(token)"
+        let forwarded = RequestOptions(timeoutMilliseconds: options.timeoutMilliseconds, correlationID: options.correlationID,
+            query: options.query, headers: headers, body: options.body, ifMatch: options.ifMatch, idempotencyKey: options.idempotencyKey, binaryBody: options.binaryBody)
+        do {
+            let answer = try await client.requestBytes(method, path: path, options: forwarded)
             try Task.checkCancellation()
             return session.isCurrent(lease) ? answer : .failure(SessionFailures.scopeChanged)
         } catch {

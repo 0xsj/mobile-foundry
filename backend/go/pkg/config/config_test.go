@@ -56,7 +56,7 @@ func TestStorageSelectionAndModuleOverrides(t *testing.T) {
 	if err != nil || configured.AccountDatabaseURL != "common" || configured.AuditDatabaseURL != "audit" || configured.NotesDatabaseURL != "common" {
 		t.Fatal("module override lost", err)
 	}
-	configured, err = Load(source(map[string]string{"STORAGE": "postgres", "ACCOUNT_DATABASE_URL": "a", "AUDIT_DATABASE_URL": "b", "NOTES_DATABASE_URL": "n"}))
+	configured, err = Load(source(map[string]string{"STORAGE": "postgres", "ACCOUNT_DATABASE_URL": "a", "AUDIT_DATABASE_URL": "b", "NOTES_DATABASE_URL": "n", "FILES_DATABASE_URL": "f"}))
 	if err != nil || configured.NotesDatabaseURL != "n" {
 		t.Fatal("owned Notes override refused", err)
 	}

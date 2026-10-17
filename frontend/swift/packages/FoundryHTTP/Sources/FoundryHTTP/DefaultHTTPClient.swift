@@ -39,6 +39,47 @@ public struct DefaultHTTPClient: HTTPClient {
         return result
     }
 
+    public func requestBytes(_ method: HTTPMethod, path: String, options: RequestOptions = .init()) async throws -> AppResult<BinaryEntity> {
+        try Task.checkCancellation()
+        let budget = options.timeoutMilliseconds ?? timeoutMilliseconds
+        if let failure = RequestPreparation.timeout(budget) { return .failure(failure) }
+        let timeout = Failure.timeout(.init(message: "The request exceeded its time budget.", correlationID: options.correlationID))
+        if budget == 0 { return .failure(timeout) }
+        let result = try await withThrowingTaskGroup(of: AppResult<BinaryEntity>.self) { group in
+            group.addTask { try await exchangeBytes(method, path: path, options: options) }
+            group.addTask {
+                try await Task.sleep(for: .milliseconds(budget))
+                return .failure(timeout)
+            }
+            defer { group.cancelAll() }
+            // Exactly two children have been added; an empty next is impossible.
+            return try await group.next()!
+        }
+        try Task.checkCancellation()
+        return result
+    }
+
+    private func exchangeBytes(_ method: HTTPMethod, path: String, options: RequestOptions) async throws -> AppResult<BinaryEntity> {
+        let prepared = try RequestPreparation.prepare(base: base, method: method, path: path, options: options, commonHeaders: headers)
+        let request: PreparedRequest
+        switch prepared { case .success(let value): request = value; case .failure(let failure): return .failure(failure) }
+        var binaryHeaders = request.headers; binaryHeaders["accept"] = "application/octet-stream, */*;q=0.8"
+        let binaryRequest = PreparedRequest(url: request.url, method: request.method, headers: binaryHeaders, body: request.body)
+        try Task.checkCancellation()
+        let result = try await transport.send(binaryRequest)
+        try Task.checkCancellation()
+        return result.flatMap { response in
+            let meta = ProblemDecoder.metadata(response, correlationID: options.correlationID)
+            guard (100...599).contains(response.status) else { return .failure(internalFailure("http.unreadable_response", "The response is not readable.")) }
+            guard (200...299).contains(response.status) else {
+                let body = response.body.flatMap { try? JSONDecoder().decode(JSONValue.self, from: $0) }
+                return .failure(ProblemDecoder.decode(response, body: body, correlationID: options.correlationID, now: now()))
+            }
+            guard let data = response.body, data.count <= 10 * 1024 * 1024 else { return .failure(internalFailure("http.invalid_binary_response", "The file response is missing or too large.")) }
+            return .success(BinaryEntity(bytes: data, contentType: header(response.headers, "content-type"), metadata: meta))
+        }
+    }
+
     private func exchange(_ method: HTTPMethod, path: String, options: RequestOptions) async throws -> AppResult<Entity> {
         let prepared = try RequestPreparation.prepare(base: base, method: method, path: path, options: options, commonHeaders: headers)
         let request: PreparedRequest

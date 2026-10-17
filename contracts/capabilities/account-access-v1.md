@@ -1,6 +1,6 @@
 # account.access.v1
 
-Provider: Account. Allowed callers in this profile: `audit`, `notes`. Internal contract;
+Provider: Account. Allowed callers in this profile: `audit`, `notes`, `files`. Internal contract;
 there is no public HTTP invocation endpoint. Composition binds the caller's
 module identity; input principal/account IDs alone provide no authentication.
 
@@ -13,7 +13,7 @@ Request object, all fields required:
 IDs are canonical nonzero UUIDs. Action is `account.read` or `account.rename`.
 Unknown fields/invalid IDs/actions are invalid input. Account's current owner
 policy answers both actions. Membership/grant extensions remain future work.
-Notes requests `account.read` as admission to the current owner-only scope for
+Notes and Files request `account.read` as admission to the current owner-only scope for
 its reads and mutations. This does not establish read-only member roles; introduce
 a deliberate action policy when membership/grants are implemented.
 

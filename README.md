@@ -318,3 +318,10 @@ shared mobile findings live in root `notes`.
 implementation slice leaves a reading handoff. [AGENTS.md](AGENTS.md) carries
 that requirement into future sessions. Run `make notes-check` to check links,
 module paths, and native example labels.
+
+## Connected media example
+
+The Go backend includes account-owned Files with memory/PostgreSQL metadata and
+replaceable byte storage. Both native catalogs can upload a gallery photo and
+open the downloaded file in the image editor through an authenticated session.
+Read [setup and verification](docs/blueprints/files-media.md).

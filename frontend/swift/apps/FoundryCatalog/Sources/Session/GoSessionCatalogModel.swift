@@ -11,6 +11,7 @@ import OSLog
     let baseURL: String
     let provider: SessionProvider
     let notes = RemoteNotesCatalogModel()
+    let files = RemoteFilesCatalogModel()
     private(set) var accounts: [Account] = []
     private(set) var nextCursor: String?
     private(set) var directoryFailure: Failure?
@@ -54,8 +55,9 @@ import OSLog
     func refreshScope() {
         clearDirectory(); load()
         guard let lease = controller.lease,
-              case .success(let client) = AuthenticatedHTTPClient.create(baseURL:baseURL,transport:transport,session:controller,lease:lease,allowLocalHTTP:allowLocalHTTP) else { notes.bind(nil,scope:nil); return }
+              case .success(let client) = AuthenticatedHTTPClient.create(baseURL:baseURL,transport:transport,session:controller,lease:lease,allowLocalHTTP:allowLocalHTTP) else { notes.bind(nil,scope:nil); files.bind(nil,scope:nil); return }
         notes.bind(HTTPRemoteNotesRepository(client:client,accountID:lease.scope.accountID,principalID:lease.scope.principalID),scope:lease.scope)
+        files.bind(HTTPRemoteFilesRepository(client:client,accountID:lease.scope.accountID,principalID:lease.scope.principalID),scope:lease.scope)
     }
-    func close() { notes.bind(nil,scope:nil); clearDirectory(); controller.shutdown(); transport.invalidate() }
+    func close() { files.bind(nil,scope:nil); notes.bind(nil,scope:nil); clearDirectory(); controller.shutdown(); transport.invalidate() }
 }

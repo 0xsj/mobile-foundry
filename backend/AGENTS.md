@@ -89,3 +89,12 @@ and Bento's six categories; module notes mirror paths from that profile's root.
 Record actual checks and important runtime limits. Run `make notes-check` at
 the repository root after note changes. Use each provider's `make check` for
 Compose validation and `make up` when runtime startup must be verified.
+
+The [Files/Media slice](../contracts/behavior/files-media.md) owns canonical file
+metadata, versions, optional command receipts and committed lifecycle facts.
+Memory/PostgreSQL metadata and memory/private-directory Objects adapters are
+implemented. Delete tombstones precede external cleanup; receipt lookup proves
+metadata commit only. Preserve original keys/versions across cleanup failures.
+No object SDK, Files state or foreign SQL enters another module's core. Audit
+receives admitted File facts through its own adapter; do not expose names, types,
+hashes or content there. Retain database and private object directory together.

@@ -33,7 +33,7 @@ func run(check bool) error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	owners := []struct{ name, url string }{{"account", configuration.AccountDatabaseURL}, {"audit", configuration.AuditDatabaseURL}, {"notes", configuration.NotesDatabaseURL}}
+	owners := []struct{ name, url string }{{"account", configuration.AccountDatabaseURL}, {"audit", configuration.AuditDatabaseURL}, {"notes", configuration.NotesDatabaseURL}, {"files", configuration.FilesDatabaseURL}}
 	if configuration.IdentityDatabaseURL != "" {
 		owners = append(owners, struct{ name, url string }{"identity", configuration.IdentityDatabaseURL})
 	}

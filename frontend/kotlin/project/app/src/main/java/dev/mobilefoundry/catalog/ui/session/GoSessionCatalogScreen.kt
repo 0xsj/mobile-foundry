@@ -20,6 +20,7 @@ import dev.mobilefoundry.catalog.composition.*
 import dev.mobilefoundry.kernel.*
 import dev.mobilefoundry.session.*
 import dev.mobilefoundry.catalog.ui.notes.RemoteNotesCatalogCard
+import dev.mobilefoundry.catalog.ui.files.RemoteFilesCatalogCard
 import dev.mobilefoundry.ui.components.display.card.Card
 import dev.mobilefoundry.ui.components.forms.button.ActionButton
 import dev.mobilefoundry.ui.components.forms.button.ButtonVariant
@@ -119,6 +120,6 @@ import dev.mobilefoundry.ui.theme.FoundryTheme
             directory.failure?.let { Text(it.meta.message, style = FoundryTheme.tokens.typography.caption) }
             Text("Remote notes below use the selected account. Offline synchronization is a separate capability.", style = FoundryTheme.tokens.typography.caption)
         }
-        key(lease.scope) { RemoteNotesCatalogCard(model.notes) }
+        key(lease.scope) { RemoteNotesCatalogCard(model.notes); RemoteFilesCatalogCard(model.files) }
     }
 }

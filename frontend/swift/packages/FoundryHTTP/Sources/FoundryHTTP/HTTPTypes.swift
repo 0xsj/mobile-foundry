@@ -9,21 +9,34 @@ public struct QueryItem: Equatable, Sendable {
     public init(_ name: String, _ value: String) { self.name = name; self.value = value }
 }
 
+public struct BinaryBody: Sendable {
+    public let bytes: Data
+    public let contentType: String
+    public init(_ bytes: Data, contentType: String) { self.bytes = bytes; self.contentType = contentType }
+}
+public struct BinaryEntity: Sendable {
+    public let bytes: Data
+    public let contentType: String?
+    public let metadata: ResponseMetadata
+    public init(bytes: Data, contentType: String?, metadata: ResponseMetadata) { self.bytes = bytes; self.contentType = contentType; self.metadata = metadata }
+}
+
 public struct RequestOptions: Sendable {
     public let timeoutMilliseconds: Int64?
     public let correlationID: String?
     public let query: [QueryItem]
     public let headers: [String: String]
     public let body: JSONValue?
+    public let binaryBody: BinaryBody?
     public let ifMatch: String?
     public let idempotencyKey: String?
 
     public init(timeoutMilliseconds: Int64? = nil, correlationID: String? = nil,
                 query: [QueryItem] = [], headers: [String: String] = [:], body: JSONValue? = nil,
-                ifMatch: String? = nil, idempotencyKey: String? = nil) {
+                ifMatch: String? = nil, idempotencyKey: String? = nil, binaryBody: BinaryBody? = nil) {
         self.timeoutMilliseconds = timeoutMilliseconds; self.correlationID = correlationID
         self.query = query; self.headers = headers; self.body = body
-        self.ifMatch = ifMatch; self.idempotencyKey = idempotencyKey
+        self.ifMatch = ifMatch; self.idempotencyKey = idempotencyKey; self.binaryBody = binaryBody
     }
 }
 
@@ -69,10 +82,12 @@ public protocol HTTPTransport: Sendable {
 }
 
 public protocol HTTPClient: Sendable {
+    func requestBytes(_ method: HTTPMethod, path: String, options: RequestOptions) async throws -> AppResult<BinaryEntity>
     func requestEntity(_ method: HTTPMethod, path: String, options: RequestOptions) async throws -> AppResult<Entity>
 }
 
 extension HTTPClient {
+    public func requestBytes(_ method: HTTPMethod, path: String, options: RequestOptions = .init()) async throws -> AppResult<BinaryEntity> { .failure(internalFailure("http.binary_unsupported", "This client does not support binary responses.")) }
     public func request(_ method: HTTPMethod, path: String, options: RequestOptions = .init()) async throws -> AppResult<JSONValue> {
         try await requestEntity(method, path: path, options: options).map(\.body)
     }

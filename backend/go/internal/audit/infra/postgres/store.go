@@ -61,8 +61,8 @@ func (s *Store) Record(ctx context.Context, consumer string, entry domain.Entry)
 		if sequence >= 1<<53-1 {
 			return domain.ErrEntry
 		}
-		_, err = tx.Exec(ctx, `INSERT INTO audit.entries(sequence,event_id,account_id,actor_id,action,version,occurred_at,recorded_at,request_id,correlation_id,principal_id,session_id,reason)
-		 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`, sequence, evidence.EventID.String(), nullable(evidence.AccountID), evidence.ActorID.String(), evidence.Action, int64(evidence.Version), evidence.OccurredAt, entry.RecordedAt(), evidence.RequestID, evidence.CorrelationID, nullable(evidence.PrincipalID), nullable(evidence.SessionID), evidence.Reason)
+		_, err = tx.Exec(ctx, `INSERT INTO audit.entries(sequence,event_id,account_id,actor_id,action,version,occurred_at,recorded_at,request_id,correlation_id,principal_id,session_id,reason,file_id)
+		 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`, sequence, evidence.EventID.String(), nullable(evidence.AccountID), evidence.ActorID.String(), evidence.Action, int64(evidence.Version), evidence.OccurredAt, entry.RecordedAt(), evidence.RequestID, evidence.CorrelationID, nullable(evidence.PrincipalID), nullable(evidence.SessionID), evidence.Reason, nullable(evidence.FileID))
 		if err != nil {
 			return err
 		}
@@ -95,7 +95,7 @@ func (s *Store) list(ctx context.Context, column string, identity id.ID, after u
 	if limit < 1 || limit > 100 || after > 1<<53-1 {
 		return app.Page{}, app.ErrInput
 	}
-	rows, err := s.pool.Query(ctx, `SELECT sequence,event_id::text,account_id::text,actor_id::text,action,version,occurred_at,recorded_at,request_id,correlation_id,principal_id::text,session_id::text,reason
+	rows, err := s.pool.Query(ctx, `SELECT sequence,event_id::text,account_id::text,actor_id::text,action,version,occurred_at,recorded_at,request_id,correlation_id,principal_id::text,session_id::text,reason,file_id::text
 	 FROM audit.entries WHERE `+column+`=$1 AND sequence>$2 ORDER BY sequence LIMIT $3`, identity.String(), int64(after), limit+1)
 	if err != nil {
 		return app.Page{}, storage.Failure(err)
@@ -105,10 +105,10 @@ func (s *Store) list(ctx context.Context, column string, identity id.ID, after u
 	for rows.Next() {
 		var sequence, version int64
 		var eventID, actor string
-		var account, principalID, sessionID *string
+		var account, principalID, sessionID, fileID *string
 		var e domain.Evidence
 		var recordedAt time.Time
-		if err := rows.Scan(&sequence, &eventID, &account, &actor, &e.Action, &version, &e.OccurredAt, &recordedAt, &e.RequestID, &e.CorrelationID, &principalID, &sessionID, &e.Reason); err != nil {
+		if err := rows.Scan(&sequence, &eventID, &account, &actor, &e.Action, &version, &e.OccurredAt, &recordedAt, &e.RequestID, &e.CorrelationID, &principalID, &sessionID, &e.Reason, &fileID); err != nil {
 			return app.Page{}, storage.Failure(err)
 		}
 		e.EventID, err = id.Parse(eventID)
@@ -129,6 +129,10 @@ func (s *Store) list(ctx context.Context, column string, identity id.ID, after u
 			return app.Page{}, errState
 		}
 		e.SessionID, err = parseOptional(sessionID)
+		if err != nil {
+			return app.Page{}, errState
+		}
+		e.FileID, err = parseOptional(fileID)
 		if err != nil {
 			return app.Page{}, errState
 		}

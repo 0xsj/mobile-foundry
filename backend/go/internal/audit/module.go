@@ -17,5 +17,5 @@ const Schema = "audit"
 func New(store app.Store, personal app.PrincipalStore, access app.AccountAccess, clock clock.Clock, principals principal.Resolver) module.Unit {
 	handler := httpv1.Handler{List: query.List{Store: store, Access: access}, Personal: query.ListPrincipal{Store: personal}, Principals: principals}
 	recorder := command.Record{Store: store, Clock: clock}
-	return module.Unit{Name: Schema, Routes: handler.Register, Requires: []string{"account.access.v1"}, Subscriptions: []events.Subscription{receiver.Subscribe(recorder), receiver.SubscribeIdentity(recorder)}}
+	return module.Unit{Name: Schema, Routes: handler.Register, Requires: []string{"account.access.v1"}, Subscriptions: []events.Subscription{receiver.Subscribe(recorder), receiver.SubscribeIdentity(recorder), receiver.SubscribeFiles(recorder)}}
 }

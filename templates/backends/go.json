@@ -5,31 +5,77 @@
   "directory": "backend/go",
   "sourceModule": "github.com/0xsj/mobile-foundry/backend",
   "goVersion": "1.27.1",
-  "modules": ["health", "identity", "account", "audit", "notes"],
-  "exclude": ["**/.gitkeep"],
-  "sources": [
-    "backend/go/go.mod", "backend/go/go.sum",
-    "backend/go/cmd/server", "backend/go/cmd/migrate",
-    "backend/go/internal/health", "backend/go/internal/server", "backend/go/internal/architecture",
-    "backend/go/internal/identity", "backend/go/internal/account", "backend/go/internal/audit", "backend/go/internal/notes",
-    "backend/go/pkg", "backend/go/migrations", "backend/go/tests", "backend/go/scripts",
-    "backend/go/Makefile", "backend/go/.env.example", "backend/go/infra/local/compose.yaml"
+  "modules": [
+    "health",
+    "identity",
+    "account",
+    "audit",
+    "notes",
+    "files"
   ],
-  "sharedSources": ["contracts/fixtures/account/names.json"],
-  "requiredFiles": [
-    "backend/go/go.mod", "backend/go/go.sum", "backend/go/cmd/server/main.go", "backend/go/cmd/migrate/main.go",
-    "backend/go/internal/architecture/architecture_test.go", "backend/go/pkg/config/config.go",
-    "backend/go/migrations/embed.go", "backend/go/migrations/account/0001_accounts_outbox.sql",
-    "backend/go/migrations/account/0002_personal_accounts.sql", "backend/go/migrations/audit/0001_entries_inbox.sql",
-    "backend/go/migrations/audit/0002_principal_evidence.sql", "backend/go/migrations/identity/0001_principals_sessions_outbox.sql",
-    "backend/go/migrations/notes/0001_notes_receipts.sql", "backend/go/tests/identity_http_test.go",
-    "backend/go/tests/notes_test.go", "backend/go/tests/integration/postgres_test.go",
-    "backend/go/scripts/smoke.py", "backend/go/scripts/postgres_integration.py",
-    "backend/go/Makefile", "backend/go/.env.example", "backend/go/infra/local/compose.yaml",
+  "exclude": [
+    "**/.gitkeep"
+  ],
+  "sources": [
+    "backend/go/go.mod",
+    "backend/go/go.sum",
+    "backend/go/cmd/server",
+    "backend/go/cmd/migrate",
+    "backend/go/internal/health",
+    "backend/go/internal/server",
+    "backend/go/internal/architecture",
+    "backend/go/internal/identity",
+    "backend/go/internal/account",
+    "backend/go/internal/audit",
+    "backend/go/internal/notes",
+    "backend/go/internal/files",
+    "backend/go/pkg",
+    "backend/go/migrations",
+    "backend/go/tests",
+    "backend/go/scripts",
+    "backend/go/Makefile",
+    "backend/go/.env.example",
+    "backend/go/infra/local/compose.yaml"
+  ],
+  "sharedSources": [
     "contracts/fixtures/account/names.json"
   ],
+  "requiredFiles": [
+    "backend/go/go.mod",
+    "backend/go/go.sum",
+    "backend/go/cmd/server/main.go",
+    "backend/go/cmd/migrate/main.go",
+    "backend/go/internal/architecture/architecture_test.go",
+    "backend/go/pkg/config/config.go",
+    "backend/go/migrations/embed.go",
+    "backend/go/migrations/account/0001_accounts_outbox.sql",
+    "backend/go/migrations/account/0002_personal_accounts.sql",
+    "backend/go/migrations/audit/0001_entries_inbox.sql",
+    "backend/go/migrations/audit/0002_principal_evidence.sql",
+    "backend/go/migrations/identity/0001_principals_sessions_outbox.sql",
+    "backend/go/migrations/notes/0001_notes_receipts.sql",
+    "backend/go/tests/identity_http_test.go",
+    "backend/go/tests/notes_test.go",
+    "backend/go/tests/integration/postgres_test.go",
+    "backend/go/scripts/smoke.py",
+    "backend/go/scripts/postgres_integration.py",
+    "backend/go/Makefile",
+    "backend/go/.env.example",
+    "backend/go/infra/local/compose.yaml",
+    "contracts/fixtures/account/names.json",
+    "backend/go/internal/files/module.go",
+    "backend/go/migrations/files/0001_records_receipts_outbox.sql",
+    "backend/go/migrations/audit/0003_file_evidence.sql",
+    "backend/go/tests/files_test.go"
+  ],
   "overlays": [
-    {"source": "templates/overlays/go/Makefile", "destination": "backend/go/Makefile"},
-    {"source": "templates/overlays/go/.env.example", "destination": "backend/go/.env.example"}
+    {
+      "source": "templates/overlays/go/Makefile",
+      "destination": "backend/go/Makefile"
+    },
+    {
+      "source": "templates/overlays/go/.env.example",
+      "destination": "backend/go/.env.example"
+    }
   ]
 }

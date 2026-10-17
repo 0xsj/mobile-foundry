@@ -32,7 +32,7 @@ def request(base, method, path, body=None, token=None, headers=None):
         return response.status, response.headers, response.read()
 
 @contextlib.contextmanager
-def server(binary, fixture=False, database_url=None, crash=False, principal_id=IDENTITY, identity=False, forbidden=()):
+def server(binary, fixture=False, database_url=None, crash=False, principal_id=IDENTITY, identity=False, forbidden=(), files_directory=None):
     with socket.socket() as reservation:
         reservation.bind(("127.0.0.1", 0))
         port = reservation.getsockname()[1]
@@ -47,9 +47,11 @@ def server(binary, fixture=False, database_url=None, crash=False, principal_id=I
         environment.pop("AUDIT_DATABASE_URL")
         environment.pop("IDENTITY_DATABASE_URL")
         environment.pop("NOTES_DATABASE_URL")
+        environment.pop("FILES_DATABASE_URL", None)
     if fixture:
         environment.update(DEV_AUTH_TOKEN=TOKEN, DEV_PRINCIPAL_ID=principal_id)
-    with tempfile.TemporaryFile(mode="w+") as logs:
+    with tempfile.TemporaryDirectory(prefix="mobile-file-objects-") as object_temp, tempfile.TemporaryFile(mode="w+") as logs:
+        environment["FILES_DIRECTORY"] = files_directory or object_temp
         process = subprocess.Popen([str(binary)], cwd=ROOT, env=environment, stdout=logs, stderr=logs)
         base = f"http://127.0.0.1:{port}"
         try:

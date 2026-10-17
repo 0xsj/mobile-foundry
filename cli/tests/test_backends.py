@@ -56,6 +56,8 @@ class BackendTests(unittest.TestCase):
                 self.assertIn("name: go-" + platform + "-api", compose)
                 self.assertIn("POSTGRES_DB: app", compose)
                 self.assertIn("$(POSTGRES_PORT)/app", (project / "backend/go/Makefile").read_text())
+                self.assertIn("backend/go/.data/", (project / ".gitignore").read_text())
+                self.assertTrue((project / "backend/go/internal/files/module.go").is_file())
                 self.assertIn("go-dev:", (project / "Makefile").read_text())
                 self.assertIn("make go-integration-test", (project / "SETUP.md").read_text())
                 for relative in ("README.md", "SETUP.md", "mobile-foundry.json", "backend/go/README.md"):

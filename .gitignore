@@ -25,6 +25,9 @@ local.properties
 .cxx/
 .externalNativeBuild/
 
+# Local file-object storage
+backend/go/.data/
+
 # Shared generated output
 .cache/
 node_modules/

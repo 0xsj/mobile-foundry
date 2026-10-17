@@ -38,4 +38,24 @@ class AuthenticatedHTTPClient private constructor(private val client: HTTPClient
             throw error
         }
     }
+    override suspend fun requestBytes(method: HTTPMethod, path: String, options: RequestOptions): AppResult<BinaryEntity> {
+        currentCoroutineContext().ensureActive()
+        val token = session.accessToken(lease) ?: return Outcome.Err(SessionFailures.scopeChanged)
+        if (options.headers.keys.any { it.equals("authorization", true) })
+            return Outcome.Err(Failure.Invalid(FailureMeta("Authorization is owned by the session.", "session.authorization_override"), emptyMap()))
+        if (!token.matches(Regex("[A-Za-z0-9._~+/-]+=*")))
+            return Outcome.Err(Failure.Internal(FailureMeta("The access credential is not a Bearer token.", "session.invalid_access_token")))
+        val headers = LinkedHashMap(options.headers).apply { put("authorization", "Bearer $token") }
+        val forwarded = options.copy(headers = headers.toMap(), query = options.query.toList())
+        try {
+            val answer = client.requestBytes(method, path, forwarded)
+            currentCoroutineContext().ensureActive()
+            return if (session.isCurrent(lease)) answer else Outcome.Err(SessionFailures.scopeChanged)
+        } catch (error: Exception) {
+            currentCoroutineContext().ensureActive()
+            if (error is kotlinx.coroutines.CancellationException) throw error
+            if (!session.isCurrent(lease)) return Outcome.Err(SessionFailures.scopeChanged)
+            throw error
+        }
+    }
 }

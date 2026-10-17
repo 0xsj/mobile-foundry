@@ -15,6 +15,9 @@ import subprocess
 import tempfile
 import time
 import uuid
+import hashlib
+import urllib.request
+import urllib.error
 
 
 def main():
@@ -89,6 +92,20 @@ def main():
                 assert request(base,"PATCH",note,{"title":"Stale"},alex["access_token"],{"Idempotency-Key":str(uuid.uuid4()),"If-Match":'"1"'})[0] == 409
                 assert request(base,"DELETE",note,token=alex["access_token"],headers={"Idempotency-Key":str(uuid.uuid4()),"If-Match":'"2"'})[0] == 200
                 assert json.loads(request(base,"GET",path + "/note-receipts/" + key,token=alex["access_token"])[2]) == receipt
+                # Exercise the copied file module through authenticated raw bytes.
+                data = bytes([0, 255, 1, 128]); file_key = str(uuid.uuid4())
+                spec = {"name":"Generated media.bin", "content_type":"application/octet-stream", "byte_size":len(data), "sha256":hashlib.sha256(data).hexdigest()}
+                status, _, wire = request(base,"POST",path + "/files/uploads",spec,alex["access_token"],{"Idempotency-Key":file_key})
+                assert status == 201; pending = json.loads(wire); file = path + "/files/" + pending["file"]["id"]
+                assert json.loads(request(base,"GET","/v1/receipts/files/" + file_key + "?account_id=" + account,token=alex["access_token"])[2]) == pending
+                req = urllib.request.Request(base + file + "/content",data=data,method="PUT",headers={"Authorization":"Bearer " + alex["access_token"],"Content-Type":"application/octet-stream"})
+                with urllib.request.urlopen(req,timeout=10) as response: assert response.status == 200
+                assert request(base,"POST",file + "/complete",token=alex["access_token"],headers={"If-Match": '\"1\"',"Idempotency-Key":file_key + ".complete"})[0] == 200
+                req = urllib.request.Request(base + file + "/content",headers={"Authorization":"Bearer " + alex["access_token"]})
+                with urllib.request.urlopen(req,timeout=10) as response: assert response.read() == data
+                assert request(base,"GET",file + "/content",token=sam["access_token"])[0] == 403
+                assert request(base,"DELETE",file,token=alex["access_token"],headers={"If-Match": '\"2\"',"Idempotency-Key":file_key + ".delete"})[0] == 200
+                assert request(base,"GET",file + "/content",token=alex["access_token"])[0] == 404
                 status, _, wire = request(base,"POST","/v1/identity/renew",{"refresh_token":alex["refresh_token"]})
                 assert status == 200; renewed = json.loads(wire); private += [renewed["access_token"],renewed["refresh_token"]]
                 assert request(base,"GET",path,token=alex["access_token"])[0] == 401
@@ -105,7 +122,7 @@ def main():
                     os.killpg(process.pid, signal.SIGKILL); process.wait(); raise
                 logs.seek(0); text = logs.read()
                 assert all(secret not in text for secret in private), "credentials leaked in generated runner logs"
-    print("Generated Go acceptance: module identity, make runner, real auth/account isolation, Notes CRUD/CAS/receipts, renewal and sign-out passed")
+    print("Generated Go acceptance: module identity, make runner, real auth/account isolation, Notes CRUD/CAS/receipts, Files upload/download/deletion, renewal and sign-out passed")
 
 
 if __name__ == "__main__":

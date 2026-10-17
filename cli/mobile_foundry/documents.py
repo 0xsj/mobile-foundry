@@ -187,6 +187,8 @@ install dependencies, set up secrets or configure remote services.
 
 
 def append_backend_documents(destination, inputs, backend, native):
+    ignore = destination / ".gitignore"
+    ignore.write_text(ignore.read_text() + "\n# Private local object bytes\nbackend/go/.data/\n")
     tasks = {
         "go-dev": "dev", "go-build": "build", "go-check": "check", "go-test": "test", "go-smoke": "smoke",
         "go-db-up": "db-up", "go-db-down": "db-down", "go-db-check": "db-check", "go-migrate": "migrate",
@@ -203,8 +205,8 @@ def append_backend_documents(destination, inputs, backend, native):
 ## Go API
 
 Go module: `{backend.module}`. Requires Go {backend.profile['goVersion']}+.
-Selected modules: Health, Identity, Account, Audit and the replaceable Notes
-exemplar. Application handlers use consumer-owned ports; memory/PostgreSQL
+Selected modules: Health, Identity, Account, Audit, the replaceable Notes
+exemplar and Files. Application handlers use consumer-owned ports; memory/PostgreSQL
 adapters stay behind them. No source checkout, local replace directive or module
 workspace is needed. External dependencies are pinned in go.mod/go.sum.
 
@@ -220,8 +222,13 @@ make go-dev
 The development runner explicitly selects owned Identity, with memory storage.
 The bare binary defaults to deny authentication; set AUTH_MODE=identity when
 launching it directly. HTTP_ADDR defaults to 127.0.0.1:8080. Set a different port
-when another API is running. Memory records/sessions/receipts vanish on exit.
+when another API is running. Memory records/sessions/receipts and object bytes vanish on exit.
 Generation does not download modules; the first build may need network access.
+With PostgreSQL, FILES_DIRECTORY defaults to backend/go/.data/files when run
+through Make. Retain this private directory alongside the database; metadata and
+bytes are separate stores. FILES_DATABASE_URL optionally overrides DATABASE_URL.
+Uploads use authenticated API transfer with a 10 MiB bound; cloud object storage,
+background upload, processing and retention jobs are separate capabilities.
 Python 3.11+ runs the included smoke/integration scripts.
 
 Register a local user after startup (this example is a development fixture):

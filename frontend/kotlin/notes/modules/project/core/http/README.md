@@ -64,3 +64,28 @@ happens at presentation; private causes stay with diagnostic observers.
 ## Related
 
 [Health services](../services/README.md), [Kernel walkthrough](../kernel/README.md), and [Deadlines and cancellation](../../../../../../../notes/concepts/deadlines-and-owned-cancellation.md).
+
+## Files binary boundary — 2026-10-17
+
+Claim: an account-bound file reader/writer can share the existing expected-failure,
+HTTP and exact-session-lease policy while carrying immutable admitted binary bytes.
+Origin: Files slice; [the source](../../../../../project/core/http/src/main/kotlin/dev/mobilefoundry/http/HTTPTypes.kt) and [the behavior contract](../../../../../../../contracts/behavior/files-media.md).
+
+JSON and binary request bodies are mutually exclusive. Generic transports bound
+response buffering at 16 MiB; Files accepts 1 byte–10 MiB and verifies type/size/
+SHA-256 after download. Provider errors remain failures and cancellation retains
+native identity. Neither transport renews credentials or replays uploads. Swift
+Data uses value semantics; Kotlin binary bodies/results copy arrays on ownership
+boundaries. Binary responses decode problem JSON on HTTP failure.
+
+The catalog selects HTTPRemoteFilesRepository; its reader/writer interfaces can
+be replaced without camera/editor or provider SDK dependencies. Pending command
+input stays with its original account through this owner's renewal. A photo
+selected under an older scope generation cannot start a new account's upload.
+
+Verification: HTTP/session regressions, real Go raw-byte transfers and dropped
+request/completion receipt recovery passed on URLSession/OkHttp. Both catalogs
+build; each platform passes two file-owner cases. These observations do not
+establish photo-picker gestures, background transfers, durable pending input or
+cloud storage. Related: [object lifecycle reasoning](../../../../../../../backend/go/notes/patterns/metadata-and-object-lifecycles.md). Next: what extra ownership is needed when uploads
+must survive native process termination?

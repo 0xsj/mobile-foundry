@@ -18,7 +18,7 @@ class OkHttpTransport(client: OkHttpClient = OkHttpClient(), private val onDiagn
     override suspend fun send(request: PreparedRequest): AppResult<WireResponse> = suspendCancellableCoroutine { continuation ->
         val builder = Request.Builder().url(request.url)
         request.headers.forEach { (name, value) -> builder.header(name, value) }
-        val body = request.body?.toRequestBody("application/json".toMediaType()) ?: when (request.method) {
+        val body = request.body?.toRequestBody((request.headers["content-type"] ?: "application/octet-stream").toMediaType()) ?: when (request.method) {
             HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH -> ByteArray(0).toRequestBody(null)
             else -> null
         }
@@ -38,7 +38,20 @@ class OkHttpTransport(client: OkHttpClient = OkHttpClient(), private val onDiagn
                     if (!continuation.isActive) return
                     val headers = response.headers.names().associateWith { response.headers.values(it).joinToString(", ") }
                     try {
-                        val bytes = response.body.bytes()
+                        val output = java.io.ByteArrayOutputStream()
+                        response.body.byteStream().use { input ->
+                            val buffer = ByteArray(8192)
+                            while (true) {
+                                val count = input.read(buffer)
+                                if (count < 0) break
+                                if (output.size() + count > 16 * 1024 * 1024) {
+                                    continuation.resume(Outcome.Err(internalFailure("http.response_too_large", "The response exceeds the byte limit.")))
+                                    return
+                                }
+                                output.write(buffer, 0, count)
+                            }
+                        }
+                        val bytes = output.toByteArray()
                         continuation.resume(Outcome.Ok(WireResponse(response.code, headers, bytes)))
                     } catch (error: IOException) {
                         if (!continuation.isActive) return

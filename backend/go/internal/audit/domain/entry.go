@@ -17,6 +17,7 @@ type Evidence struct {
 	PrincipalID                 id.ID  `json:",omitempty"`
 	SessionID                   id.ID  `json:",omitempty"`
 	Reason                      string `json:",omitempty"`
+	FileID                      id.ID  `json:",omitempty"`
 }
 type Entry struct {
 	evidence   Evidence
@@ -26,8 +27,12 @@ type Entry struct {
 func New(e Evidence, now time.Time) (Entry, error) {
 	validScope := false
 	if e.AccountID.Valid() && e.PrincipalID == "" && e.SessionID == "" && e.Reason == "" {
-		validScope = (e.Action == "account.created" && e.Version == 1) || (e.Action == "account.renamed" && e.Version >= 2)
-	} else if e.AccountID == "" && e.PrincipalID.Valid() && e.ActorID == e.PrincipalID {
+		if e.FileID == "" {
+			validScope = (e.Action == "account.created" && e.Version == 1) || (e.Action == "account.renamed" && e.Version >= 2)
+		} else if e.FileID.Valid() {
+			validScope = (e.Action == "files.upload_requested" && e.Version == 1) || (e.Action == "files.upload_completed" && e.Version == 2) || (e.Action == "files.deleted" && (e.Version == 2 || e.Version == 3))
+		}
+	} else if e.AccountID == "" && e.FileID == "" && e.PrincipalID.Valid() && e.ActorID == e.PrincipalID {
 		switch e.Action {
 		case "identity.principal.registered":
 			validScope = e.SessionID == "" && e.Version == 1 && e.Reason == ""

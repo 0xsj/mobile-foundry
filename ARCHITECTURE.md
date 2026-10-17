@@ -528,3 +528,20 @@ within the installed app container. Later slices add separate account partitions
 and in-process observation streams; migrations, outbox/reconciliation and remote
 synchronization remain future work. Corrupt or newer stores are refused rather
 than reset automatically.
+
+## Files and media lifecycle
+
+The [Files contract](contracts/behavior/files-media.md) separates canonical owned
+metadata from immutable object bytes. Named commands and consumer-owned ports
+admit uploads, verify content before availability, enforce versions and commit
+keyed receipts/facts atomically. Memory/PostgreSQL metadata and memory/private-
+directory Objects are implemented. Deletion commits a tombstone before external
+cleanup, and same-key retries preserve the logical result while repeating cleanup.
+The stores are not one transaction; orphan retention remains separate work.
+
+Files asks Account for current owner access and publishes selected lifecycle facts
+to Audit's receiving adapter. No domain imports another module's implementation.
+Native RemoteFilesReader/Writer ports use binary-capable session-bound HTTP; the
+Go session catalogs reuse photo selection/decoding and the existing image editor.
+They retain scoped retry input in memory only. CLI 0.5.0 includes Files in the full
+Go backend; generated native/backend auth/media composition remains unselected.

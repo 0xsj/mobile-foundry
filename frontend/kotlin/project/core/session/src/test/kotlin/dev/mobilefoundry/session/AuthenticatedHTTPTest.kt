@@ -105,4 +105,15 @@ class AuthenticatedHTTPTest {
             val request = server.takeRequest(2, java.util.concurrent.TimeUnit.SECONDS)!!; assertEquals("Bearer access.secret", request.headers["authorization"]); assertEquals("/api/notes", request.url.encodedPath); assertEquals(1, server.requestCount)
         }
     }
+    @Test fun binaryRequestsKeepLeaseAndAuthorizationOwnership() = runTest {
+        val (session, _, _) = signedIn(); val transport = RecordingTransport(); val http = client(session, transport)
+        val bytes = byteArrayOf(0, -1, -128)
+        http.requestEntity(HTTPMethod.PUT, "files/content", RequestOptions(binaryBody = BinaryBody(bytes, "image/png")))
+        assertArrayEquals(bytes, transport.requests.single().body)
+        assertEquals("Bearer access.secret", transport.requests.single().headers["authorization"])
+        session.renew()!!.join()
+        assertEquals(Outcome.Err(SessionFailures.scopeChanged), http.requestBytes(HTTPMethod.GET, "files/content"))
+        assertEquals(1, transport.requests.size); session.shutdown()
+    }
+
 }

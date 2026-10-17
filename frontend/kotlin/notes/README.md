@@ -4,6 +4,13 @@ Follow the Android implementation through source walkthroughs, with separate
 notes for Kotlin mechanics and framework behavior. This notebook follows
 [the shared workflow](../../../docs/NOTES.md) and Bento's categories.
 
+Files follow-up, 2026-10-17: read [Files construction](../../../docs/blueprints/files-media.md), then the HTTP/Services module notes and
+catalog walkthrough. Binary bodies retain byte ownership and the exact session
+lease. Gallery upload and downloaded editor preview build; real Go transfers and
+receipt recovery pass. Two file-owner cases verify retry input through renewal
+and stale picker results after account replacement. System picker gestures,
+background uploads and generated connected products remain separate.
+
 ## Reading order
 
 1. [Gradle and Android bootstrap](substrate/gradle-and-android-bootstrap.md).

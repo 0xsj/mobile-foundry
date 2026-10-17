@@ -1753,3 +1753,19 @@ memory API. HTTPS remains the adapter default; certificate trust is unchanged.
 Host OkHttp acceptance supplies two-principal/reuse coverage separately. CLI
 extraction, remote data/sync, physical hardware/TLS deployment and Android process
 relaunch acceptance remain pending. See [checkpoint reasoning](../../../../../../notes/patterns/deployment-authorities-and-rotation-checkpoints.md).
+
+## Account file catalog — 2026-10-17
+
+[The model](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/files/RemoteFilesCatalogModel.kt) owns selected-account files, bounded photo bytes, exact retry keys and editor
+preview. Its retry history is partitioned by SessionScope for this owner only;
+renewal changes the client lease without retargeting the saved command. New
+picker results carry a generation ticket so replaced scopes cannot receive them.
+A response is applied only after cancellation/generation checks. Downloads pass
+through the existing bounded photo decoder before entering the GPU editor.
+
+[The owner tests](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/files/RemoteFilesCatalogModelTest.kt) exercises retained bytes/key through renewal and stale photo-selection input
+under a replacement account: two cases pass on this platform. The catalog builds,
+and real HTTP byte/receipt recovery is verified separately by the native Go
+runner. System-picker gestures and physical-device performance were not exercised.
+The editor's adjustments remain local previews, not uploaded rendered exports.
+Read [Files construction](../../../../../../docs/blueprints/files-media.md) for remaining object/metadata and native-lifetime limits.

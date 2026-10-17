@@ -35,12 +35,17 @@ internal object RequestPreparation {
             unsafe(path, false) || !validSegments(path)) return refused("Supply an API-relative path without traversal or invalid encoding.")
         val url = base.newBuilder().addEncodedPathSegments(path.removePrefix("/"))
         options.query.forEach { url.addQueryParameter(it.name, it.value) }
-        val body = options.body?.let {
+        if (options.body != null && options.binaryBody != null) return refused("Supply one request body representation.")
+        var body = options.body?.let {
             if (method == HTTPMethod.GET || method == HTTPMethod.HEAD || it !is JsonObject || !supportedJSON(it)) {
                 return refused("Request bodies must be JSON objects on body-capable methods.")
             }
             try { Json.encodeToString(JsonElement.serializer(), it).toByteArray(Charsets.UTF_8) }
             catch (_: SerializationException) { return refused("The request body is not valid JSON.") }
+        }
+        options.binaryBody?.let {
+            if (method == HTTPMethod.GET || method == HTTPMethod.HEAD || it.bytes.size > 10 * 1024 * 1024 || !Regex("[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+").matches(it.contentType)) return refused("The binary request body is invalid or too large.")
+            body = it.bytes
         }
         val headers = linkedMapOf<String, String>()
         for (layer in listOf(commonHeaders, options.headers)) {
@@ -57,7 +62,7 @@ internal object RequestPreparation {
         }
         headers["accept"] = "application/json, application/problem+json"
         headers.remove("content-type")
-        if (body != null) headers["content-type"] = "application/json"
+        if (body != null) headers["content-type"] = options.binaryBody?.contentType ?: "application/json"
         return Outcome.Ok(PreparedRequest(url.build(), method, headers, body))
     }
 

@@ -28,6 +28,83 @@ event sourcing or separate processes. A named handler is useful when it makes
 workflow ownership clear; a facade should delegate rather than absorb every rule.
 The health example needs only a query because there is no mutation or aggregate.
 
+## Bento conventions comparison — source inspection, 2026-10-17
+
+Claim: the implemented backend follows Bento's main ownership boundaries, but
+its newer modules do not yet follow every module-authoring and HTTP convention.
+
+Origin/evidence: compared Bento's
+[conventions](../../../../../bento/backend/CONVENTIONS.md) and
+[module-authoring rules](../../../../../bento/backend/MODULE-AUTHORING.md)
+with current Go source. This is a bounded source review, not a complete audit
+of every operation or a fresh persistence/runtime acceptance run.
+
+The matching pattern is visible in [Notes composition](../../internal/notes/module.go),
+its [consumer-owned access port](../../internal/notes/app/ports.go) and
+[capability client](../../internal/notes/infra/capabilities/account.go): application
+code requires behavior, while the module root selects providers. The
+[Audit receiver](../../internal/audit/infra/events/consumer.go) translates
+integration messages into its own inputs without importing Account's implementation.
+Go uses ordinary error returns. The
+[PostgreSQL classifier](../../pkg/persistence/postgres/pool.go) preserves causes
+and distinguishes recognized transient errors from other internal failures.
+
+Concrete differences worth closing before copying these patterns into more modules:
+
+- [Notes commands](../../internal/notes/app/command/write.go) combine create,
+  update and delete in one `Write` handler, and
+  [queries](../../internal/notes/app/query/read.go) combine several operations in
+  `Read`. Bento prefers a named handler with `Handle` per operation and named
+  inputs when several business fields are needed.
+- [Notes domain values](../../internal/notes/domain/note.go) have public fields
+  and JSON tags, and own not-found/version/command conflicts. Bento places
+  use-case and port conditions in application errors, and keeps aggregate state
+  private with detached snapshots. Notes currently contains scalar values, so
+  the public fields do not themselves establish a shared mutable alias defect.
+- [Account transport](../../internal/account/transport/http/v1/handler.go)
+  rejects idempotency keys for create/rename. Bento supports optional keys and
+  atomic replay/receipts. [Notes transport](../../internal/notes/transport/http/v1/handler.go)
+  has atomic receipt semantics behind its store, but requires a UUID key and
+  serves account-scoped receipt routes instead of Bento's shared receipt route.
+  Its lists expose UUID `after`/`next_after` positions instead of opaque
+  transport-owned cursors. These are public contract differences; changing them
+  requires coordinated native clients/contracts, not just moving Go files.
+- The shared PostgreSQL pool fixes connection count at eight and server statement/
+  lock timeouts at five/two seconds. Bento specifies configurable pool sizing,
+  thirty-minute idle retention and caller-context statement deadlines, with
+  special bounded lock waits. Matching dependency direction does not establish
+  matching operational defaults.
+
+Example: a future `RenameNote.Handle(RenameNoteInput)` can retain the same atomic
+store contract while separating its workflow and application errors from the
+other operations. This is a proposed cleanup, not an implemented handler.
+
+Verification: `make architecture-check` passed on 2026-10-17. It enforces import
+direction and representative forbidden dependencies, including tests; it does
+not check handler granularity, SQL semantics, cursor formats or error ownership.
+Documentation links are checked separately with root `make notes-check`.
+Next reading question: which differences are deliberate product contracts, and
+which should be normalized before another module copies Notes?
+
+Follow-up source trace, 2026-10-17: module communication already uses the two
+implemented mechanisms described by Bento. Notes and Audit ask Account for a
+current access decision through their own application ports and `account.access.v1`.
+The [local invoker](../../pkg/capability/capability.go) admits JSON boundary
+values, checks allowed callers, supplies a two-second context budget bounded by
+the parent context, and performs no automatic retry. Cancellation is cooperative;
+this context budget does not forcibly interrupt a provider ignoring its context.
+Account and Identity instead communicate completed facts to Audit through
+producer mapping, committed outbox records, delivery and Audit's receiving
+adapters. The [Audit PostgreSQL store](../../internal/audit/infra/postgres/store.go)
+commits evidence and its inbox marker together. Account does not invoke Audit
+directly. Both mechanisms currently run in-process; remote capability routing,
+broker delivery adapters and Broadcast/Realtime remain unimplemented. Versioned
+contracts and ports provide extension points, not evidence that those transports
+already work. Multi-module workflows need an application coordinator with
+explicit intermediate states; they cannot assume one transaction across stores.
+
+## Port and adapter flow
+
 Conceptual:
 
 ```text

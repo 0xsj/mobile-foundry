@@ -50,7 +50,7 @@ help:
 	@echo 'make observation-test Run local repository observation and reader unit checks'
 	@echo 'make observation-ui-test Run Android live readers and account lifecycle checks'
 	@echo 'make session-test    Run Swift and Kotlin session lifecycle tests'
-	@echo 'make go-native-test  Verify native sessions/Notes receipts against an owned Go API'
+	@echo 'make go-native-test  Verify native sessions/Notes/Files against an owned Go API'
 	@echo 'make go-native-device-test Add iOS/Android Go catalog and native-vault checks'
 	@echo 'make session-ui-test Run Android Keystore and session UI tests on a device'
 	@echo 'make account-test    Run session/HTTP, account storage and feature unit checks'

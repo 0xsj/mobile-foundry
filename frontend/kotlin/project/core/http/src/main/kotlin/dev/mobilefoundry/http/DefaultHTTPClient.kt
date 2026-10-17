@@ -32,6 +32,32 @@ class DefaultHTTPClient private constructor(
         currentCoroutineContext().ensureActive()
         return result
     }
+    override suspend fun requestBytes(method: HTTPMethod, path: String, options: RequestOptions): AppResult<BinaryEntity> {
+        currentCoroutineContext().ensureActive()
+        val budget = options.timeoutMilliseconds ?: timeoutMilliseconds
+        RequestPreparation.timeout(budget)?.let { return Outcome.Err(it) }
+        val timeout = Outcome.Err(Failure.Timeout(FailureMeta("The request exceeded its time budget.", correlationId = options.correlationId)))
+        if (budget == 0L) return timeout
+        val result = withTimeoutOrNull(budget) { exchangeBytes(method, path, options) } ?: timeout
+        currentCoroutineContext().ensureActive()
+        return result
+    }
+    private suspend fun exchangeBytes(method: HTTPMethod, path: String, options: RequestOptions): AppResult<BinaryEntity> {
+        val prepared = when (val p = RequestPreparation.prepare(base, method, path, options, headers)) { is Outcome.Ok -> p.value; is Outcome.Err -> return p }
+        val binaryRequest = PreparedRequest(prepared.url, prepared.method, prepared.headers + ("accept" to "application/octet-stream, */*;q=0.8"), prepared.body)
+        currentCoroutineContext().ensureActive()
+        val response = when (val r = transport.send(binaryRequest)) { is Outcome.Ok -> r.value; is Outcome.Err -> return r }
+        currentCoroutineContext().ensureActive()
+        val meta = ProblemDecoder.metadata(response, options.correlationId)
+        if (response.status !in 100..599) return Outcome.Err(internalFailure("http.unreadable_response", "The response is not readable."))
+        if (response.status !in 200..299) {
+            val body = try { response.body?.let { Json.parseToJsonElement(it.toString(Charsets.UTF_8)) } } catch (_: SerializationException) { null }
+            return Outcome.Err(ProblemDecoder.decode(response, body, options.correlationId, now()))
+        }
+        val bytes = response.body ?: return Outcome.Err(internalFailure("http.invalid_binary_response", "The file response is missing."))
+        if (bytes.size > 10 * 1024 * 1024) return Outcome.Err(internalFailure("http.invalid_binary_response", "The file response is too large."))
+        return Outcome.Ok(BinaryEntity(bytes, response.headers.header("content-type"), meta))
+    }
     private suspend fun exchange(method: HTTPMethod, path: String, options: RequestOptions): AppResult<Entity> {
         val prepared = when (val preparation = RequestPreparation.prepare(base, method, path, options, headers)) {
             is Outcome.Ok -> preparation.value

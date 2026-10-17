@@ -34,7 +34,7 @@ production guarantee for the whole catalog.
 | Swift/Kotlin Physics | **Catalog capability verified**: pure 2D modules, native court/control consumers, five numeric cases per platform and five total native interactions. | Register a deliberate CLI feature combination and independently verify generated output before recommending physics-enabled starters. |
 | Swift/Kotlin Go session | **Catalog integration verified**: deployment-bound authority, real HTTP/account scope, rotation checkpoints, discovery/switching and actual native-vault workflows. | Independently generated connected products remain required; Android process relaunch is not claimed from route restoration. |
 | Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, CAS and receipt recovery verified against Go through URLSession/OkHttp; catalog owners/controls build and pass recovery tests; iOS Notes CRUD/Keychain process relaunch passes. | Select/extract a connected CLI combination and independently verify generated products. Durable native queues/sync remain optional future capabilities; Android Notes UI gestures are not established by host tests. |
-| Go backend | **Standalone starter ready** through CLI 0.4.0: independently generated/renamed API, real auth/account/Notes flows, race checks and PostgreSQL migration/crash recovery. | Ready to start Go APIs. Generated native session/account/remote-data composition needs its own connected acceptance; auth recovery, roles and deployment remain deliberate product work. |
+| Go backend | **Standalone starter ready** through CLI 0.5.0: independently generated API, auth/account/Notes/Files flows, race checks and PostgreSQL migration/crash recovery. | Ready to start Go APIs. Generated native session/account/remote-data composition needs its own connected acceptance; auth recovery, roles and deployment remain deliberate product work. |
 | Supabase integration | Local development stack present; native provider adapters/policies unconnected. | Real auth/account/remote Notes adapters and policies, then connected starter verification. |
 | Firebase integration | Local emulator setup present; native provider adapters/rules unconnected. | Real auth/account/remote data adapters and rules, then connected starter verification. |
 
@@ -56,6 +56,22 @@ four negative inventory probes covering missing dependencies/fixtures and an
 escaping path. See the [Swift product handoff](../frontend/swift/notes/modules/apps/ProductApp/README.md)
 and [Kotlin product handoff](../frontend/kotlin/notes/modules/project/product/README.md).
 Those initial runs used this checkout and did not establish standalone readiness.
+
+## Files-enabled Go acceptance — 2026-10-17
+
+CLI 0.5.0 includes Files in the full Go backend. The independent media-final
+output under /private/tmp/mobile-files-starter-hk73dwex uses
+`github.com/example/media-final/backend` and passes formatting/import/vet/build,
+race/smoke, disposable PostgreSQL 14.24 and API crash recovery, plus its generated
+Make-runner auth/Files upload/download/deletion/receipt workflow. The short-module
+media-api output passes memory/race and runner checks too. Private local object
+storage is ignored by generated git configuration and must be retained with the DB.
+
+Both native catalogs build and their real HTTP Files adapters pass URLSession/
+OkHttp receipt recovery; each platform's two owner tests pass. These catalog
+screens are not part of generated native/Go auth/media composition. Cloud object
+storage, background transfer, long-term cleanup and physical-device performance
+remain separate work. Read [Files construction](blueprints/files-media.md).
 
 ## Go backend acceptance completed
 

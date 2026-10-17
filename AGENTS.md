@@ -13,6 +13,13 @@ Remote Notes implements [commands and receipts](contracts/behavior/remote-notes.
 Preserve the original command/input/scope across uncertain acknowledgement. Commit
 receipt and record changes atomically, check replay before CAS/existence, and keep
 local unversioned CRUD separate from remote receipt/version guarantees.
+Account Files/Media implements [file lifecycle](contracts/behavior/files-media.md).
+Keep private domain state and named command/query handlers; metadata, receipts
+and required facts commit atomically. Objects remains an application-owned port.
+Verify immutable content against declared size/digest; commit inaccessibility
+before external deletion and preserve the same command on cleanup uncertainty.
+Native binary requests stay bound to the exact session lease. Catalog retry
+bytes are scoped, bounded and ephemeral; they do not establish durable sync.
 Identity/session lifecycle implements [session behavior](contracts/behavior/session.md).
 Keep credential storage behind its port, gate work with current scope leases,
 and distinguish the catalog demo authority from real authentication.

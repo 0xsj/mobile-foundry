@@ -93,6 +93,7 @@ struct GoSessionCatalogView: View {
     if let lease = controller.lease {
       directoryCard(model, controller)
       RemoteNotesCatalogCard(model:model.notes).id(lease.scope)
+      RemoteFilesCatalogCard(model:model.files).id(lease.scope)
     }
   }
   private func sessionCard(_ model: GoSessionCatalogModel, _ controller: SessionController)

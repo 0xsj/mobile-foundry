@@ -17,6 +17,11 @@ versioned tool or dependency findings in `substrate`.
 3. [Go interfaces, errors and contexts](language/interfaces-errors-and-contexts.md).
 4. [Assembly and cleanup](modules/pkg/module/README.md), then
    [ports and composition](patterns/ports-and-module-composition.md).
+   Its 2026-10-17 Bento comparison records matching boundaries and remaining
+   handler/error, HTTP and PostgreSQL configuration differences. Architecture
+   checks passed; this comparison is source inspection, not fresh runtime acceptance.
+   Its follow-up traces the implemented access-capability and Account/Identity
+   fact-to-Audit paths, and distinguishes local wiring from future transports.
    Its integration-events section traces the proposed Identity/Account → Audit
    seam against Bento's actual producer, receiving and outbox/inbox design.
    The client-realtime section separates durable delivery, ephemeral broadcast
@@ -50,6 +55,27 @@ then [shared acknowledgement recovery](../../../notes/patterns/command-receipts-
 Memory/PostgreSQL conformance, atomic receipt-finalization rollback, CAS/replay
 and killed API recovery now pass. Notes stays a replaceable exemplar; native
 durable outboxes, Notes facts/live hints and backend extraction remain separate.
+
+15. [Selecting domains for mobile products](patterns/mobile-capability-selection.md)
+    separates candidate installation/notification/media/purchase ownership from
+    native lifecycle and per-domain synchronization. This is proposed selection
+    guidance from 2026-10-17, not implemented capability coverage.
+
+16. [Files lifecycle](modules/internal/files/README.md), then
+    [metadata and object lifecycles](patterns/metadata-and-object-lifecycles.md).
+    Trace replay/CAS/outbox atomicity separately from immutable bytes and deletion
+    cleanup. The native catalogs use real binary HTTP; cloud storage is separate.
+
+## Files follow-up — 2026-10-17
+
+Files memory/PostgreSQL conformance and forced receipt/outbox rollback pass.
+Private-directory immutable writes/reopen and compiled PostgreSQL API SIGKILL
+recovery pass on isolated local PostgreSQL 14.24. File facts reach Audit without
+foreign implementation imports. Native URLSession/OkHttp transfers and receipt
+recovery pass; both catalogs build and each platform passes two file-owner tests.
+CLI 0.5.0's media-final output passes independent checks/race/smoke, PostgreSQL
+recovery and generated Make-runner auth/Files acceptance. Cloud adapters,
+background transfer, retention jobs and generated native connectivity remain open.
 
 ## Current coverage — 2026-10-13
 
@@ -105,7 +131,9 @@ Read [the cross-platform checkpoint pattern](../../../notes/patterns/deployment-
 These new native checks use an owned memory API; they do not replace PostgreSQL
 recovery evidence or establish a generated connected profile.
 
-Remote routing, Realtime, remote Notes and backend CLI generation remain pending.
-Next: remote account data/receipts and independently generated setup. Database failover, role isolation,
+Remote routing, Realtime and a generated connected native profile remain pending.
+Remote Notes and standalone Go CLI generation are implemented as described above.
+Next: close the documented convention gaps and verify generated native/backend wiring.
+Database failover, role isolation,
 operational replay/retention and actual network-cut commit uncertainty remain
 unverified. Documentation checks validate links and mirrored paths separately.

@@ -80,6 +80,7 @@ def main():
         environment.pop("AUDIT_DATABASE_URL")
         environment.pop("IDENTITY_DATABASE_URL")
         environment.pop("NOTES_DATABASE_URL")
+        environment.pop("FILES_DATABASE_URL", None)
         with tempfile.TemporaryDirectory(prefix="mobile-foundry-pg-") as temporary:
             binary = Path(temporary) / "server"
             run("go", "build", "-o", str(binary), "./cmd/server", cwd=ROOT)
@@ -133,7 +134,40 @@ def main():
                 assert request(base, "GET", path, token=TOKEN)[0] == 403
                 assert request(base, "GET", path + "/audit", token=TOKEN)[0] == 403
             identity_processes(binary, url, psql)
+            files_processes(binary, url, str(Path(temporary) / "objects"))
         print("PostgreSQL integration: schema guards, atomic writes, CAS, leases, inbox replay, cursor isolation and process recovery passed")
+
+def files_processes(binary, url, directory):
+    import hashlib
+    import urllib.request
+    data = b"private media bytes\x00\xff"
+    name = "private-photo.bin"
+    def raw(base, path, method="GET", body=None):
+        req = urllib.request.Request(base + path, data=body, method=method,
+            headers={"Authorization": "Bearer " + TOKEN, "Content-Type": "application/octet-stream"})
+        with urllib.request.urlopen(req, timeout=10) as response:
+            return response.status, response.read()
+    with server(binary, fixture=True, database_url=url, crash=True, files_directory=directory, forbidden=(name,)) as base:
+        status, _, wire = request(base, "POST", "/v1/accounts", {"name": "Media restart"}, TOKEN)
+        assert status == 201; account = json.loads(wire)["id"]
+        path = "/v1/accounts/" + account + "/files"
+        body = {"name": name, "content_type": "application/octet-stream", "byte_size": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+        status, _, wire = request(base, "POST", path + "/uploads", body, TOKEN, {"Idempotency-Key": "restart.request"})
+        assert status == 201; pending = json.loads(wire); target = path + "/" + pending["file"]["id"]
+        assert raw(base, target + "/content", "PUT", data)[0] == 200
+    with server(binary, fixture=True, database_url=url, crash=True, files_directory=directory, forbidden=(name,)) as base:
+        receipt = "/v1/receipts/files/restart.request?account_id=" + account
+        assert json.loads(request(base, "GET", receipt, token=TOKEN)[2]) == pending
+        status, _, wire = request(base, "POST", target + "/complete", token=TOKEN, headers={"If-Match": '\"1\"', "Idempotency-Key": "restart.complete"})
+        assert status == 200; completed = json.loads(wire)
+        assert raw(base, target + "/content")[1] == data
+    with server(binary, fixture=True, database_url=url, files_directory=directory, forbidden=(name,)) as base:
+        assert raw(base, target + "/content")[1] == data
+        assert json.loads(request(base, "POST", target + "/complete", token=TOKEN, headers={"If-Match": '\"1\"', "Idempotency-Key": "restart.complete"})[2]) == completed
+        status, _, _ = request(base, "DELETE", target, token=TOKEN, headers={"If-Match": '\"2\"', "Idempotency-Key": "restart.delete"})
+        assert status == 200
+        assert request(base, "GET", target + "/content", token=TOKEN)[0] == 404
+    print("Files PostgreSQL: pending content, completion, receipts and private bytes survive API SIGKILL; deletion closes access")
 
 def identity_processes(binary, url, psql):
     password = "private process passphrase"

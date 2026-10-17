@@ -20,6 +20,7 @@ type Runtime struct {
 	Storage, AccountDatabaseURL, AuditDatabaseURL string
 	Authentication, IdentityDatabaseURL           string
 	NotesDatabaseURL                              string
+	FilesDatabaseURL, FilesDirectory              string
 }
 
 // Runtime may contain credentials; formatting it never prints the snapshot.
@@ -50,6 +51,11 @@ func Load(source env.Source) (Runtime, error) {
 		configuration.AuditDatabaseURL = source.String("AUDIT_DATABASE_URL", common)
 		configuration.IdentityDatabaseURL = source.String("IDENTITY_DATABASE_URL", common)
 		configuration.NotesDatabaseURL = source.String("NOTES_DATABASE_URL", common)
+		configuration.FilesDatabaseURL = source.String("FILES_DATABASE_URL", common)
+		configuration.FilesDirectory = source.String("FILES_DIRECTORY", ".data/files")
+		if configuration.FilesDatabaseURL == "" || configuration.FilesDirectory == "" {
+			return Runtime{}, invalid("postgres files require FILES_DATABASE_URL or DATABASE_URL and a nonempty FILES_DIRECTORY")
+		}
 		if configuration.NotesDatabaseURL == "" {
 			return Runtime{}, invalid("postgres storage requires NOTES_DATABASE_URL or DATABASE_URL")
 		}

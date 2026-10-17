@@ -36,9 +36,11 @@ def main():
             run("./gradlew", ":core:session:testDebugUnitTest", "--tests", "dev.mobilefoundry.session.GoNativeSessionTest", cwd=ROOT / "frontend/kotlin/project", env=environment)
             run("swift", "test", "--package-path", "frontend/swift/packages/FoundryServices", "--filter", "nativeGoNotesReceiptsRecoverLostAcknowledgementAndGuardVersions", env=environment)
             run("./gradlew", ":core:services:test", "--tests", "dev.mobilefoundry.services.GoNativeNotesTest", cwd=ROOT / "frontend/kotlin/project", env=environment)
+            run("swift", "test", "--package-path", "frontend/swift/packages/FoundryServices", "--filter", "nativeGoFilesBinaryTransferAndReceiptRecovery", env=environment)
+            run("./gradlew", ":core:services:test", "--tests", "dev.mobilefoundry.services.GoNativeFilesTest", cwd=ROOT / "frontend/kotlin/project", env=environment)
             if arguments.devices or arguments.android_device_only or arguments.ios_device_only:
                 device_tests(base, environment, Path(temporary), run_ios=not arguments.android_device_only,run_android=not arguments.ios_device_only)
-    print("Native Go acceptance: sessions/accounts and Notes CRUD, version conflicts, receipt recovery and replay passed on URLSession/OkHttp")
+    print("Native Go acceptance: sessions/accounts, Notes CRUD/CAS and Files binary transfers/receipt recovery passed on URLSession/OkHttp")
 
 def device_tests(base, environment, temporary, run_ios=True,run_android=True):
     # These accounts and workspaces exist only in this owned memory API.

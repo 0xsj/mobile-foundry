@@ -1,6 +1,6 @@
 # Generate a Go starter
 
-Status: standalone backend ready, CLI 0.4.0, 2026-10-13. Connected native catalog
+Status: standalone backend ready, CLI 0.5.0, Files follow-up 2026-10-17. Connected native catalog
 behavior is verified separately; generated native auth/data UI remains the next
 capability.
 
@@ -103,3 +103,8 @@ location is an acceptance utility, not a dependency of the output. Read
 [verification reasoning](../../notes/techniques/go-source-copy-verification.md),
 [behavior](../../contracts/behavior/go-starter.md), and
 [readiness](../STARTER-READINESS.md).
+
+Files follow-up: the full backend now includes Files, with memory/PostgreSQL
+metadata and memory/private-directory object bytes. Read
+[Files setup and current acceptance](files-media.md). Retain FILES_DIRECTORY with
+the database; generated native shells still do not compose authenticated media UI.

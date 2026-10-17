@@ -119,3 +119,17 @@ private actor GateTransport: HTTPTransport {
     task.cancel(); await transport.release()
     do { _ = try await task.value; Issue.record("Expected cancellation") } catch is CancellationError {}
 }
+
+@Test @MainActor func binaryRequestsKeepLeaseAndAuthorizationOwnership() async throws {
+    let (session, _, _) = await signedIn(); let lease = try #require(session.lease)
+    let transport = RecordingTransport()
+    let client = try AuthenticatedHTTPClient.create(baseURL: "https://example.test", transport: transport, session: session, lease: lease).get()
+    let bytes = Data([0, 255, 128])
+    _ = try await client.requestEntity(.PUT, path: "files/content", options: .init(binaryBody: BinaryBody(bytes, contentType: "image/png")))
+    let requests = await transport.requests
+    #expect(requests.count == 1 && requests[0].body == bytes && requests[0].headers["authorization"] == "Bearer access.secret")
+    _ = await session.renew()?.value
+    if case .failure(let error) = try await client.requestBytes(.GET, path: "files/content") { #expect(error == SessionFailures.scopeChanged) } else { Issue.record("Old binary lease admitted") }
+    #expect(await transport.requests.count == 1)
+    session.shutdown()
+}

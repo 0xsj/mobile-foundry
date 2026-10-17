@@ -10,6 +10,9 @@ import okhttp3.HttpUrl
 
 enum class HTTPMethod { GET, HEAD, POST, PUT, PATCH, DELETE }
 data class QueryItem(val name: String, val value: String)
+class BinaryBody(bytes: ByteArray, val contentType: String) { private val data = bytes.copyOf(); val bytes get() = data.copyOf() }
+class BinaryEntity(bytes: ByteArray, val contentType: String?, val metadata: ResponseMetadata) { private val data = bytes.copyOf(); val bytes get() = data.copyOf() }
+
 data class RequestOptions(
     val timeoutMilliseconds: Long? = null,
     val correlationId: String? = null,
@@ -18,6 +21,7 @@ data class RequestOptions(
     val body: JsonElement? = null,
     val ifMatch: String? = null,
     val idempotencyKey: String? = null,
+    val binaryBody: BinaryBody? = null,
 )
 
 class PreparedRequest(val url: HttpUrl, val method: HTTPMethod, headers: Map<String, String>, body: ByteArray? = null) {
@@ -40,6 +44,7 @@ data class Entity(val body: JsonElement, val metadata: ResponseMetadata)
 fun interface HTTPTransport { suspend fun send(request: PreparedRequest): AppResult<WireResponse> }
 
 interface HTTPClient {
+    suspend fun requestBytes(method: HTTPMethod, path: String, options: RequestOptions = RequestOptions()): AppResult<BinaryEntity> = dev.mobilefoundry.kernel.Outcome.Err(internalFailure("http.binary_unsupported", "This client does not support binary responses."))
     suspend fun requestEntity(method: HTTPMethod, path: String, options: RequestOptions = RequestOptions()): AppResult<Entity>
     suspend fun request(method: HTTPMethod, path: String, options: RequestOptions = RequestOptions()): AppResult<JsonElement> =
         requestEntity(method, path, options).map { it.body }

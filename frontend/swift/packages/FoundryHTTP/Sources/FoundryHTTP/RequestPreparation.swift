@@ -51,11 +51,17 @@ enum RequestPreparation {
         if !options.query.isEmpty { parts.queryItems = options.query.map { URLQueryItem(name: $0.name, value: $0.value) } }
         guard let url = parts.url else { return refused("The request URL is invalid.") }
 
+        guard options.body == nil || options.binaryBody == nil else { return refused("Supply one request body representation.") }
         var body: Data?
         if let supplied = options.body {
             guard method != .GET, method != .HEAD, case .object = supplied else { return refused("Request bodies must be JSON objects on body-capable methods.") }
             do { body = try JSONEncoder().encode(supplied) }
             catch is EncodingError { return refused("The request body is not valid JSON.") }
+        }
+        if let supplied = options.binaryBody {
+            guard method != .GET, method != .HEAD, supplied.bytes.count <= 10 * 1024 * 1024,
+                  supplied.contentType.range(of: "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$", options: .regularExpression) != nil else { return refused("The binary request body is invalid or too large.") }
+            body = supplied.bytes
         }
         var headers: [String: String] = [:]
         for layer in [commonHeaders, options.headers] {
@@ -71,7 +77,7 @@ enum RequestPreparation {
             }
         }
         headers["accept"] = "application/json, application/problem+json"
-        headers["content-type"] = body == nil ? nil : "application/json"
+        headers["content-type"] = options.binaryBody?.contentType ?? (body == nil ? nil : "application/json")
         return .success(.init(url: url, method: method, headers: headers, body: body))
     }
 

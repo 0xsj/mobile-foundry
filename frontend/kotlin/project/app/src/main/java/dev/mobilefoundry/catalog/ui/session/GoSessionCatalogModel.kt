@@ -4,6 +4,8 @@ import dev.mobilefoundry.http.HTTPTransport
 import dev.mobilefoundry.kernel.*
 import dev.mobilefoundry.session.*
 import dev.mobilefoundry.services.HTTPRemoteNotesRepository
+import dev.mobilefoundry.services.HTTPRemoteFilesRepository
+import dev.mobilefoundry.catalog.ui.files.RemoteFilesCatalogModel
 import dev.mobilefoundry.catalog.ui.notes.RemoteNotesCatalogModel
 import dev.mobilefoundry.catalog.composition.SessionProvider
 import kotlinx.coroutines.*
@@ -15,6 +17,7 @@ class GoSessionCatalogModel(private val scope: CoroutineScope, authority: GoSess
     private val transport: HTTPTransport, val provider: SessionProvider, private val allowLocalHTTP: Boolean) {
     val baseUrl = authority.baseUrl
     val notes = RemoteNotesCatalogModel(scope)
+    val files = RemoteFilesCatalogModel(scope)
     val controller = SessionController(scope, authority, vault, System::currentTimeMillis) {
         android.util.Log.e("GoSession", "Unexpected Go session failure.")
     }
@@ -54,7 +57,10 @@ class GoSessionCatalogModel(private val scope: CoroutineScope, authority: GoSess
         clearDirectory();load()
         val lease = controller.lease
         val client = lease?.let { AuthenticatedHTTPClient.create(baseUrl,transport,controller,it,allowLocalHTTP = allowLocalHTTP) }
-        if (lease != null && client is Outcome.Ok) notes.bind(HTTPRemoteNotesRepository(client.value,lease.scope.accountId,lease.scope.principalId),lease.scope) else notes.bind(null,null)
+        if (lease != null && client is Outcome.Ok) {
+            notes.bind(HTTPRemoteNotesRepository(client.value,lease.scope.accountId,lease.scope.principalId),lease.scope)
+            files.bind(HTTPRemoteFilesRepository(client.value,lease.scope.accountId,lease.scope.principalId),lease.scope)
+        } else { notes.bind(null,null); files.bind(null,null) }
     }
-    fun close() { notes.bind(null,null);clearDirectory(); controller.shutdown() }
+    fun close() { files.bind(null,null); notes.bind(null,null);clearDirectory(); controller.shutdown() }
 }

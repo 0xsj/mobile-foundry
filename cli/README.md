@@ -52,7 +52,8 @@ Solid/Glass selection. Without `--with`, its screens are placeholders. Add
 SQLite persistence, CRUD state and live observation. All three platforms above
 support that combination. Backend `none` is the default;
 Go is available through `--backend go`, selecting Health, Identity, Account,
-Audit and Notes with memory/PostgreSQL stores. Generate an API on its own:
+Audit, Notes and Files with memory/PostgreSQL metadata stores. Files uses memory
+bytes or a private local directory; cloud storage adapters remain separate. Generate an API on its own:
 
 ```sh
 mobile-foundry doctor --platform none --backend go

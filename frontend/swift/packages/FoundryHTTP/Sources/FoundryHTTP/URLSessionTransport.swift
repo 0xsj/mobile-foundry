@@ -65,6 +65,7 @@ private final class SessionDelegate: NSObject, URLSessionDataDelegate, @unchecke
         let correlationID: String?
         var response: HTTPURLResponse?
         var body = Data()
+        var tooLarge = false
     }
     private let lock = NSLock()
     private var pending: [Int: Pending] = [:]
@@ -83,7 +84,15 @@ private final class SessionDelegate: NSObject, URLSessionDataDelegate, @unchecke
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        lock.lock(); pending[dataTask.taskIdentifier]?.body.append(data); lock.unlock()
+        lock.lock()
+        var cancel = false
+        if var state = pending[dataTask.taskIdentifier] {
+            if state.body.count + data.count > 16 * 1024 * 1024 { state.tooLarge = true; cancel = true }
+            else if !state.tooLarge { state.body.append(data) }
+            pending[dataTask.taskIdentifier] = state
+        }
+        lock.unlock()
+        if cancel { dataTask.cancel() }
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse,
@@ -95,6 +104,7 @@ private final class SessionDelegate: NSObject, URLSessionDataDelegate, @unchecke
         lock.lock(); let state = pending.removeValue(forKey: task.taskIdentifier); lock.unlock()
         guard let state else { return }
         let continuation = state.continuation
+        if state.tooLarge { continuation.resume(returning: .failure(internalFailure("http.response_too_large", "The response exceeds the byte limit."))); return }
         if let error {
             guard let network = error as? URLError else { continuation.resume(throwing: error); return }
             if network.code == .cancelled { continuation.resume(throwing: CancellationError()); return }

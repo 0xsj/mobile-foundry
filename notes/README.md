@@ -2,6 +2,16 @@
 
 Use this index to study the native foundation between implementation sessions.
 
+Files follow-up, 2026-10-17: read
+[Files construction](../docs/blueprints/files-media.md), then the
+[Go walkthrough](../backend/go/notes/modules/internal/files/README.md) and
+[metadata/object lifecycle pattern](../backend/go/notes/patterns/metadata-and-object-lifecycles.md).
+Both catalogs add gallery upload/download/editor preview through exact session
+leases, with scoped ephemeral retry drafts. Real URLSession/OkHttp checks,
+Go memory/PostgreSQL rollback/restart and independent CLI 0.5.0 backend checks pass.
+Two owner tests pass on each platform; system picker gestures and generated native
+media composition are separate acceptance. Existing evidence below is dated history.
+
 Latest extraction, 2026-10-13: Go is standalone ready through CLI 0.4.0.
 Read [the CLI walkthrough](modules/cli/README.md), then
 [Go source-copy verification](techniques/go-source-copy-verification.md) and

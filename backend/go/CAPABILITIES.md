@@ -1,6 +1,6 @@
 # Backend capability catalog
 
-Status: Blueprint policy established 2026-10-12; updated 2026-10-13. Runtime,
+Status: Blueprint policy established 2026-10-12; updated 2026-10-17. Runtime,
 Health and the [Account/Audit workflow](../../contracts/behavior/account-audit.md)
 are implemented, including local capabilities/events and
 [PostgreSQL persistence](../../contracts/behavior/postgres-persistence.md).
@@ -8,7 +8,8 @@ are implemented, including local capabilities/events and
 implemented for memory/PostgreSQL, including personal bootstrap and owned listing;
 [native authority/account adapters](../../contracts/behavior/go-native-session.md)
 are verified in the catalogs. [Remote Notes/receipts](../../contracts/behavior/remote-notes.md)
-now supply the connected data exemplar. Remote module routing and other business
+now supply the connected data exemplar. [Files/Media](../../contracts/behavior/files-media.md)
+adds owned metadata/content, receipts and Audit facts with native catalog consumers. Remote module routing and other business
 modules remain planned/reserved.
 
 Select capabilities for a product rather than copying the whole catalog. Each
@@ -27,7 +28,7 @@ defines how they collaborate. Runtime mechanics remain in generic packages.
 | Authorization | Permission vocabulary, scoped roles, grants and permission decisions | Uses declared ownership/membership inputs; provides explicit permission decisions | When account roles alone are insufficient |
 | Realtime | Authorized subscriptions, connection lifetime and recoverable live updates | Consumes events, maps hints, broadcasts to WebSocket gateways | Live connected experiences |
 | Notifications | Inbox/read state, preferences, device delivery registrations and outbound delivery | Consumes relevant facts; selects push/email adapters | Inbox or outbound messaging |
-| Files | File metadata, folders, ownership, upload/download admission and object lifecycle | Checks access/limits; selects an object store; publishes file facts | Media, documents or uploads |
+| Files | Metadata, ownership, upload/download admission, immutable content and deletion | Checks owner access; selects memory/private-directory Objects and memory/PostgreSQL Store; publishes selected Audit facts | Implemented local media foundation; folders, processing and quotas remain planned |
 | Billing | Provider customer/purchase references, verified purchases, subscriptions and payment lifecycle | Publishes verified commercial facts; adapters own provider protocols | Paid products |
 | Entitlements | Product access, plan features and configured limits | Consumes billing facts; answers access/limit queries | Plans, trials or feature gating |
 | Usage | Metered quantities, reservations, consumption and release/settlement | Supports admitted operations and publishes usage facts | Quotas or metered products |

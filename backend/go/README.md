@@ -283,3 +283,24 @@ Read the [runtime contract](../../contracts/behavior/go-runtime.md),
 the independently generated Go backend is standalone ready through CLI 0.4.0.
 Native catalog integration is verified; generated native auth/data composition
 remains tracked in [starter readiness](../../docs/STARTER-READINESS.md).
+
+## Files and media
+
+Files adds owned pending/available/deleted metadata, immutable content and atomic
+command receipts behind application ports. Memory mode needs no services; with
+PostgreSQL, FILES_DATABASE_URL inherits DATABASE_URL and FILES_DIRECTORY defaults
+to .data/files. Retain that private directory with the database across restarts.
+Migrations remain explicit. Cloud object storage and long-term cleanup are separate.
+
+Run AUTH_MODE=identity make dev, then open Go identity and accounts → Account files
+in a native catalog. Choose a gallery photo up to 10 MiB, upload it, download it
+into the existing image editor or delete it. The editor displays a local preview;
+it does not yet upload an edited render. Pending retry drafts last for this catalog
+owner only. Use root make go-native-test for real URLSession/OkHttp file acceptance.
+
+Read [Files construction](../../docs/blueprints/files-media.md),
+[behavior](../../contracts/behavior/files-media.md) and
+[HTTP v1](../../contracts/http/files-v1.md). DELETE commits inaccessibility before
+object cleanup; a cleanup failure can follow a committed receipt. Retry the same
+key/target/version. Receipt lookup alone does not remove bytes. Background upload,
+folders/trash, processing, quotas, scanning and orphan retention are not implemented.

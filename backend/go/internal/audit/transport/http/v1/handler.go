@@ -44,6 +44,7 @@ type record struct {
 	PrincipalID   id.ID  `json:"principal_id,omitempty"`
 	SessionID     id.ID  `json:"session_id,omitempty"`
 	Reason        string `json:"reason,omitempty"`
+	FileID        id.ID  `json:"file_id,omitempty"`
 }
 
 func (h Handler) Register(mux *http.ServeMux) {
@@ -112,7 +113,7 @@ func (h Handler) read(w http.ResponseWriter, r *http.Request, personal bool) err
 	rows := make([]record, 0, len(page.Records))
 	for _, item := range page.Records {
 		e := item.Entry.Evidence()
-		rows = append(rows, record{Sequence: item.Sequence, EventID: e.EventID, AccountID: e.AccountID, ActorID: e.ActorID, Action: e.Action, Version: e.Version, OccurredAt: e.OccurredAt.Format("2006-01-02T15:04:05.999999Z"), RecordedAt: item.Entry.RecordedAt().Format("2006-01-02T15:04:05.999999Z"), RequestID: e.RequestID, CorrelationID: e.CorrelationID, PrincipalID: e.PrincipalID, SessionID: e.SessionID, Reason: e.Reason})
+		rows = append(rows, record{Sequence: item.Sequence, EventID: e.EventID, AccountID: e.AccountID, ActorID: e.ActorID, Action: e.Action, Version: e.Version, OccurredAt: e.OccurredAt.Format("2006-01-02T15:04:05.999999Z"), RecordedAt: item.Entry.RecordedAt().Format("2006-01-02T15:04:05.999999Z"), RequestID: e.RequestID, CorrelationID: e.CorrelationID, PrincipalID: e.PrincipalID, SessionID: e.SessionID, Reason: e.Reason, FileID: e.FileID})
 	}
 	var next *string
 	if page.Next != 0 {

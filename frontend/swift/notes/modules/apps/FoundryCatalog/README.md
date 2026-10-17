@@ -1759,3 +1759,19 @@ simulator loopback API is not a physical-device deployment.
 `make go-native-device-test` supplies an isolated memory API and fixture accounts.
 CLI extraction, remote CRUD/sync, real TLS deployment and physical-device/network
 cut experiments remain pending. Read [checkpoint reasoning](../../../../../../notes/patterns/deployment-authorities-and-rotation-checkpoints.md).
+
+## Account file catalog — 2026-10-17
+
+[The model](../../../../apps/FoundryCatalog/Sources/Files/RemoteFilesCatalogModel.swift) owns selected-account files, bounded photo bytes, exact retry keys and editor
+preview. Its retry history is partitioned by SessionScope for this owner only;
+renewal changes the client lease without retargeting the saved command. New
+picker results carry a generation ticket so replaced scopes cannot receive them.
+A response is applied only after cancellation/generation checks. Downloads pass
+through the existing bounded photo decoder before entering the GPU editor.
+
+[The owner tests](../../../../apps/FoundryCatalog/Tests/RemoteFilesCatalogTests.swift) exercises retained bytes/key through renewal and stale photo-selection input
+under a replacement account: two cases pass on this platform. The catalog builds,
+and real HTTP byte/receipt recovery is verified separately by the native Go
+runner. System-picker gestures and physical-device performance were not exercised.
+The editor's adjustments remain local previews, not uploaded rendered exports.
+Read [Files construction](../../../../../../docs/blueprints/files-media.md) for remaining object/metadata and native-lifetime limits.
