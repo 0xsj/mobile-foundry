@@ -1,5 +1,76 @@
 # Mobile Foundry learning notes
 
+Recovery follow-up, 2026-10-17: read
+[why the original outcome remains](../backend/go/notes/patterns/recovery-preserves-the-original-outcome.md)
+and [backend construction/evidence](../docs/blueprints/push-job-recovery.md).
+Cancel and replacement are distinct owned operations; neither rewrites an earlier
+uncertain send into proof of failure. Native queue UI remains separate.
+
+Queued-preview follow-up, 2026-10-17: read
+[marker/recovery reasoning](../backend/go/notes/patterns/send-markers-and-conservative-recovery.md)
+and [construction/evidence](../docs/blueprints/push-jobs.md).
+The Go backend can retain manual preview intents and resume safe preflight work.
+Unknown sends remain uncertain without automatic resend; this is independent
+from live delivery, account inbox decisions and native open admission.
+
+Remote-preview follow-up, 2026-10-17: continue with
+[receipt versus open identity](patterns/remote-notification-admission-and-open-identity.md)
+and [native construction/evidence](../docs/blueprints/remote-notifications.md).
+Both platforms now admit the provider payload and route generic preview taps.
+Signed-device delivery, scoped private destinations and connected CLI extraction
+remain separate acceptance boundaries.
+
+Provider follow-up, 2026-10-17: continue with
+[error evidence](../backend/go/notes/patterns/provider-errors-and-address-retirement.md)
+and [APNs/FCM setup/evidence](../docs/blueprints/push-providers.md). Backend adapters
+and an opt-in proof/session/revision-guarded preview now exist. Protocol checks
+are local; the native remote follow-up above supplies presentation/open admission,
+while live device delivery remains a separate acceptance boundary.
+
+Backend push follow-up, 2026-10-17: continue from native address collection to
+[snapshot/external-effect reasoning](../backend/go/notes/patterns/push-snapshots-and-external-effects.md)
+and [construction/evidence](../docs/blueprints/push-dispatch.md). The Go use case
+checks Identity through a consumer-owned capability and protects replacements
+from stale rejection cleanup. CLI 0.8.0 extraction is independently verified;
+cloud sending and connected native starter readiness remain separate.
+
+Provider-token follow-up, 2026-10-17: start with
+[addresses and registration intents](patterns/provider-addresses-and-registration-intents.md),
+then [native setup/evidence](../docs/blueprints/push-tokens.md) and platform module
+walkthroughs. Optional APNs/FCM adapters collect explicitly and retain a redacted
+process candidate; callbacks never bind a backend session. Local adapter/UI
+checks are separate from live provider issuance, sending and connected CLI readiness.
+
+System notifications follow-up, 2026-10-17: read
+[device notifications and navigation hints](patterns/device-notifications-and-navigation-hints.md)
+and [construction/acceptance](../docs/blueprints/system-notifications.md).
+Native permission, local OS previews and app-lifetime open admission are separate
+from account inbox preferences, installation ownership and provider delivery.
+
+Native installation follow-up, 2026-10-17: start with
+[identity and reconciliation](patterns/installation-identity-and-current-state-reconciliation.md),
+then [construction and acceptance](../docs/blueprints/installations.md).
+Both native catalogs now manage secure device identity and explicit target
+registration behind ports. Keychain/Keystore and real Go HTTP checks pass;
+automatic OS tokens, external push and generated connected profiles remain pending.
+
+Installation registry follow-up, 2026-10-17: read [construction](../docs/blueprints/installations.md), [the module walkthrough](../backend/go/notes/modules/internal/notifications/installations.md) and [session-bound target retirement](../backend/go/notes/patterns/session-bound-delivery-targets.md). Source race/HTTP and PostgreSQL 14.24 rollback/crash recovery pass. The backend registry retains hashed installation proof and clears tokens on matching retirement; native token collection and external delivery remain pending.
+
+Notifications native follow-up, 2026-10-17: read
+[inbox refresh and setting uncertainty](patterns/inbox-refresh-and-setting-uncertainty.md) and
+[the connected walkthrough](../docs/blueprints/notifications.md).
+Swift/Kotlin now expose account inbox/read state and media preferences through
+repository ports, exact session leases and passive shared components. Shared
+admission tests, owner replacement/reconciliation and real Go HTTP checks provide
+separate evidence; generated connected profiles and system push remain pending.
+
+Notifications follow-up, 2026-10-17: read
+[the construction guide](../docs/blueprints/notifications.md),
+[Go module walkthrough](../backend/go/notes/modules/internal/notifications/README.md)
+and [delivery-decision pattern](../backend/go/notes/patterns/notification-decisions-and-replay.md).
+This batch implements the backend inbox/read/preferences and independent Files
+consumption. Native inbox/push integration remains pending.
+
 Use this index to study the native foundation between implementation sessions.
 
 Files follow-up, 2026-10-17: read

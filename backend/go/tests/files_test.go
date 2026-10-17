@@ -17,6 +17,7 @@ import (
 	"github.com/0xsj/mobile-foundry/backend/internal/files/infra/objects"
 	pg "github.com/0xsj/mobile-foundry/backend/internal/files/infra/postgres"
 	"github.com/0xsj/mobile-foundry/backend/internal/identity"
+	"github.com/0xsj/mobile-foundry/backend/internal/notifications"
 	"github.com/0xsj/mobile-foundry/backend/internal/server"
 	"github.com/0xsj/mobile-foundry/backend/pkg/capability"
 	"github.com/0xsj/mobile-foundry/backend/pkg/clock"
@@ -293,9 +294,13 @@ func TestFilesApplicationRecoveryAndAccess(t *testing.T) {
 	}
 }
 func filesHTTP(t *testing.T) harness {
+	h, _ := filesHTTPRegistry(t)
+	return h
+}
+func filesHTTPRegistry(t *testing.T) (harness, *capability.Registry) {
 	registry := capability.NewRegistry()
 	runtime := module.Runtime{Clock: clock.System{}, IDs: id.Random{}, Capabilities: registry, Events: events.NewMemory(), Principals: identity.CredentialResolver(registry.Client("api"))}
-	units, err := module.Assemble(runtime, account.Build, audit.Build, identity.Build, files.Build)
+	units, err := module.Assemble(runtime, account.Build, audit.Build, identity.Build, files.Build, notifications.Build)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -306,7 +311,7 @@ func filesHTTP(t *testing.T) harness {
 	}
 	api := httptest.NewServer(app.Handler())
 	t.Cleanup(api.Close)
-	return harness{t, api.URL}
+	return harness{t, api.URL}, registry
 }
 func TestFilesAuthenticatedHTTPAndAudit(t *testing.T) {
 	h := filesHTTP(t)
@@ -386,6 +391,7 @@ func TestFilesAuthenticatedHTTPAndAudit(t *testing.T) {
 	if status, _ := raw("GET", alex.Access, nil); status != 404 {
 		t.Fatal("deleted download", status)
 	}
+	notificationsHTTPAcceptance(t, h, account.ID, r.File.ID, alex.Access, sam.Access)
 	deadline := time.Now().Add(3 * time.Second)
 	for {
 		_, _, wire = h.request("GET", "/v1/accounts/"+account.ID+"/audit", alex.Access, "", nil)

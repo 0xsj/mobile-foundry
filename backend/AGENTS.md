@@ -98,3 +98,38 @@ metadata commit only. Preserve original keys/versions across cleanup failures.
 No object SDK, Files state or foreign SQL enters another module's core. Audit
 receives admitted File facts through its own adapter; do not expose names, types,
 hashes or content there. Retain database and private object directory together.
+
+The [Notifications slice](../contracts/behavior/notifications.md) receives completed
+Files facts through its own adapter. Keep item/inbox/preference decisions atomic
+and account/principal scoped. Same-event input conflicts are failures; muted source
+markers remain applied. Backend in-app delivery does not establish native/push
+integration, installation lifecycle or retention.
+
+The [installation registry](../contracts/behavior/installations.md) owns session-bound target metadata under Notifications. Identity credential v1 remains principal-only; v2 supplies trusted session/expiry to the edge. Never accept session ownership from request JSON. Keep proofs hashed, token views private, and cleanup/source-marker/tombstone atomic. No Identity SQL or aggregate imports enter Notifications.
+
+Optional [push dispatch](../contracts/behavior/push-dispatch.md) uses a trusted
+internal preview handler, exact target leases and identity.session.eligible.v1.
+The negative session answer differs from dependency failure. Short access expiry
+differs from absolute session expiry. Finish owned store operations before a
+foreign call/send, and guard invalid-address cleanup against the original owner/
+version. No gateway is selected by default. [Explicit provider selection](../contracts/behavior/push-providers.md)
+adds real APNs/FCM adapters and a guarded manual HTTP preview; local TLS tests do
+not prove live cloud delivery. Preserve check/send and no-receipt limits, refuse
+arbitrary endpoints/redirects, sanitize transport causes, and isolate acceptance
+processes from host provider settings. Provider keys remain outside source copies.
+
+Notifications' [queued previews](../contracts/behavior/push-jobs.md) require a
+second explicit runtime selection with durable PostgreSQL. Retain immutable
+owner/version identity and job-ID replay; use atomic fenced claim/begin/finish
+operations. Only confirmed sending-marker commit permits a gateway call. Unknown
+post-marker results remain uncertain and never become automatic retries. Bound
+preflight backoff, claims, lifetime and capacity, and keep raw provider details out
+of job state. Preserve matching memory/PostgreSQL rules and deliberate process-kill
+evidence. New migrations are immutable; runtime checks never apply them implicitly.
+
+[Recovery](../contracts/behavior/push-job-recovery.md) retains source evidence and
+admits a new child under the same installation/principal/session. Fresh replacements
+prove the selected current revision; exact replay retains its original input.
+Cancellation serializes with Begin, and a committed marker always wins refusal.
+Keep root enqueue separate from replacement lineage, one child per source, explicit
+duplicate-risk acknowledgement and old-row migration/rollback/reopen evidence.

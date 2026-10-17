@@ -1,5 +1,49 @@
 # Go backend learning notes
 
+Recovery follow-up, 2026-10-17: read
+[preserved outcomes](patterns/recovery-preserves-the-original-outcome.md),
+[explicit boolean presence](language/explicit-json-boolean-presence.md),
+[module flow](modules/internal/notifications/recovery.md), then
+[setup/evidence](../../../docs/blueprints/push-job-recovery.md).
+Current owners can cancel before sending or create one linked replacement with
+explicit acknowledgement when the source is uncertain. Cross-session operations,
+retention/erasure and live provider delivery remain separate.
+
+Queued-preview follow-up, 2026-10-17: read
+[send markers and recovery](patterns/send-markers-and-conservative-recovery.md),
+[Notifications jobs](modules/internal/notifications/jobs.md),
+[generic polling](modules/pkg/jobs/README.md), then
+[setup and verification](../../../docs/blueprints/push-jobs.md).
+Memory/PostgreSQL state, guarded HTTP, forced rollback and killed-worker recovery
+now distinguish safe preflight retries from an uncertain external effect. Live
+provider delivery, fanout/retention and connected native CLI UI remain separate.
+
+Provider follow-up, 2026-10-17: read
+[failure evidence](patterns/provider-errors-and-address-retirement.md),
+[HTTP/signing/caches](substrate/provider-http-and-jwt.md), then
+[adapter walkthrough](modules/internal/notifications/providers.md) and
+[setup/evidence](../../../docs/blueprints/push-providers.md).
+Local TLS protocols and guarded HTTP pass; live cloud/device acceptance and
+native remote opens remain separate. CLI 0.9.0 selects only source and examples,
+prunes private credentials and keeps sending disabled without explicit setup.
+
+Push follow-up, 2026-10-17: start with
+[snapshots and external effects](patterns/push-snapshots-and-external-effects.md),
+then [Notifications orchestration](modules/internal/notifications/push.md), the
+Identity eligibility section and [construction/evidence](../../../docs/blueprints/push-dispatch.md).
+Memory/PostgreSQL ordering/rollback and independent CLI 0.8.0 acceptance pass.
+The gateway remains injected; cloud sending, durable retries and native remote
+opens are not established by these checks.
+
+Installation registry follow-up, 2026-10-17: read [construction](../../../docs/blueprints/installations.md), [the module walkthrough](modules/internal/notifications/installations.md) and [session-bound target retirement](patterns/session-bound-delivery-targets.md). Source race/HTTP and PostgreSQL 14.24 rollback/crash recovery pass. The backend registry retains hashed installation proof and clears tokens on matching retirement; native token collection and external delivery remain pending.
+
+Notifications follow-up, 2026-10-17: start with
+[the module walkthrough](modules/internal/notifications/README.md) and
+[delivery decisions and replay](patterns/notification-decisions-and-replay.md).
+Memory and PostgreSQL 14.24 conformance, forced transaction failures and blocked
+consumer/SIGKILL recovery pass. Read state and preferences survive process restart.
+Native catalog inbox consumers now exist; OS token collection, APNs/FCM and retention remain pending.
+
 Follow [the shared notes workflow](../../../docs/NOTES.md). Runtime/shared packages
 and Identity/Account/Audit memory/PostgreSQL modules are implemented. Notes distinguish
 source boundaries, verified execution, and future provider behavior.

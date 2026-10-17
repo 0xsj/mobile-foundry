@@ -34,6 +34,7 @@ targets:
       properties:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CatalogAPNsEnvironment: $(CATALOG_APNS_ENVIRONMENT)
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
     sources:
@@ -56,6 +57,7 @@ targets:
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         DEVELOPMENT_TEAM: 7U72Y3VFHD
+        CATALOG_APNS_ENVIRONMENT: ""
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Mobile Foundry

@@ -15,6 +15,7 @@ import (
 	"github.com/0xsj/mobile-foundry/backend/internal/files"
 	"github.com/0xsj/mobile-foundry/backend/internal/identity"
 	"github.com/0xsj/mobile-foundry/backend/internal/notes"
+	"github.com/0xsj/mobile-foundry/backend/internal/notifications"
 	"github.com/0xsj/mobile-foundry/backend/internal/server"
 	"github.com/0xsj/mobile-foundry/backend/migrations"
 	"github.com/0xsj/mobile-foundry/backend/pkg/capability"
@@ -66,6 +67,14 @@ func run(ctx context.Context) error {
 	identityBuilder := module.Builder(identity.Build)
 	notesBuilder := module.Builder(notes.Build)
 	filesBuilder := module.Builder(files.Build)
+	notificationsBuilder := module.Builder(notifications.Build)
+	// Load only on explicit selection; no provider network traffic occurs at startup.
+	pushGateway, closePush, err := notifications.LoadPushGateway(configuration.PushConfigFile, runtime.Clock)
+	if err != nil {
+		return err
+	}
+	defer closePush()
+	notificationsBuilder = notifications.BuildWithPush(pushGateway, configuration.PushJobsEnabled)
 	startup, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 	if configuration.Storage == "postgres" {
@@ -89,6 +98,11 @@ func run(ctx context.Context) error {
 			return err
 		}
 		filesBuilder = files.BuildPostgres(startup, postgres.Config{URL: configuration.FilesDatabaseURL}, filesSchema, configuration.FilesDirectory)
+		notificationsSchema, err := postgres.Load(migrations.Files, notifications.Schema)
+		if err != nil {
+			return err
+		}
+		notificationsBuilder = notifications.BuildPostgresWithPush(startup, postgres.Config{URL: configuration.NotificationsDatabaseURL}, notificationsSchema, pushGateway, configuration.PushJobsEnabled)
 		if configuration.Authentication == "identity" {
 			schema, err := postgres.Load(migrations.Files, identity.Schema)
 			if err != nil {
@@ -99,7 +113,7 @@ func run(ctx context.Context) error {
 	} else {
 		log.Warn("memory storage enabled; data is lost on process exit")
 	}
-	builders := []module.Builder{accountBuilder, auditBuilder, notesBuilder, filesBuilder}
+	builders := []module.Builder{accountBuilder, auditBuilder, notesBuilder, filesBuilder, notificationsBuilder}
 	if configuration.Authentication == "identity" {
 		builders = append(builders, identityBuilder)
 	}

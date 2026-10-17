@@ -5,6 +5,11 @@ import dev.mobilefoundry.kernel.*
 import dev.mobilefoundry.session.*
 import dev.mobilefoundry.services.HTTPRemoteNotesRepository
 import dev.mobilefoundry.services.HTTPRemoteFilesRepository
+import dev.mobilefoundry.services.HTTPNotificationInboxRepository
+import dev.mobilefoundry.services.HTTPInstallationRegistry
+import dev.mobilefoundry.services.InstallationController
+import dev.mobilefoundry.services.InstallationVault
+import dev.mobilefoundry.catalog.ui.notifications.NotificationInboxCatalogModel
 import dev.mobilefoundry.catalog.ui.files.RemoteFilesCatalogModel
 import dev.mobilefoundry.catalog.ui.notes.RemoteNotesCatalogModel
 import dev.mobilefoundry.catalog.composition.SessionProvider
@@ -14,10 +19,13 @@ import kotlinx.coroutines.flow.asStateFlow
 
 data class GoDirectoryState(val accounts: List<Account> = emptyList(), val nextCursor: String? = null, val failure: Failure? = null, val isLoading: Boolean = false)
 class GoSessionCatalogModel(private val scope: CoroutineScope, authority: GoSessionAuthority, vault: CredentialVault,
-    private val transport: HTTPTransport, val provider: SessionProvider, private val allowLocalHTTP: Boolean) {
+    private val transport: HTTPTransport, val provider: SessionProvider, private val allowLocalHTTP: Boolean,
+    installationVault: InstallationVault) {
     val baseUrl = authority.baseUrl
     val notes = RemoteNotesCatalogModel(scope)
     val files = RemoteFilesCatalogModel(scope)
+    val inbox = NotificationInboxCatalogModel(scope)
+    val installations = InstallationController(scope,installationVault) { android.util.Log.e("Installations","Unexpected installation failure.") }
     val controller = SessionController(scope, authority, vault, System::currentTimeMillis) {
         android.util.Log.e("GoSession", "Unexpected Go session failure.")
     }
@@ -58,9 +66,11 @@ class GoSessionCatalogModel(private val scope: CoroutineScope, authority: GoSess
         val lease = controller.lease
         val client = lease?.let { AuthenticatedHTTPClient.create(baseUrl,transport,controller,it,allowLocalHTTP = allowLocalHTTP) }
         if (lease != null && client is Outcome.Ok) {
+            installations.bind(HTTPInstallationRegistry(client.value))
             notes.bind(HTTPRemoteNotesRepository(client.value,lease.scope.accountId,lease.scope.principalId),lease.scope)
             files.bind(HTTPRemoteFilesRepository(client.value,lease.scope.accountId,lease.scope.principalId),lease.scope)
-        } else { notes.bind(null,null); files.bind(null,null) }
+            inbox.bind(HTTPNotificationInboxRepository(client.value,lease.scope.accountId,lease.scope.principalId),lease.scope)
+        } else { installations.bind(null); notes.bind(null,null); files.bind(null,null); inbox.bind(null,null) }
     }
-    fun close() { files.bind(null,null); notes.bind(null,null);clearDirectory(); controller.shutdown() }
+    fun close() { installations.bind(null); inbox.bind(null,null); files.bind(null,null); notes.bind(null,null);clearDirectory(); controller.shutdown() }
 }

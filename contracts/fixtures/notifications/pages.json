@@ -1,0 +1,325 @@
+[
+  {
+    "name": "valid",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": true,
+    "unread": false
+  },
+  {
+    "name": "foreign account",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000099",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "duplicate items",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 2,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "missing read timestamp",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z"
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "impossible calendar date",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-02-31T10:00:00Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "unknown type",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.private_payload",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "fractional count",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1.5,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "count below page unread",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 0,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "next cursor on short page",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": "next"
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "read row in unread page",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": "2026-10-17T10:00:02Z"
+        }
+      ],
+      "unread_count": 0,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": true
+  },
+  {
+    "name": "valid read row",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": "2026-10-17T10:00:02.000001Z"
+        }
+      ],
+      "unread_count": 0,
+      "next_cursor": null
+    },
+    "valid": true,
+    "unread": false
+  },
+  {
+    "name": "normalized hour",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T24:00:00Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "normalized leap second",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2016-12-31T23:59:60Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "ID trailing newline",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001\n",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  },
+  {
+    "name": "timestamp trailing newline",
+    "body": {
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "file_id": "00000000-0000-4000-8000-000000000004",
+          "type": "files.upload_ready",
+          "category": "media",
+          "occurred_at": "2026-10-17T10:00:00.123456Z",
+          "created_at": "2026-10-17T10:00:01Z\n",
+          "read_at": null
+        }
+      ],
+      "unread_count": 1,
+      "next_cursor": null
+    },
+    "valid": false,
+    "unread": false
+  }
+]

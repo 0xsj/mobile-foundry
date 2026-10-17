@@ -21,6 +21,8 @@ import dev.mobilefoundry.kernel.*
 import dev.mobilefoundry.session.*
 import dev.mobilefoundry.catalog.ui.notes.RemoteNotesCatalogCard
 import dev.mobilefoundry.catalog.ui.files.RemoteFilesCatalogCard
+import dev.mobilefoundry.catalog.ui.notifications.NotificationInboxCatalogCard
+import dev.mobilefoundry.catalog.installations.InstallationCatalogCard
 import dev.mobilefoundry.ui.components.display.card.Card
 import dev.mobilefoundry.ui.components.forms.button.ActionButton
 import dev.mobilefoundry.ui.components.forms.button.ButtonVariant
@@ -58,7 +60,7 @@ import dev.mobilefoundry.ui.theme.FoundryTheme
                         is Outcome.Err -> configurationFailure = answer.error.publicInfo()
                         is Outcome.Ok -> {
                             current?.close(); configurationFailure = null
-                            model = GoSessionCatalogModel(scope, answer.value, SessionComposition.goVault(context, provider, answer.value.id), SessionComposition.goTransport, provider, localHTTP)
+                            model = GoSessionCatalogModel(scope, answer.value, SessionComposition.goVault(context, provider, answer.value.id), SessionComposition.goTransport, provider, localHTTP, SessionComposition.installationVault(context,provider,answer.value.id))
                             model!!.controller.restore()
                         }
                     }
@@ -121,5 +123,6 @@ import dev.mobilefoundry.ui.theme.FoundryTheme
             Text("Remote notes below use the selected account. Offline synchronization is a separate capability.", style = FoundryTheme.tokens.typography.caption)
         }
         key(lease.scope) { RemoteNotesCatalogCard(model.notes); RemoteFilesCatalogCard(model.files) }
+        key(lease) { NotificationInboxCatalogCard(model.inbox); InstallationCatalogCard(model.installations) }
     }
 }

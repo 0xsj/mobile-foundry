@@ -12,6 +12,8 @@ import OSLog
     let provider: SessionProvider
     let notes = RemoteNotesCatalogModel()
     let files = RemoteFilesCatalogModel()
+    let inbox = NotificationInboxCatalogModel()
+    let installations: InstallationController
     private(set) var accounts: [Account] = []
     private(set) var nextCursor: String?
     private(set) var directoryFailure: Failure?
@@ -23,6 +25,9 @@ import OSLog
     init(authority: GoSessionAuthority, transport: URLSessionHTTPTransport, vault: any CredentialVault,
          provider: SessionProvider, allowLocalHTTP: Bool) {
         self.transport = transport; self.baseURL = authority.baseURL; self.provider = provider; self.allowLocalHTTP = allowLocalHTTP
+        installations = InstallationController(vault: SessionComposition.installationVault(provider, authorityID: authority.id), onUnexpectedError: { _ in
+            Logger(subsystem: "dev.mobilefoundry.catalog", category: "installations").error("Unexpected installation failure.")
+        })
         controller = SessionController(authority: authority, vault: vault, now: { Int64(Date().timeIntervalSince1970 * 1000) }, onUnexpectedError: { _ in
             Logger(subsystem: "dev.mobilefoundry.catalog", category: "go-session").error("Unexpected Go session failure.")
         })
@@ -55,9 +60,11 @@ import OSLog
     func refreshScope() {
         clearDirectory(); load()
         guard let lease = controller.lease,
-              case .success(let client) = AuthenticatedHTTPClient.create(baseURL:baseURL,transport:transport,session:controller,lease:lease,allowLocalHTTP:allowLocalHTTP) else { notes.bind(nil,scope:nil); files.bind(nil,scope:nil); return }
+              case .success(let client) = AuthenticatedHTTPClient.create(baseURL:baseURL,transport:transport,session:controller,lease:lease,allowLocalHTTP:allowLocalHTTP) else { notes.bind(nil,scope:nil); files.bind(nil,scope:nil); inbox.bind(nil,scope:nil); installations.bind(nil); return }
+        installations.bind(HTTPInstallationRegistry(client: client))
         notes.bind(HTTPRemoteNotesRepository(client:client,accountID:lease.scope.accountID,principalID:lease.scope.principalID),scope:lease.scope)
         files.bind(HTTPRemoteFilesRepository(client:client,accountID:lease.scope.accountID,principalID:lease.scope.principalID),scope:lease.scope)
+        inbox.bind(HTTPNotificationInboxRepository(client:client,accountID:lease.scope.accountID,principalID:lease.scope.principalID),scope:lease.scope)
     }
-    func close() { files.bind(nil,scope:nil); notes.bind(nil,scope:nil); clearDirectory(); controller.shutdown(); transport.invalidate() }
+    func close() { installations.bind(nil); inbox.bind(nil,scope:nil); files.bind(nil,scope:nil); notes.bind(nil,scope:nil); clearDirectory(); controller.shutdown(); transport.invalidate() }
 }

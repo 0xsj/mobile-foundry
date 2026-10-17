@@ -3,9 +3,37 @@
 The user requested an explicit handoff when a project/profile becomes a good
 foundation for a new product. Assess each selected native/backend profile
 independently and report milestone changes during development handoffs.
-Last assessment: 2026-10-13, after Go CLI extraction and independent backend acceptance. Native connected-profile readiness remains separate.
+Last assessment: 2026-10-17, after owned push-job recovery and independent CLI 0.11.0 extraction. Native generic receipt/open admission remains catalog-verified. Live provider acceptance/device delivery, token issuance and native connected-profile readiness remain separate.
 
 ## Readiness levels
+
+Recovery follow-up: [construction/evidence](blueprints/push-job-recovery.md) records
+CLI 0.11.0 output at
+`/private/tmp/mobile-push-recovery-starter-2QauZT/recovery-verified`, module
+`github.com/example/recovery-verified/backend`. It passes its own check/race/smoke,
+disposable PostgreSQL upgrade/rollback/reopen/recovery and generated Make-runner
+acceptance. Current owners can cancel before sending or explicitly replace an
+eligible terminal job; uncertain sources require duplicate-risk acknowledgement.
+Standalone Go readiness is preserved, without promoting native connected profiles.
+
+Queue follow-up: [construction/evidence](blueprints/push-jobs.md) records CLI 0.10.0
+output at `/private/tmp/mobile-push-jobs-starter-SNkXAO/verified-api`, module
+`github.com/example/verified-api/backend`. Source and output pass check/race/smoke,
+disposable PostgreSQL queue/rollback/SIGKILL recovery and generated runner checks.
+The worker is opt-in, retries preflight only and retains unknown sends without
+automatic resend. This preserves Go standalone readiness; native connected
+profiles and live delivery remain separate.
+
+Go provider follow-up: [setup/evidence](blueprints/push-providers.md) records
+source and independent output checks for CLI 0.9.0 at
+`/private/tmp/mobile-provider-verified-9jtwolsv/push-api`, module
+`github.com/example/push-api/backend`. Source and output pass check/race/smoke and
+their own disposable PostgreSQL 14.24 suite. Local TLS tests verify provider
+protocols; real Identity HTTP checks verify preview ownership/proof/version and
+conditional retirement. The generated runner acceptance passes real
+auth/account/data/inbox/installation flows. Provider selection remains off by
+default, with no live cloud credentials or device-delivery evidence. Native
+readiness levels are unchanged.
 
 | Level | Meaning |
 | --- | --- |
@@ -33,10 +61,16 @@ production guarantee for the whole catalog.
 | Kotlin Browse | **Standalone starter ready** through mobile-foundry 0.3.0; saveable search/detail and native Back. | Ready for UI products; collection persistence/provider operations are separate capabilities. |
 | Swift/Kotlin Physics | **Catalog capability verified**: pure 2D modules, native court/control consumers, five numeric cases per platform and five total native interactions. | Register a deliberate CLI feature combination and independently verify generated output before recommending physics-enabled starters. |
 | Swift/Kotlin Go session | **Catalog integration verified**: deployment-bound authority, real HTTP/account scope, rotation checkpoints, discovery/switching and actual native-vault workflows. | Independently generated connected products remain required; Android process relaunch is not claimed from route restoration. |
-| Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, CAS and receipt recovery verified against Go through URLSession/OkHttp; catalog owners/controls build and pass recovery tests; iOS Notes CRUD/Keychain process relaunch passes. | Select/extract a connected CLI combination and independently verify generated products. Durable native queues/sync remain optional future capabilities; Android Notes UI gestures are not established by host tests. |
-| Go backend | **Standalone starter ready** through CLI 0.5.0: independently generated API, auth/account/Notes/Files flows, race checks and PostgreSQL migration/crash recovery. | Ready to start Go APIs. Generated native session/account/remote-data composition needs its own connected acceptance; auth recovery, roles and deployment remain deliberate product work. |
+| Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, Files and Notifications verified against Go through URLSession/OkHttp; catalog owners build and pass recovery/replacement tests. Inbox read/settings recover through authoritative refresh. | Select/extract a connected CLI combination and independently verify generated products. Durable queues, live hints and system push remain separate; inbox gestures against a real API are not established by host/state tests. |
+| Swift/Kotlin system notifications | **Catalog capability verified**: explicit OS permission/settings, local previews and bounded app-owned open navigation. iOS warm/cold opens and Android real content PendingIntent/recreation checks pass. | Live provider integration/sending, remote scoped destinations, Android cold process acceptance and independent CLI selection remain separate. |
+| Swift/Kotlin remote previews | **Catalog capability verified**: strict provider-payload admission, foreground receipt without navigation and generic tap routing; Apple simulator warm/cold opens and Android actual PendingIntent/launcher/recreation checks pass. | Verify live signed-device APNs/FCM delivery and Android killed-process FCM entry. Account-scoped destinations and independently generated connected profiles remain separate. Read [construction/evidence](blueprints/remote-notifications.md). |
+| Swift/Kotlin provider tokens | **Catalog foundation candidate**: swappable collection ports, app-only APNs/FCM adapters, process-local rotation and explicit registry handoff; host/native adapter and default missing-setup UI checks pass. | Configure signing/Firebase and verify actual issued tokens on devices. Sending, remote opens, FID sender semantics and generated connected CLI selection remain separate. Read [setup/evidence](blueprints/push-tokens.md). |
+| Swift/Kotlin installation registry | **Catalog foundation verified**: secure app/deployment proof vaults, exact-lease registry ports, guarded explicit registration and readback; native Keychain/Keystore and real Go HTTP handoff/renewal/retirement checks pass. | Live provider token acquisition/configuration, sending, remote scoped routes and independently generated connected combinations remain separate. |
+| Go push dispatch/providers | **Foundation candidate**: exact-session dispatch and conditional retirement plus real APNs/FCM adapters and opt-in guarded manual preview. Local TLS, memory/PostgreSQL HTTP and independently extracted checks pass. | Configure private provider credentials and verify cloud acceptance/device delivery. Durable queues, fanout, retry receipts and native remote opens remain separate. |
+| Go queued previews/recovery | **Foundation candidate**: immutable jobs, fenced claims, guarded enqueue/status/cancel/replacement, bounded preflight backoff and retained uncertainty verified in memory/PostgreSQL and an independent copy. | Live provider acceptance, fanout, provider-result retry classification, retention/erasure/cross-session administration and native queue UI remain separate. |
+| Go backend | **Standalone starter ready** through CLI 0.11.0: independently generated API, auth/account/data/inbox/installation workflows, optional provider/jobs/recovery source, race checks and PostgreSQL upgrade/crash recovery. | Ready to start Go APIs. Live provider acceptance and generated connected products remain separate; auth recovery, roles and deployment remain deliberate product work. |
 | Supabase integration | Local development stack present; native provider adapters/policies unconnected. | Real auth/account/remote Notes adapters and policies, then connected starter verification. |
-| Firebase integration | Local emulator setup present; native provider adapters/rules unconnected. | Real auth/account/remote data adapters and rules, then connected starter verification. |
+| Firebase auth/data integration | Local emulator setup present; native auth/data adapters and rules unconnected. FCM token adapters are assessed separately above. | Real auth/account/remote data adapters and rules, then connected starter verification. |
 
 Native runtime evidence is recorded in the
 [Swift handoff](../frontend/swift/notes/modules/apps/FoundryCatalog/README.md#product-shell-variations)
@@ -56,6 +90,84 @@ four negative inventory probes covering missing dependencies/fixtures and an
 escaping path. See the [Swift product handoff](../frontend/swift/notes/modules/apps/ProductApp/README.md)
 and [Kotlin product handoff](../frontend/kotlin/notes/modules/project/product/README.md).
 Those initial runs used this checkout and did not establish standalone readiness.
+
+## Installation-enabled Go acceptance — 2026-10-17
+
+CLI 0.7.0 selects installation metadata under Notifications, credential v2 beside
+compatible v1, and the immutable 0002 migration. Independent output
+`/private/tmp/mobile-installations-starter-d1q94emj/device-api`, using module
+`github.com/example/device-api/backend`, passes its own formatting/import/vet/build,
+full race suite, process smoke and disposable PostgreSQL 14.24 migration/rollback/
+SIGKILL recovery. Its generated root Make runner passes real HTTP proof refusal,
+explicit cross-principal rebinding, old-session cleanup refusal and settled
+unregister, alongside the existing auth/data/inbox/renewal/sign-out workflows.
+
+Source conformance covers twelve-way same-ID create contention, private proof,
+token rotation/CAS, late cleanup/revocation, pre-registration tombstones, target
+uniqueness/expiry reclamation and cancellation. Forced installation, tombstone and
+inbox writes all roll back retirement. A compiled process retains registration
+through SIGKILL, then recovers blocked revocation after another kill and verifies
+raw-token erasure. Capability tests retain v1's exact shape and enforce v2 edge
+caller policy. All 28 CLI cases and starter inventory checks pass.
+
+No native code changes or native readiness promotion are claimed from this backend
+batch. Secure installation storage, OS tokens, offline unlink, provider queues/
+delivery and production retention remain separate. Read
+[construction and limits](blueprints/installations.md) and
+[the learning walkthrough](../backend/go/notes/modules/internal/notifications/installations.md).
+
+## Native Notifications follow-up — 2026-10-17
+
+Both catalogs now bind NotificationInboxRepository on the exact current session
+lease. Go identity and accounts includes Account inbox with server unread count,
+unread filtering, paging, first-read acknowledgement, media preference and a
+reference detail sheet. It retains at most 200 rows. Unconfirmed mutations require
+full successful refresh before another change, with no auto-replay on renewal.
+
+The shared page corpus covers scope/type/category, duplicates, missing read_at,
+impossible/normalized dates, count bounds and unread/cursor consistency. Two inbox
+service tests pass per platform. Real Go URLSession/OkHttp acceptance creates an
+upload-ready item, drops read and preference acknowledgements after commit, reads
+current state and checks another account's empty/default inbox.
+
+Two owner tests pass per platform for uncertainty/readback and late old-account
+completion. iOS execution is confirmed in
+.cache/ios/Logs/Test/Test-FoundryCatalog-2026.10.17_12-29-08-+0300.xcresult on
+iPhone 17 Pro/iOS 26.2: passed 2, failed/skipped 0. Android unit XML likewise reports
+2 with no failures/skips; its debug APK builds. These checks build the connected
+views but do not perform inbox gestures against a real API. Existing component
+interaction evidence remains separate. No connected CLI profile is promoted.
+
+Read [setup](blueprints/notifications.md) and
+[the learning pattern](../notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+Native starter readiness and Go CLI 0.6.0 selection remain unchanged; generated
+connected inboxes, Realtime, native installation/token integration and cloud push
+need their own slices. Backend installation metadata is recorded above.
+
+## Notifications-enabled Go acceptance — 2026-10-17
+
+CLI 0.6.0 includes Notifications in the full Go selection. Independent output
+`/private/tmp/mobile-notifications-starter-fwo4ysh0/inbox-api`, with module
+`github.com/example/inbox-api/backend`, passes its own formatting/import/vet/build,
+race suite, memory process smoke, disposable PostgreSQL 14.24 migration/transaction/
+SIGKILL recovery and generated Make-runner authentication/account/Notes/Files/
+Notifications acceptance. Its upload completion produces one in-app item; the
+runner reads it, acknowledges it and changes the media preference.
+
+The final copy in the same parent, inbox-final, uses
+`github.com/example/inbox-final/backend`. It includes the new cursor/HEAD test
+and finished generated setup guide; its own check target, focused race acceptance
+and generated Make-runner probe pass. The earlier inbox-api copy supplies the full
+independent PostgreSQL evidence for the same runtime/migration implementation.
+
+Source conformance checks twelve-way duplicate delivery, conflicting source
+identity, scope isolation, suppressed replay and preference races. Forced item,
+inbox and scope failures roll back all notification effects. Process checks block
+Notifications while Files commits, kill the API, then recover delivery; another
+restart preserves one item, first-read timestamp and preference. The source also
+checks scoped/filter-bound cursors and HEAD. All 28 CLI cases and starter inventory
+checks pass. Native connected catalog and backend installation evidence are recorded above. Cloud push, Realtime and
+retention remain pending. Read [the setup and learning path](blueprints/notifications.md).
 
 ## Files-enabled Go acceptance — 2026-10-17
 

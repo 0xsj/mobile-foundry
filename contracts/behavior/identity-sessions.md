@@ -5,7 +5,12 @@ and sessions, separate from Account ownership, membership and selection. Memory
 and PostgreSQL adapters implement the same application ports.
 [Account bootstrap/listing](account-bootstrap.md) is implemented separately;
 [native Go adapters](go-native-session.md) are implemented against these public
-contracts. Provider federation and backend CLI extraction remain later slices.
+contracts. Go CLI extraction is implemented; provider federation remains separate.
+
+The [installation registry](installations.md) now consumes Identity revocation.
+The process-selected credential resolver uses [v2](../capabilities/identity-credential-v2.md)
+for trusted session ID/absolute expiry while v1 remains principal-only and compatible.
+Public sign-in/renewal response shapes stay unchanged.
 
 ## Values and ownership
 

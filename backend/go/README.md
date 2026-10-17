@@ -1,5 +1,30 @@
 # Go backend foundation
 
+Recovery follow-up, 2026-10-17: [cancel/replace setup](../../docs/blueprints/push-job-recovery.md)
+adds owner-scoped cancellation, explicit replacement and direct-child readback.
+Apply Notifications 0004 before an existing API starts. The source outcome remains
+intact, and uncertain replacement requires explicit duplicate-risk acknowledgement.
+CLI 0.11.0 includes migration/source/setup; queue selection remains opt-in.
+
+Queue follow-up, 2026-10-17: [queued push-preview setup](../../docs/blueprints/push-jobs.md)
+adds retained intents, fenced claims, bounded preflight backoff and conservative
+crash recovery. Apply Notifications 0003 explicitly before an existing PostgreSQL
+API starts. PUSH_JOBS_ENABLED=true additionally requires selected private provider
+configuration, owned Identity and PostgreSQL; the default still starts no sender
+worker. CLI 0.10.0 includes source/migration/setup, with readiness evidence in that guide.
+
+Provider follow-up, 2026-10-17: [APNs/FCM preview setup](../../docs/blueprints/push-providers.md)
+documents real outbound adapters and the optional authenticated/proof/version
+preview route. Explicit private configuration is required; default startup sends
+nothing. Local protocol/runtime and CLI 0.9.0 extraction checks are independent
+of live cloud/device acceptance and native remote opens.
+
+Current push follow-up, 2026-10-17: [dispatch foundation](../../docs/blueprints/push-dispatch.md)
+adds a trusted internal preview use case, Identity session eligibility and
+conditional invalid-target retirement through swappable ports. Source and
+independent CLI 0.8.0 check/race/smoke/PostgreSQL/runner acceptance pass. The
+default API selects no gateway, send endpoint or delivery worker.
+
 A runnable runtime, reusable packages and an Account → Audit workflow with
 swappable memory/PostgreSQL stores. Memory needs no running services; PostgreSQL
 uses pgx v5.11.0. Identity adds owned password/session authentication through
@@ -304,3 +329,15 @@ Read [Files construction](../../docs/blueprints/files-media.md),
 object cleanup; a cleanup failure can follow a committed receipt. Retry the same
 key/target/version. Receipt lookup alone does not remove bytes. Background upload,
 folders/trash, processing, quotas, scanning and orphan retention are not implemented.
+
+Notifications adds an account/principal in-app inbox, stable first-read time
+and a media preference. It consumes committed Files completion independently of
+Audit; disabled deliveries still retain dedup markers. Memory/PostgreSQL are
+selected with the other modules. Run make migrate before starting an existing
+PostgreSQL stack after this upgrade; NOTIFICATIONS_DATABASE_URL inherits DATABASE_URL.
+Read [setup](../../docs/blueprints/notifications.md) and
+[HTTP routes](../../contracts/http/notifications-v1.md). Native Swift/Kotlin catalogs now connect an Account inbox through exact-lease
+repositories. Push registration/providers, generated native composition and
+retention remain separate slices.
+
+The [installation registry](../../docs/blueprints/installations.md) adds POST/GET/PUT/DELETE metadata routes under /v1/installations. It needs an owned Identity session plus an independent installation key. Credential v2 carries session evidence while v1 stays compatible. Run make migrate before upgrading an existing PostgreSQL API to 0002_installations.sql. Native OS token hooks, provider delivery, retention and encryption-at-rest key management remain separate.

@@ -1,0 +1,11 @@
+[
+  {"name":"provider-v1-preview","payload":{"version":"1","kind":"push_preview","preview_id":"10000000-0000-4000-8000-000000000001"},"valid":true},
+  {"name":"local-kind-is-not-remote","payload":{"version":"1","kind":"local_preview","preview_id":"10000000-0000-4000-8000-000000000001"},"valid":false},
+  {"name":"unknown-version","payload":{"version":"2","kind":"push_preview","preview_id":"10000000-0000-4000-8000-000000000001"},"valid":false},
+  {"name":"extra-account-authority","payload":{"version":"1","kind":"push_preview","preview_id":"10000000-0000-4000-8000-000000000001","account_id":"foreign"},"valid":false},
+  {"name":"unknown-field","payload":{"version":"1","kind":"push_preview","preview_id":"10000000-0000-4000-8000-000000000001","url":"https://untrusted.invalid"},"valid":false},
+  {"name":"zero-uuid","payload":{"version":"1","kind":"push_preview","preview_id":"00000000-0000-0000-0000-000000000000"},"valid":false},
+  {"name":"uppercase-uuid","payload":{"version":"1","kind":"push_preview","preview_id":"a0000000-0000-4000-8000-00000000000A"},"valid":false},
+  {"name":"missing-id","payload":{"version":"1","kind":"push_preview"},"valid":false},
+  {"name":"malformed-id","payload":{"version":"1","kind":"push_preview","preview_id":"../escape"},"valid":false}
+]

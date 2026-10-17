@@ -21,6 +21,9 @@ type Runtime struct {
 	Authentication, IdentityDatabaseURL           string
 	NotesDatabaseURL                              string
 	FilesDatabaseURL, FilesDirectory              string
+	NotificationsDatabaseURL                      string
+	PushConfigFile                                string
+	PushJobsEnabled                               bool
 }
 
 // Runtime may contain credentials; formatting it never prints the snapshot.
@@ -52,6 +55,10 @@ func Load(source env.Source) (Runtime, error) {
 		configuration.IdentityDatabaseURL = source.String("IDENTITY_DATABASE_URL", common)
 		configuration.NotesDatabaseURL = source.String("NOTES_DATABASE_URL", common)
 		configuration.FilesDatabaseURL = source.String("FILES_DATABASE_URL", common)
+		configuration.NotificationsDatabaseURL = source.String("NOTIFICATIONS_DATABASE_URL", common)
+		if configuration.NotificationsDatabaseURL == "" {
+			return Runtime{}, invalid("postgres storage requires NOTIFICATIONS_DATABASE_URL or DATABASE_URL")
+		}
 		configuration.FilesDirectory = source.String("FILES_DIRECTORY", ".data/files")
 		if configuration.FilesDatabaseURL == "" || configuration.FilesDirectory == "" {
 			return Runtime{}, invalid("postgres files require FILES_DATABASE_URL or DATABASE_URL and a nonempty FILES_DIRECTORY")
@@ -115,6 +122,18 @@ func Load(source env.Source) (Runtime, error) {
 	}
 	if configuration.Authentication == "development" && configuration.DevelopmentToken == "" {
 		return Runtime{}, invalid("development authentication requires paired fixture credentials")
+	}
+	configuration.PushConfigFile = source.String("PUSH_CONFIG_FILE", "")
+	queued := source.String("PUSH_JOBS_ENABLED", "false")
+	if queued != "true" && queued != "false" {
+		return Runtime{}, invalid("PUSH_JOBS_ENABLED must be true or false")
+	}
+	configuration.PushJobsEnabled = queued == "true"
+	if configuration.PushJobsEnabled && (configuration.PushConfigFile == "" || configuration.Authentication != "identity" || configuration.Storage != "postgres") {
+		return Runtime{}, invalid("PUSH_JOBS_ENABLED requires private push configuration, owned Identity and postgres storage")
+	}
+	if configuration.PushConfigFile != "" && (configuration.Authentication != "identity" || configuration.PushConfigFile != strings.TrimSpace(configuration.PushConfigFile)) {
+		return Runtime{}, invalid("PUSH_CONFIG_FILE requires AUTH_MODE=identity and a nonblank private configuration path")
 	}
 	return configuration, nil
 }

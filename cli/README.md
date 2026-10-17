@@ -1,5 +1,17 @@
 # Local project CLI
 
+CLI 0.11.0 includes [owned push-job recovery](../docs/blueprints/push-job-recovery.md),
+its 0004 migration, atomic adapters and old-row upgrade checks. Generated setup
+explains cancel-before-sending, one linked replacement per source and explicit
+duplicate-risk acknowledgement. No keys, worker or connected native recovery UI
+are enabled by copying the source.
+
+CLI 0.10.0 includes [queued Go previews](../docs/blueprints/push-jobs.md): the owned
+0003 migration, state/ports/adapters, fenced worker and guarded enqueue/status API.
+The generated guide explains explicit PostgreSQL/provider/queue selection and
+uncertain outcomes. No provider credentials, active worker or native connected
+profile is selected by copying the source.
+
 `mobile-foundry` copies a selected native starter into `PARENT/NAME`. The output
 contains its own source, native build configuration, tests, fixtures, Gradle
 wrapper and setup guide. It builds without this checkout or the CLI.
@@ -52,7 +64,9 @@ Solid/Glass selection. Without `--with`, its screens are placeholders. Add
 SQLite persistence, CRUD state and live observation. All three platforms above
 support that combination. Backend `none` is the default;
 Go is available through `--backend go`, selecting Health, Identity, Account,
-Audit, Notes and Files with memory/PostgreSQL metadata stores. Files uses memory
+Audit, Notes, Files and Notifications with memory/PostgreSQL stores. Notifications
+adds the upload-ready inbox, read state and media preferences; native inbox wiring
+and cloud push remain separate. Files uses memory
 bytes or a private local directory; cloud storage adapters remain separate. Generate an API on its own:
 
 ```sh
@@ -204,3 +218,16 @@ Adding a placeholder directory or changing a registry status is insufficient.
 Read [behavior](../contracts/behavior/project-cli.md),
 [construction](../docs/blueprints/project-cli.md) and
 [source-copy reasoning](../notes/techniques/local-cli-and-independent-source-copies.md).
+
+CLI 0.7.0 includes Notifications installation metadata in the Go selection. Source copying selects credential resolution v2, the immutable 0002 migration and registry acceptance cases. Native product shells remain independently composed; no OS token/vault hooks or push provider credentials are provisioned.
+
+CLI 0.8.0 selects the Go push-dispatch application foundation, Identity eligibility
+capability and conformance cases. The independent output passes check/race/smoke,
+disposable PostgreSQL and generated runner acceptance. No gateway, worker or public
+send route is enabled. Read [evidence](../docs/blueprints/push-dispatch.md).
+
+CLI 0.9.0 selects optional real APNs/FCM adapters and their private configuration
+example. PUSH_CONFIG_FILE plus AUTH_MODE=identity enables the guarded manual
+preview route. Source copying prunes .p8, .push-private and known service-account
+filenames; generated ignore/setup files match. No key or cloud account is
+provisioned. Read [setup and acceptance](../docs/blueprints/push-providers.md).

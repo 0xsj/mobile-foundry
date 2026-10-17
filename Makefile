@@ -9,6 +9,51 @@ CLI_PREFIX ?= $(HOME)/.local
 .PHONY: cli-test cli-install
 .PHONY: physics-test physics-ui-test physics-ios-ui-test
 .PHONY: go-dev go-check go-test
+.PHONY: installations-ui-test
+.PHONY: system-notifications-ui-test
+.PHONY: push-tokens-ui-test
+.PHONY: remote-notifications-ios-test remote-notifications-android-test
+
+remote-notifications-ios-test: ios-generate
+	python3 -B scripts/remote_notifications_ios_test.py
+
+remote-notifications-android-test:
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :app:connectedDebugAndroidTest \
+		-Pandroid.testInstrumentationRunnerArguments.class=dev.mobilefoundry.catalog.systemnotifications.RemoteNotificationTest,dev.mobilefoundry.catalog.systemnotifications.SystemNotificationTest
+
+push-tokens-ui-test: ios-generate
+	xcodebuild -project frontend/swift/apps/FoundryCatalog/FoundryCatalog.xcodeproj \
+		-scheme FoundryCatalog -destination '$(FOUNDRY_IOS_TEST_DESTINATION)' \
+		-derivedDataPath .cache/ios -configuration Debug CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+		-quiet -only-testing:FoundryCatalogTests/PushTokenTests \
+		-only-testing:FoundryCatalogUITests/PushTokenUITests test
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :app:connectedDebugAndroidTest \
+		-Pandroid.testInstrumentationRunnerArguments.class=dev.mobilefoundry.catalog.installations.PushTokenTest,dev.mobilefoundry.catalog.installations.PushTokenUITest
+
+system-notifications-ui-test: ios-generate
+	xcodebuild -project frontend/swift/apps/FoundryCatalog/FoundryCatalog.xcodeproj \
+		-scheme FoundryCatalog -destination '$(FOUNDRY_IOS_TEST_DESTINATION)' \
+		-derivedDataPath .cache/ios -configuration Debug CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+		-quiet -only-testing:FoundryCatalogTests/SystemNotificationAdmissionTests \
+		-only-testing:FoundryCatalogUITests/SystemNotificationUITests test
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :app:connectedDebugAndroidTest \
+		-Pandroid.testInstrumentationRunnerArguments.class=dev.mobilefoundry.catalog.systemnotifications.SystemNotificationTest
+
+installations-ui-test: ios-generate
+	xcodebuild -project frontend/swift/apps/FoundryCatalog/FoundryCatalog.xcodeproj \
+		-scheme FoundryCatalog -destination '$(FOUNDRY_IOS_TEST_DESTINATION)' \
+		-derivedDataPath .cache/ios -configuration Debug CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+		-quiet -only-testing:FoundryCatalogTests/InstallationVaultTests test
+	cd frontend/kotlin/project && \
+		JAVA_HOME="$(FOUNDRY_ANDROID_JAVA_HOME)" ANDROID_HOME="$(FOUNDRY_ANDROID_SDK)" \
+		./gradlew :app:connectedDebugAndroidTest \
+		-Pandroid.testInstrumentationRunnerArguments.class=dev.mobilefoundry.catalog.installations.InstallationVaultTest
 
 go-dev:
 	$(MAKE) -C backend/go dev
@@ -30,6 +75,9 @@ cli-install:
 .PHONY: help kernel-build kernel-test http-test query-test data-test data-ui-test observation-test observation-ui-test session-test session-ui-test account-test account-ui-test shell-ui-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
 
 help:
+	@echo 'make remote-notifications-ios-test Verify injected remote and local iOS opens'
+	@echo 'make remote-notifications-android-test Verify remote/local Android notification opens'
+	@echo 'make push-tokens-ui-test Verify native token bridges and missing-setup UI'
 	@echo 'make go-dev          Run the Go runtime and health endpoints'
 	@echo 'make go-check        Check Go formatting, architecture, vet and build'
 	@echo 'make go-test         Run Go foundation tests with the race detector'
@@ -51,6 +99,8 @@ help:
 	@echo 'make observation-ui-test Run Android live readers and account lifecycle checks'
 	@echo 'make session-test    Run Swift and Kotlin session lifecycle tests'
 	@echo 'make go-native-test  Verify native sessions/Notes/Files against an owned Go API'
+	@echo 'make installations-ui-test Run native installation Keychain/Keystore checks'
+	@echo 'make system-notifications-ui-test Run native notification/permission/open checks'
 	@echo 'make go-native-device-test Add iOS/Android Go catalog and native-vault checks'
 	@echo 'make session-ui-test Run Android Keystore and session UI tests on a device'
 	@echo 'make account-test    Run session/HTTP, account storage and feature unit checks'

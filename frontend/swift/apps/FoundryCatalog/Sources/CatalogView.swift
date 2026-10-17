@@ -1,6 +1,8 @@
 import SwiftUI
 
+private enum CatalogDestination: Hashable { case systemNotifications }
 struct CatalogView: View {
+    @State private var path: [CatalogDestination] = []
     @Binding var glassTheme: Bool
     private let onClose: (() -> Void)?
     init(glassTheme: Binding<Bool> = .constant(false), onClose: (() -> Void)? = nil) {
@@ -8,7 +10,7 @@ struct CatalogView: View {
         self.onClose = onClose
     }
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             List {
                 Section("Theme") {
                     Toggle("Glass surfaces", isOn: $glassTheme)
@@ -16,6 +18,7 @@ struct CatalogView: View {
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 Section("Foundation") {
+                    NavigationLink(value: CatalogDestination.systemNotifications) { Label("System notifications", systemImage: "bell") }
                     NavigationLink { ProductShellCatalogView() } label: { Label("Product shells", systemImage: "rectangle.split.2x2") }
                     NavigationLink { ComponentCatalogView() } label: { Label("Components", systemImage: "rectangle.3.group") }
                     NavigationLink { FormsCatalogView() } label: { Label("Forms and mutations", systemImage: "square.and.pencil") }
@@ -45,6 +48,7 @@ struct CatalogView: View {
                 }
             }
             .navigationTitle("Mobile Foundry")
+            .navigationDestination(for: CatalogDestination.self) { _ in SystemNotificationCatalogView() }
             .toolbar {
                 if let onClose {
                     ToolbarItem(placement: .cancellationAction) {
@@ -52,6 +56,11 @@ struct CatalogView: View {
                     }
                 }
             }
+        }
+        .onChange(of: SystemNotificationComposition.opens.pending?.id, initial: true) { _, id in
+            guard id != nil, let open = SystemNotificationComposition.opens.pending else { return }
+            if path.last != .systemNotifications { path.append(.systemNotifications) }
+            SystemNotificationComposition.opens.consume(open)
         }
     }
 }

@@ -4,6 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import dev.mobilefoundry.services.NotificationOpen
+import dev.mobilefoundry.catalog.systemnotifications.SystemNotificationCatalogScreen
+import dev.mobilefoundry.catalog.systemnotifications.SystemNotificationComposition
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
@@ -30,8 +34,14 @@ import dev.mobilefoundry.catalog.ui.graphics.ImageStudioScreen
 import dev.mobilefoundry.catalog.ui.graphics.ProductStudioScreen
 
 @Composable
-fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) -> Unit = {}, onExit: (() -> Unit)? = null) {
+fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) -> Unit = {}, onExit: (() -> Unit)? = null, notificationOpen: NotificationOpen? = null) {
   val backStack = rememberNavBackStack(Main)
+  LaunchedEffect(notificationOpen?.id) {
+    if (notificationOpen != null) {
+      if (backStack.lastOrNull() != SystemNotificationsCatalog) backStack.add(SystemNotificationsCatalog)
+      SystemNotificationComposition.opens.consume(notificationOpen)
+    }
+  }
 
   NavDisplay(
     backStack = backStack,
@@ -39,6 +49,9 @@ fun MainNavigation(glassTheme: Boolean = false, onGlassThemeChange: (Boolean) ->
     onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
     entryProvider =
       entryProvider {
+        entry<SystemNotificationsCatalog> {
+          SystemNotificationCatalogScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
+        }
         entry<PhysicsPlaygroundCatalog> {
           PhysicsPlaygroundScreen(onBack = { backStack.removeLastOrNull() }, modifier = Modifier.safeDrawingPadding().padding(16.dp))
         }

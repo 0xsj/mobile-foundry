@@ -56,7 +56,7 @@ def main():
         with socket.socket() as reservation:
             reservation.bind(("127.0.0.1", 0)); port = reservation.getsockname()[1]
         base = f"http://127.0.0.1:{port}"
-        env = dict(os.environ, HTTP_ADDR=f"127.0.0.1:{port}", LOG_FORMAT="json", STORAGE="memory", DEV_AUTH_TOKEN="", DEV_PRINCIPAL_ID="")
+        env = dict(os.environ, HTTP_ADDR=f"127.0.0.1:{port}", LOG_FORMAT="json", STORAGE="memory", DEV_AUTH_TOKEN="", DEV_PRINCIPAL_ID="", PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false")
         env.pop("AUTH_MODE", None)
         env["PATH"] = str(shim.parent) + os.pathsep + env["PATH"]
         with tempfile.TemporaryFile(mode="w+") as logs:
@@ -106,6 +106,39 @@ def main():
                 assert request(base,"GET",file + "/content",token=sam["access_token"])[0] == 403
                 assert request(base,"DELETE",file,token=alex["access_token"],headers={"If-Match": '\"2\"',"Idempotency-Key":file_key + ".delete"})[0] == 200
                 assert request(base,"GET",file + "/content",token=alex["access_token"])[0] == 404
+                inbox = path + "/notifications"
+                deadline = time.monotonic() + 5
+                while True:
+                    status, _, wire = request(base,"GET",inbox,token=alex["access_token"])
+                    assert status == 200; page = json.loads(wire)
+                    if len(page["items"]) == 1: break
+                    assert time.monotonic() < deadline, "generated notification not delivered"
+                    time.sleep(0.02)
+                assert page["unread_count"] == 1 and page["items"][0]["file_id"] == pending["file"]["id"]
+                assert request(base,"GET",inbox,token=sam["access_token"])[0] == 403
+                item = inbox + "/" + page["items"][0]["id"] + "/read"
+                assert request(base,"POST",item,token=alex["access_token"])[0] == 200
+                assert json.loads(request(base,"GET",inbox,token=alex["access_token"])[2])["unread_count"] == 0
+                preferences = path + "/notification-preferences"
+                assert request(base,"PUT",preferences,{"media_in_app":False},alex["access_token"])[0] == 200
+                assert json.loads(request(base,"GET",preferences,token=alex["access_token"])[2])["media_in_app"] is False
+                # Installation proof is independent of both auth and push token.
+                import secrets
+                proof = "i1." + secrets.token_urlsafe(32); target = "private-target-" + uuid.uuid4().hex
+                private += [proof,target]
+                installation = str(uuid.uuid4()); registration = str(uuid.uuid4()); route = "/v1/installations/" + installation
+                binding = {"installation_id":installation,"registration_id":registration,"provider":"apns","application":"generated.ios","environment":"sandbox","token":target}
+                installation_headers = {"X-Installation-Key":proof}
+                status,hdr,wire = request(base,"POST","/v1/installations",binding,alex["access_token"],installation_headers)
+                assert status == 201 and hdr["ETag"] == '"1"'
+                assert proof.encode() not in wire and target.encode() not in wire and json.loads(wire)["current_binding"]
+                assert request(base,"GET",route,token=sam["access_token"],headers={"X-Installation-Key":"i1." + secrets.token_urlsafe(32)})[0] == 404
+                update = dict(binding);update.pop("installation_id");update["registration_id"] = str(uuid.uuid4())
+                status,_,wire = request(base,"PUT",route,update,sam["access_token"],dict(installation_headers,**{"If-Match":'"1"'}))
+                assert status == 200 and json.loads(wire)["version"] == 2
+                assert request(base,"DELETE",route,token=alex["access_token"],headers=dict(installation_headers,**{"If-Match":'"2"'}))[0] == 403
+                assert request(base,"DELETE",route,token=sam["access_token"],headers=dict(installation_headers,**{"If-Match":'"2"'}))[0] == 200
+                assert request(base,"DELETE",route,token=sam["access_token"],headers=dict(installation_headers,**{"If-Match":'"2"'}))[0] == 200
                 status, _, wire = request(base,"POST","/v1/identity/renew",{"refresh_token":alex["refresh_token"]})
                 assert status == 200; renewed = json.loads(wire); private += [renewed["access_token"],renewed["refresh_token"]]
                 assert request(base,"GET",path,token=alex["access_token"])[0] == 401
@@ -122,7 +155,7 @@ def main():
                     os.killpg(process.pid, signal.SIGKILL); process.wait(); raise
                 logs.seek(0); text = logs.read()
                 assert all(secret not in text for secret in private), "credentials leaked in generated runner logs"
-    print("Generated Go acceptance: module identity, make runner, real auth/account isolation, Notes CRUD/CAS/receipts, Files upload/download/deletion, renewal and sign-out passed")
+    print("Generated Go acceptance: auth/account/Notes/Files/Notifications, installation proof/rebind/unregister, renewal and sign-out passed")
 
 
 if __name__ == "__main__":

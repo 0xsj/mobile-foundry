@@ -10,6 +10,26 @@ func source(values map[string]string) env.Source {
 	return func(key string) (string, bool) { value, found := values[key]; return value, found }
 }
 
+func TestPushJobsRequireExplicitDurableProviderSelection(t *testing.T) {
+	for _, values := range []map[string]string{
+		{"PUSH_JOBS_ENABLED": "yes"}, {"PUSH_JOBS_ENABLED": "true"},
+		{"PUSH_JOBS_ENABLED": "true", "PUSH_CONFIG_FILE": "private.json", "AUTH_MODE": "identity"},
+		{"PUSH_JOBS_ENABLED": "true", "AUTH_MODE": "identity", "STORAGE": "postgres", "DATABASE_URL": "common"},
+	} {
+		if _, err := Load(source(values)); err == nil {
+			t.Fatal("unsafe queued setup admitted")
+		}
+	}
+	valid, err := Load(source(map[string]string{"PUSH_JOBS_ENABLED": "true", "PUSH_CONFIG_FILE": "private.json", "AUTH_MODE": "identity", "STORAGE": "postgres", "DATABASE_URL": "common"}))
+	if err != nil || !valid.PushJobsEnabled {
+		t.Fatal("durable queued selection refused", err)
+	}
+	off, err := Load(source(nil))
+	if err != nil || off.PushJobsEnabled {
+		t.Fatal("jobs enabled by default", err)
+	}
+}
+
 func TestDevelopmentCredentialsRequireExplicitSafeComposition(t *testing.T) {
 	identity := "00000000-0000-4000-8000-000000000001"
 	for _, values := range []map[string]string{
@@ -46,6 +66,18 @@ func TestDefaultsAndAdmission(t *testing.T) {
 	}
 }
 
+func TestPushConfigurationIsExplicitAndRequiresOwnedIdentity(t *testing.T) {
+	for _, values := range []map[string]string{{"PUSH_CONFIG_FILE": "private.json"}, {"PUSH_CONFIG_FILE": " "}, {"AUTH_MODE": "identity", "PUSH_CONFIG_FILE": " private.json"}} {
+		if _, err := Load(source(values)); err == nil {
+			t.Fatal("unsafe provider selection")
+		}
+	}
+	configured, err := Load(source(map[string]string{"AUTH_MODE": "identity", "PUSH_CONFIG_FILE": ".push-private/push.local.json"}))
+	if err != nil || configured.PushConfigFile != ".push-private/push.local.json" {
+		t.Fatal("valid explicit provider selection", err)
+	}
+}
+
 func TestStorageSelectionAndModuleOverrides(t *testing.T) {
 	for _, values := range []map[string]string{{"STORAGE": "sqlite"}, {"STORAGE": "postgres"}, {"STORAGE": "postgres", "ACCOUNT_DATABASE_URL": "account-url"}} {
 		if _, err := Load(source(values)); err == nil {
@@ -53,12 +85,12 @@ func TestStorageSelectionAndModuleOverrides(t *testing.T) {
 		}
 	}
 	configured, err := Load(source(map[string]string{"STORAGE": "postgres", "DATABASE_URL": "common", "AUDIT_DATABASE_URL": "audit"}))
-	if err != nil || configured.AccountDatabaseURL != "common" || configured.AuditDatabaseURL != "audit" || configured.NotesDatabaseURL != "common" {
+	if err != nil || configured.AccountDatabaseURL != "common" || configured.AuditDatabaseURL != "audit" || configured.NotesDatabaseURL != "common" || configured.NotificationsDatabaseURL != "common" {
 		t.Fatal("module override lost", err)
 	}
-	configured, err = Load(source(map[string]string{"STORAGE": "postgres", "ACCOUNT_DATABASE_URL": "a", "AUDIT_DATABASE_URL": "b", "NOTES_DATABASE_URL": "n", "FILES_DATABASE_URL": "f"}))
-	if err != nil || configured.NotesDatabaseURL != "n" {
-		t.Fatal("owned Notes override refused", err)
+	configured, err = Load(source(map[string]string{"STORAGE": "postgres", "ACCOUNT_DATABASE_URL": "a", "AUDIT_DATABASE_URL": "b", "NOTES_DATABASE_URL": "n", "FILES_DATABASE_URL": "f", "NOTIFICATIONS_DATABASE_URL": "notify"}))
+	if err != nil || configured.NotesDatabaseURL != "n" || configured.NotificationsDatabaseURL != "notify" {
+		t.Fatal("owned module override refused", err)
 	}
 }
 func TestAuthenticationSelection(t *testing.T) {

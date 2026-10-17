@@ -1,8 +1,32 @@
 # Generate a Go starter
 
-Status: standalone backend ready, CLI 0.5.0, Files follow-up 2026-10-17. Connected native catalog
+Status: standalone backend ready, CLI 0.11.0, recovery follow-up 2026-10-17. Connected native catalog
 behavior is verified separately; generated native auth/data UI remains the next
 capability.
+
+[Owned job recovery](push-job-recovery.md) now adds explicit cancellation before
+sending and one linked replacement per eligible source. Independent CLI 0.11.0
+output at `/private/tmp/mobile-push-recovery-starter-2QauZT/recovery-verified`
+passes its own check/race/smoke, disposable PostgreSQL old-row upgrade and recovery,
+and generated HTTP runner acceptance. Apply Notifications 0004 explicitly on an
+existing deployment; source copying still selects no provider keys or active worker.
+
+[Queued manual previews](push-jobs.md) now add opt-in retained intents and fenced
+execution under Notifications. Independent CLI 0.10.0 output at
+`/private/tmp/mobile-push-jobs-starter-SNkXAO/verified-api` passes its own
+check/race/smoke, disposable PostgreSQL crash/rollback and HTTP runner acceptance.
+PUSH_JOBS_ENABLED=true additionally requires PostgreSQL plus selected private
+providers. Source copying enables no live worker and provisions no credentials.
+
+The selected source includes [internal push-dispatch seams](push-dispatch.md) and
+[optional APNs/FCM adapters](push-providers.md): versioned Identity eligibility,
+exact installation rechecks, conditional invalid-address retirement and a guarded
+manual preview. PUSH_CONFIG_FILE explicitly selects private provider routes/keys;
+the ordinary generated runner leaves it disabled. Independent CLI 0.9.0 output at
+`/private/tmp/mobile-provider-verified-9jtwolsv/push-api` passes check/race/smoke,
+disposable PostgreSQL and generated runner acceptance. Local TLS protocol tests
+are not live cloud/device-delivery evidence. The synchronous route has no durable
+send receipt; the separate queued workflow above now retains execution state.
 
 From an existing output parent outside this checkout:
 

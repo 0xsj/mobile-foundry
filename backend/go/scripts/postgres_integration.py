@@ -72,7 +72,7 @@ def main():
         raise RuntimeError("POSTGRES_TEST_MODE must be docker or local")
     database = docker_database if mode == "docker" else local_database
     with database() as (url, psql):
-        environment = dict(os.environ, STORAGE="postgres", AUTH_MODE="deny", DATABASE_URL=url, ACCOUNT_DATABASE_URL="", AUDIT_DATABASE_URL="",IDENTITY_DATABASE_URL="",NOTES_DATABASE_URL="",
+        environment = dict(os.environ, STORAGE="postgres", AUTH_MODE="deny", PUSH_CONFIG_FILE="", PUSH_JOBS_ENABLED="false", DATABASE_URL=url, ACCOUNT_DATABASE_URL="", AUDIT_DATABASE_URL="",IDENTITY_DATABASE_URL="",NOTES_DATABASE_URL="",
                            TEST_POSTGRES_URL=url, TEST_POSTGRES_DISPOSABLE="1", DEV_AUTH_TOKEN="", DEV_PRINCIPAL_ID="")
         # Empty module overrides deliberately mean empty in application config;
         # omit them here so each falls back to the common database URL.
@@ -81,6 +81,7 @@ def main():
         environment.pop("IDENTITY_DATABASE_URL")
         environment.pop("NOTES_DATABASE_URL")
         environment.pop("FILES_DATABASE_URL", None)
+        environment.pop("NOTIFICATIONS_DATABASE_URL", None)
         with tempfile.TemporaryDirectory(prefix="mobile-foundry-pg-") as temporary:
             binary = Path(temporary) / "server"
             run("go", "build", "-o", str(binary), "./cmd/server", cwd=ROOT)
@@ -134,10 +135,11 @@ def main():
                 assert request(base, "GET", path, token=TOKEN)[0] == 403
                 assert request(base, "GET", path + "/audit", token=TOKEN)[0] == 403
             identity_processes(binary, url, psql)
-            files_processes(binary, url, str(Path(temporary) / "objects"))
+            files_processes(binary, url, str(Path(temporary) / "objects"), psql)
+            installations_processes(binary, url, psql)
         print("PostgreSQL integration: schema guards, atomic writes, CAS, leases, inbox replay, cursor isolation and process recovery passed")
 
-def files_processes(binary, url, directory):
+def files_processes(binary, url, directory, psql):
     import hashlib
     import urllib.request
     data = b"private media bytes\x00\xff"
@@ -155,19 +157,88 @@ def files_processes(binary, url, directory):
         status, _, wire = request(base, "POST", path + "/uploads", body, TOKEN, {"Idempotency-Key": "restart.request"})
         assert status == 201; pending = json.loads(wire); target = path + "/" + pending["file"]["id"]
         assert raw(base, target + "/content", "PUT", data)[0] == 200
+    # Block only Notifications so Audit can accept the same committed fact.
+    run(*psql, "-v", "ON_ERROR_STOP=1", "-c",
+        "ALTER TABLE notifications.inbox ADD CONSTRAINT pause_notifications CHECK(false) NOT VALID", stdout=subprocess.DEVNULL)
     with server(binary, fixture=True, database_url=url, crash=True, files_directory=directory, forbidden=(name,)) as base:
         receipt = "/v1/receipts/files/restart.request?account_id=" + account
         assert json.loads(request(base, "GET", receipt, token=TOKEN)[2]) == pending
         status, _, wire = request(base, "POST", target + "/complete", token=TOKEN, headers={"If-Match": '\"1\"', "Idempotency-Key": "restart.complete"})
         assert status == 200; completed = json.loads(wire)
         assert raw(base, target + "/content")[1] == data
+        inbox = "/v1/accounts/" + account + "/notifications"
+        assert json.loads(request(base, "GET", inbox, token=TOKEN)[2])["items"] == []
+    run(*psql, "-v", "ON_ERROR_STOP=1", "-c",
+        "ALTER TABLE notifications.inbox DROP CONSTRAINT pause_notifications", stdout=subprocess.DEVNULL)
     with server(binary, fixture=True, database_url=url, files_directory=directory, forbidden=(name,)) as base:
+        deadline = time.monotonic() + 10
+        while True:
+            page = json.loads(request(base, "GET", inbox, token=TOKEN)[2])
+            if len(page["items"]) == 1:
+                break
+            assert time.monotonic() < deadline, "notification delivery not recovered after producer crash"
+            time.sleep(0.02)
+        assert page["unread_count"] == 1 and page["items"][0]["file_id"] == pending["file"]["id"]
+        item = inbox + "/" + page["items"][0]["id"] + "/read"
+        status, _, wire = request(base, "POST", item, token=TOKEN)
+        assert status == 200; read = json.loads(wire)
+        preferences = "/v1/accounts/" + account + "/notification-preferences"
+        assert request(base, "PUT", preferences, {"media_in_app":False}, TOKEN)[0] == 200
         assert raw(base, target + "/content")[1] == data
         assert json.loads(request(base, "POST", target + "/complete", token=TOKEN, headers={"If-Match": '\"1\"', "Idempotency-Key": "restart.complete"})[2]) == completed
         status, _, _ = request(base, "DELETE", target, token=TOKEN, headers={"If-Match": '\"2\"', "Idempotency-Key": "restart.delete"})
         assert status == 200
         assert request(base, "GET", target + "/content", token=TOKEN)[0] == 404
+    with server(binary, fixture=True, database_url=url, files_directory=directory, forbidden=(name,)) as base:
+        page = json.loads(request(base, "GET", inbox, token=TOKEN)[2])
+        assert len(page["items"]) == 1 and page["unread_count"] == 0, "notification lost/duplicated on restart"
+        assert json.loads(request(base, "POST", item, token=TOKEN)[2]) == read, "read acknowledgement not retained"
+        assert json.loads(request(base, "GET", preferences, token=TOKEN)[2])["media_in_app"] is False
+    with server(binary, fixture=True, database_url=url, files_directory=directory, principal_id="00000000-0000-4000-8000-000000000002") as base:
+        assert request(base, "GET", inbox, token=TOKEN)[0] == 403
     print("Files PostgreSQL: pending content, completion, receipts and private bytes survive API SIGKILL; deletion closes access")
+    print("Notifications PostgreSQL: blocked consumer recovers after SIGKILL; one inbox item, read acknowledgement and preference survive restart")
+
+def installations_processes(binary, url, psql):
+    import secrets
+    proof = "i1." + secrets.token_urlsafe(32)
+    token = "private-installation-target-" + uuid.uuid4().hex
+    password = "private installation passphrase"
+    hidden = [proof, token, password]
+    identity, registration = str(uuid.uuid4()), str(uuid.uuid4())
+    path = "/v1/installations/" + identity
+    headers = {"X-Installation-Key": proof}
+    with server(binary, identity=True, database_url=url, crash=True, forbidden=hidden) as base:
+        assert request(base,"POST","/v1/identity/register",{"login":"installation-process","display_name":"Device","password":password})[0] == 201
+        status,_,wire = request(base,"POST","/v1/identity/sign-in",{"login":"installation-process","password":password})
+        assert status == 200; grant = json.loads(wire); hidden += [grant["access_token"],grant["refresh_token"]]
+        body = {"installation_id":identity,"registration_id":registration,"provider":"fcm","application":"catalog.android","environment":"production","token":token}
+        status,hdr,wire = request(base,"POST","/v1/installations",body,grant["access_token"],headers)
+        assert status == 201 and hdr["ETag"] == '"1"'; committed = json.loads(wire)
+        assert all(secret.encode() not in wire for secret in hidden)
+    run(*psql,"-v","ON_ERROR_STOP=1","-c",
+        "ALTER TABLE notifications.installation_inbox ADD CONSTRAINT pause_installation_revoke CHECK(false) NOT VALID",stdout=subprocess.DEVNULL)
+    with server(binary, identity=True, database_url=url, crash=True, forbidden=hidden) as base:
+        status,_,wire = request(base,"GET",path,token=grant["access_token"],headers=headers)
+        assert status == 200 and json.loads(wire) == committed, "installation lost on crash"
+        assert request(base,"POST","/v1/identity/sign-out",{"refresh_token":grant["refresh_token"]})[0] == 204
+    run(*psql,"-v","ON_ERROR_STOP=1","-c",
+        "ALTER TABLE notifications.installation_inbox DROP CONSTRAINT pause_installation_revoke",stdout=subprocess.DEVNULL)
+    with server(binary, identity=True, database_url=url, forbidden=hidden) as base:
+        status,_,wire = request(base,"POST","/v1/identity/sign-in",{"login":"installation-process","password":password})
+        assert status == 200; fresh = json.loads(wire); hidden += [fresh["access_token"],fresh["refresh_token"]]
+        deadline = time.monotonic() + 10
+        while True:
+            status,_,wire = request(base,"GET",path,token=fresh["access_token"],headers=headers)
+            assert status == 200; current = json.loads(wire)
+            if not current["registered"]: break
+            assert time.monotonic() < deadline, "installation revoke not recovered"
+            time.sleep(0.02)
+        assert current["version"] == 2 and current["current_binding"] is False
+    state = run(*psql,"-tA","-v","ON_ERROR_STOP=1","-c",
+        "SELECT token || ':' || proof_digest FROM notifications.installations WHERE id='" + identity + "'",capture_output=True,text=True).stdout.strip()
+    assert state.startswith(":") and proof not in state and token not in state, "routing token/proof retained after revoke"
+    print("Installation process acceptance: registration survives SIGKILL; blocked Identity revocation recovers, erases token and preserves hashed proof")
 
 def identity_processes(binary, url, psql):
     password = "private process passphrase"

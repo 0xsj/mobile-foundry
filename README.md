@@ -325,3 +325,45 @@ The Go backend includes account-owned Files with memory/PostgreSQL metadata and
 replaceable byte storage. Both native catalogs can upload a gallery photo and
 open the downloaded file in the image editor through an authenticated session.
 Read [setup and verification](docs/blueprints/files-media.md).
+
+The Go backend also includes an account-scoped in-app inbox: completed uploads
+produce an upload-ready notice with read state and media preferences. Read
+[Notifications setup and limits](docs/blueprints/notifications.md). Swift and Kotlin
+now show the connected Account inbox in Go identity and accounts, with unread
+filtering, read acknowledgements and media preferences. System push remains a
+separate integration step.
+
+The [session-bound installation registry](docs/blueprints/installations.md) now has Swift/Kotlin ports, native secure identity vaults and catalog controls for registration, token replacement, explicit rebinding and unregister. Identity revocation retires matching server targets; uncertain writes require readback. Optional [APNs/FCM token adapters](docs/blueprints/push-tokens.md) add explicit collection and a separate Register collected token action. Provider setup and live cloud checks are required; push sending remains separate.
+
+Both catalogs now include [System notifications](docs/blueprints/system-notifications.md):
+explicit device permission/settings, a real local test notification and admitted
+navigation on open. The preview remains separate from account inbox preferences
+and installation registration; cloud push is a later capability.
+
+The [Go push-dispatch foundation](docs/blueprints/push-dispatch.md) checks live
+session eligibility, rechecks a versioned installation and calls a swappable
+gateway once. Invalid-address cleanup preserves newer registrations. CLI 0.8.0
+includes the independently verified source; the default API selects no sender.
+
+Optional [APNs/FCM preview providers](docs/blueprints/push-providers.md) now add
+real HTTP adapters and a guarded manual preview endpoint. CLI 0.9.0 includes
+the source/example and private-key copy exclusions. Provider selection is off
+by default; live credentials, device delivery and remote native opens need their
+own acceptance.
+
+The [native remote preview](docs/blueprints/remote-notifications.md) now admits
+the provider payload, records foreground receipt and routes taps into notification
+diagnostics. iOS simulator pushes and Android fixture/PendingIntent checks are
+separate from live signed-device delivery. Learning notes follow the value,
+transport and app-navigation owners on both platforms.
+
+[Queued Go previews](docs/blueprints/push-jobs.md) now retain manual delivery
+intents behind guarded enqueue/status routes. An opt-in worker retries preflight
+failures and retains uncertain sends without automatic resend. CLI 0.10.0 includes
+the owned migration and independently verified source; it enables no worker by
+default and requires PostgreSQL plus private provider configuration when selected.
+
+[Owned job recovery](docs/blueprints/push-job-recovery.md) now cancels work before
+sending or creates an explicit linked replacement while retaining the source.
+Uncertain replacement requires duplicate-risk acknowledgement. CLI 0.11.0 includes
+the independently verified source and 0004 migration; default selection remains off.

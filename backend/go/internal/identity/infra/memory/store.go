@@ -2,6 +2,7 @@ package memory
 
 import (
 	"context"
+	"github.com/0xsj/mobile-foundry/backend/pkg/principal"
 	"sync"
 	"time"
 
@@ -213,16 +214,21 @@ func (s *Store) Revoke(ctx context.Context, digest string, now time.Time, metada
 	return nil
 }
 func (s *Store) Access(ctx context.Context, digest string, now time.Time) (id.ID, error) {
+	actor, err := s.AccessSession(ctx, digest, now)
+	return actor.ID, err
+}
+func (s *Store) AccessSession(ctx context.Context, digest string, now time.Time) (principal.Principal, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if err := ctx.Err(); err != nil {
-		return "", err
+		return principal.Principal{}, err
 	}
 	session, found := s.sessions[s.access[digest]]
 	if !found || !session.Active(now) {
-		return "", domain.ErrCredential
+		return principal.Principal{}, domain.ErrCredential
 	}
-	return session.Snapshot().PrincipalID, nil
+	v := session.Snapshot()
+	return principal.Principal{ID: v.PrincipalID, SessionID: v.ID, SessionExpiresAt: v.ExpiresAt}, nil
 }
 func (s *Store) Pending(ctx context.Context, limit int) ([]events.Envelope, error) {
 	s.mu.Lock()

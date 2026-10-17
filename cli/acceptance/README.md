@@ -2,7 +2,8 @@
 
 [Go verification driver](go/verify.py) accepts an independently generated project,
 checks module identity/absence of checkout paths, builds its own API and exercises
-the generated root Make runner with real auth/account/Notes/CAS/receipt/renewal/
+the generated root Make runner with real auth/account/Notes/CAS/receipt, Files
+binary transfer, Notifications inbox/read/preferences and renewal/
 sign-out flows. It owns a temporary binary, narrow go-run shim and process group;
 no development API/database is contacted. Run it after Go generation, then use
 the output's go-integration-test for disposable PostgreSQL acceptance. See

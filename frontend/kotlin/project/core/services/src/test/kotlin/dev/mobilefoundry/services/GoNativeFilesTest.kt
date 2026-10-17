@@ -43,6 +43,23 @@ class GoNativeFilesTest {
         assertEquals(FileStatus.AVAILABLE, available.status); assertEquals(2L, available.version)
         assertEquals(available, repo.complete(requested, "$key.complete").value().file)
         assertArrayEquals(bytes, repo.download(available).value())
+        val inbox = HTTPNotificationInboxRepository(bearer, account, principal)
+        var notice: InboxNotification? = null
+        for (attempt in 0 until 100) {
+            val page = inbox.page().value()
+            if (page.items.isNotEmpty()) { assertEquals(1L,page.unreadCount);assertEquals(1,page.items.size);notice=page.items.single();break }
+            kotlinx.coroutines.delay(30)
+        }
+        val delivered = requireNotNull(notice);assertEquals(available.id,delivered.fileId);assertTrue(delivered.isUnread)
+        assertTrue(HTTPNotificationInboxRepository(drop("/read"),account,principal).markRead(delivered) is Outcome.Err)
+        val read = inbox.page().value().items.single();assertFalse(read.isUnread);assertNotNull(read.readAt)
+        assertEquals(read.readAt,inbox.markRead(read).value().readAt)
+        assertTrue(inbox.page(unreadOnly=true).value().items.isEmpty())
+        assertTrue(HTTPNotificationInboxRepository(drop("/notification-preferences"),account,principal).setMediaEnabled(false) is Outcome.Err)
+        assertFalse(inbox.mediaEnabled().value())
+        val other = bearer.requestEntity(HTTPMethod.POST,"accounts",RequestOptions(body=buildJsonObject { put("name","Other inbox") })).value().body.jsonObject.getValue("id").jsonPrimitive.content
+        val otherInbox = HTTPNotificationInboxRepository(bearer,other,principal)
+        assertTrue(otherInbox.page().value().items.isEmpty());assertTrue(otherInbox.mediaEnabled().value())
         repo.delete(available, "$key.delete").value(); assertTrue(repo.page().value().files.isEmpty())
         assertEquals(available, repo.complete(requested, "$key.complete").value().file)
         assertEquals(FailureKind.NOT_FOUND, (repo.download(available) as Outcome.Err).error.kind)

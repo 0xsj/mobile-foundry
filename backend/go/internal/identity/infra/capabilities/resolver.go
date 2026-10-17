@@ -2,6 +2,7 @@ package capabilities
 
 import (
 	"context"
+	"time"
 
 	"github.com/0xsj/mobile-foundry/backend/pkg/capability"
 	"github.com/0xsj/mobile-foundry/backend/pkg/id"
@@ -18,16 +19,18 @@ func (r Resolver) Resolve(ctx context.Context, token string) (principal.Principa
 		return principal.Principal{}, principal.ErrRequired
 	}
 	var answer struct {
-		PrincipalID id.ID `json:"principal_id"`
+		PrincipalID      id.ID     `json:"principal_id"`
+		SessionID        id.ID     `json:"session_id"`
+		SessionExpiresAt time.Time `json:"session_expires_at"`
 	}
-	err := r.Invoker.Invoke(ctx, "identity.credential.resolve.v1", struct {
+	err := r.Invoker.Invoke(ctx, "identity.credential.resolve.v2", struct {
 		AccessToken string `json:"access_token"`
 	}{token}, &answer)
 	if err != nil {
 		return principal.Principal{}, err
 	}
-	if !answer.PrincipalID.Valid() {
+	if !answer.PrincipalID.Valid() || !answer.SessionID.Valid() || answer.SessionExpiresAt.IsZero() || answer.SessionExpiresAt.Year() < 1970 || answer.SessionExpiresAt.Year() > 9999 {
 		return principal.Principal{}, capability.ErrResponse
 	}
-	return principal.Principal{ID: answer.PrincipalID}, nil
+	return principal.Principal{ID: answer.PrincipalID, SessionID: answer.SessionID, SessionExpiresAt: answer.SessionExpiresAt}, nil
 }

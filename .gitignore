@@ -33,6 +33,11 @@ backend/go/.data/
 node_modules/
 __pycache__/
 *.pyc
+.push-private/
+*.p8
+push.local.json
+*service-account*.json
+serviceAccountKey.json
 
 # Keep application dependency locks, Gradle wrappers, Xcode projects,
 # source assets, and portable fixtures versioned.

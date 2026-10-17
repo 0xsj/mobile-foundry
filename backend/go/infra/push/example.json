@@ -1,0 +1,19 @@
+{
+  "routes": [
+    {
+      "provider": "apns",
+      "application": "dev.mobilefoundry.catalog",
+      "environment": "sandbox",
+      "team_id": "YOURTEAMID",
+      "key_id": "YOURKEYID0",
+      "key_file": "signing.p8"
+    },
+    {
+      "provider": "fcm",
+      "application": "dev.mobilefoundry.catalog",
+      "environment": "production",
+      "project_id": "your-project",
+      "service_account_file": "service-account.json"
+    }
+  ]
+}

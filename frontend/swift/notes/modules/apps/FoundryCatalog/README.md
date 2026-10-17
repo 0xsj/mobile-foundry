@@ -1,5 +1,58 @@
 # Swift catalog walkthrough
 
+## Remote preview receipt and opens — 2026-10-17
+
+Claim: a native push trigger admits a generic hint before presentation/navigation,
+and foreground receipt alone never changes the route. Origin: remote-preview slice.
+Read [delegate](../../../../apps/FoundryCatalog/Sources/SystemNotifications/AppleSystemNotifications.swift),
+[diagnostics](../../../../apps/FoundryCatalog/Sources/SystemNotifications/SystemNotificationCatalogView.swift),
+[catalog navigation](../../../../apps/FoundryCatalog/Sources/CatalogView.swift),
+[adapter checks](../../../../apps/FoundryCatalog/Tests/SystemNotificationAdmissionTests.swift)
+and [native UI check](../../../../apps/FoundryCatalog/UITests/RemoteNotificationUITests.swift).
+
+UNPushNotificationTrigger distinguishes push from an arbitrary local request.
+The adapter admits aps plus the three exact string fields, then transfers only
+a Sendable value to MainActor. Foreground callbacks permit native presentation
+and record a receipt. Default tap callbacks enqueue an open; shell/catalog owners
+present/select the diagnostic screen before consuming the same tagged event.
+No callback reads session/account state or contacts the API. Unknown background
+alerts can still be displayed by the OS, which is outside this admission gate.
+
+[The simulator driver](../../../../../../scripts/remote_notifications_ios_test.py)
+provides a runner-only fixture endpoint and invokes simctl push. There is no debug
+push receiver in the shipped app. See [actual evidence and limits](../../../../../../docs/blueprints/remote-notifications.md)
+and [framework mechanics](../../../substrate/usernotifications-delegates-and-local-previews.md).
+Next question: what current-lease lookup would a private inbox destination need?
+
+## Optional APNs collection — 2026-10-17
+
+Claim: APNs callbacks can update an app-owned address without changing a backend
+session binding. Origin: native provider-token slice. Read
+[ApplePushTokens.swift](../../../../apps/FoundryCatalog/Sources/Installations/ApplePushTokens.swift),
+[delegate bridge](../../../../apps/FoundryCatalog/Sources/SystemNotifications/AppleSystemNotifications.swift),
+[catalog card](../../../../apps/FoundryCatalog/Sources/Installations/PushTokenCatalogCard.swift),
+[native checks](../../../../apps/FoundryCatalog/Tests/PushTokenTests.swift)
+and [missing-setup UI check](../../../../apps/FoundryCatalog/UITests/PushTokenUITests.swift).
+
+PushTokenComposition retains the store/adapter for the app process. The retained
+UIApplicationDelegate forwards APNs byte/error callbacks, while each catalog
+card owns its request controller. System notifications permits collection without
+login; Go identity and accounts additionally supplies its current installation
+owner for the explicit registration button. No token value is shown or copied.
+
+The optional CatalogAPNsEnvironment setting selects a declared route; its empty
+default refuses collection without contacting APNs. A selected app must enable
+the signing capability deliberately and match its exported entitlement. The
+unselected example file does not enable signing or change a developer account.
+The adapter owns a continuation, matching-ID cancellation and a thirty-second
+timeout. Late callbacks can refresh the process candidate but never acknowledge
+an installation command. Read [APNs mechanics](../../../substrate/apns-registration-callbacks.md).
+
+Local evidence covers missing configuration, byte admission/leading-zero hex,
+rotation, cancellation/timeout cleanup and actual missing-setup UI. It does not
+prove live issuance, signing or delivery. Follow [setup and evidence](../../../../../../docs/blueprints/push-tokens.md).
+Next: configure and inspect a signed physical build before a cloud test.
+
 ## Remote Notes recovery
 
 Claim: draft/version/command ownership remains above the view and exact lease-bound
@@ -1775,3 +1828,104 @@ and real HTTP byte/receipt recovery is verified separately by the native Go
 runner. System-picker gestures and physical-device performance were not exercised.
 The editor's adjustments remain local previews, not uploaded rendered exports.
 Read [Files construction](../../../../../../docs/blueprints/files-media.md) for remaining object/metadata and native-lifetime limits.
+
+## Connected account inbox — 2026-10-17
+
+Claim: inbox state and uncertainty belong to an account/lease owner above passive
+NotificationRow, CountBadge and ToggleField components.
+
+Origin: native Notifications slice. Read
+[the owner](../../../../apps/FoundryCatalog/Sources/Notifications/NotificationInboxCatalogModel.swift) and
+[the connected card](../../../../apps/FoundryCatalog/Sources/Notifications/NotificationInboxCatalogCard.swift), then
+[the reconciliation pattern](../../../../../../notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+
+Go identity and accounts binds an HTTP repository on each exact lease. Closing,
+renewal and account replacement invalidate old tasks/jobs and reset visible state.
+The owner loads 20 items, supports a scope/filter-bound cursor and caps retained
+rows at 200. Refresh replaces rows and settings; count is authoritative server
+state rather than a speculative decrement. Details remain app-owned references,
+not a dependency on Files metadata or a promise that the file still exists.
+
+Before a mutation, needsRefresh blocks further changes. Failure leaves the last
+confirmed value visible; acknowledgement starts readback. Only full successful
+refresh clears the requirement. There is no automatic replay across renewal.
+Changing unread filters resets rows/cursors; overlapping pages require refresh.
+
+[Owner tests](../../../../apps/FoundryCatalog/Tests/NotificationInboxCatalogTests.swift) cover committed-but-unacknowledged settings with no
+replay and a held old-account response that completes after replacement. The app
+build includes the real shared components; these state tests do not execute inbox
+gestures against a real API. Real URLSession/OkHttp acceptance is separate.
+
+Actual route: Catalog → Go identity and accounts → Account inbox. Upload a photo
+in Account files, then refresh the inbox and open/mark the notice read.
+[Construction and actual acceptance](../../../../../../docs/blueprints/notifications.md) records checks and
+limits. Generated connected native profiles, Realtime and system push remain
+separate. Next: installation ownership and recoverable live refresh hints.
+
+## Native installation ownership — 2026-10-17
+
+Claim: catalog composition keeps device proof across auth changes while replacing
+its HTTP owner on every exact lease change.
+
+Origin: native registry slice. Read [KeychainInstallationVault.swift](../../../../apps/FoundryCatalog/Sources/Installations/KeychainInstallationVault.swift), [SessionComposition.swift](../../../../apps/FoundryCatalog/Sources/Composition/SessionComposition.swift), [GoSessionCatalogModel.swift](../../../../apps/FoundryCatalog/Sources/Session/GoSessionCatalogModel.swift), [InstallationCatalogCard.swift](../../../../apps/FoundryCatalog/Sources/Installations/InstallationCatalogCard.swift),
+then [native vault tests](../../../../apps/FoundryCatalog/Tests/InstallationVaultTests.swift).
+
+KeychainInstallationVault uses one non-synchronizing generic-password item with AfterFirstUnlockThisDeviceOnly accessibility. SecItemAdd and duplicate-item readback prevent two adapter instances from choosing different persisted identities. No asynchronous suspension occurs within its actor-protected read/create section.
+
+Device namespaces include the application and deployment authority, never a user
+or account. Memory selection uses an explicitly process-only vault cached for
+that authority. Both use 32 cryptographically random proof bytes. Existing
+corruption/lost keys fail and remain in place; there is no reset/plaintext fallback.
+The vault is separate from CredentialVault, so clearing auth does not erase proof.
+
+The Go model binds InstallationController to HTTPInstallationRegistry using the
+same exact AuthenticatedHTTPClient as its other connected features. All lease
+changes clear/read registry presentation; no implicit target transfer occurs.
+The card identity follows the lease, dropping the opaque token draft on renewal,
+account switch, sign-out or navigation away. Closing the gallery never unregisters
+a target. Successful Identity sign-out supplies eventual server retirement;
+offline/failed revoke cannot promise immediate target suppression.
+
+Actual route: Catalog → Go identity and accounts → Device registration. Sign in,
+wait for the initial read, enter an opaque probe address, register, replace it,
+refresh and unregister. The card explicitly labels this as a metadata registry
+test; no OS token collection, permission prompt, SDK or push sender is enabled.
+The environment/application labels do not attest a real provider token.
+
+Verification: both catalogs build; two Keychain and two Keystore cases execute
+without failures/skips on iPhone 17 Pro/iOS 26.2 and API36_Test/Android 16.
+They establish reopen, namespace separation, concurrent creation, auth-clear
+separation and corruption preservation; Android also checks lost-key refusal.
+They do not establish uninstall/reinstall policy, physical-device secure hardware,
+locked-device states, catalog gestures or independent generated connected output.
+
+Related: [secure storage substrate](../../../substrate/keychain-credentials-and-accessibility.md),
+[construction and acceptance](../../../../../../docs/blueprints/installations.md), and
+[shared reconciliation pattern](../../../../../../notes/patterns/installation-identity-and-current-state-reconciliation.md).
+Next: configured OS token acquisition and account-independent callback ownership.
+
+## System notifications — 2026-10-17
+
+Claim: local notification permission/posting and admitted app navigation can be
+exercised without introducing a backend or cloud provider dependency.
+
+Origin: the next native notification slice. Read
+[AppleSystemNotifications.swift](../../../../apps/FoundryCatalog/Sources/SystemNotifications/AppleSystemNotifications.swift), [SystemNotificationCatalogView.swift](../../../../apps/FoundryCatalog/Sources/SystemNotifications/SystemNotificationCatalogView.swift), [FoundryCatalogApp.swift](../../../../apps/FoundryCatalog/Sources/FoundryCatalogApp.swift), [AppShellView.swift](../../../../apps/FoundryCatalog/Sources/Shell/AppShellView.swift), [CatalogView.swift](../../../../apps/FoundryCatalog/Sources/CatalogView.swift), [SystemNotificationAdmissionTests.swift](../../../../apps/FoundryCatalog/Tests/SystemNotificationAdmissionTests.swift), [SystemNotificationUITests.swift](../../../../apps/FoundryCatalog/UITests/SystemNotificationUITests.swift).
+
+UIApplicationDelegateAdaptor retains a delegate installed before launch completes. Its nonisolated delegate methods admit the owned identifier/category/string payload and enqueue only a Sendable LocalNotificationPreview on the main actor. They do not move UNNotificationResponse across isolation or do networking. The known preview gets foreground banner/list/sound options; only its default open action routes.
+
+The app-lifetime open router exists before the catalog. AppShell presents the catalog when an intent is pending; CatalogView adds/selects its typed destination and consumes that same ID. AppleSystemNotifications schedules one three-second local request and clears only its owned pending/delivered identifier.
+
+Actual route: Studio → Open catalog → System notifications. Allow notifications,
+post a generic local preview, open it from the system notification surface and
+clear the owned preview. Settings return refreshes access. The screen displays
+OS acceptance separately from an admitted open; neither proves remote delivery.
+
+Permission denial, account preference and installation registration are independent.
+No token, auth credential, principal/account field or remote text enters this
+preview. There is no automatic registration, sign-in, scope switch, read marking
+or OS write retry. Native evidence and limits are recorded in
+[the construction guide](../../../../../../docs/blueprints/system-notifications.md).
+Related: [platform substrate](../../../substrate/usernotifications-delegates-and-local-previews.md) and
+[navigation-hint pattern](../../../../../../notes/patterns/device-notifications-and-navigation-hints.md).
+Next: configured provider token collection and scope-checked remote destinations.

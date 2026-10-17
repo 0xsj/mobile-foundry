@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/0xsj/mobile-foundry/backend/pkg/principal"
 	"time"
 
 	"github.com/0xsj/mobile-foundry/backend/internal/identity/app"
@@ -217,15 +218,20 @@ func (s *Store) Revoke(ctx context.Context, digest string, now time.Time, metada
 	})
 }
 func (s *Store) Access(ctx context.Context, digest string, now time.Time) (id.ID, error) {
+	actor, err := s.AccessSession(ctx, digest, now)
+	return actor.ID, err
+}
+func (s *Store) AccessSession(ctx context.Context, digest string, now time.Time) (principal.Principal, error) {
 	session, err := restoreSession(s.pool.QueryRow(ctx, "SELECT "+sessionColumns+" FROM identity.sessions WHERE access_digest=$1", digest))
 	if errors.Is(err, pgx.ErrNoRows) {
-		return "", domain.ErrCredential
+		return principal.Principal{}, domain.ErrCredential
 	}
 	if err != nil {
-		return "", storage.Failure(err)
+		return principal.Principal{}, storage.Failure(err)
 	}
 	if !session.Active(now) {
-		return "", domain.ErrCredential
+		return principal.Principal{}, domain.ErrCredential
 	}
-	return session.Snapshot().PrincipalID, nil
+	v := session.Snapshot()
+	return principal.Principal{ID: v.PrincipalID, SessionID: v.ID, SessionExpiresAt: v.ExpiresAt}, nil
 }

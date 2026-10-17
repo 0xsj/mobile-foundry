@@ -56,6 +56,9 @@ struct AppShellView: View {
         .fullScreenCover(isPresented: $catalogPresented) {
             CatalogView(glassTheme: $glassTheme, onClose: { catalogPresented = false })
         }
+        .onChange(of: SystemNotificationComposition.opens.pending?.id, initial: true) { _, id in
+            if id != nil { catalogPresented = true }
+        }
     }
 }
 

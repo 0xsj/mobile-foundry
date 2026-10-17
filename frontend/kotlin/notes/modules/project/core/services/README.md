@@ -1,5 +1,56 @@
 # Services walkthrough
 
+## Remote notification values — 2026-10-17
+
+Claim: foreground receipt and an open are distinct UI-dispatcher transitions;
+the complete tagged open guards consumption. Origin: generic remote-preview slice.
+Read [values](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/RemoteNotificationPreview.kt),
+[router](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/SystemNotifications.kt)
+and [checks](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/RemoteNotificationTest.kt).
+
+RemoteNotificationPreview uses private construction plus strict schema/UUID
+admission. NotificationOpen is a sealed interface with Local/Remote data classes;
+structural equality includes that case and the preview. The StateFlow owner is
+confined to the UI dispatcher. recordReceipt never changes pending navigation;
+consume requires the complete pending value and preserves receipt diagnostics.
+The enum-like sealed representation avoids unrelated kind/string pairs.
+
+Shared fixtures and state tests cover malformed remote fields, kind collisions,
+late consumption, duplicate opens and bounded eviction. They do not prove FCM
+delivery. Continue with [app transport ownership](../../app/README.md) and
+[shared reasoning](../../../../../../../notes/patterns/remote-notification-admission-and-open-identity.md).
+
+## Provider address candidate — 2026-10-17
+
+Claim: a process-owned address candidate and UI-owned collection request remain
+separate from session-bound registration. Origin: optional provider adapters.
+Read [PushTokens.kt](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/PushTokens.kt),
+[owner tests](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/PushTokenTest.kt)
+and [registry handoff checks](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/InstallationTest.kt).
+
+PushTokenStore exposes immutable StateFlow snapshots on the UI dispatcher.
+Equal admitted targets do not advance the local revision; explicit invalidation
+does even while empty. DeliveryTarget's diagnostic representation is redacted.
+No provider SDK, auth credential, disk write or HTTP call enters this store.
+
+The controller holds a lazy Job before starting it, serializes requests and
+clears the candidate on explicit collect. Expected failures remain values;
+cancellation propagates; thrown defects reach the hook and publish a generic
+message. close is terminal. A later native callback can update the longer-lived
+store, while a closed controller cannot expose it as a usable target or publish
+late action failures. This avoids treating cancellation as provider cancellation.
+
+The catalog snapshots the candidate into InstallationController on a separate
+button action. The handoff test rotates a target during uncertain acknowledgement:
+the sent address stays original, registry refresh never replays, and the rotated
+address needs another explicit action. Auth unbinding leaves provider state
+intact. See [ownership reasoning](../../../../../../../notes/patterns/provider-addresses-and-registration-intents.md).
+
+Evidence: host owner/handoff and native adapter/UI checks in
+[setup/evidence](../../../../../../../docs/blueprints/push-tokens.md). These do
+not prove live FCM issuance, durable sync, cloud sending or generated connected
+acceptance. Next: sender eligibility and version-guarded invalidation.
+
 ## Remote Notes and immutable receipts
 
 Claim: a remote repository promises versions/recoverable commands through admitted
@@ -196,3 +247,117 @@ build; each platform passes two file-owner cases. These observations do not
 establish photo-picker gestures, background transfers, durable pending input or
 cloud storage. Related: [object lifecycle reasoning](../../../../../../../backend/go/notes/patterns/metadata-and-object-lifecycles.md). Next: what extra ownership is needed when uploads
 must survive native process termination?
+
+## Connected inbox — 2026-10-17
+
+Claim: typed account-bound repositories can expose settled inbox actions without
+adding command receipts or provider dependencies to reusable UI.
+
+Origin: native Notifications slice; read [ports and snapshots](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/NotificationInbox.kt),
+[HTTP admission](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/HTTPNotificationInboxRepository.kt) and
+[the shared recovery pattern](../../../../../../../notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+
+The reader exposes scoped pages and a media preference; the writer marks an item
+read or assigns the preference. The HTTP adapter is one-attempt and expects an
+exact-lease AuthenticatedHTTPClient from composition. No SDK, renewal, receipt key
+or implicit retry enters these ports. The wire does not repeat the principal on
+each item; the repository carries its bound identity and the authenticated server
+checks row ownership. Pages must repeat the current account.
+
+Response admission rejects unknown type/category, malformed IDs/calendar times,
+missing read_at, duplicate rows, inconsistent unread filters/counts and invalid
+cursor shapes. Preserve server order because its commit sequence is intentionally
+not in item DTOs. MarkRead validates the original item/file/times and preserves a
+known first-read time. A setting acknowledgement must echo the requested boolean.
+Public failure metadata and native cancellation remain distinct.
+The shared fixture file is an explicit Gradle test input, so corpus changes
+invalidate cached test results rather than silently reusing an older pass.
+
+[Shared response fixtures](../../../../../../../contracts/fixtures/notifications/pages.json) execute in both
+platform suites. The real Go Files acceptance now also waits for its upload-ready
+item, deliberately drops read/preference acknowledgements, reads committed state
+and checks another account's empty/default inbox. This observes actual HTTP through
+URLSession/OkHttp; it does not establish system push or native screen gestures.
+
+Use: [catalog owner](../../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notifications/NotificationInboxCatalogModel.kt).
+Related: [Notifications behavior](../../../../../../../contracts/behavior/notifications.md).
+Next: which additional audience/type needs a new explicit producer contract?
+
+## Installation registry — 2026-10-17
+
+Claim: a session-scoped registry client can manage a persistent installation
+identity without importing session or provider SDK types into Services.
+
+Origin: native registry slice. Read [InstallationRegistry.kt](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/InstallationRegistry.kt), [HTTPInstallationRegistry.kt](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/HTTPInstallationRegistry.kt), [InstallationController.kt](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/InstallationController.kt) in that order,
+then [InstallationTest.kt](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/InstallationTest.kt), [GoNativeInstallationsTest.kt](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/GoNativeInstallationsTest.kt) and
+[the shared response corpus](../../../../../../../contracts/fixtures/installations/records.json).
+
+InstallationIdentity owns a canonical UUID and canonical i1 proof. Its formatter
+is redacted, as is DeliveryTarget; neither secret enters controller snapshots.
+InstallationVault offers only serialized load-or-create, so callers cannot
+accidentally treat a corrupt record as absence or clear proof on sign-out.
+InstallationRegistry is the replaceable read/register/unregister port. The HTTP
+adapter receives an exact-lease client from app composition and preserves proof,
+CAS and one-attempt semantics without owning renewal.
+
+The response decoder checks the sanitized field set, matching ETag/version,
+UUIDs, route policy, booleans and timestamp ordering. Register validates the
+accepted checkpoint, route, binding and next revision; unregister validates the
+disabled revision and preserved metadata. GET not-found does not create/reset a
+remote record or rotate local proof.
+
+The owner is confined to the UI dispatcher; MutableStateFlow publishes immutable snapshots. Coroutine cancellation and a captured generation guard completions independently. Private constructors plus @ConsistentCopyVisibility keep data-class copy from bypassing route/record admission.
+
+The controller first loads/persists identity, then reads the registry. A storage
+failure prevents networking. Each explicit registration captures a fresh UUID
+and target once. A failed mutation leaves writes blocked until GET succeeds.
+A new bind, including renewal/account switch, cancels/invalidates the old work,
+clears presentation and reads again without automatic registration. Unbind does
+not erase the vault. There is no hidden token retry queue or receipt history.
+
+Verification: shared corpus admission and three owner cases pass on both platforms;
+the held old-lease response contains a different record, proving it cannot replace
+the new binding's state. Real Go HTTP checks cover lost acknowledgement,
+session handoff, unchanged binding through renewal, settled unregister, target
+replacement and asynchronous sign-out retirement. These are host/state checks,
+not catalog gestures, real provider delivery or generated connected acceptance.
+
+Related: [identity and reconciliation pattern](../../../../../../../notes/patterns/installation-identity-and-current-state-reconciliation.md).
+Next: how should an app present a desired OS token while an earlier revision is
+still unconfirmed?
+
+## System notification preview — 2026-10-17
+
+Claim: an OS notification port can remain independent of provider tokens, account
+inbox state and native navigation APIs.
+
+Origin: the local system-notification slice. Read
+[SystemNotifications.kt](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/SystemNotifications.kt), [SystemNotificationController.kt](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/SystemNotificationController.kt), [SystemNotificationTest.kt](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/SystemNotificationTest.kt), then
+[shared payload admission](../../../../../../../contracts/fixtures/system-notifications/payloads.json) and
+[the behavior contract](../../../../../../../contracts/behavior/system-notifications.md).
+
+NotificationAccess separates authorization from delivery settings; notGranted
+intentionally avoids promising another OS prompt. Quiet delivery can still be
+admitted. SystemNotificationPort exposes read, explicit permission request,
+post/clear preview and open settings. Native adapters recheck current access at
+post time. The controller never prompts on refresh, never retries an OS write,
+and calls its defect hook without exposing private exception content to UI.
+Closing prevents further publication but cannot undo a post already accepted by
+an OS. A later owner can explicitly clear the same owned slot.
+
+LocalNotificationPreview admits exactly version/kind/canonical UUID. It carries
+no account authority or remote content. NotificationOpenRouter holds the latest
+pending preview and a bounded 32-ID duplicate window in process memory. consume
+must match the pending ID; an old consume cannot erase a newer intent. Repeated
+opens within the window do not add another route. No durable receipt/history or
+cross-process exactly-once behavior follows.
+
+The controller/router are confined to the UI dispatcher. Immutable StateFlow snapshots expose state; native coroutine jobs and recent IDs stay private. Cancellation plus generation admission protects a disposed owner even when a fake/native operation completes non-cooperatively.
+
+Verification: host checks exercise the shared corpus, explicit permission action,
+blocked posting after settings change, no automatic replay, current-ID open
+consumption and late-response suppression after close. The OS tests and their
+limits are separate in [the construction guide](../../../../../../../docs/blueprints/system-notifications.md).
+This package never imports APNs/FCM, starts an auth request or changes an inbox
+preference. Related: [navigation-hint reasoning](../../../../../../../notes/patterns/device-notifications-and-navigation-hints.md).
+Next: what current account/session admission does a remote inbox destination need?

@@ -9,13 +9,36 @@ implemented for memory/PostgreSQL, including personal bootstrap and owned listin
 [native authority/account adapters](../../contracts/behavior/go-native-session.md)
 are verified in the catalogs. [Remote Notes/receipts](../../contracts/behavior/remote-notes.md)
 now supply the connected data exemplar. [Files/Media](../../contracts/behavior/files-media.md)
-adds owned metadata/content, receipts and Audit facts with native catalog consumers. Remote module routing and other business
+adds owned metadata/content, receipts and Audit facts with native catalog consumers.
+[Notifications](../../contracts/behavior/notifications.md) now consumes completed uploads
+into an account/principal inbox with read state and media preferences. Remote module routing and other business
 modules remain planned/reserved.
+
+[Push dispatch](../../contracts/behavior/push-dispatch.md) now has an optional
+internal preview command with exact target reads, a versioned Identity session
+gate and guarded invalid-address cleanup. Provider outcomes are injected for
+memory/PostgreSQL tests; no gateway, public route or worker is selected by default.
+
+[Provider selection](../../contracts/behavior/push-providers.md) optionally enables
+APNs/FCM HTTP adapters and a guarded manual preview route. It remains off without
+private configuration. Local TLS protocol/API tests do not establish cloud/device
+acceptance, remote native opens, durable scheduling or retry policy.
 
 Select capabilities for a product rather than copying the whole catalog. Each
 business module owns its domain, application handlers, ports, adapters, data and
 versioned boundary contracts. The [module boundary policy](../../contracts/behavior/module-boundaries.md)
 defines how they collaborate. Runtime mechanics remain in generic packages.
+
+[Queued generic previews](../../contracts/behavior/push-jobs.md) now retain immutable
+intents and fenced execution in Notifications. A second explicit selection adds
+enqueue/status routes and polling. Preflight work can retry; uncertain post-marker
+outcomes never automatically resend. This is separate from audience fanout,
+provider-result retry classification and a general scheduler.
+
+[Owned recovery](../../contracts/behavior/push-job-recovery.md) now cancels unstarted
+jobs or creates a new linked replacement without changing the source outcome.
+Current auth/installation proof, exact target input and duplicate-risk acknowledgement
+remain explicit. This does not add cross-session administrator authority.
 
 ## Business capabilities
 
@@ -27,7 +50,7 @@ defines how they collaborate. Runtime mechanics remain in generic packages.
 | Notes | Replaceable versioned data exemplar and immutable command receipts | Authorizes through consumer-owned AccountAccess; owns memory/PostgreSQL data and replay | Connected reference feature |
 | Authorization | Permission vocabulary, scoped roles, grants and permission decisions | Uses declared ownership/membership inputs; provides explicit permission decisions | When account roles alone are insufficient |
 | Realtime | Authorized subscriptions, connection lifetime and recoverable live updates | Consumes events, maps hints, broadcasts to WebSocket gateways | Live connected experiences |
-| Notifications | Inbox/read state, preferences, device delivery registrations and outbound delivery | Consumes relevant facts; selects push/email adapters | Inbox or outbound messaging |
+| Notifications | Account/principal inbox, read state, media preference, installations and optional provider/queued previews with owned recovery | Consumes Files/Identity facts; queries AccountAccess and Identity eligibility through owned ports | Inbox/registry, APNs/FCM, queued manual previews and explicit cancel/replacement implemented; live cloud acceptance, fanout and provider-result retries remain separate. Generic native open admission is verified independently. |
 | Files | Metadata, ownership, upload/download admission, immutable content and deletion | Checks owner access; selects memory/private-directory Objects and memory/PostgreSQL Store; publishes selected Audit facts | Implemented local media foundation; folders, processing and quotas remain planned |
 | Billing | Provider customer/purchase references, verified purchases, subscriptions and payment lifecycle | Publishes verified commercial facts; adapters own provider protocols | Paid products |
 | Entitlements | Product access, plan features and configured limits | Consumes billing facts; answers access/limit queries | Plans, trials or feature gating |
@@ -69,7 +92,7 @@ contracts. A search index or cache can also be an adapter within its owner.
 | `capability` | Local registry/invoker implemented | Versioned invocation, validation, caller policy and cooperative deadlines; remote adapter planned |
 | `events` | Local delivery/dispatcher implemented | Envelopes and independent consumers; memory/PostgreSQL outbox/inbox stored by their owners; broker transport planned |
 | `broadcast` | Planned | Bounded ephemeral publish/subscribe fan-out |
-| Jobs/scheduling | Planned as needed | Execution/retry mechanics; jobs and their rules stay with their owner |
+| `jobs` / scheduling | Serial cooperative polling implemented; general scheduling planned | Notifications owns preview state, claim fencing and retry decisions; generic worker owns cadence/start/stop only |
 | Telemetry/service authentication | Planned as needed | Operation observation and authenticated remote module calls |
 
 Health is the implemented runtime exemplar. It owns live/ready HTTP projection,

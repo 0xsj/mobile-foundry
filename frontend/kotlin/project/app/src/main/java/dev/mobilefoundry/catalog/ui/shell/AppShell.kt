@@ -20,6 +20,8 @@ import dev.mobilefoundry.catalog.MainNavigation
 import dev.mobilefoundry.catalog.R
 import dev.mobilefoundry.catalog.ui.camera.CameraScreen
 import dev.mobilefoundry.graphics.RasterImage
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.mobilefoundry.catalog.systemnotifications.SystemNotificationComposition
 import dev.mobilefoundry.ui.components.shells.appshell.AppShell as AppShellLayout
 import dev.mobilefoundry.ui.components.layout.surface.Surface
 import dev.mobilefoundry.ui.components.layout.surface.SurfaceRole
@@ -44,11 +46,13 @@ fun AppShell(glassTheme: Boolean, onGlassThemeChange: (Boolean) -> Unit) {
     val tab = ShellTab.entries.firstOrNull { it.name == selectedId } ?: ShellTab.HOME
     val tokens = FoundryTheme.tokens
     val catalogOwner: CatalogPresentationModel = viewModel()
+    val open = SystemNotificationComposition.opens.state.collectAsStateWithLifecycle().value.pending
+    LaunchedEffect(open?.id) { if (open != null) catalogPresented = true }
 
     if (catalogPresented) {
         // Scope entry ViewModels to this presentation instead of the whole Activity.
         CompositionLocalProvider(LocalViewModelStoreOwner provides catalogOwner) {
-            MainNavigation(glassTheme, onGlassThemeChange, onExit = { catalogOwner.dismiss(); catalogPresented = false })
+            MainNavigation(glassTheme, onGlassThemeChange, onExit = { catalogOwner.dismiss(); catalogPresented = false }, notificationOpen = open)
         }
     } else {
         AppShellLayout(Modifier.fillMaxSize(), background = {

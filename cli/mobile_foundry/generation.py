@@ -19,9 +19,9 @@ from .profiles import ProfileError, admitted_path, relative_path
 EXCLUDED_NAMES = {
     ".git", ".hg", ".svn", ".idea", ".vscode", ".cache", ".build", "build",
     "DerivedData", ".gradle", ".kotlin", "xcuserdata", "node_modules", ".venv",
-    "__pycache__", ".pytest_cache", ".DS_Store", "local.properties",
+    "__pycache__", ".pytest_cache", ".DS_Store", "local.properties", ".push-private",
 }
-EXCLUDED_SUFFIXES = {".xcuserstate", ".pyc", ".log", ".jks", ".keystore", ".p12", ".pfx", ".mobileprovision", ".pem", ".key", ".cer"}
+EXCLUDED_SUFFIXES = {".xcuserstate", ".pyc", ".log", ".jks", ".keystore", ".p12", ".pfx", ".mobileprovision", ".pem", ".key", ".cer", ".p8"}
 
 
 @dataclass(frozen=True)
@@ -64,6 +64,8 @@ def excluded(relative, patterns):
     if any(part in EXCLUDED_NAMES for part in path.parts) or path.suffix.lower() in EXCLUDED_SUFFIXES:
         return True
     name = path.name
+    if name.lower() in {"push.local.json", "service-account.json", "serviceaccountkey.json"} or name.lower().endswith(".service-account.json"):
+        return True
     if (name == ".env" or name.startswith(".env.") or name.endswith(".env")) and not name.endswith((".example", ".sample", ".template")):
         return True
     return any(fnmatch.fnmatchcase(relative, pattern) or fnmatch.fnmatchcase("/" + relative, pattern) for pattern in patterns)

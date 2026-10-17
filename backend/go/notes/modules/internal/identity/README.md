@@ -1,5 +1,30 @@
 # Identity orchestration and owned session state
 
+## Session eligibility follow-up — 2026-10-17
+
+Claim: Notifications can ask whether a bound session remains live without using
+an access credential or importing Identity state. Origin: push-dispatch foundation.
+Read [the query](../../../../internal/identity/app/query/session_eligibility.go),
+[versioned provider](../../../../internal/identity/transport/capability/v1/session_eligibility.go),
+[memory lookup](../../../../internal/identity/infra/memory/session_eligibility.go),
+[PostgreSQL lookup](../../../../internal/identity/infra/postgres/session_eligibility.go)
+and [shared checks](../../../../tests/push_test.go).
+
+The query validates principal/session IDs and uses Identity's clock. Stores check
+the owned session's principal and Renewable predicate, which covers start,
+revocation and absolute expiry without requiring a live short access token. This
+does not renew anything. Missing/wrong/expired/revoked is false; storage failure
+or corrupt restoration is an error. Only notifications can invoke the capability;
+API callers remain on credential v1/v2. The response contains only a boolean.
+
+Memory/PostgreSQL conformance covers short access expiry, renewal, absolute
+expiry and revocation. The composed dispatch check leaves Notifications cleanup
+lagging after a real Identity revocation and still blocks the next attempt.
+This answer is point-in-time, not a lease that closes the later provider race.
+See [contract](../../../../../../contracts/capabilities/identity-session-eligibility-v1.md)
+and [observed evidence](../../../../../../docs/blueprints/push-dispatch.md).
+Next: preserve this distinction when adding real outbound providers.
+
 Identity can authenticate principals and own session lifecycle while Account
 retains a separate ownership scope and Audit interprets its committed facts.
 
@@ -79,3 +104,11 @@ Related: [behavior](../../../../../../contracts/behavior/identity-sessions.md),
 and [security substrate](../../../substrate/argon2-and-opaque-session-credentials.md).
 Next: remote account data and generated connected acceptance, preserving the
 implemented native account/rotation checkpoint semantics.
+
+## Session evidence follow-up — 2026-10-17
+
+Claim: session-bound consumers need admitted session identity without breaking existing principal-only capability clients.
+
+Origin: installation registry slice. Read [ResolveSession](../../../../internal/identity/app/query/resolve_session.go), [the v2 provider](../../../../internal/identity/transport/capability/v2/handler.go) and [the v2 contract](../../../../../../contracts/capabilities/identity-credential-v2.md). Memory/PostgreSQL expose AccessSession while retaining the original Access method. v1 still serializes exactly principal_id; the edge resolver selects v2 and carries trusted session ID/absolute expiry. No caller supplies those values to a domain route. Installation HTTP acceptance invokes both versions, refuses a non-edge capability caller, renews without changing binding identity and observes event-driven retirement.
+
+The shared Principal session fields are optional for sessionless fixture adapters. This does not turn fixtures into Identity sessions. The expiry describes the refresh family, not the short-lived access credential. Future push eligibility must still consult current authority rather than treating captured metadata as a live session lookup. Related: [installation ownership](../notifications/installations.md).

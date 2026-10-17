@@ -1,5 +1,63 @@
 # Android catalog walkthrough
 
+## Remote preview receipt and opens — 2026-10-17
+
+Claim: FCM foreground messages and background notification taps need separate
+transport admission before the same app-owned destination. Origin: remote-preview slice.
+Read [remote adapter](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/systemnotifications/AndroidRemoteNotifications.kt),
+[Firebase service](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/installations/AndroidPushTokens.kt),
+[Activity](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/MainActivity.kt)
+and [native checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/systemnotifications/RemoteNotificationTest.kt).
+
+The Firebase service projects strict notification-plus-data messages into admitted
+previews, records receipt on the UI dispatcher and posts fixed generic content.
+Permission reads never prompt. Foreground native notifications have one immutable
+replaceable slot, separate from local previews. SDK background presentation uses
+the manifest's remote channel/icon and reaches the explicit launcher Activity.
+The Activity admits known bounded transport extras, then decodes the exact app
+schema. Unknown account/URL fields and wrong types fail rather than disappearing.
+
+Both Activity entry points clear accepted intent data before recreation.
+NotificationOpen carries kind/UUID through shell/catalog navigation; consumption
+follows route selection. These hints never gain credential/account authority.
+See [actual native evidence/limits](../../../../../../docs/blueprints/remote-notifications.md)
+and [platform mechanics](../../../substrate/android-notification-permissions-and-pending-intents.md).
+Next question: what part of this fixture acceptance still needs a real FCM cold start?
+
+## Optional FCM collection — 2026-10-17
+
+Claim: an app-only Firebase adapter can supply a candidate without giving a token
+callback authority over account/session registration. Origin: provider-token slice.
+Read [adapter/service](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/installations/AndroidPushTokens.kt),
+[catalog card](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/installations/PushTokenCatalogCard.kt),
+[native checks](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/installations/PushTokenTest.kt)
+and [UI check](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/installations/PushTokenUITest.kt).
+
+The app's Gradle properties generate standard public Firebase resources.
+Unconfigured collection returns a value before SDK access. Configured app startup
+retains FirebaseInitProvider for default-app construction in cold service starts;
+manifest switches disable token auto-init, Analytics collection, delegation and
+FID mode. An explicit request checks Play services and overrides any persisted
+auto-init flag before requesting a registration token. SDK Task failures publish
+a generic unavailable value; no SDK exception/token is logged by the adapter.
+
+PushMessagingService transfers an admitted callback through the main Looper into
+the process store. The request captures its starting revision so a newer callback
+wins. An invalid callback advances an invalidation revision even while empty,
+preventing an older successful Task from resurrecting it. withTimeoutOrNull limits
+the app wait without swallowing parent cancellation. The service remains private.
+
+System notifications offers collection alone; Go identity and accounts supplies
+the existing exact-session installation owner for Register collected token.
+Neither callback nor permission state writes to that owner. Read
+[Firebase mechanics](../../../substrate/firebase-token-collection.md) and
+[ownership](../../../../../../notes/patterns/provider-addresses-and-registration-intents.md).
+
+Evidence: native injected-request races/admission/cancellation, merged policy
+and default catalog UI checks. Cloud-issued tokens, cold remote messages and
+delivery are unverified. See [setup/evidence](../../../../../../docs/blueprints/push-tokens.md).
+Next: configure a Firebase Android app and verify live token issuance separately.
+
 ## Remote Notes recovery
 
 Claim: a lifecycle-owned state model retains original scoped commands through
@@ -1769,3 +1827,104 @@ and real HTTP byte/receipt recovery is verified separately by the native Go
 runner. System-picker gestures and physical-device performance were not exercised.
 The editor's adjustments remain local previews, not uploaded rendered exports.
 Read [Files construction](../../../../../../docs/blueprints/files-media.md) for remaining object/metadata and native-lifetime limits.
+
+## Connected account inbox — 2026-10-17
+
+Claim: inbox state and uncertainty belong to an account/lease owner above passive
+NotificationRow, CountBadge and ToggleField components.
+
+Origin: native Notifications slice. Read
+[the owner](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notifications/NotificationInboxCatalogModel.kt) and
+[the connected card](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/notifications/NotificationInboxCatalogCard.kt), then
+[the reconciliation pattern](../../../../../../notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+
+Go identity and accounts binds an HTTP repository on each exact lease. Closing,
+renewal and account replacement invalidate old tasks/jobs and reset visible state.
+The owner loads 20 items, supports a scope/filter-bound cursor and caps retained
+rows at 200. Refresh replaces rows and settings; count is authoritative server
+state rather than a speculative decrement. Details remain app-owned references,
+not a dependency on Files metadata or a promise that the file still exists.
+
+Before a mutation, needsRefresh blocks further changes. Failure leaves the last
+confirmed value visible; acknowledgement starts readback. Only full successful
+refresh clears the requirement. There is no automatic replay across renewal.
+Changing unread filters resets rows/cursors; overlapping pages require refresh.
+
+[Owner tests](../../../../project/app/src/test/java/dev/mobilefoundry/catalog/ui/notifications/NotificationInboxCatalogModelTest.kt) cover committed-but-unacknowledged settings with no
+replay and a held old-account response that completes after replacement. The app
+build includes the real shared components; these state tests do not execute inbox
+gestures against a real API. Real URLSession/OkHttp acceptance is separate.
+
+Actual route: Catalog → Go identity and accounts → Account inbox. Upload a photo
+in Account files, then refresh the inbox and open/mark the notice read.
+[Construction and actual acceptance](../../../../../../docs/blueprints/notifications.md) records checks and
+limits. Generated connected native profiles, Realtime and system push remain
+separate. Next: installation ownership and recoverable live refresh hints.
+
+## Native installation ownership — 2026-10-17
+
+Claim: catalog composition keeps device proof across auth changes while replacing
+its HTTP owner on every exact lease change.
+
+Origin: native registry slice. Read [KeystoreInstallationVault.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/installations/KeystoreInstallationVault.kt), [SessionComposition.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/composition/SessionComposition.kt), [GoSessionCatalogModel.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/session/GoSessionCatalogModel.kt), [InstallationCatalogCard.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/installations/InstallationCatalogCard.kt),
+then [native vault tests](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/installations/InstallationVaultTest.kt).
+
+KeystoreInstallationVault encrypts the identity with a non-exportable AndroidKeyStore AES-GCM key, namespace-bound authenticated data and a fresh nonce. AtomicFile stores only the envelope under noBackupFilesDir. A namespace mutex serializes adapters in this one application process; this does not claim multiprocess storage coordination.
+
+Device namespaces include the application and deployment authority, never a user
+or account. Memory selection uses an explicitly process-only vault cached for
+that authority. Both use 32 cryptographically random proof bytes. Existing
+corruption/lost keys fail and remain in place; there is no reset/plaintext fallback.
+The vault is separate from CredentialVault, so clearing auth does not erase proof.
+
+The Go model binds InstallationController to HTTPInstallationRegistry using the
+same exact AuthenticatedHTTPClient as its other connected features. All lease
+changes clear/read registry presentation; no implicit target transfer occurs.
+The card identity follows the lease, dropping the opaque token draft on renewal,
+account switch, sign-out or navigation away. Closing the gallery never unregisters
+a target. Successful Identity sign-out supplies eventual server retirement;
+offline/failed revoke cannot promise immediate target suppression.
+
+Actual route: Catalog → Go identity and accounts → Device registration. Sign in,
+wait for the initial read, enter an opaque probe address, register, replace it,
+refresh and unregister. The card explicitly labels this as a metadata registry
+test; no OS token collection, permission prompt, SDK or push sender is enabled.
+The environment/application labels do not attest a real provider token.
+
+Verification: both catalogs build; two Keychain and two Keystore cases execute
+without failures/skips on iPhone 17 Pro/iOS 26.2 and API36_Test/Android 16.
+They establish reopen, namespace separation, concurrent creation, auth-clear
+separation and corruption preservation; Android also checks lost-key refusal.
+They do not establish uninstall/reinstall policy, physical-device secure hardware,
+locked-device states, catalog gestures or independent generated connected output.
+
+Related: [secure storage substrate](../../../substrate/keystore-encryption-and-atomic-credentials.md),
+[construction and acceptance](../../../../../../docs/blueprints/installations.md), and
+[shared reconciliation pattern](../../../../../../notes/patterns/installation-identity-and-current-state-reconciliation.md).
+Next: configured OS token acquisition and account-independent callback ownership.
+
+## System notifications — 2026-10-17
+
+Claim: local notification permission/posting and admitted app navigation can be
+exercised without introducing a backend or cloud provider dependency.
+
+Origin: the next native notification slice. Read
+[AndroidSystemNotifications.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/systemnotifications/AndroidSystemNotifications.kt), [SystemNotificationCatalogScreen.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/systemnotifications/SystemNotificationCatalogScreen.kt), [MainActivity.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/MainActivity.kt), [AppShell.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/ui/shell/AppShell.kt), [Navigation.kt](../../../../project/app/src/main/java/dev/mobilefoundry/catalog/Navigation.kt), [SystemNotificationTest.kt](../../../../project/app/src/androidTest/java/dev/mobilefoundry/catalog/systemnotifications/SystemNotificationTest.kt).
+
+The ActivityResult permission launcher belongs to the screen. A cancellable deferred bridge waits for its callback; the adapter then reads actual OS permission/app/channel settings instead of treating the callback boolean as a permanent grant. LifecycleEventEffect re-reads on resume; neither callback registration nor initial refresh launches a prompt.
+
+The native adapter posts one tag/ID/channel with an explicit immutable PendingIntent and fixed application URI. Slot replacement updates its bounded UUID extra. MainActivity validates both initial and new intents. It clears only owned routing data while preserving base launch metadata. Navigation3 selects/adds the System notifications destination before consuming the pending ID. The device check synchronizes RESUMED before Activity recreation.
+
+Actual route: Studio → Open catalog → System notifications. Allow notifications,
+post a generic local preview, open it from the system notification surface and
+clear the owned preview. Settings return refreshes access. The screen displays
+OS acceptance separately from an admitted open; neither proves remote delivery.
+
+Permission denial, account preference and installation registration are independent.
+No token, auth credential, principal/account field or remote text enters this
+preview. There is no automatic registration, sign-in, scope switch, read marking
+or OS write retry. Native evidence and limits are recorded in
+[the construction guide](../../../../../../docs/blueprints/system-notifications.md).
+Related: [platform substrate](../../../substrate/android-notification-permissions-and-pending-intents.md) and
+[navigation-hint pattern](../../../../../../notes/patterns/device-notifications-and-navigation-hints.md).
+Next: configured provider token collection and scope-checked remote destinations.

@@ -28,7 +28,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix="mobile-foundry-native-go-") as temporary:
         binary = Path(temporary) / "server"
         run("go", "build", "-o", str(binary), "./cmd/server", cwd=BACKEND)
-        with server(binary, identity=True, forbidden=("native integration passphrase",)) as base:
+        with server(binary, identity=True, forbidden=("native integration passphrase", "native-installation-probe-", "i1.")) as base:
             environment = dict(os.environ, GO_SESSION_TEST_BASE=base + "/v1")
             environment.setdefault("JAVA_HOME", "/Applications/Android Studio.app/Contents/jbr/Contents/Home")
             environment.setdefault("ANDROID_HOME", str(Path.home() / "Library/Android/sdk"))
@@ -38,9 +38,11 @@ def main():
             run("./gradlew", ":core:services:test", "--tests", "dev.mobilefoundry.services.GoNativeNotesTest", cwd=ROOT / "frontend/kotlin/project", env=environment)
             run("swift", "test", "--package-path", "frontend/swift/packages/FoundryServices", "--filter", "nativeGoFilesBinaryTransferAndReceiptRecovery", env=environment)
             run("./gradlew", ":core:services:test", "--tests", "dev.mobilefoundry.services.GoNativeFilesTest", cwd=ROOT / "frontend/kotlin/project", env=environment)
+            run("swift", "test", "--package-path", "frontend/swift/packages/FoundryServices", "--filter", "nativeGoInstallationReadbackHandoffAndRetirement", env=environment)
+            run("./gradlew", ":core:services:test", "--tests", "dev.mobilefoundry.services.GoNativeInstallationsTest", cwd=ROOT / "frontend/kotlin/project", env=environment)
             if arguments.devices or arguments.android_device_only or arguments.ios_device_only:
                 device_tests(base, environment, Path(temporary), run_ios=not arguments.android_device_only,run_android=not arguments.ios_device_only)
-    print("Native Go acceptance: sessions/accounts, Notes CRUD/CAS and Files binary transfers/receipt recovery passed on URLSession/OkHttp")
+    print("Native Go acceptance: sessions/accounts, Notes CRUD/CAS, Files binary, inbox read/preferences and installation readback/handoff/retirement passed on URLSession/OkHttp")
 
 def device_tests(base, environment, temporary, run_ios=True,run_android=True):
     # These accounts and workspaces exist only in this owned memory API.

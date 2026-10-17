@@ -1,6 +1,7 @@
 # Files integration facts v1
 
-Producer: files. Consumer currently selected: audit.files. Delivery uses the
+Producer: files. Consumers selected: audit.files and notifications.files
+(the latter subscribes only to upload completion). Delivery uses the
 existing generic envelope/outbox/inbox protocol and is at-least-once.
 
 | Name | Meaning | Aggregate version |
@@ -24,5 +25,9 @@ actor, action/version/time and causal IDs, with inbox/evidence committed togethe
 An existing Account/Identity fingerprint is unchanged when the new optional subject
 is absent. Do not import Files domain/application types into Audit.
 
-Broker replacement, Realtime projection, notification delivery, privacy export/
+Notifications admits upload completion into its own application input and commits
+its inbox marker, preference decision and optional in-app item together. It does
+not import Files types or read its store. Read [Notifications](../behavior/notifications.md).
+
+Broker replacement, Realtime projection, outbound push delivery, privacy export/
 erasure integration and operational event retention remain separate capabilities.

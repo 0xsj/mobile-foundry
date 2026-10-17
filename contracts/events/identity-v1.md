@@ -1,6 +1,7 @@
 # Identity lifecycle facts v1
 
-Producer: `identity`. Independent receiver: `audit.identity`. Publication is
+Producer: `identity`. Independent receivers: `audit.identity` and, for session
+revocation, `notifications.identity`. Publication is
 after the producer state/outbox commit, through the existing Publisher port.
 Stable identity and consumer inbox deduplication survive retries/restarts.
 
@@ -25,3 +26,10 @@ there is no global ordering promise across principals/sessions/modules.
 The generic envelope now permits omitted account ID for non-account facts;
 account-specific receiving/domain contracts continue to require a real account
 ID. Audit represents principal scope explicitly instead of fabricating an account.
+
+Notifications maps only session.revoked into its own installation-retirement input.
+It validates actor/principal, session, version and reason, then commits a source
+marker with a session tombstone and matching token erasure. It never imports
+Identity state. Late old-session cleanup leaves rebound installations alone;
+pre-registration tombstones refuse delayed writes. See
+[installation lifecycle](../behavior/installations.md).

@@ -188,7 +188,7 @@ install dependencies, set up secrets or configure remote services.
 
 def append_backend_documents(destination, inputs, backend, native):
     ignore = destination / ".gitignore"
-    ignore.write_text(ignore.read_text() + "\n# Private local object bytes\nbackend/go/.data/\n")
+    ignore.write_text(ignore.read_text() + "\n# Private local object bytes and push provider credentials\nbackend/go/.data/\n.push-private/\n*.p8\npush.local.json\n*service-account*.json\nserviceAccountKey.json\n")
     tasks = {
         "go-dev": "dev", "go-build": "build", "go-check": "check", "go-test": "test", "go-smoke": "smoke",
         "go-db-up": "db-up", "go-db-down": "db-down", "go-db-check": "db-check", "go-migrate": "migrate",
@@ -206,7 +206,7 @@ def append_backend_documents(destination, inputs, backend, native):
 
 Go module: `{backend.module}`. Requires Go {backend.profile['goVersion']}+.
 Selected modules: Health, Identity, Account, Audit, the replaceable Notes
-exemplar and Files. Application handlers use consumer-owned ports; memory/PostgreSQL
+exemplar, Files and Notifications. Application handlers use consumer-owned ports; memory/PostgreSQL
 adapters stay behind them. No source checkout, local replace directive or module
 workspace is needed. External dependencies are pinned in go.mod/go.sum.
 
@@ -246,6 +246,58 @@ GET/POST /v1/accounts/{{account}}/notes, version-guarded PATCH/DELETE, and
 GET /v1/accounts/{{account}}/note-receipts/{{command}}. Write keys are canonical
 UUIDs; retain the exact command and original scope before dispatch. Receipts
 survive later edits/deletion. A lost response does not establish rollback.
+
+Completed uploads also deliver an in-app item to the uploader. Use
+GET /v1/accounts/{{account}}/notifications (limit/cursor/unread),
+POST /v1/accounts/{{account}}/notifications/{{item}}/read with no body, and
+GET/PUT /v1/accounts/{{account}}/notification-preferences with
+{{"media_in_app":true}}. Read acknowledges once; settings use last committed value.
+These two mutations reject Idempotency-Key/If-Match and offer no command receipts.
+Notifications uses its own schema/pool; NOTIFICATIONS_DATABASE_URL inherits
+DATABASE_URL. Run explicit migrations before API startup after an upgrade.
+No native inbox, OS token collection, push provider or retention is selected by default.
+Optional real APNs/FCM preview sending requires AUTH_MODE=identity and an explicit
+PUSH_CONFIG_FILE (prefer an absolute path to an untracked private configuration).
+Copy backend/go/infra/push/example.json into .push-private/push.local.json and
+replace its routes/credential paths. Key paths are relative to that config file.
+The optional POST /v1/installations/{{installation}}/push-preview requires current
+Identity auth, X-Installation-Key, If-Match and {{"preview_id":"UUID"}}. It sends
+once, has no idempotency receipt and may duplicate on a repeated request. Default
+builds need no provider account or keys. Do not put server credentials in native
+apps. Live cloud delivery and generated native remote UI require separate verification.
+Queued previews additionally require STORAGE=postgres and PUSH_JOBS_ENABLED=true.
+POST /v1/installations/{{installation}}/push-jobs takes the same auth/proof/current
+If-Match plus {{"job_id":"UUID"}}; GET the returned ID at that path to inspect it.
+The job ID is also its generic payload preview ID. Repeating the identical intent
+returns its retained job; a changed owner/revision conflicts. The worker rechecks
+the original binding/session and retries only before its durable send marker.
+Unknown provider/commit outcomes become uncertain and are never automatically
+resent. Apply pending migrations explicitly, including 0004_push_job_recovery.sql
+on an existing deployment. POST .../push-jobs/{{job}}/cancel with no body or If-Match
+cancels queued/leased work only; it cannot retract a send already marked sending.
+POST .../push-jobs/{{job}}/replacement requires current auth/proof/If-Match and
+{{"job_id":"NEW_UUID","accept_possible_duplicate":false}} for a failed, blocked,
+expired or canceled source. An uncertain source requires true, explicitly accepting
+possible duplicate delivery. Accepted/invalid_target/active jobs cannot be replaced.
+Exactly one linked replacement is retained per source. Repeating its exact ID,
+revision and acknowledgement returns that child; another ID conflicts. GET at the
+same /replacement path with auth/proof and no If-Match reads the existing child.
+The original outcome is preserved; replacement is a new request, not confirmation
+that the earlier send failed. Neither cancellation nor recovery affects descendants.
+Jobs expire for execution after fifteen minutes; terminal rows remain retained,
+with a ten-thousand-row admission cap. Retention, fanout and cross-owner operations
+remain separate. Recovery uses the same explicit queue selection, with no new default worker.
+
+The API also owns a session-bound installation registry. POST /v1/installations
+creates metadata with a client UUID and fresh registration_id; GET/PUT/DELETE
+/v1/installations/{{installation}} require X-Installation-Key in addition to Bearer
+authentication. Generate an independent i1. key from 32 cryptographically random
+bytes encoded as unpadded base64url; store it securely on the native installation.
+PUT uses a new registration_id/current If-Match; DELETE requires the currently
+owning session and version. Lost acknowledgements require current-state readback.
+Token/key bytes are never echoed. Identity sign-out/reuse facts retire matching
+bindings through the Notifications inbox. This selects registry metadata, not
+native OS token capture or APNs/FCM delivery. Explicitly apply migrations on upgrade.
 
 ### Durable local storage
 
@@ -304,4 +356,4 @@ provisioning external services or credentials.
     readme = destination / "README.md"
     text = readme.read_text().replace("Backend: none.", "Backend: go (independent API).")
     readme.write_text(text + f"\nGo API: `{backend.module}`. Run `make go-dev`; use `make go-test` and\n`make go-integration-test` for the included checks. Read SETUP.md for persistence.\n" + ("Native session/data UI wiring is a separate capability.\n" if native else ""), encoding="utf-8")
-    (destination / "backend/go/README.md").write_text(f"# {inputs.display_name} API\n\nGo module `{backend.module}`; Health, Identity, Account, Audit and Notes.\n\nRead [project setup](../../SETUP.md#go-api) for runtime, credentials, persistence,\nmigrations and isolated tests. Modules own domain/application ports and adapters;\ncmd/server owns composition. This copy builds without the source checkout.\n", encoding="utf-8")
+    (destination / "backend/go/README.md").write_text(f"# {inputs.display_name} API\n\nGo module `{backend.module}`; Health, Identity, Account, Audit, Notes, Files and Notifications.\n\nRead [project setup](../../SETUP.md#go-api) for runtime, credentials, persistence,\nmigrations and isolated tests. Modules own domain/application ports and adapters;\ncmd/server owns composition. This copy builds without the source checkout.\n", encoding="utf-8")

@@ -545,3 +545,81 @@ Native RemoteFilesReader/Writer ports use binary-capable session-bound HTTP; the
 Go session catalogs reuse photo selection/decoding and the existing image editor.
 They retain scoped retry input in memory only. CLI 0.5.0 includes Files in the full
 Go backend; generated native/backend auth/media composition remains unselected.
+
+The [Notifications contract](contracts/behavior/notifications.md) adds a second
+independent Files consumer. A receiving adapter maps upload completion to an owned
+DeliverUpload command. Its Store atomically commits the source marker, current
+preference decision and optional item. AccountAccess authorizes public use cases;
+no foreign data/store enters the module. Memory and PostgreSQL are selectable.
+Native inbox wiring, outbound delivery queues/providers and Realtime remain separate.
+
+Native Notifications now binds reader/writer repositories through the exact lease
+and selected account in each catalog. Shared components render only supplied data;
+app owners retain bounded pages and refresh server count/preferences after settled
+mutations. An unconfirmed change requires readback before another write, and old
+generations cannot update replacement scope. Read
+[the reconciliation pattern](notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+Generated connected composition and system push remain separate from this slice.
+
+Notifications now owns a [session-bound installation registry](contracts/behavior/installations.md) behind Installations/InstallationProofs ports. Credential resolution v2 adds trusted session evidence without changing v1. Explicit proof-plus-version handoff protects a device binding; Identity revocation enters through the consumer adapter and commits matching token erasure, a session tombstone and its own inbox marker. Future native token owners and provider delivery remain separate.
+
+Native Services now supplies InstallationVault/InstallationRegistry and a UI-owned
+InstallationController. Composition selects Keychain/Keystore or explicit memory
+storage and injects an exact-lease HTTP client. Proof persists by app/deployment;
+lease changes invalidate/read presentation without automatic registration. Failed
+writes block until authoritative readback. Catalog forms exercise metadata only;
+OS token subscriptions and provider delivery remain unselected.
+
+Native [system notifications](contracts/behavior/system-notifications.md) now have
+an OS port and UI-owned controller separate from inbox preferences/installation
+registration. Composition retains a bounded open router before screens exist;
+native edges admit only a generic local preview. Navigation consumes the current
+intent without account switching or domain writes. OS acceptance is not delivery
+proof. Remote scoped opens and cloud sending remain separate.
+
+Optional [provider token adapters](contracts/behavior/push-tokens.md) bridge APNs
+and FCM into a process-owned address candidate. Screen owners collect explicitly;
+callbacks/rotation never register or rebind a backend installation. Catalog
+composition hands a snapshot to the existing exact-session registry only on
+explicit action. Missing provider configuration remains a supported default;
+local adapter acceptance does not prove live token issuance or delivery.
+
+The [backend push foundation](contracts/behavior/push-dispatch.md) adds an optional
+internal preview command. Notifications reads/rechecks exact target leases and
+asks Identity through a versioned consumer-owned session port, then calls an
+injected gateway once. Conditional rejection cleanup preserves newer bindings.
+No foreign state/transaction enters the core. The default runtime starts no send
+worker or public endpoint; provider selection and durable fanout remain separate.
+
+[Provider composition](contracts/behavior/push-providers.md) now optionally selects
+APNs/FCM HTTP adapters and a session/proof/revision-guarded preview endpoint.
+Default startup remains off; only private server configuration enables it.
+Adapters own signing, credential caches, fixed hosts and response admission.
+Application dispatch still owns eligibility and conditional cleanup. No durable
+fanout or native remote-open behavior follows from local protocol acceptance.
+
+[Native remote previews](contracts/behavior/remote-notifications.md) now unwrap
+APNs/FCM envelopes into strict Services values. Foreground receipt and tap/default
+opens are distinct transitions; only the latter enters app-owned navigation.
+Tagged local/remote identity guards bounded deduplication and exact consumption.
+The diagnostic route needs no account and performs no backend mutation. Android
+handles foreground callbacks and SDK background launcher Intents separately,
+clearing accepted data before recreation. Simulator/fixture execution remains
+separate from live signed-device delivery and connected CLI extraction.
+
+[Queued previews](contracts/behavior/push-jobs.md) add Notifications-owned intents
+and memory/PostgreSQL execution state behind PushJobs. Optional pkg/jobs polling
+claims one fenced job, reuses Identity/target admission, commits sending and invokes
+the gateway once. Preflight failures may back off; expired sending claims and
+unknown acknowledgements retain uncertainty without automatic resend. Worker stop
+precedes pool closure. Runtime selection requires PostgreSQL plus explicit
+provider/queue configuration; default startup remains off. This is independent
+from Files-to-inbox decisions, audience fanout and native navigation.
+
+[Job recovery](contracts/behavior/push-job-recovery.md) now provides owner-scoped
+cancel/replacement/readback operations. Cancellation races atomically against Begin;
+it cannot retract sending. A replacement is a new linked immutable intent, with
+explicit duplicate acknowledgement for uncertain sources. The original outcome
+remains intact, and a unique source link prevents competing replacement IDs from
+creating multiple children. No generic worker policy, module boundary or native
+navigation authority changes; default runtime selection remains off.

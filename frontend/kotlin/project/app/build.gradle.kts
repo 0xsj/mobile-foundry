@@ -14,6 +14,12 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Public Firebase Android app configuration; absent by default. No cloud SDK in core.
+        for ((name, resource) in mapOf("ApplicationId" to "google_app_id", "ProjectId" to "project_id",
+            "SenderId" to "gcm_defaultSenderId", "ApiKey" to "google_api_key")) {
+            resValue("string", resource,
+                providers.gradleProperty("catalogFcm$name").getOrElse(""))
+        }
     }
 
     sourceSets.getByName("androidTest").assets.srcDir(rootProject.file("../../../contracts/fixtures/local-notes"))
@@ -26,6 +32,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -33,6 +40,7 @@ android {
       compose = true
       aidl = false
       buildConfig = false
+      resValues = true
       shaders = false
     }
 
@@ -53,6 +61,8 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
+  implementation(libs.firebase.messaging)
+  coreLibraryDesugaring(libs.desugar.jdk.libs)
   implementation(libs.androidx.exifinterface)
   implementation(libs.androidx.camera.camera2)
   implementation(libs.androidx.camera.lifecycle)

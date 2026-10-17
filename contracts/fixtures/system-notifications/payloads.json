@@ -1,0 +1,108 @@
+[
+  {
+    "name": "valid",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview",
+      "preview_id": "a0000000-0000-4000-8000-000000000001"
+    },
+    "valid": true
+  },
+  {
+    "name": "version-1",
+    "payload": {
+      "version": "2",
+      "kind": "local_preview",
+      "preview_id": "a0000000-0000-4000-8000-000000000001"
+    },
+    "valid": false
+  },
+  {
+    "name": "version-2",
+    "payload": {
+      "version": "1\n",
+      "kind": "local_preview",
+      "preview_id": "a0000000-0000-4000-8000-000000000001"
+    },
+    "valid": false
+  },
+  {
+    "name": "kind-3",
+    "payload": {
+      "version": "1",
+      "kind": "inbox",
+      "preview_id": "a0000000-0000-4000-8000-000000000001"
+    },
+    "valid": false
+  },
+  {
+    "name": "preview_id-4",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview",
+      "preview_id": "../escape"
+    },
+    "valid": false
+  },
+  {
+    "name": "preview_id-5",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview",
+      "preview_id": "00000000-0000-0000-0000-000000000000"
+    },
+    "valid": false
+  },
+  {
+    "name": "preview_id-6",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview",
+      "preview_id": "a0000000-0000-4000-8000-000000000001\n"
+    },
+    "valid": false
+  },
+  {
+    "name": "preview_id-7",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview",
+      "preview_id": "A0000000-0000-4000-8000-000000000001"
+    },
+    "valid": false
+  },
+  {
+    "name": "account_id-8",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview",
+      "preview_id": "a0000000-0000-4000-8000-000000000001",
+      "account_id": "00000000-0000-4000-8000-000000000002"
+    },
+    "valid": false
+  },
+  {
+    "name": "missing-version",
+    "payload": {
+      "kind": "local_preview",
+      "preview_id": "a0000000-0000-4000-8000-000000000001"
+    },
+    "valid": false
+  },
+  {
+    "name": "missing-kind",
+    "payload": {
+      "version": "1",
+      "preview_id": "a0000000-0000-4000-8000-000000000001"
+    },
+    "valid": false
+  },
+  {
+    "name": "missing-preview_id",
+    "payload": {
+      "version": "1",
+      "kind": "local_preview"
+    },
+    "valid": false
+  }
+]

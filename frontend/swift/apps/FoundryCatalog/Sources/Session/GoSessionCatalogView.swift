@@ -94,6 +94,8 @@ struct GoSessionCatalogView: View {
       directoryCard(model, controller)
       RemoteNotesCatalogCard(model:model.notes).id(lease.scope)
       RemoteFilesCatalogCard(model:model.files).id(lease.scope)
+      NotificationInboxCatalogCard(model:model.inbox).id(lease)
+      InstallationCatalogCard(model: model.installations).id(lease)
     }
   }
   private func sessionCard(_ model: GoSessionCatalogModel, _ controller: SessionController)

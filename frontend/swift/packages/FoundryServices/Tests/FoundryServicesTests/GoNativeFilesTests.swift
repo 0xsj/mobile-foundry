@@ -46,6 +46,28 @@ func nativeGoFilesBinaryTransferAndReceiptRecovery() async throws {
     #expect(available.status == .available && available.version == 2)
     #expect(try await repo.complete(requested.file, key: key + ".complete").get().file == available)
     #expect(try await repo.download(available).get() == bytes)
+    let inbox = HTTPNotificationInboxRepository(client: bearer, accountID: accountID, principalID: principal)
+    var delivered: InboxNotification?
+    for _ in 0..<100 {
+        let page = try await inbox.page().get()
+        if let item = page.items.first { #expect(page.unreadCount == 1 && page.items.count == 1); delivered = item; break }
+        try await Task.sleep(for: .milliseconds(30))
+    }
+    let notice = try #require(delivered); #expect(notice.fileID == available.id && notice.isUnread)
+    let lostRead = HTTPNotificationInboxRepository(client: LoseFileAcknowledgement(bearer, suffix: "/read"), accountID: accountID, principalID: principal)
+    if case .success = try await lostRead.markRead(notice) { Issue.record("Read acknowledgement was not dropped") }
+    let read = try #require(try await inbox.page().get().items.first)
+    #expect(!read.isUnread && read.readAt != nil)
+    #expect(try await inbox.markRead(read).get().readAt == read.readAt)
+    #expect(try await inbox.page(unreadOnly: true).get().items.isEmpty)
+    let lostSetting = HTTPNotificationInboxRepository(client: LoseFileAcknowledgement(bearer, suffix: "/notification-preferences"), accountID: accountID, principalID: principal)
+    if case .success = try await lostSetting.setMediaEnabled(false) { Issue.record("Preference acknowledgement was not dropped") }
+    #expect(try await inbox.mediaEnabled().get() == false)
+    let other = try await bearer.requestEntity(.POST, path: "accounts", options: .init(body: .object(["name": .string("Other inbox")]))).get()
+    let otherID = try #require(other.body.object?["id"]?.string)
+    let otherInbox = HTTPNotificationInboxRepository(client: bearer, accountID: otherID, principalID: principal)
+    #expect(try await otherInbox.page().get().items.isEmpty)
+    #expect(try await otherInbox.mediaEnabled().get())
     _ = try await repo.delete(available, key: key + ".delete").get()
     #expect(try await repo.page().get().files.isEmpty)
     #expect(try await repo.complete(requested.file, key: key + ".complete").get().file == available)

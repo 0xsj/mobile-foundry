@@ -4,5 +4,5 @@ package migrations
 
 import "embed"
 
-//go:embed account/*.sql audit/*.sql identity/*.sql notes/*.sql files/*.sql
+//go:embed account/*.sql audit/*.sql identity/*.sql notes/*.sql files/*.sql notifications/*.sql
 var Files embed.FS

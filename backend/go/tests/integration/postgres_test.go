@@ -128,7 +128,7 @@ func TestPostgres(t *testing.T) {
 			}
 		}
 	})
-	for _, name := range []string{"account", "audit", "identity", "notes", "files"} {
+	for _, name := range []string{"account", "audit", "identity", "notes", "files", "notifications"} {
 		schema, err := storage.Load(migrations.Files, name)
 		if err != nil {
 			t.Fatal(err)

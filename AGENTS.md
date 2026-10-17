@@ -133,3 +133,69 @@ Use the relevant targets in [Makefile](Makefile) for native code changes. Run
 `make notes-check` for learning-note changes. Do not repeat native builds for
 prose-only edits. Run additional examples or checks when the claims being added
 require them; a compile or build result alone does not establish runtime behavior.
+
+The backend [Notifications slice](contracts/behavior/notifications.md) owns in-app
+delivery decisions, first-read state and media preferences. Commit source markers
+with both accepted and suppressed decisions; do not resurrect muted events on replay.
+Keep audience mapping explicit and external push separate from in-app transactions.
+Native inbox consumers use the same contract through account/principal-bound
+ports and exact session leases. Invalidate owner generations on every bind,
+including renewal. Require authoritative readback after unconfirmed settings;
+do not invent receipt or automatic replay semantics for settled inbox mutations.
+
+The backend installation registry follows [installation behavior](contracts/behavior/installations.md). Keep installation proof separate from auth/delivery tokens; authenticate session evidence through credential v2. Preserve proof/CAS/target uniqueness and retirement/inbox/tombstone atomicity. Old cleanup must never unlink a rebound session. Native token collection and actual push are separate capabilities.
+
+Native installation owners use the same behavior through secure load-or-create
+vaults and exact-lease registry ports. Keep proof app/deployment-scoped across auth
+changes. Rebind/read on lease changes, require readback after unconfirmed writes,
+and never reset unreadable proof or replay a registration implicitly. Sign-out
+uses Identity revocation; do not queue old-session device DELETE operations.
+
+Native [system notification previews](contracts/behavior/system-notifications.md)
+keep OS permission, account preferences and provider registration separate.
+Prompt only on explicit action; re-read settings on foreground return. Keep
+payloads admitted and non-authoritative, opens bounded and app-owned, clear only
+owned notification identifiers, and never infer delivery from OS acceptance.
+Do not add implicit account switching or inbox mutations to preview taps.
+
+Native [provider token collection](contracts/behavior/push-tokens.md) keeps app/process
+addresses separate from permission, installation proof and session-bound writes.
+Collect explicitly; callbacks update only a redacted ephemeral candidate. Keep
+SDKs in app adapters, provider setup optional and route/signing selection explicit.
+Do not silently replace the registry's FCM registration-token contract with FIDs,
+infer delivery from collection or promote connected CLI readiness from adapter tests.
+
+The [backend push dispatch foundation](contracts/behavior/push-dispatch.md) is an
+optional internal use case. Keep Identity eligibility behind the consumer-owned
+capability port and recheck the exact target after that call. Never hold a store
+lock across a provider call. Retire only the rejected owner/version; uncertain
+provider errors never erase tokens. No automatic send/worker or exactly-once
+claim follows from this foundation or its injected gateway tests.
+
+[Optional provider adapters](contracts/behavior/push-providers.md) require explicit
+PUSH_CONFIG_FILE with owned Identity, exact route allowlists and private server
+keys. Default runtime is off. Keep fixed provider endpoints, TLS/no redirects,
+bounded replies, redacted transport errors and strict invalid-address evidence.
+Never copy provider keys into generated products or infer live cloud delivery
+from local protocol tests. Acceptance processes must clear host PUSH_CONFIG_FILE.
+
+Native [remote preview admission](contracts/behavior/remote-notifications.md) keeps
+transport envelopes, foreground receipt and default/tap opens distinct. Preserve
+strict application fields and reviewed bounded SDK metadata. Kind plus ID guards
+deduplication/consumption; receipt never navigates or grants account authority.
+Clear accepted Android launch extras before recreation. Simulator/fixture opens
+do not establish live APNs/FCM delivery or connected CLI readiness.
+
+Optional [queued push previews](contracts/behavior/push-jobs.md) retain immutable
+original owner/revision intents. Preserve atomic replay, random claim fencing,
+the committed sending marker and conservative uncertain outcomes. Never recover
+a post-marker error/crash by blindly resending. Keep jobs Notifications-owned and
+generic polling free of business policy; stop workers before pools. Acceptance
+processes must also clear inherited PUSH_JOBS_ENABLED.
+
+[Owned job recovery](contracts/behavior/push-job-recovery.md) cancels only before
+the send marker and replaces eligible terminal jobs with a new linked intent.
+Preserve original outcomes, one direct child per source and immutable duplicate-risk
+acknowledgement. Never reset uncertain work or silently affect descendants. Keep
+current installation/session proof at the edge, exact acknowledgement admission
+and atomic memory/PostgreSQL rules; this is not cross-session administration.

@@ -10,6 +10,19 @@ PostgreSQL migrations/crash recovery, and both co-located native builds pass.
 
 ## Source reading order
 
+Installation follow-up, 2026-10-17: CLI 0.7.0 selects credential v2, compatible v1,
+installation metadata, 0002 migration and registry tests. The independent device-api
+passes its own race/smoke/PostgreSQL recovery and generated root runner's proof,
+rebind and unregister flows. Native OS integration remains unselected. Read
+[actual readiness](../../../docs/STARTER-READINESS.md).
+
+Notifications follow-up, 2026-10-17: CLI 0.6.0 extends the explicit Go module/source/
+migration/test closure with Notifications. No source domain import reaches another
+module. The independent generated API passes its own memory/race, PostgreSQL 14.24
+recovery and Make-runner upload → inbox → read → preference flow. Read
+[the current evidence](../../../docs/STARTER-READINESS.md) and
+[Notifications construction](../../../docs/blueprints/notifications.md).
+
 1. [Entry and selection](../../../cli/mobile_foundry/cli.py): API-only versus native
    platform choices, backend/module admission and explicit scope in the handoff.
 2. [Backend inventory](../../../templates/backends/go.json) and

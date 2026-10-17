@@ -1,5 +1,41 @@
 # Kotlin learning notes
 
+Remote-preview follow-up, 2026-10-17: read
+[receipt/open identity](../../../notes/patterns/remote-notification-admission-and-open-identity.md),
+the Services/app remote sections, then [construction and native evidence](../../../docs/blueprints/remote-notifications.md).
+FCM foreground callbacks and background launcher envelopes now have separate
+admission paths. Fixture/PendingIntent execution is distinct from live FCM delivery.
+
+Provider-token follow-up, 2026-10-17: read
+[ownership](../../../notes/patterns/provider-addresses-and-registration-intents.md),
+[Firebase callback ordering](substrate/firebase-token-collection.md), then
+Services/app walkthroughs and [setup/evidence](../../../docs/blueprints/push-tokens.md).
+The optional adapter and explicit registration handoff build and pass local
+checks; live FCM issuance and generated connected products remain unverified.
+
+System notifications follow-up, 2026-10-17: read
+[device notifications and navigation hints](../../../notes/patterns/device-notifications-and-navigation-hints.md),
+then the Services/app System notifications sections and platform substrate.
+Both catalogs add explicit OS permission/settings, local previews and admitted
+app navigation. Cloud push, remote account destinations and generated connected
+starter acceptance remain separate; see actual native evidence in
+[the construction guide](../../../docs/blueprints/system-notifications.md).
+
+Native installation follow-up, 2026-10-17: read
+[identity and current-state reconciliation](../../../notes/patterns/installation-identity-and-current-state-reconciliation.md),
+then the Services registry and app vault/composition walkthroughs.
+Secure proof ownership, explicit registration/rebinding, renewal readback and
+sign-out retirement pass their separate native/HTTP checks. OS token collection,
+provider delivery and generated connected products remain pending.
+
+Notifications native follow-up, 2026-10-17: read
+[inbox refresh and setting uncertainty](../../../notes/patterns/inbox-refresh-and-setting-uncertainty.md) and
+[the connected walkthrough](../../../docs/blueprints/notifications.md).
+Swift/Kotlin now expose account inbox/read state and media preferences through
+repository ports, exact session leases and passive shared components. Shared
+admission tests, owner replacement/reconciliation and real Go HTTP checks provide
+separate evidence; generated connected profiles and system push remain pending.
+
 Follow the Android implementation through source walkthroughs, with separate
 notes for Kotlin mechanics and framework behavior. This notebook follows
 [the shared workflow](../../../docs/NOTES.md) and Bento's categories.

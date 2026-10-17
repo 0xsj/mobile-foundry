@@ -23,6 +23,7 @@ import dev.mobilefoundry.catalog.ProductShellsCatalog
 import dev.mobilefoundry.catalog.PhysicsPlaygroundCatalog
 import dev.mobilefoundry.catalog.SessionCatalog
 import dev.mobilefoundry.catalog.GoSessionCatalog
+import dev.mobilefoundry.catalog.SystemNotificationsCatalog
 import dev.mobilefoundry.catalog.NotesCatalog
 import dev.mobilefoundry.catalog.QueryCatalog
 import dev.mobilefoundry.catalog.TokensCatalog
@@ -54,6 +55,7 @@ fun MainScreen(
         modifier = Modifier.semantics { contentDescription = "Glass surfaces" })
     }
     Button(onClick = { onItemClick(TokensCatalog) }) { Text("Tokens") }
+    Button(onClick = { onItemClick(SystemNotificationsCatalog) }) { Text("System notifications") }
     Button(onClick = { onItemClick(ProductShellsCatalog) }) { Text("Product shells") }
     Button(onClick = { onItemClick(ComponentsCatalog) }) { Text("Components") }
     Button(onClick = { onItemClick(FormsCatalog) }) { Text("Forms and mutations") }

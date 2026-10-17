@@ -1,5 +1,57 @@
 # Services walkthrough
 
+## Remote notification values — 2026-10-17
+
+Claim: receiving an admitted push value does not request navigation; consuming
+an open requires its complete tagged identity. Origin: generic remote-preview slice.
+Read [values](../../../../packages/FoundryServices/Sources/FoundryServices/RemoteNotificationPreview.swift),
+[router](../../../../packages/FoundryServices/Sources/FoundryServices/SystemNotifications.swift)
+and [checks](../../../../packages/FoundryServices/Tests/FoundryServicesTests/RemoteNotificationTests.swift).
+
+RemoteNotificationPreview validates the exact string schema and canonical UUID.
+NotificationOpen is an enum with associated local/remote values; equality retains
+the case, while its Identifiable key combines kind/UUID for SwiftUI observation.
+The main-actor observable router separately records receipt, pending navigation
+and the last consumed open. Associated values keep invalid case/data combinations
+out of this representation. A raw UUID would lose that distinction.
+
+Shared fixtures cover remote admission. State tests cover foreground no-navigation,
+same-UUID local/remote races, duplicate opens and eviction from the bounded window.
+These do not prove OS delivery. Follow [app flow and acceptance](../../apps/FoundryCatalog/README.md)
+and [the shared reasoning](../../../../../../notes/patterns/remote-notification-admission-and-open-identity.md).
+
+## Provider address candidate — 2026-10-17
+
+Claim: a process-local provider address and a screen-owned collection request
+have separate lifetimes from the session-bound installation owner.
+Origin: optional APNs/FCM collection. Read [PushTokens.swift](../../../../packages/FoundryServices/Sources/FoundryServices/PushTokens.swift),
+[owner tests](../../../../packages/FoundryServices/Tests/FoundryServicesTests/PushTokenTests.swift)
+and [registry handoff checks](../../../../packages/FoundryServices/Tests/FoundryServicesTests/InstallationTests.swift).
+
+PushTokenStore is @MainActor/@Observable. Its admitted DeliveryTarget is redacted
+in diagnostics, and its revision orders local changes. Explicit invalidation
+advances even an empty store; an older completion must not resurrect a refused
+address. Repeated equal targets do not advance the revision. Nothing is persisted
+by this package and no callback has a reference to an installation registry.
+
+PushTokenPort publishes its admitted candidate before returning success. The
+controller owns only busy/failure and its cancellable Task. Construction does
+not collect; collect clears the old candidate, serializes screen requests and
+reports only public failures. A thrown defect reaches its original reporting
+hook. close makes the owner terminal; a later native callback may update the
+process store, but cannot publish request state into that closed screen.
+
+The catalog's separate registration button snapshots target into the existing
+InstallationController. Tests rotate the candidate during a write with a lost
+acknowledgement: the first write retains its original address, refresh does not
+resend, and only another explicit action writes the new address. Unbinding auth
+does not destroy the process address. Read [the shared pattern](../../../../../../notes/patterns/provider-addresses-and-registration-intents.md).
+
+Evidence: host owner/handoff checks and native tests recorded in
+[setup/evidence](../../../../../../docs/blueprints/push-tokens.md). Live APNs/FCM
+issuance, automatic registration/sync and generated connected selection are not
+established. Next: provider selection/eligibility and guarded invalid-token cleanup.
+
 ## Remote Notes and immutable receipts
 
 Claim: a remote repository promises versions and recoverable commands explicitly,
@@ -194,3 +246,115 @@ build; each platform passes two file-owner cases. These observations do not
 establish photo-picker gestures, background transfers, durable pending input or
 cloud storage. Related: [object lifecycle reasoning](../../../../../../backend/go/notes/patterns/metadata-and-object-lifecycles.md). Next: what extra ownership is needed when uploads
 must survive native process termination?
+
+## Connected inbox — 2026-10-17
+
+Claim: typed account-bound repositories can expose settled inbox actions without
+adding command receipts or provider dependencies to reusable UI.
+
+Origin: native Notifications slice; read [ports and snapshots](../../../../packages/FoundryServices/Sources/FoundryServices/NotificationInbox.swift),
+[HTTP admission](../../../../packages/FoundryServices/Sources/FoundryServices/HTTPNotificationInboxRepository.swift) and
+[the shared recovery pattern](../../../../../../notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+
+The reader exposes scoped pages and a media preference; the writer marks an item
+read or assigns the preference. The HTTP adapter is one-attempt and expects an
+exact-lease AuthenticatedHTTPClient from composition. No SDK, renewal, receipt key
+or implicit retry enters these ports. The wire does not repeat the principal on
+each item; the repository carries its bound identity and the authenticated server
+checks row ownership. Pages must repeat the current account.
+
+Response admission rejects unknown type/category, malformed IDs/calendar times,
+missing read_at, duplicate rows, inconsistent unread filters/counts and invalid
+cursor shapes. Preserve server order because its commit sequence is intentionally
+not in item DTOs. MarkRead validates the original item/file/times and preserves a
+known first-read time. A setting acknowledgement must echo the requested boolean.
+Public failure metadata and native cancellation remain distinct.
+
+[Shared response fixtures](../../../../../../contracts/fixtures/notifications/pages.json) execute in both
+platform suites. The real Go Files acceptance now also waits for its upload-ready
+item, deliberately drops read/preference acknowledgements, reads committed state
+and checks another account's empty/default inbox. This observes actual HTTP through
+URLSession/OkHttp; it does not establish system push or native screen gestures.
+
+Use: [catalog owner](../../../../apps/FoundryCatalog/Sources/Notifications/NotificationInboxCatalogModel.swift).
+Related: [Notifications behavior](../../../../../../contracts/behavior/notifications.md).
+Next: which additional audience/type needs a new explicit producer contract?
+
+## Installation registry — 2026-10-17
+
+Claim: a session-scoped registry client can manage a persistent installation
+identity without importing session or provider SDK types into Services.
+
+Origin: native registry slice. Read [InstallationRegistry.swift](../../../../packages/FoundryServices/Sources/FoundryServices/InstallationRegistry.swift), [HTTPInstallationRegistry.swift](../../../../packages/FoundryServices/Sources/FoundryServices/HTTPInstallationRegistry.swift), [InstallationController.swift](../../../../packages/FoundryServices/Sources/FoundryServices/InstallationController.swift) in that order,
+then [InstallationTests.swift](../../../../packages/FoundryServices/Tests/FoundryServicesTests/InstallationTests.swift), [GoNativeInstallationsTests.swift](../../../../packages/FoundryServices/Tests/FoundryServicesTests/GoNativeInstallationsTests.swift) and
+[the shared response corpus](../../../../../../contracts/fixtures/installations/records.json).
+
+InstallationIdentity owns a canonical UUID and canonical i1 proof. Its formatter
+is redacted, as is DeliveryTarget; neither secret enters controller snapshots.
+InstallationVault offers only serialized load-or-create, so callers cannot
+accidentally treat a corrupt record as absence or clear proof on sign-out.
+InstallationRegistry is the replaceable read/register/unregister port. The HTTP
+adapter receives an exact-lease client from app composition and preserves proof,
+CAS and one-attempt semantics without owning renewal.
+
+The response decoder checks the sanitized field set, matching ETag/version,
+UUIDs, route policy, booleans and timestamp ordering. Register validates the
+accepted checkpoint, route, binding and next revision; unregister validates the
+disabled revision and preserved metadata. GET not-found does not create/reset a
+remote record or rotate local proof.
+
+@MainActor serializes observable presentation. @ObservationIgnored excludes ports, proof and task handles from rendering dependencies. A captured generation plus cancellation checks admits completions; a canceled task cannot undo an accepted remote mutation.
+
+The controller first loads/persists identity, then reads the registry. A storage
+failure prevents networking. Each explicit registration captures a fresh UUID
+and target once. A failed mutation leaves writes blocked until GET succeeds.
+A new bind, including renewal/account switch, cancels/invalidates the old work,
+clears presentation and reads again without automatic registration. Unbind does
+not erase the vault. There is no hidden token retry queue or receipt history.
+
+Verification: shared corpus admission and three owner cases pass on both platforms;
+the held old-lease response contains a different record, proving it cannot replace
+the new binding's state. Real Go HTTP checks cover lost acknowledgement,
+session handoff, unchanged binding through renewal, settled unregister, target
+replacement and asynchronous sign-out retirement. These are host/state checks,
+not catalog gestures, real provider delivery or generated connected acceptance.
+
+Related: [identity and reconciliation pattern](../../../../../../notes/patterns/installation-identity-and-current-state-reconciliation.md).
+Next: how should an app present a desired OS token while an earlier revision is
+still unconfirmed?
+
+## System notification preview — 2026-10-17
+
+Claim: an OS notification port can remain independent of provider tokens, account
+inbox state and native navigation APIs.
+
+Origin: the local system-notification slice. Read
+[SystemNotifications.swift](../../../../packages/FoundryServices/Sources/FoundryServices/SystemNotifications.swift), [SystemNotificationController.swift](../../../../packages/FoundryServices/Sources/FoundryServices/SystemNotificationController.swift), [SystemNotificationTests.swift](../../../../packages/FoundryServices/Tests/FoundryServicesTests/SystemNotificationTests.swift), then
+[shared payload admission](../../../../../../contracts/fixtures/system-notifications/payloads.json) and
+[the behavior contract](../../../../../../contracts/behavior/system-notifications.md).
+
+NotificationAccess separates authorization from delivery settings; notGranted
+intentionally avoids promising another OS prompt. Quiet delivery can still be
+admitted. SystemNotificationPort exposes read, explicit permission request,
+post/clear preview and open settings. Native adapters recheck current access at
+post time. The controller never prompts on refresh, never retries an OS write,
+and calls its defect hook without exposing private exception content to UI.
+Closing prevents further publication but cannot undo a post already accepted by
+an OS. A later owner can explicitly clear the same owned slot.
+
+LocalNotificationPreview admits exactly version/kind/canonical UUID. It carries
+no account authority or remote content. NotificationOpenRouter holds the latest
+pending preview and a bounded 32-ID duplicate window in process memory. consume
+must match the pending ID; an old consume cannot erase a newer intent. Repeated
+opens within the window do not add another route. No durable receipt/history or
+cross-process exactly-once behavior follows.
+
+@MainActor keeps action/open ownership serial; @Observable publishes the snapshot while @ObservationIgnored excludes native ports and task handles. The port is also UI-isolated because permission requests belong to a presentation owner. Native delegate callbacks transfer only Sendable preview values into that owner.
+
+Verification: host checks exercise the shared corpus, explicit permission action,
+blocked posting after settings change, no automatic replay, current-ID open
+consumption and late-response suppression after close. The OS tests and their
+limits are separate in [the construction guide](../../../../../../docs/blueprints/system-notifications.md).
+This package never imports APNs/FCM, starts an auth request or changes an inbox
+preference. Related: [navigation-hint reasoning](../../../../../../notes/patterns/device-notifications-and-navigation-hints.md).
+Next: what current account/session admission does a remote inbox destination need?

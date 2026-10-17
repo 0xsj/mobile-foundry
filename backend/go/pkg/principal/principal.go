@@ -3,12 +3,19 @@ package principal
 
 import (
 	"context"
+	"time"
 
 	apperrors "github.com/0xsj/mobile-foundry/backend/pkg/errors"
 	"github.com/0xsj/mobile-foundry/backend/pkg/id"
 )
 
-type Principal struct{ ID id.ID }
+// Session fields are trusted optional credential evidence, never caller input.
+// Development fixtures have no owned Identity session.
+type Principal struct {
+	ID               id.ID
+	SessionID        id.ID
+	SessionExpiresAt time.Time
+}
 
 // Resolver verifies a credential before returning a trusted principal. It must
 // not infer identity from a caller-provided principal/account ID.

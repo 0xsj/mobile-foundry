@@ -50,6 +50,12 @@ class BackendTests(unittest.TestCase):
                 self.assertIn(self.backend.module + "/", policy)
                 self.assertTrue((project / "contracts/fixtures/account/names.json").is_file())
                 self.assertFalse((project / "backend/go/notes").exists())
+                self.assertTrue((project / "backend/go/migrations/notifications/0003_push_jobs.sql").is_file())
+                self.assertTrue((project / "backend/go/migrations/notifications/0004_push_job_recovery.sql").is_file())
+                self.assertIn("accept_possible_duplicate", (project / "SETUP.md").read_text())
+                self.assertTrue((project / "backend/go/pkg/jobs/worker.go").is_file())
+                self.assertIn("PUSH_JOBS_ENABLED", (project / "SETUP.md").read_text())
+                self.assertIn("PUSH_JOBS_ENABLED=true", (project / "backend/go/.env.example").read_text())
                 self.assertFalse((project / "backend/go/internal/realtime").exists())
                 self.assertFalse(any(path.name == ".gitkeep" for path in (project / "backend/go").rglob("*")))
                 compose = (project / "backend/go/infra/local/compose.yaml").read_text()
@@ -58,6 +64,7 @@ class BackendTests(unittest.TestCase):
                 self.assertIn("$(POSTGRES_PORT)/app", (project / "backend/go/Makefile").read_text())
                 self.assertIn("backend/go/.data/", (project / ".gitignore").read_text())
                 self.assertTrue((project / "backend/go/internal/files/module.go").is_file())
+                self.assertTrue((project / "backend/go/internal/notifications/module.go").is_file())
                 self.assertIn("go-dev:", (project / "Makefile").read_text())
                 self.assertIn("make go-integration-test", (project / "SETUP.md").read_text())
                 for relative in ("README.md", "SETUP.md", "mobile-foundry.json", "backend/go/README.md"):
@@ -131,10 +138,13 @@ class BackendTests(unittest.TestCase):
         (source / self.backend.manifest).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / self.backend.manifest, source / self.backend.manifest)
         base = source / "backend/go/pkg"
-        for relative in (".env.local", "build/server", ".cache/record", "private.pem"):
+        for relative in (".env.local", "build/server", ".cache/record", "private.pem", "signing.p8", ".push-private/credentials.json", "push.local.json", "service-account.json", "test.service-account.json", "serviceAccountKey.json"):
             path = base / relative; path.parent.mkdir(parents=True, exist_ok=True); path.write_text("private")
         project = self.generate("alternate", root=source)
-        for name in (".env.local", "server", "record", "private.pem"):
+        for pattern in (".push-private/", "*.p8", "push.local.json", "*service-account*.json"):
+            self.assertIn(pattern, (project / ".gitignore").read_text())
+        self.assertIn("PUSH_CONFIG_FILE", (project / "SETUP.md").read_text())
+        for name in (".env.local", "server", "record", "private.pem", "signing.p8", "credentials.json", "push.local.json", "service-account.json", "test.service-account.json", "serviceAccountKey.json"):
             self.assertFalse(any(p.name == name for p in (project / "backend/go/pkg").rglob("*")))
         link = base / "linked.go"; link.symlink_to(ROOT / "README.md")
         with self.assertRaisesRegex(ProfileError, "symlink"):
