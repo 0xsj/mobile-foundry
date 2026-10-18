@@ -1,0 +1,346 @@
+[
+  {
+    "name": "list-?",
+    "path": "/notifications?",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?limit=0",
+    "path": "/notifications?limit=0",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?limit=101",
+    "path": "/notifications?limit=101",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?limit=01",
+    "path": "/notifications?limit=01",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?limit=+1",
+    "path": "/notifications?limit=+1",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?limit=",
+    "path": "/notifications?limit=",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?unread=TRUE",
+    "path": "/notifications?unread=TRUE",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?unread=1",
+    "path": "/notifications?unread=1",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?unread=",
+    "path": "/notifications?unread=",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?limit=1&limit=1",
+    "path": "/notifications?limit=1&limit=1",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?other=1",
+    "path": "/notifications?other=1",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?cursor=",
+    "path": "/notifications?cursor=",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?cursor=bad",
+    "path": "/notifications?cursor=bad",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?cursor=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path": "/notifications?cursor=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-?unread=true&unread=true",
+    "path": "/notifications?unread=true&unread=true",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "list-body",
+    "path": "/notifications",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {}
+  },
+  {
+    "name": "list-valid-false",
+    "path": "/notifications?unread=false",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "name": "list-valid-true",
+    "path": "/notifications?limit=100&unread=true",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "name": "list-head",
+    "path": "/notifications",
+    "method": "HEAD",
+    "status": 200
+  },
+  {
+    "name": "no-auth",
+    "path": "/notifications",
+    "method": "GET",
+    "status": 401,
+    "code": "principal.authentication_required",
+    "authenticated": false
+  },
+  {
+    "name": "wrong-method",
+    "path": "/notifications",
+    "method": "POST",
+    "status": 405,
+    "code": "http.method_not_allowed"
+  },
+  {
+    "name": "prefs-query-?",
+    "path": "/notification-preferences?",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "prefs-query-?x=1",
+    "path": "/notification-preferences?x=1",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "prefs-If-Match",
+    "path": "/notification-preferences",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "prefs-Idempotency-Key",
+    "path": "/notification-preferences",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "key"
+      ]
+    ]
+  },
+  {
+    "name": "prefs-body",
+    "path": "/notification-preferences",
+    "method": "GET",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {}
+  },
+  {
+    "name": "set-missing",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {}
+  },
+  {
+    "name": "set-null",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {
+      "media_in_app": null
+    }
+  },
+  {
+    "name": "set-unknown",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "http.invalid_json",
+    "body": {
+      "media_in_app": true,
+      "other": true
+    }
+  },
+  {
+    "name": "set-string",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "http.invalid_json",
+    "body": {
+      "media_in_app": "true"
+    }
+  },
+  {
+    "name": "set-duplicate-null",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "wire": "{\"media_in_app\":true,\"media_in_app\":null}"
+  },
+  {
+    "name": "set-wrong-earlier",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"media_in_app\":1,\"media_in_app\":true}"
+  },
+  {
+    "name": "set-valid-last",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 200,
+    "wire": "{\"media_in_app\":false,\"media_in_app\":true}"
+  },
+  {
+    "name": "set-case-fold",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 200,
+    "wire": "{\"MEDIA_IN_APP\":false}"
+  },
+  {
+    "name": "set-array",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "[]"
+  },
+  {
+    "name": "set-trailing",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{} {}"
+  },
+  {
+    "name": "set-missing-type",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 415,
+    "code": "http.invalid_content_type",
+    "wire": "{\"media_in_app\":true}",
+    "no_content_type": true
+  },
+  {
+    "name": "set-limit",
+    "path": "/notification-preferences",
+    "method": "PUT",
+    "status": 413,
+    "code": "http.body_too_large",
+    "wire": "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "
+  },
+  {
+    "name": "read-missing",
+    "path": "/notifications/ITEM/read",
+    "method": "POST",
+    "status": 404,
+    "code": "notifications.not_found"
+  },
+  {
+    "name": "read-body",
+    "path": "/notifications/ITEM/read",
+    "method": "POST",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {}
+  },
+  {
+    "name": "read-query",
+    "path": "/notifications/ITEM/read?x=1",
+    "method": "POST",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "read-If-Match",
+    "path": "/notifications/ITEM/read",
+    "method": "POST",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "read-Idempotency-Key",
+    "path": "/notifications/ITEM/read",
+    "method": "POST",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "key"
+      ]
+    ]
+  }
+]

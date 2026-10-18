@@ -1,0 +1,46 @@
+[
+  {
+    "name": "create-0",
+    "input": {
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "action": "create",
+      "note_id": "",
+      "title": "Café <>&  \u0000",
+      "expected_version": 0
+    },
+    "sha256": "b767e27c8ad34cda52da2ed6f50aa58827502ecec7e1c1d37d35abbab6b90695"
+  },
+  {
+    "name": "create-1",
+    "input": {
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "action": "create",
+      "note_id": "",
+      "title": "literal \\u003c\n\t\"",
+      "expected_version": 0
+    },
+    "sha256": "141b434ee2efcc837313486970ce249b722082287b70c9f6b92422543c1b313f"
+  },
+  {
+    "name": "update-2",
+    "input": {
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "action": "update",
+      "note_id": "00000000-0000-4000-8000-000000000002",
+      "title": "  Keep 🧩 é  ",
+      "expected_version": 1
+    },
+    "sha256": "2c8548defb373aaac53e1d5cb9a283090aaa037c99bc9c9c8b2566e039a0cfcd"
+  },
+  {
+    "name": "delete-3",
+    "input": {
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "action": "delete",
+      "note_id": "00000000-0000-4000-8000-000000000002",
+      "title": "",
+      "expected_version": 2
+    },
+    "sha256": "a1d498fef6e3f2b04558b7eb1cf3f175b738ce8f021286695fec7f8c4883d51c"
+  }
+]

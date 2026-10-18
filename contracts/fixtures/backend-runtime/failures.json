@@ -1,0 +1,199 @@
+[
+  {
+    "name": "invalid",
+    "kind": "invalid",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:invalid",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "A safe message.",
+      "kind": "invalid",
+      "code": "fixture.condition",
+      "fields": {
+        "name": "Check this value."
+      },
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "unauthenticated",
+    "kind": "unauthenticated",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:unauthenticated",
+      "title": "Unauthorized",
+      "status": 401,
+      "detail": "A safe message.",
+      "kind": "unauthenticated",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "forbidden",
+    "kind": "forbidden",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:forbidden",
+      "title": "Forbidden",
+      "status": 403,
+      "detail": "A safe message.",
+      "kind": "forbidden",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "not_found",
+    "kind": "not_found",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:not_found",
+      "title": "Not Found",
+      "status": 404,
+      "detail": "A safe message.",
+      "kind": "not_found",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "conflict",
+    "kind": "conflict",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:conflict",
+      "title": "Conflict",
+      "status": 409,
+      "detail": "A safe message.",
+      "kind": "conflict",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "rate_limited",
+    "kind": "rate_limited",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:rate_limited",
+      "title": "Too Many Requests",
+      "status": 429,
+      "detail": "A safe message.",
+      "kind": "rate_limited",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "unavailable",
+    "kind": "unavailable",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:unavailable",
+      "title": "Service Unavailable",
+      "status": 503,
+      "detail": "A safe message.",
+      "kind": "unavailable",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "timeout",
+    "kind": "timeout",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:timeout",
+      "title": "Gateway Timeout",
+      "status": 504,
+      "detail": "A safe message.",
+      "kind": "timeout",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "canceled",
+    "kind": "canceled",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:canceled",
+      "title": "Request Timeout",
+      "status": 408,
+      "detail": "A safe message.",
+      "kind": "canceled",
+      "code": "fixture.condition",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "internal",
+    "kind": "internal",
+    "code": "fixture.condition",
+    "public": "A safe message.",
+    "fields": {
+      "name": "Check this value."
+    },
+    "expected": {
+      "type": "urn:problem:internal",
+      "title": "Internal Server Error",
+      "status": 500,
+      "detail": "An unexpected error occurred.",
+      "kind": "internal",
+      "request_id": "fixture-request"
+    }
+  },
+  {
+    "name": "no_public_diagnostic",
+    "kind": "invalid",
+    "code": "",
+    "public": null,
+    "fields": {},
+    "expected": {
+      "type": "urn:problem:invalid",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "The request failed.",
+      "kind": "invalid",
+      "request_id": "fixture-request"
+    }
+  }
+]

@@ -1,0 +1,471 @@
+[
+  {
+    "name": "upload-completed",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "wrong-producer",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "identity",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "requested",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "deleted",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.deleted.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "future-version",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v2",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "wrong-version",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 3,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "no-account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "bad-file",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "bad",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "zero-file",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-0000-0000-000000000000",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "missing-file",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "payload-account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000005",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "payload-version",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "private-data",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "name": "SECRET"
+      }
+    }
+  },
+  {
+    "name": "extra-field",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "other": true
+      }
+    }
+  },
+  {
+    "name": "bad-metadata",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "bad token"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "case-folding",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "{\"FILE_ID\": \"00000000-0000-4000-8000-000000000004\", \"ACCOUNT_ID\": \"00000000-0000-4000-8000-000000000002\", \"VERSION\": 2}"
+  },
+  {
+    "name": "null-value-no-op",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "{\"file_id\":\"00000000-0000-4000-8000-000000000004\",\"account_id\":\"00000000-0000-4000-8000-000000000002\",\"version\":2,\"file_id\":null,\"version\":null}"
+  },
+  {
+    "name": "valid-duplicate",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "{\"file_id\":\"00000000-0000-4000-8000-000000000004\",\"account_id\":\"00000000-0000-4000-8000-000000000002\",\"version\":2,\"version\":2}"
+  },
+  {
+    "name": "wrong-earlier-type",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "{\"file_id\":false,\"file_id\":\"00000000-0000-4000-8000-000000000004\",\"account_id\":\"00000000-0000-4000-8000-000000000002\",\"version\":2}"
+  },
+  {
+    "name": "fractional-version",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "{\"file_id\":\"00000000-0000-4000-8000-000000000004\",\"account_id\":\"00000000-0000-4000-8000-000000000002\",\"version\":2.0}"
+  },
+  {
+    "name": "array-data",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "[]"
+  },
+  {
+    "name": "negative-version",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00.123Z",
+      "metadata": {
+        "request_id": "notice-source"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    },
+    "data_wire": "{\"file_id\":\"00000000-0000-4000-8000-000000000004\",\"account_id\":\"00000000-0000-4000-8000-000000000002\",\"version\":-1}"
+  }
+]

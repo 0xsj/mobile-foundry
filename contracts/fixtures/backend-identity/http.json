@@ -1,0 +1,138 @@
+[
+  {
+    "name": "null_object",
+    "path": "/v1/identity/register",
+    "wire": "null",
+    "status": 400,
+    "code": "http.invalid_json"
+  },
+  {
+    "name": "unknown",
+    "path": "/v1/identity/register",
+    "wire": "{\"login\":\"alice\",\"display_name\":\"Ada\",\"password\":\"SECRET-password-123\",\"extra\":1}",
+    "status": 400,
+    "code": "http.invalid_json"
+  },
+  {
+    "name": "typed_field",
+    "path": "/v1/identity/register",
+    "wire": "{\"login\":42}",
+    "status": 400,
+    "code": "http.invalid_json"
+  },
+  {
+    "name": "bad_earlier_duplicate",
+    "path": "/v1/identity/register",
+    "wire": "{\"login\":42,\"login\":\"alice\",\"display_name\":\"Ada\",\"password\":\"SECRET-password-123\"}",
+    "status": 400,
+    "code": "http.invalid_json"
+  },
+  {
+    "name": "null_password",
+    "path": "/v1/identity/register",
+    "wire": "{\"login\":\"alice\",\"display_name\":\"Ada\",\"password\":null}",
+    "status": 400,
+    "code": "identity.invalid_input"
+  },
+  {
+    "name": "folding_and_valid_duplicates",
+    "path": "/v1/identity/register",
+    "wire": "{\"LOGIN\":\"wrong\",\"login\":\"Wire.One\",\"DISPLAY_NAME\":\"Ada\",\"PASSWORD\":\"SECRET-password-123\"}",
+    "status": 201,
+    "login": "wire.one"
+  },
+  {
+    "name": "null_retains_string",
+    "path": "/v1/identity/register",
+    "wire": "{\"login\":\"wire.two\",\"display_name\":\"Ada\",\"display_name\":null,\"password\":\"SECRET-password-123\"}",
+    "status": 201,
+    "login": "wire.two"
+  },
+  {
+    "name": "unsupported_query",
+    "path": "/v1/identity/register?password=SECRET",
+    "wire": "{}",
+    "status": 400,
+    "code": "identity.invalid_input"
+  },
+  {
+    "name": "unsupported_receipt",
+    "path": "/v1/identity/register",
+    "wire": "{}",
+    "status": 400,
+    "code": "http.unsupported_idempotency",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "one"
+      ]
+    ]
+  },
+  {
+    "name": "wrong_method",
+    "path": "/v1/identity/register",
+    "method": "GET",
+    "status": 405,
+    "code": "http.method_not_allowed",
+    "allow": "POST"
+  },
+  {
+    "name": "missing_password",
+    "path": "/v1/identity/sign-in",
+    "wire": "{\"login\":\"wire.one\"}",
+    "status": 401,
+    "code": "identity.invalid_credential"
+  },
+  {
+    "name": "typed_duplicate_password",
+    "path": "/v1/identity/sign-in",
+    "wire": "{\"login\":\"wire.one\",\"password\":42,\"password\":\"SECRET-password-123\"}",
+    "status": 400,
+    "code": "http.invalid_json"
+  },
+  {
+    "name": "unknown_login",
+    "path": "/v1/identity/sign-in",
+    "wire": "{\"login\":\"unknown\",\"password\":\"SECRET-password-123\"}",
+    "status": 401,
+    "code": "identity.invalid_credential"
+  },
+  {
+    "name": "wrong_purpose_renew",
+    "path": "/v1/identity/renew",
+    "wire": "{\"refresh_token\":\"a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}",
+    "status": 401,
+    "code": "identity.invalid_credential"
+  },
+  {
+    "name": "missing_refresh",
+    "path": "/v1/identity/sign-out",
+    "wire": "{}",
+    "status": 401,
+    "code": "identity.invalid_credential"
+  },
+  {
+    "name": "missing_access",
+    "path": "/v1/identity/me",
+    "method": "GET",
+    "status": 401,
+    "code": "principal.authentication_required"
+  },
+  {
+    "name": "repeated_auth",
+    "path": "/v1/identity/me",
+    "method": "GET",
+    "headers": [
+      [
+        "Authorization",
+        "Bearer one"
+      ],
+      [
+        "Authorization",
+        "Bearer two"
+      ]
+    ],
+    "status": 401,
+    "code": "principal.authentication_required"
+  }
+]

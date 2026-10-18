@@ -41,3 +41,4 @@ serviceAccountKey.json
 
 # Keep application dependency locks, Gradle wrappers, Xcode projects,
 # source assets, and portable fixtures versioned.
+/backend/rust/target/

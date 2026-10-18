@@ -1,0 +1,33 @@
+[package]
+name = "api-server"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+postgres-storage.workspace = true
+migration-catalog.workspace = true
+sqlx.workspace = true
+kernel.workspace = true
+runtime-config.workspace = true
+runtime-server.workspace = true
+httpx.workspace = true
+tokio.workspace = true
+identity.workspace = true
+account.workspace = true
+capability.workspace = true
+principal.workspace = true
+events.workspace = true
+audit.workspace = true
+notes.workspace = true
+files.workspace = true
+notifications.workspace = true
+health.workspace = true
+
+[[bin]]
+name = "api-server"
+path = "src/main.rs"
+
+[lints]
+workspace = true

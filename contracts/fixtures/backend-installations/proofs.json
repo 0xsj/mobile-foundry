@@ -1,0 +1,54 @@
+[
+  {
+    "name": "canonical",
+    "raw": "i1.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+    "valid": true,
+    "sha256": "48f954879aafe160e264eeec3573e894bacfa78b2888dfcc151763a187e6faf4"
+  },
+  {
+    "name": "zero-bytes",
+    "raw": "i1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "valid": true,
+    "sha256": "d20adbee827ff16c8ad18630a7fc0299b3364b2680407f569fa24d1f1439a6c7"
+  },
+  {
+    "name": "wrong-prefix",
+    "raw": "i2.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+    "valid": false
+  },
+  {
+    "name": "padded",
+    "raw": "i1.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=",
+    "valid": false
+  },
+  {
+    "name": "noncanonical-tail",
+    "raw": "i1.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh9",
+    "valid": false
+  },
+  {
+    "name": "short",
+    "raw": "i1.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh",
+    "valid": false
+  },
+  {
+    "name": "standard-base64",
+    "raw": "i1.///////////////////////////////////////////",
+    "valid": false
+  },
+  {
+    "name": "empty",
+    "raw": "",
+    "valid": false
+  },
+  {
+    "name": "whitespace",
+    "raw": "i1.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8 ",
+    "valid": false
+  },
+  {
+    "name": "newline",
+    "raw": "i1.AAECAwQ\nBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+    "valid": false
+  }
+]

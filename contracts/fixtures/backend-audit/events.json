@@ -1,0 +1,722 @@
+[
+  {
+    "name": "account_created",
+    "source": "account",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "account_renamed",
+    "source": "account",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.renamed.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "account_wrong_producer",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "identity",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "account_mismatched_scope",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "account_mismatched_version",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "account_created_at_version_two",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "account_unknown_field",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1,
+        "name": "SECRET"
+      }
+    }
+  },
+  {
+    "name": "account_missing_id",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "account_null_payload",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": null
+    }
+  },
+  {
+    "name": "account_array_payload",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": []
+    }
+  },
+  {
+    "name": "account_duplicate_version",
+    "source": "account",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    },
+    "data_wire": "{\"account_id\": \"00000000-0000-4000-8000-000000000001\",\"version\":2,\"version\":1}"
+  },
+  {
+    "name": "account_earlier_wrong_type",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    },
+    "data_wire": "{\"account_id\": \"00000000-0000-4000-8000-000000000001\",\"version\":\"bad\",\"version\":1}"
+  },
+  {
+    "name": "account_null_retains",
+    "source": "account",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    },
+    "data_wire": "{\"account_id\": \"00000000-0000-4000-8000-000000000001\",\"version\":1,\"version\":null}"
+  },
+  {
+    "name": "account_case_folded",
+    "source": "account",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "ACCOUNT_ID": "00000000-0000-4000-8000-000000000001",
+        "VERSION": 1
+      }
+    }
+  },
+  {
+    "name": "identity_registered",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.principal.registered.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "identity_issued",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.issued.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "identity_renewed",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.renewed.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "identity_revoked_sign_out",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 2,
+        "reason": "sign_out"
+      }
+    }
+  },
+  {
+    "name": "identity_revoked_refresh_reuse",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 2,
+        "reason": "refresh_reuse"
+      }
+    }
+  },
+  {
+    "name": "identity_wrong_reason_v1",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 2,
+        "reason": "password_change"
+      }
+    }
+  },
+  {
+    "name": "identity_wrong_actor",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.issued.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "identity_account_scope",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.issued.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      },
+      "account_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "name": "identity_missing_session",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.issued.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "identity_session_on_principal",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.principal.registered.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "identity_early_renewal",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.renewed.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "identity_profile_excluded",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.principal.registered.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1,
+        "login": "SECRET"
+      }
+    }
+  },
+  {
+    "name": "identity_unknown_action",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "identity.session.unknown.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "session_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "invalid_request_metadata",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "bad token"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "invalid_correlation_metadata",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "correlation_id": "bad/token"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "empty_metadata",
+    "source": "account",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {},
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "invalid_event_id",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "invalid",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "invalid_actor",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-0000-0000-000000000000",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "unsafe_version",
+    "source": "account",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "account.created.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000001",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 9007199254740992,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-test",
+        "correlation_id": "flow-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000001",
+        "version": 1
+      }
+    }
+  }
+]

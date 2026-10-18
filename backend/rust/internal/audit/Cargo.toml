@@ -1,0 +1,24 @@
+[package]
+name = "audit"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+[dependencies]
+sha2.workspace = true
+postgres-storage.workspace = true
+sqlx.workspace = true
+kernel.workspace = true
+principal.workspace = true
+capability.workspace = true
+events.workspace = true
+httpx.workspace = true
+axum.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+base64.workspace = true
+chrono.workspace = true
+[dev-dependencies]
+tokio.workspace = true
+[lints]
+workspace = true

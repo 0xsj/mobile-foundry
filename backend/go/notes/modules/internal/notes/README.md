@@ -1,5 +1,12 @@
 # Notes command/query and receipt walkthrough
 
+Rust follow-up, 2026-10-18: [shared Notes checks](../../../../parity/notes_test.go)
+and [the process runner](../../../../../../scripts/notes_parity.py) now verify
+47 HTTP cases and real receipt/CAS/scope flows in both implementations. The
+disposable PostgreSQL runner additionally checks Go↔Rust replay, including
+HTML/separator/NUL fingerprint bytes and historical receipts after deletion.
+See [Rust Notes](../../../../../rust/notes/modules/internal/notes/README.md).
+
 Claim: one module can authorize through a consumer-owned capability and atomically
 persist its own data/receipt without importing another domain's implementation.
 

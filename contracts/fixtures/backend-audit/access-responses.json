@@ -1,0 +1,39 @@
+[
+  {
+    "name": "allowed",
+    "wire": "{\"allowed\":true}",
+    "valid": true,
+    "allowed": true
+  },
+  {
+    "name": "denied",
+    "wire": "{\"allowed\":false}",
+    "valid": true,
+    "allowed": false
+  },
+  {
+    "name": "missing",
+    "wire": "{}",
+    "valid": false
+  },
+  {
+    "name": "null",
+    "wire": "{\"allowed\":null}",
+    "valid": false
+  },
+  {
+    "name": "wrong_type",
+    "wire": "{\"allowed\":\"false\"}",
+    "valid": false
+  },
+  {
+    "name": "unknown",
+    "wire": "{\"allowed\":false,\"extra\":true}",
+    "valid": false
+  },
+  {
+    "name": "not_object",
+    "wire": "[]",
+    "valid": false
+  }
+]

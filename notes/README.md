@@ -1,5 +1,89 @@
 # Mobile Foundry learning notes
 
+Rust installations follow-up, 2026-10-18: read
+[registry ownership](../backend/rust/notes/modules/internal/notifications/installations.md)
+and [rebinding/tombstones](../backend/rust/notes/patterns/rebinding-and-retirement-tombstones.md).
+Shared Go/Rust proof/target/event/HTTP checks, actual session lifecycle flows,
+PostgreSQL rollback, separate databases and killed pending v1/v2 handoff now cover
+registry metadata and eventual retirement. Push/providers/jobs and native/CLI
+Rust selection remain separate.
+
+Rust Notifications follow-up, 2026-10-18: read
+[inbox ownership](../backend/rust/notes/modules/internal/notifications/README.md),
+[consumed suppression and snapshots](../backend/rust/notes/patterns/consumed-suppression-and-inbox-snapshots.md)
+and [causal delivery fences](../backend/rust/notes/techniques/causal-delivery-fences.md).
+Shared Go/Rust event/fingerprint/HTTP checks and PostgreSQL rollback/restart handoff
+now preserve inbox decisions, first-read state and preferences. Installations has
+its own acceptance above; push and native/CLI Rust selection remain separate.
+
+Rust Files follow-up, 2026-10-18: read
+[module ownership](../backend/rust/notes/modules/internal/files/README.md),
+[logical deletion before cleanup](../backend/rust/notes/patterns/logical-deletion-before-object-cleanup.md)
+and [owned blocking I/O](../backend/rust/notes/language/owned-blocking-filesystem-jobs.md).
+Metadata/receipts/bytes and independent Audit now pass shared Go/Rust conformance
+and PostgreSQL rollback/killed-process handoff with a retained private directory.
+Notifications has its separate acceptance above; cloud objects and native/CLI
+Rust products remain separate.
+
+Rust recovery follow-up, 2026-10-18: read
+[Identity recovery ownership](../backend/rust/notes/modules/internal/identity/recovery.md),
+[credential checkpoint races](../backend/rust/notes/patterns/checkpointed-recovery.md)
+and [private SMTP acceptance](../backend/rust/notes/substrate/private-smtp-and-acceptance.md).
+Verified contacts, reset/change and v2 password revocation facts now pass shared
+Go/Rust flows, local TLS/STARTTLS and PostgreSQL rollback/restart/code handoff.
+Mail admission is ephemeral; Rust native/CLI selection remains unregistered.
+
+Rust Notes follow-up, 2026-10-18: read
+[Notes command/receipt ownership](../backend/rust/notes/modules/internal/notes/README.md),
+[historical replay](../backend/rust/notes/patterns/historical-receipts-before-current-state.md)
+and [fingerprint byte compatibility](../backend/rust/notes/substrate/go-json-command-fingerprints.md).
+Scoped memory/PostgreSQL CRUD and immutable receipts now pass Go/Rust conformance
+and restart/handoff acceptance. Rust native/CLI selection remains unregistered.
+
+Rust PostgreSQL follow-up, 2026-10-18: read
+[owned SQL mechanics](../backend/rust/notes/modules/pkg/persistence/postgres/README.md),
+[explicit migration artifacts](../backend/rust/notes/modules/migrations/README.md),
+[transaction ownership](../backend/rust/notes/substrate/sqlx-transactions-and-pool-lifetime.md)
+and [restart/language handoff](../backend/rust/notes/techniques/durable-restart-and-language-handoff.md).
+Durable core acceptance now covers Account/Identity/Audit, separate module
+databases and Go↔Rust core records/inbox replay. CLI/native Rust selection remains separate.
+
+Rust Audit follow-up, 2026-10-18: read
+[independent Audit](../backend/rust/notes/modules/internal/audit/README.md),
+[event delivery](../backend/rust/notes/modules/pkg/events/README.md),
+[state/outbox and evidence/inbox](../backend/rust/notes/patterns/state-outbox-and-inbox-boundaries.md)
+and [owned worker joining](../backend/rust/notes/language/owned-polling-and-cancellation-safe-join.md).
+Account/Identity now commit versioned envelopes and Audit deduplicates delivery.
+Memory lifetime, PostgreSQL and independent CLI extraction remain separate.
+
+Rust Account follow-up, 2026-10-18: read
+[Account ownership](../backend/rust/notes/modules/internal/account/README.md),
+[versioned invocation](../backend/rust/notes/modules/pkg/capability/README.md),
+[consuming builders](../backend/rust/notes/language/consuming-builders-and-immutable-registries.md)
+and [bootstrap/CAS](../backend/rust/notes/patterns/personal-mapping-and-write-cas.md).
+Memory Account now consumes Identity through its own port and credential v2.
+Audit delivery now has separate memory acceptance; durability and independent CLI extraction remain separate.
+
+Rust Identity follow-up, 2026-10-18: read
+[the module walkthrough](../backend/rust/notes/modules/internal/identity/README.md),
+[committed refusals](../backend/rust/notes/patterns/committed-security-refusals.md)
+and [blocking KDF ownership](../backend/rust/notes/substrate/argon2-and-blocking-lifetime.md).
+The explicit memory profile now runs core registration/session flows with Go
+conformance; persistence/recovery have the separate follow-ups above, while CLI
+selection remains unregistered.
+
+Rust admission follow-up, 2026-10-18: read
+[wire admission before the domain](../backend/rust/notes/patterns/wire-admission-before-domain.md),
+then [newtypes/status ownership](../backend/rust/notes/language/newtypes-and-transport-errors.md)
+and [decoder compatibility](../backend/rust/notes/substrate/json-admission-compatibility.md).
+Clock/ID ports and bounded JSON/version/key helpers now share conformance cases
+with Go; business DTO compatibility and write guarantees remain separate.
+
+Rust backend follow-up, 2026-10-18: start with [the Rust reading order](../backend/rust/notes/README.md),
+then its Result/async-port explanation and mirrored Kernel/HTTP/Health/server
+walkthroughs. Shared Go/Rust fixtures establish bounded runtime conformance;
+[the parity inventory](../backend/rust/PARITY.md) retains the remaining gaps.
+
 Workspace follow-up, 2026-10-17: start with [construction/evidence](../docs/blueprints/native-workspaces.md), then the linked current-state/receipt pattern and Session/product walkthroughs. CLI 0.18.0 adds owner create/rename with explicit uncertainty review.
 
 Registration follow-up, 2026-10-17: start with [construction/evidence](../docs/blueprints/native-registration.md), then its linked profile/session separation pattern and Session/product walkthroughs. The port confirms a profile; explicit sign-in separately opens Personal.

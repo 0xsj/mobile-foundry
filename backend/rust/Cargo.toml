@@ -1,0 +1,54 @@
+[workspace]
+members = ["cmd/server", "cmd/migrate", "migrations", "pkg/kernel", "pkg/config", "pkg/httpx", "pkg/capability", "pkg/principal", "pkg/events", "pkg/persistence/postgres", "internal/health", "internal/server", "internal/identity", "internal/account", "internal/audit", "internal/notes", "internal/files", "internal/notifications"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.86"
+publish = false
+
+[workspace.dependencies]
+kernel = { path = "pkg/kernel" }
+postgres-storage = { path = "pkg/persistence/postgres" }
+migration-catalog = { path = "migrations" }
+capability = { path = "pkg/capability" }
+principal = { path = "pkg/principal" }
+events = { path = "pkg/events" }
+audit = { path = "internal/audit" }
+notes = { path = "internal/notes" }
+files = { path = "internal/files" }
+notifications = { path = "internal/notifications" }
+account = { path = "internal/account" }
+runtime-config = { path = "pkg/config" }
+httpx = { path = "pkg/httpx" }
+health = { path = "internal/health" }
+identity = { path = "internal/identity" }
+runtime-server = { path = "internal/server" }
+axum = { version = "0.8.9", default-features = false, features = ["http1", "tokio", "json"] }
+tokio = { version = "1.53", features = ["macros", "rt-multi-thread", "net", "signal", "sync", "time", "io-util"] }
+hyper = { version = "1.11", features = ["server", "http1"] }
+hyper-util = { version = "0.1", features = ["tokio", "service"] }
+http-body-util = "0.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = "1"
+getrandom = { version = "0.4", features = ["std"] }
+mime = "0.3"
+serde_ignored = "0.1"
+futures-util = { version = "0.3", default-features = false, features = ["std", "async-await"] }
+tower = { version = "0.5", features = ["util"] }
+argon2 = { version = "0.5.3", default-features = false, features = ["alloc", "zeroize"] }
+base64 = "0.22"
+sha2 = "0.10"
+subtle = "2.6"
+zeroize = "1.9"
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+sqlx = { version = "=0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres", "chrono", "json"] }
+
+tokio-rustls = { version = "=0.26.6", default-features = false, features = ["ring", "tls12"] }
+rustls-native-certs = "=0.8.5"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+

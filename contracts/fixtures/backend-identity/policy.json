@@ -1,0 +1,145 @@
+[
+  {
+    "field": "login",
+    "input": "  ALICE.Example+1@Host  ",
+    "valid": true,
+    "expected": "alice.example+1@host"
+  },
+  {
+    "field": "login",
+    "input": "Kelvin",
+    "valid": true,
+    "expected": "kelvin"
+  },
+  {
+    "field": "login",
+    "input": "İUSER",
+    "valid": true,
+    "expected": "iuser"
+  },
+  {
+    "field": "login",
+    "input": "abc",
+    "valid": true,
+    "expected": "abc"
+  },
+  {
+    "field": "login",
+    "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": true,
+    "expected": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "field": "login",
+    "input": "ab",
+    "valid": false
+  },
+  {
+    "field": "login",
+    "input": ".abc",
+    "valid": false
+  },
+  {
+    "field": "login",
+    "input": "a/b",
+    "valid": false
+  },
+  {
+    "field": "login",
+    "input": "a b",
+    "valid": false
+  },
+  {
+    "field": "login",
+    "input": "ångstrom",
+    "valid": false
+  },
+  {
+    "field": "login",
+    "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "valid": false
+  },
+  {
+    "field": "display_name",
+    "input": "  Ada Lovelace  ",
+    "valid": true,
+    "expected": "Ada Lovelace"
+  },
+  {
+    "field": "display_name",
+    "input": "🧑‍💻",
+    "valid": true,
+    "expected": "🧑‍💻"
+  },
+  {
+    "field": "display_name",
+    "input": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字",
+    "valid": true,
+    "expected": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字"
+  },
+  {
+    "field": "display_name",
+    "input": "",
+    "valid": false
+  },
+  {
+    "field": "display_name",
+    "input": "  ",
+    "valid": false
+  },
+  {
+    "field": "display_name",
+    "input": "a\nb",
+    "valid": false
+  },
+  {
+    "field": "display_name",
+    "input": "a\u0000b",
+    "valid": false
+  },
+  {
+    "field": "display_name",
+    "input": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字",
+    "valid": false
+  },
+  {
+    "field": "password",
+    "input": "123456789012",
+    "valid": true
+  },
+  {
+    "field": "password",
+    "input": " 1234567890 ",
+    "valid": true
+  },
+  {
+    "field": "password",
+    "input": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+    "valid": true
+  },
+  {
+    "field": "password",
+    "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "valid": true
+  },
+  {
+    "field": "password",
+    "input": "a\u0000a\u0000a\u0000a\u0000a\u0000a\u0000",
+    "valid": true
+  },
+  {
+    "field": "password",
+    "input": "short",
+    "valid": false
+  },
+  {
+    "field": "password",
+    "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "valid": false
+  },
+  {
+    "field": "password",
+    "input": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+    "valid": false
+  }
+]

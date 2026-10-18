@@ -31,6 +31,7 @@ mobile-foundry/
     kotlin/project/  # Android catalog, clean product and reusable modules
   backend/
     go/              # Owned API using Bento's Go architecture
+    rust/            # Independent Go-contract implementation candidate
     supabase/        # Local self-hosted Supabase stack
     firebase/        # Local Firebase Emulator Suite
   contracts/
@@ -274,6 +275,28 @@ Run `make ios-generate` after editing the iOS application's `project.yml`.
 Use [Setup](docs/SETUP.md) for IDE paths and individual build commands.
 
 ## Local backends
+
+A [Rust backend](backend/rust/README.md) now mirrors runtime/Health, memory/PostgreSQL
+Identity/Account, independent Audit, account-scoped Notes, Files/Media, in-app
+Notifications and session-bound installations.
+Run `HTTP_ADDR=127.0.0.1:8081 make rust-dev` and `make backend-parity-test` for
+the shared Go/Rust runtime checks. `make backend-identity-parity-test` checks the
+explicit `AUTH_MODE=identity` core. `make backend-account-parity-test` verifies
+bootstrap, owner scope and guarded renames through the credential capability.
+`make backend-audit-parity-test` checks committed delivery and scoped activity.
+`make backend-notes-parity-test` checks scoped Notes writes and immutable command replay.
+`make backend-recovery-parity-test` checks verified contacts, password reset/change,
+session revocation and private local SMTP; configure mail explicitly for deployment.
+`make backend-files-parity-test` checks Files metadata, immutable byte transfer,
+historical receipts and independent Audit. PostgreSQL retains private bytes in
+`FILES_DIRECTORY` alongside metadata; Rust CLI/native selection remains separate.
+`make backend-notifications-parity-test` checks upload-to-inbox delivery, retained
+suppression, first-read acknowledgements and account-scoped preferences/paging.
+`make backend-installations-parity-test` checks proof/checkpoint registration,
+explicit rebinding, token rotation and independent Identity v1/v2 retirement.
+`make backend-postgres-parity-test` adds isolated database/restart and Go core handoff checks.
+Its [parity inventory](backend/rust/PARITY.md)
+records remaining domains, operational/runtime gaps and CLI generation.
 
 The Go runtime needs no external services:
 

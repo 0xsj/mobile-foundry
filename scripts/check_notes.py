@@ -11,7 +11,7 @@ from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP = {".git", ".cache", ".build", ".gradle", ".kotlin", "build", "node_modules", "xcuserdata"}
+SKIP = {".git", ".cache", ".build", ".gradle", ".kotlin", "build", "target", "node_modules", "xcuserdata"}
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 LINK = re.compile(r"!?\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))")
 LABEL = re.compile(r"^// (Runnable|Excerpt|Conceptual|Compile-fail)(?:$|[ :])")
@@ -37,7 +37,7 @@ def check_document(path: Path):
         match = FENCE.match(line)
         if fence is not None:
             if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
-                if language in {"swift", "kotlin"}:
+                if language in {"swift", "kotlin", "rust"}:
                     examples += 1
                     if not LABEL.match(first_line or ""):
                         errors.append(f"line {start}: {language} example needs a scope label")

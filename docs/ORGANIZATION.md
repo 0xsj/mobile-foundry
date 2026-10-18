@@ -225,6 +225,38 @@ Reusable runtime code remains in its native implementation directory.
 
 ## Backend ownership
 
+`backend/rust` mirrors the Go ownership with a Cargo workspace: `cmd/server`,
+`cmd/migrate`, owner migration artifacts, `pkg/persistence/postgres`,
+`pkg/kernel`, `pkg/config`, `pkg/httpx`, `pkg/capability`, `pkg/principal`,
+`pkg/events`, `internal/health`, `internal/server`, `internal/identity`,
+`internal/account`, `internal/audit`, `internal/notes`, `internal/files` and
+`internal/notifications`. Identity/Account/Audit/Notes/Files/Notifications
+implement domain, command/query, consumer-owned ports, selected adapters and
+versioned transports under separate crates. Account consumes the versioned
+Identity credential contract without an Identity crate/store dependency.
+Audit authorizes through account.access.v1 and independently consumes committed
+events; producer state/outbox and Audit evidence/inbox remain separately owned.
+Notes owns its record/receipt transaction and consumes AccountAccess; its
+optional lossy Changes port has no broadcast adapter selected in Rust.
+Identity owns checkpointed recovery transitions, private SMTP and its bounded
+anonymous reset worker. Audit admits the separate password revocation v2 contract;
+neither module imports the other's store. Recovery has its own shared fixtures
+and real-process runner, including PostgreSQL challenge handoff across languages.
+Rust Files owns its metadata/receipt/outbox transaction and consumes AccountAccess.
+Its Objects port selects bounded memory bytes or a private directory; process
+composition joins retained directory jobs before pools close. Audit independently
+admits File subjects without importing Files state or changing old fingerprints.
+Notifications owns source decisions/items/preferences and independently admits
+upload completion. Suppressed events retain inbox markers; scoped pages/read/
+settings share its guard. It uses a sixth selected pool and existing producer
+workers. Installation/push artifacts remain copied histories without Rust feature
+selection; no foreign stores or extra notification timer are introduced.
+The [parity inventory](../backend/rust/PARITY.md) separates implemented runtime
+behavior from planned business modules. Shared HTTP/public-failure fixtures live
+under `contracts/fixtures/backend-runtime`; Identity/Account have separate shared
+corpora and process runners; Audit adds event/response/HTTP conformance. Notebooks
+stay profile-owned.
+
 `backend/go` implements startup in `cmd/server`, listener/drain ownership in
 `internal/server`, and reusable errors, clock, ID, env/config, logger, HTTP,
 principal and module assembly packages under `pkg`. Health has `app/query`,

@@ -26,6 +26,7 @@ frontend/swift/notes/         # Swift notebook
   substrate/
 frontend/kotlin/notes/        # Kotlin notebook, same six categories
 backend/go/notes/             # Go notebook, same six categories
+backend/rust/notes/           # Rust notebook, same six categories
 backend/supabase/notes/       # Supabase notebook, same six categories
 backend/firebase/notes/       # Firebase notebook, same six categories
 ```
@@ -111,7 +112,7 @@ not establish persistence or offline synchronization.
 
 ## Examples and checks
 
-The first line of each fenced `swift` or `kotlin` example identifies its scope:
+The first line of each fenced `swift`, `kotlin`, or `rust` example identifies its scope:
 
 - `// Runnable`: a complete example with its execution command, prerequisites,
   and expected outcome recorded beside it. Run it before calling it verified.
@@ -129,7 +130,7 @@ make notes-check
 ```
 
 This Python 3 check validates inline relative file links, mirrored module
-directories, and Swift/Kotlin example labels. It ignores URL destinations and
+directories, and Swift/Kotlin/Rust example labels. It ignores URL destinations and
 heading fragments. It does not execute snippets, validate external URLs, or
 establish the notes' technical claims; run the native commands those claims need.
 

@@ -1,0 +1,218 @@
+[
+  {
+    "name": "missing-contact-auth",
+    "path": "/v1/identity/email",
+    "method": "GET",
+    "status": 401,
+    "authenticated": false,
+    "code": "principal.authentication_required"
+  },
+  {
+    "name": "initial-contact",
+    "path": "/v1/identity/email",
+    "method": "GET",
+    "status": 200,
+    "authenticated": true
+  },
+  {
+    "name": "head-contact",
+    "path": "/v1/identity/email",
+    "method": "HEAD",
+    "status": 200,
+    "authenticated": true
+  },
+  {
+    "name": "query-contact",
+    "path": "/v1/identity/email?x=1",
+    "method": "GET",
+    "status": 400,
+    "authenticated": true,
+    "code": "identity.invalid_input"
+  },
+  {
+    "name": "missing-email",
+    "path": "/v1/identity/email/request",
+    "method": "POST",
+    "status": 400,
+    "authenticated": true,
+    "code": "identity.invalid_input",
+    "body": {
+      "password": "SECRET-identity-password-123"
+    }
+  },
+  {
+    "name": "bad-password",
+    "path": "/v1/identity/email/request",
+    "method": "POST",
+    "status": 401,
+    "authenticated": true,
+    "code": "identity.invalid_credential",
+    "body": {
+      "email": "owner@example.test",
+      "password": "short"
+    }
+  },
+  {
+    "name": "unknown-field",
+    "path": "/v1/identity/email/request",
+    "method": "POST",
+    "status": 400,
+    "authenticated": true,
+    "code": "http.invalid_json",
+    "body": {
+      "email": "owner@example.test",
+      "password": "SECRET-identity-password-123",
+      "extra": 1
+    }
+  },
+  {
+    "name": "no-code",
+    "path": "/v1/identity/email/verify",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "identity.challenge_refused",
+    "body": {}
+  },
+  {
+    "name": "invalid-code",
+    "path": "/v1/identity/email/verify",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "identity.challenge_refused",
+    "body": {
+      "token": "bad"
+    }
+  },
+  {
+    "name": "missing-reset-email",
+    "path": "/v1/identity/password/request-reset",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "identity.invalid_input",
+    "body": {}
+  },
+  {
+    "name": "unknown-reset",
+    "path": "/v1/identity/password/request-reset",
+    "method": "POST",
+    "status": 202,
+    "authenticated": false,
+    "body": {
+      "email": "unknown@example.test"
+    }
+  },
+  {
+    "name": "bad-reset-password",
+    "path": "/v1/identity/password/reset",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "identity.invalid_input",
+    "body": {
+      "token": "bad",
+      "password": "short"
+    }
+  },
+  {
+    "name": "invalid-reset-code",
+    "path": "/v1/identity/password/reset",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "identity.challenge_refused",
+    "body": {
+      "token": "bad",
+      "password": "SECRET-identity-password-123"
+    }
+  },
+  {
+    "name": "change-auth",
+    "path": "/v1/identity/password/change",
+    "method": "POST",
+    "status": 401,
+    "authenticated": false,
+    "code": "principal.authentication_required",
+    "body": {
+      "current_password": "old",
+      "new_password": "short"
+    }
+  },
+  {
+    "name": "invalid-new",
+    "path": "/v1/identity/password/change",
+    "method": "POST",
+    "status": 400,
+    "authenticated": true,
+    "code": "identity.invalid_input",
+    "body": {
+      "current_password": "SECRET-identity-password-123",
+      "new_password": "short"
+    }
+  },
+  {
+    "name": "invalid-current",
+    "path": "/v1/identity/password/change",
+    "method": "POST",
+    "status": 401,
+    "authenticated": true,
+    "code": "identity.invalid_credential",
+    "body": {
+      "current_password": "short",
+      "new_password": "SECRET-new-password-123"
+    }
+  },
+  {
+    "name": "query-reset",
+    "path": "/v1/identity/password/request-reset?x=1",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "identity.invalid_input",
+    "body": {
+      "email": "owner@example.test"
+    }
+  },
+  {
+    "name": "key-not-supported",
+    "path": "/v1/identity/email",
+    "method": "GET",
+    "status": 400,
+    "authenticated": true,
+    "code": "http.unsupported_idempotency",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "one"
+      ]
+    ]
+  },
+  {
+    "name": "typed-duplicate",
+    "path": "/v1/identity/password/request-reset",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "http.invalid_json",
+    "wire": "{\"email\":1,\"email\":\"owner@example.test\"}"
+  },
+  {
+    "name": "null-no-op",
+    "path": "/v1/identity/password/request-reset",
+    "method": "POST",
+    "status": 202,
+    "authenticated": false,
+    "wire": "{\"EMAIL\":\"unknown@example.test\",\"email\":null}"
+  },
+  {
+    "name": "null-root",
+    "path": "/v1/identity/email/verify",
+    "method": "POST",
+    "status": 400,
+    "authenticated": false,
+    "code": "http.invalid_json",
+    "wire": "null"
+  }
+]

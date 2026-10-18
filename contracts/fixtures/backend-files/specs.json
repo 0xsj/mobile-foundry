@@ -1,0 +1,308 @@
+[
+  {
+    "name": "valid",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "trim",
+    "input": {
+      "name": "  Café 🧩  ",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "Café 🧩",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "empty",
+    "input": {
+      "name": "",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "long",
+    "input": {
+      "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "unicode-bound",
+    "input": {
+      "name": "🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "slash",
+    "input": {
+      "name": "folder/a",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "backslash",
+    "input": {
+      "name": "folder\\a",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "control",
+    "input": {
+      "name": "a\u0000b",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "c1-control",
+    "input": {
+      "name": "ab",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "separator",
+    "input": {
+      "name": "<>&  ",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "<>&",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "zero-bytes",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 0,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "max-bytes",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 10485760,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 10485760,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "too-many-bytes",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 10485761,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "uppercase-digest",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD"
+    },
+    "valid": false
+  },
+  {
+    "name": "short-digest",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "valid": false
+  },
+  {
+    "name": "uppercase-type",
+    "input": {
+      "name": "photo.png",
+      "content_type": "IMAGE/PNG",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "type-parameters",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/png; charset=utf-8",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "unsupported-type",
+    "input": {
+      "name": "photo.png",
+      "content_type": "text/plain",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": false
+  },
+  {
+    "name": "pdf",
+    "input": {
+      "name": "photo.png",
+      "content_type": "application/pdf",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "application/pdf",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "octets",
+    "input": {
+      "name": "photo.png",
+      "content_type": "application/octet-stream",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "application/octet-stream",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "heic",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/heic",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "image/heic",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "heif",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/heif",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "image/heif",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "jpeg",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/jpeg",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "image/jpeg",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "webp",
+    "input": {
+      "name": "photo.png",
+      "content_type": "image/webp",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "valid": true,
+    "canonical": {
+      "name": "photo.png",
+      "content_type": "image/webp",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  }
+]

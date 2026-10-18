@@ -1,0 +1,50 @@
+[
+  {
+    "input": {
+      "action": "request_upload",
+      "file_id": "",
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+      "expected_version": 0
+    },
+    "sha256": "f250eb3ab2330e15484403015734f9718bcdb620aa6d87ed5352b776c664de14"
+  },
+  {
+    "input": {
+      "action": "request_upload",
+      "file_id": "",
+      "name": "Café <>&   🧩",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+      "expected_version": 0
+    },
+    "sha256": "d541a0f932da6636cc24fd709932a431502b7a304355536c72873b1134a55f31"
+  },
+  {
+    "input": {
+      "action": "complete_upload",
+      "file_id": "00000000-0000-4000-8000-000000000003",
+      "name": "",
+      "content_type": "",
+      "byte_size": 0,
+      "sha256": "",
+      "expected_version": 1
+    },
+    "sha256": "eb220cc4f54a23a142cb67969966f5a01a5fc9d4666f44ec41998ab2c632006a"
+  },
+  {
+    "input": {
+      "action": "delete",
+      "file_id": "00000000-0000-4000-8000-000000000003",
+      "name": "",
+      "content_type": "",
+      "byte_size": 0,
+      "sha256": "",
+      "expected_version": 2
+    },
+    "sha256": "10e73e0b06050fa541975e6368339396ffc694031fdf17b32b0f0ff5f2e6d868"
+  }
+]

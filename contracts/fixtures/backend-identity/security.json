@@ -1,0 +1,8 @@
+{
+  "password": "fixture-password-123",
+  "hash": "$argon2id$v=19$m=19456,t=2,p=1$MDEyMzQ1Njc4OWFiY2RlZg$E/OKD8fL64o/xC3wpVtL8enig20fnPxL+aXLo0VAqx4",
+  "access_token": "a1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "access_digest": "1cc54b8d9e40735067846c26b04e8fdff5060e1c8525562be60d97794b1538cd",
+  "refresh_token": "r1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "refresh_digest": "f865268fe83d817fed37501e07e2e00f84d3ccdaa1dadaee1ed170cf318fe2af"
+}

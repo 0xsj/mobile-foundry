@@ -1,0 +1,450 @@
+[
+  {
+    "name": "missing-title",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_title",
+    "wire": "{}"
+  },
+  {
+    "name": "null-title",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_title",
+    "wire": "{\"title\":null}"
+  },
+  {
+    "name": "blank",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_title",
+    "wire": "{\"title\":\" \\t\\r\\n\"}"
+  },
+  {
+    "name": "unknown-field",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"title\":\"ok\",\"extra\":1}"
+  },
+  {
+    "name": "typed-duplicate",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"title\":1,\"title\":\"ok\"}"
+  },
+  {
+    "name": "last-null",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_title",
+    "wire": "{\"title\":\"ok\",\"title\":null}"
+  },
+  {
+    "name": "null-first",
+    "method": "POST",
+    "path": "/notes",
+    "status": 201,
+    "wire": "{\"title\":null,\"TITLE\":\"ok\"}"
+  },
+  {
+    "name": "last-value",
+    "method": "POST",
+    "path": "/notes",
+    "status": 201,
+    "wire": "{\"title\":\"first\",\"title\":\"ok\"}"
+  },
+  {
+    "name": "array-root",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "[]"
+  },
+  {
+    "name": "null-root",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "null"
+  },
+  {
+    "name": "trailing",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"title\":\"ok\"} {}"
+  },
+  {
+    "name": "nul-unicode",
+    "method": "POST",
+    "path": "/notes",
+    "status": 201,
+    "wire": "{\"title\": \"Caf\\u00e9 <>&\\u2028\\u0000 \\ud83e\\udde9\"}"
+  },
+  {
+    "name": "scalar-limit",
+    "method": "POST",
+    "path": "/notes",
+    "status": 201,
+    "wire": "{\"title\": \"\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\"}"
+  },
+  {
+    "name": "scalar-over",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_title",
+    "wire": "{\"title\": \"\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\\ud83e\\udde9\"}"
+  },
+  {
+    "name": "body-limit",
+    "method": "POST",
+    "path": "/notes",
+    "status": 413,
+    "code": "http.body_too_large",
+    "wire": "{\"title\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+  },
+  {
+    "name": "missing-key",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_write",
+    "wire": "{\"title\":\"ok\"}",
+    "headers": []
+  },
+  {
+    "name": "token-key",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "notes.invalid_write",
+    "wire": "{\"title\":\"ok\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "key-one"
+      ]
+    ]
+  },
+  {
+    "name": "bad-key",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_idempotency_key",
+    "wire": "{\"title\":\"ok\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "bad key"
+      ]
+    ]
+  },
+  {
+    "name": "duplicate-key",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_idempotency_key",
+    "wire": "{\"title\":\"ok\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ]
+    ]
+  },
+  {
+    "name": "create-precondition",
+    "method": "POST",
+    "path": "/notes",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "wire": "{\"title\":\"ok\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "media",
+    "method": "POST",
+    "path": "/notes",
+    "status": 415,
+    "code": "http.invalid_content_type",
+    "wire": "{\"title\":\"ok\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "Content-Type",
+        "text/plain"
+      ]
+    ]
+  },
+  {
+    "name": "missing-version",
+    "method": "PATCH",
+    "path": "/notes/NOTE",
+    "status": 428,
+    "code": "http.precondition_required",
+    "wire": "{\"title\":\"changed\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ]
+    ]
+  },
+  {
+    "name": "weak-version",
+    "method": "PATCH",
+    "path": "/notes/NOTE",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "wire": "{\"title\":\"changed\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "If-Match",
+        "W/\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "version-limit",
+    "method": "PATCH",
+    "path": "/notes/NOTE",
+    "status": 400,
+    "code": "notes.invalid_write",
+    "wire": "{\"title\":\"changed\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "If-Match",
+        "\"9007199254740991\""
+      ]
+    ]
+  },
+  {
+    "name": "stale-version",
+    "method": "PATCH",
+    "path": "/notes/NOTE",
+    "status": 409,
+    "code": "notes.version_conflict",
+    "wire": "{\"title\":\"changed\"}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "If-Match",
+        "\"2\""
+      ]
+    ]
+  },
+  {
+    "name": "delete-body",
+    "method": "DELETE",
+    "path": "/notes/NOTE",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{}",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "delete-ok",
+    "method": "DELETE",
+    "path": "/notes/NOTE",
+    "status": 200,
+    "headers": [
+      [
+        "Idempotency-Key",
+        "COMMAND"
+      ],
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "page-27",
+    "method": "GET",
+    "path": "/notes?unknown=1",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-28",
+    "method": "GET",
+    "path": "/notes?limit=0",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-29",
+    "method": "GET",
+    "path": "/notes?limit=01",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-30",
+    "method": "GET",
+    "path": "/notes?limit=101",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-31",
+    "method": "GET",
+    "path": "/notes?limit=",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-32",
+    "method": "GET",
+    "path": "/notes?limit=1&limit=2",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-33",
+    "method": "GET",
+    "path": "/notes?limit=1&%6cimit=1",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-34",
+    "method": "GET",
+    "path": "/notes?limit=1;after=x",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "page-35",
+    "method": "GET",
+    "path": "/notes?after=",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "invalid-after",
+    "method": "GET",
+    "path": "/notes?after=bad",
+    "status": 400,
+    "code": "id.invalid"
+  },
+  {
+    "name": "bare-query-write",
+    "method": "POST",
+    "path": "/notes?",
+    "status": 400,
+    "code": "notes.invalid_write",
+    "wire": "{\"title\":\"ok\"}"
+  },
+  {
+    "name": "query-get",
+    "method": "GET",
+    "path": "/notes/NOTE?x=1",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "bare-query-get",
+    "method": "GET",
+    "path": "/notes/NOTE?",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "query-receipt",
+    "method": "GET",
+    "path": "/note-receipts/COMMAND?x=1",
+    "status": 400,
+    "code": "notes.invalid_write"
+  },
+  {
+    "name": "missing-receipt",
+    "method": "GET",
+    "path": "/note-receipts/COMMAND",
+    "status": 404,
+    "code": "notes.receipt_not_found"
+  },
+  {
+    "name": "get-ok",
+    "method": "GET",
+    "path": "/notes/NOTE",
+    "status": 200
+  },
+  {
+    "name": "head-ok",
+    "method": "HEAD",
+    "path": "/notes/NOTE",
+    "status": 200
+  },
+  {
+    "name": "head-page",
+    "method": "HEAD",
+    "path": "/notes",
+    "status": 200
+  },
+  {
+    "name": "unsupported",
+    "method": "PUT",
+    "path": "/notes/NOTE",
+    "status": 405,
+    "allow": "GET, HEAD, PATCH, DELETE"
+  },
+  {
+    "name": "denied",
+    "method": "GET",
+    "path": "/notes",
+    "status": 401,
+    "code": "principal.authentication_required",
+    "authenticated": false
+  }
+]

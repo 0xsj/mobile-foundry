@@ -1,0 +1,155 @@
+[
+  {
+    "name": "missing_auth",
+    "path": "/v1/accounts/{account}/audit",
+    "status": 401,
+    "auth": false,
+    "code": "principal.authentication_required"
+  },
+  {
+    "name": "foreign_owner",
+    "path": "/v1/accounts/{account}/audit",
+    "status": 403,
+    "auth": "other",
+    "code": "audit.access_denied"
+  },
+  {
+    "name": "missing_account",
+    "path": "/v1/accounts/00000000-0000-4000-8000-000000000099/audit",
+    "status": 403,
+    "code": "audit.access_denied"
+  },
+  {
+    "name": "invalid_account",
+    "path": "/v1/accounts/invalid/audit",
+    "status": 400,
+    "code": "id.invalid"
+  },
+  {
+    "name": "unknown_query",
+    "path": "/v1/accounts/{account}/audit?principal_id=forged",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "repeated_limit",
+    "path": "/v1/accounts/{account}/audit?limit=1&limit=2",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "empty_limit",
+    "path": "/v1/accounts/{account}/audit?limit=",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "zero_limit",
+    "path": "/v1/accounts/{account}/audit?limit=0",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "large_limit",
+    "path": "/v1/accounts/{account}/audit?limit=101",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "leading_zero_limit",
+    "path": "/v1/accounts/{account}/audit?limit=01",
+    "status": 200
+  },
+  {
+    "name": "explicit_plus_limit",
+    "path": "/v1/accounts/{account}/audit?limit=%2B1",
+    "status": 200
+  },
+  {
+    "name": "raw_plus_is_space",
+    "path": "/v1/accounts/{account}/audit?limit=+1",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "invalid_escape",
+    "path": "/v1/accounts/{account}/audit?limit=%zz",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "semicolon",
+    "path": "/v1/accounts/{account}/audit?limit=1;other=2",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "empty_cursor",
+    "path": "/v1/accounts/{account}/audit?cursor=",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "malformed_cursor",
+    "path": "/v1/accounts/{account}/audit?cursor=invalid",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "repeated_cursor",
+    "path": "/v1/accounts/{account}/audit?cursor=a&cursor=b",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "personal_unknown_query",
+    "path": "/v1/principals/me/audit?account_id=forged",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "personal_zero_limit",
+    "path": "/v1/principals/me/audit?limit=0",
+    "status": 400,
+    "code": "audit.invalid_query"
+  },
+  {
+    "name": "head_account",
+    "path": "/v1/accounts/{account}/audit",
+    "status": 200,
+    "method": "HEAD"
+  },
+  {
+    "name": "head_principal",
+    "path": "/v1/principals/me/audit",
+    "status": 200,
+    "method": "HEAD"
+  },
+  {
+    "name": "account_method",
+    "path": "/v1/accounts/{account}/audit",
+    "status": 405,
+    "method": "POST",
+    "auth": false,
+    "allow": "GET, HEAD"
+  },
+  {
+    "name": "principal_method",
+    "path": "/v1/principals/me/audit",
+    "status": 405,
+    "method": "OPTIONS",
+    "auth": false,
+    "allow": "GET, HEAD"
+  },
+  {
+    "name": "read_ignores_write_key",
+    "path": "/v1/accounts/{account}/audit",
+    "status": 200,
+    "headers": [
+      [
+        "Idempotency-Key",
+        "invalid/key"
+      ]
+    ]
+  }
+]

@@ -3,7 +3,24 @@
 The user requested an explicit handoff when a project/profile becomes a good
 foundation for a new product. Assess each selected native/backend profile
 independently and report milestone changes during development handoffs.
-Last assessment: 2026-10-17. Daily + go-connected now has independent Swift/Kotlin
+Last assessment: 2026-10-18. Rust adds an independently running runtime/Health
+foundation, injectable clock/IDs and bounded JSON/version/key helpers with shared
+Go conformance checks. The explicit core memory Identity profile now passes its
+own Go/Rust session acceptance. Account now passes bootstrap, owner pages/selection
+and strong-CAS rename through versioned credential seams. Committed memory
+events now reach independent Audit, with replay/retry/readiness/shutdown evidence.
+The core PostgreSQL profile now passes owned transactions, explicit migrations,
+restart/replay and Go↔Rust account/session/Audit handoff acceptance. Notes now passes scoped CRUD,
+immutable command receipts and replay after deletion in memory/PostgreSQL and
+across Go/Rust restarts. Recovery now passes verified contact/reset/change flows,
+local TLS/STARTTLS, atomic rollback and killed-process Go/Rust challenge handoff.
+Private SMTP is explicit; anonymous reset admission is bounded and ephemeral.
+Files now passes scoped metadata/receipts/bytes/Audit conformance, PostgreSQL
+rollback and killed-upload Go/Rust handoff using a retained private directory.
+In-app Notifications now passes event/fingerprint/HTTP conformance, coherent scoped
+inbox/read/settings behavior and killed pending-delivery handoff across Go/Rust. Rust remains
+a foundation candidate: CLI extraction/native connection are still unregistered.
+Daily + go-connected has independent Swift/Kotlin
 CLI 0.18.0 owner workspace create/rename and explicit conflict/uncertainty review,
 alongside registration, scoped caching, verification/reset/change forms and live
 Notes reads. Secure restore and durable pending-command acceptance remain required
@@ -77,6 +94,7 @@ production guarantee for the whole catalog.
 | Go push dispatch/providers | **Foundation candidate**: exact-session dispatch and conditional retirement plus real APNs/FCM adapters and opt-in guarded manual preview. Local TLS, memory/PostgreSQL HTTP and independently extracted checks pass. | Configure private provider credentials and verify cloud acceptance/device delivery. Durable queues, fanout, retry receipts and native remote opens remain separate. |
 | Go queued previews/recovery | **Foundation candidate**: immutable jobs, fenced claims, guarded enqueue/status/cancel/replacement, bounded preflight backoff and retained uncertainty verified in memory/PostgreSQL and an independent copy. | Live provider acceptance, fanout, provider-result retry classification, retention/erasure/cross-session administration and native queue UI remain separate. |
 | Go backend | **Standalone starter ready** through CLI 0.14.0: independently generated API, account-scoped WebSocket hints, core identity lifecycle, existing auth/data/inbox/installation/provider/job seams, race/PostgreSQL recovery and Docker/email/backup/restore acceptance. | Ready to start Go APIs with the tested portable baseline. Configure real hosting/SMTP and chosen product policy. Daily selects native socket/recovery UI through its separate acceptance. Richer roles/auth, multi-replica fanout and external delivery need deliberate extensions. |
+| Rust backend | **Foundation candidate**: eighteen-crate workspace, runtime/admission, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications and installations, private SMTP/objects, scoped receipts/inbox/retirement decisions, explicit migrations and restart/Go handoff acceptance. | Implement remaining product and routing/network slices; register CLI selection and independently verify generated products. Push/providers and live deployment remain separate. See [parity inventory](../backend/rust/PARITY.md). |
 | Supabase integration | Local development stack present; native provider adapters/policies unconnected. | Real auth/account/remote Notes adapters and policies, then connected starter verification. |
 | Firebase auth/data integration | Local emulator setup present; native auth/data adapters and rules unconnected. FCM token adapters are assessed separately above. | Real auth/account/remote data adapters and rules, then connected starter verification. |
 

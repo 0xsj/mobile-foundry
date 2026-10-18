@@ -1,0 +1,102 @@
+[
+  {
+    "input": " Owner@Example.Test ",
+    "valid": true,
+    "canonical": "owner@example.test"
+  },
+  {
+    "input": "a+b@example.test",
+    "valid": true,
+    "canonical": "a+b@example.test"
+  },
+  {
+    "input": "İnfo@example.test",
+    "valid": true,
+    "canonical": "info@example.test"
+  },
+  {
+    "input": "a.b@example.test",
+    "valid": true,
+    "canonical": "a.b@example.test"
+  },
+  {
+    "input": "x@a.b",
+    "valid": true,
+    "canonical": "x@a.b"
+  },
+  {
+    "input": "a..b@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a.@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": ".a@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@localhost",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@-example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@example-.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@exa_mple.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@x..test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a\r\n@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "á@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.test",
+    "valid": true,
+    "canonical": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.test"
+  },
+  {
+    "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.test",
+    "valid": false,
+    "canonical": null
+  },
+  {
+    "input": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.test",
+    "valid": true,
+    "canonical": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.test"
+  },
+  {
+    "input": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.test",
+    "valid": false,
+    "canonical": null
+  }
+]

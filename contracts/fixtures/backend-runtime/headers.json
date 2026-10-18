@@ -1,0 +1,400 @@
+[
+  {
+    "name": "required_version",
+    "operation": "version",
+    "headers": [],
+    "expected": {
+      "status": 428,
+      "code": "http.precondition_required",
+      "detail": "Read the current resource and send its ETag in If-Match."
+    }
+  },
+  {
+    "name": "valid_\"1\"",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": 1
+    }
+  },
+  {
+    "name": "valid_\"9007199254740991\"",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"9007199254740991\""
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": 9007199254740991
+    }
+  },
+  {
+    "name": "bad_version_0",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"0\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_1",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"01\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_2",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"9007199254740992\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_3",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "W/\"1\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_4",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "*"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_5",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\",\"2\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_6",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"+1\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_7",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"-1\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_8",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"1.0\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_9",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\" 1\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_10",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "1"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_11",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "bad_version_12",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"18446744073709551616\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "duplicate_version",
+    "operation": "version",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ],
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_precondition",
+      "detail": "Send one strong ETag returned by this API in If-Match."
+    }
+  },
+  {
+    "name": "optional_key",
+    "operation": "key",
+    "headers": [],
+    "expected": {
+      "status": 200,
+      "value": null
+    }
+  },
+  {
+    "name": "valid_key_0",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "command-123.part:one_ok"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": "command-123.part:one_ok"
+    }
+  },
+  {
+    "name": "valid_key_1",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  },
+  {
+    "name": "bad_key_0",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        ""
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  },
+  {
+    "name": "bad_key_1",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  },
+  {
+    "name": "bad_key_2",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "bad/key"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  },
+  {
+    "name": "bad_key_3",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "one,two"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  },
+  {
+    "name": "bad_key_4",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "space key"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  },
+  {
+    "name": "bad_key_5",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "é"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  },
+  {
+    "name": "duplicate_key",
+    "operation": "key",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "one"
+      ],
+      [
+        "Idempotency-Key",
+        "two"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_idempotency_key",
+      "detail": "Send one Idempotency-Key of 1 to 128 letters, digits, or ._:- characters."
+    }
+  }
+]

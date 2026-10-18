@@ -1,0 +1,409 @@
+[
+  {
+    "name": "object",
+    "body": "{\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": "Ada",
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "parameters",
+    "body": "{\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json; charset=utf-8"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": "Ada",
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "quoted_parameter",
+    "body": "{\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json; charset=\"utf-8\""
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": "Ada",
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "case_media",
+    "body": "{\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "Application/JSON"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": "Ada",
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "empty_object",
+    "body": "{}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": null,
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "null_field",
+    "body": "{\"name\":null}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": null,
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "nested",
+    "body": "{\"detail\":{\"enabled\":true}}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": null,
+        "detail": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  {
+    "name": "last_member",
+    "body": "{\"name\":\"first\",\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": "Ada",
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "max_bytes",
+    "body": "{\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "pad_to": 16384,
+    "expected": {
+      "status": 200,
+      "value": {
+        "name": "Ada",
+        "detail": null
+      }
+    }
+  },
+  {
+    "name": "too_many_bytes",
+    "body": "{\"name\":\"Ada\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "pad_to": 16385,
+    "expected": {
+      "status": 413,
+      "code": "http.body_too_large",
+      "detail": "The request body is too large."
+    }
+  },
+  {
+    "name": "empty",
+    "body": "",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "null",
+    "body": "null",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "array",
+    "body": "[]",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "scalar",
+    "body": "\"Ada\"",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "trailing",
+    "body": "{} {}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "malformed",
+    "body": "{\"name\":",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "wrong_field_type",
+    "body": "{\"name\":42}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "unknown_root",
+    "body": "{\"name\":\"Ada\",\"extra\":\"SECRET\"}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "unknown_nested",
+    "body": "{\"detail\":{\"enabled\":true,\"extra\":1}}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 400,
+      "code": "http.invalid_json",
+      "detail": "Send one valid JSON object with the documented fields."
+    }
+  },
+  {
+    "name": "missing_type",
+    "body": "{}",
+    "headers": [],
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  },
+  {
+    "name": "empty_type",
+    "body": "{}",
+    "headers": [
+      [
+        "Content-Type",
+        ""
+      ]
+    ],
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  },
+  {
+    "name": "wrong_type",
+    "body": "{}",
+    "headers": [
+      [
+        "Content-Type",
+        "text/plain"
+      ]
+    ],
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  },
+  {
+    "name": "suffix_type",
+    "body": "{}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/problem+json"
+      ]
+    ],
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  },
+  {
+    "name": "duplicate_type",
+    "body": "{}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "Content-Type",
+        "application/json"
+      ]
+    ],
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  },
+  {
+    "name": "invalid_parameter",
+    "body": "{}",
+    "headers": [
+      [
+        "Content-Type",
+        "application/json; broken"
+      ]
+    ],
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  },
+  {
+    "name": "media_before_size",
+    "body": "{}",
+    "headers": [],
+    "pad_to": 16385,
+    "expected": {
+      "status": 415,
+      "code": "http.invalid_content_type",
+      "detail": "Use Content-Type application/json."
+    }
+  }
+]

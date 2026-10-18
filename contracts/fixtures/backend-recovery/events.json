@@ -1,0 +1,319 @@
+[
+  {
+    "name": "email.verified",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.email.verified.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "email.verified-version-one",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.email.verified.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "password.changed",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.password.changed.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "password.changed-version-one",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.password.changed.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "password.recovered",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.password.recovered.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "password.recovered-version-one",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.password.recovered.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "v1-sign_out",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "sign_out"
+      }
+    }
+  },
+  {
+    "name": "v1-refresh_reuse",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "refresh_reuse"
+      }
+    }
+  },
+  {
+    "name": "v1-password_change",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "password_change"
+      }
+    }
+  },
+  {
+    "name": "v1-password_reset",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "password_reset"
+      }
+    }
+  },
+  {
+    "name": "v2-sign_out",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v2",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "sign_out"
+      }
+    }
+  },
+  {
+    "name": "v2-refresh_reuse",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v2",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "refresh_reuse"
+      }
+    }
+  },
+  {
+    "name": "v2-password_change",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v2",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "password_change"
+      }
+    }
+  },
+  {
+    "name": "v2-password_reset",
+    "source": "identity",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.session.revoked.v2",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "session_id": "00000000-0000-4000-8000-000000000003",
+        "reason": "password_reset"
+      }
+    }
+  },
+  {
+    "name": "private-payload-refused",
+    "source": "identity",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "identity.email.verified.v1",
+      "producer": "identity",
+      "actor_id": "00000000-0000-4000-8000-000000000002",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "request-recovery"
+      },
+      "data": {
+        "principal_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2,
+        "email": "SECRET@example.test"
+      }
+    }
+  }
+]

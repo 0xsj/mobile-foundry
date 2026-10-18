@@ -9,6 +9,55 @@ CLI_PREFIX ?= $(HOME)/.local
 .PHONY: cli-test cli-install
 .PHONY: physics-test physics-ui-test physics-ios-ui-test
 .PHONY: go-dev go-check go-test
+.PHONY: rust-dev rust-check rust-test backend-parity-test
+.PHONY: backend-identity-parity-test
+.PHONY: backend-account-parity-test
+.PHONY: backend-audit-parity-test
+.PHONY: backend-postgres-parity-test
+.PHONY: backend-notes-parity-test
+.PHONY: backend-recovery-parity-test
+.PHONY: backend-files-parity-test
+.PHONY: backend-notifications-parity-test
+.PHONY: backend-installations-parity-test
+
+backend-installations-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/installations_parity.py
+
+backend-notifications-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/notifications_parity.py
+
+backend-files-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/files_parity.py
+
+backend-recovery-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/recovery_parity.py
+
+backend-notes-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/notes_parity.py
+
+backend-postgres-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/postgres_parity.py
+
+backend-audit-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/audit_parity.py
+
+backend-account-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/account_parity.py
+
+backend-identity-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/identity_parity.py
+
+rust-dev:
+	$(MAKE) -C backend/rust dev
+
+rust-check:
+	$(MAKE) -C backend/rust check
+
+rust-test:
+	$(MAKE) -C backend/rust test
+
+backend-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/backend_parity.py
 .PHONY: installations-ui-test
 .PHONY: system-notifications-ui-test
 .PHONY: push-tokens-ui-test
@@ -75,6 +124,19 @@ cli-install:
 .PHONY: help kernel-build kernel-test http-test query-test data-test data-ui-test pending-notes-ui-test observation-test observation-ui-test session-test session-ui-test account-test account-ui-test shell-ui-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
 
 help:
+	@echo 'make backend-identity-parity-test Verify Go/Rust memory Identity flows'
+	@echo 'make backend-account-parity-test Verify Go/Rust memory Account flows'
+	@echo 'make backend-audit-parity-test Verify Go/Rust memory event/Audit flows'
+	@echo 'make backend-notes-parity-test Verify Go/Rust Notes receipts/CAS/scope and HTTP flows'
+	@echo 'make backend-recovery-parity-test Verify Go/Rust contact/password recovery and local SMTP'
+	@echo 'make backend-files-parity-test Verify Go/Rust file bytes, lifecycle, receipts and Audit'
+	@echo 'make backend-notifications-parity-test Verify Go/Rust in-app inbox, reads and preferences'
+	@echo 'make backend-installations-parity-test Verify Go/Rust device registry and session retirement'
+	@echo 'make backend-postgres-parity-test Verify disposable database/restart and Go core handoff'
+	@echo 'make rust-dev        Run the Rust runtime and health endpoints'
+	@echo 'make rust-check      Check Rust formatting, Clippy and build'
+	@echo 'make rust-test       Run Rust workspace behavioral tests'
+	@echo 'make backend-parity-test Verify shared Go/Rust runtime fixtures'
 	@echo 'make remote-notifications-ios-test Verify injected remote and local iOS opens'
 	@echo 'make remote-notifications-android-test Verify remote/local Android notification opens'
 	@echo 'make push-tokens-ui-test Verify native token bridges and missing-setup UI'

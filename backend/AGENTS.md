@@ -4,6 +4,11 @@ Go is the reference owned API. Supabase and Firebase are optional provider
 profiles with local infrastructure; they do not yet implement application
 contracts. Keep provider SDK adapters in their owning native platform.
 
+Rust is a separate implementation candidate mirroring the shared behavior and
+module ownership with idiomatic Rust. Follow its [local instructions](rust/AGENTS.md)
+and [parity inventory](rust/PARITY.md); runtime acceptance does not establish
+business modules or CLI starter readiness.
+
 ## Go boundaries
 
 The [runtime foundation](../contracts/behavior/go-runtime.md) is implemented.

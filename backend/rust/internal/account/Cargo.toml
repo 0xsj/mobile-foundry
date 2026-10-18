@@ -1,0 +1,27 @@
+[package]
+name = "account"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+postgres-storage.workspace = true
+sqlx.workspace = true
+kernel.workspace = true
+principal.workspace = true
+events.workspace = true
+capability.workspace = true
+httpx.workspace = true
+axum.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+base64.workspace = true
+chrono.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true
+
+[lints]
+workspace = true

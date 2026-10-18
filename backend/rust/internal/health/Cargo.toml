@@ -1,0 +1,21 @@
+[package]
+name = "health"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+kernel.workspace = true
+httpx.workspace = true
+axum.workspace = true
+serde.workspace = true
+
+[dev-dependencies]
+runtime-config.workspace = true
+tokio.workspace = true
+tower.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

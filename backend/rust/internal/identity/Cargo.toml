@@ -1,0 +1,34 @@
+[package]
+name = "identity"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+tokio-rustls.workspace = true
+rustls-native-certs.workspace = true
+postgres-storage.workspace = true
+sqlx.workspace = true
+kernel.workspace = true
+events.workspace = true
+capability.workspace = true
+httpx.workspace = true
+axum.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+argon2.workspace = true
+base64.workspace = true
+sha2.workspace = true
+subtle.workspace = true
+getrandom.workspace = true
+zeroize.workspace = true
+chrono.workspace = true
+
+[dev-dependencies]
+tower.workspace = true
+runtime-config.workspace = true
+
+[lints]
+workspace = true

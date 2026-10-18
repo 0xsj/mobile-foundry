@@ -1,0 +1,427 @@
+[
+  {
+    "name": "get-valid",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 200
+  },
+  {
+    "name": "head-valid",
+    "method": "HEAD",
+    "path": "/v1/installations/ITEM",
+    "status": 200
+  },
+  {
+    "name": "wrong-proof",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 404,
+    "code": "notifications.installation_not_found",
+    "proof": "i1.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  },
+  {
+    "name": "missing-proof",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "proof": null
+  },
+  {
+    "name": "malformed-proof",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "proof": "bad"
+  },
+  {
+    "name": "duplicate-proof",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "X-Installation-Key",
+        "i1.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8"
+      ]
+    ]
+  },
+  {
+    "name": "no-auth",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 401,
+    "code": "principal.authentication_required",
+    "authenticated": false
+  },
+  {
+    "name": "empty-query",
+    "method": "GET",
+    "path": "/v1/installations/ITEM?",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "query",
+    "method": "GET",
+    "path": "/v1/installations/ITEM?x=1",
+    "status": 400,
+    "code": "notifications.invalid_input"
+  },
+  {
+    "name": "get-body",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {}
+  },
+  {
+    "name": "get-If-Match",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "get-If-None-Match",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "If-None-Match",
+        "*"
+      ]
+    ]
+  },
+  {
+    "name": "get-Idempotency-Key",
+    "method": "GET",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "10000000-0000-4000-8000-000000000009"
+      ]
+    ]
+  },
+  {
+    "name": "wrong-method",
+    "method": "POST",
+    "path": "/v1/installations/ITEM",
+    "status": 405,
+    "code": "http.method_not_allowed"
+  },
+  {
+    "name": "collection-get",
+    "method": "GET",
+    "path": "/v1/installations",
+    "status": 405,
+    "code": "http.method_not_allowed"
+  },
+  {
+    "name": "missing-ifmatch",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 428,
+    "code": "http.precondition_required",
+    "body": "UPDATE"
+  },
+  {
+    "name": "delete-missing-ifmatch",
+    "method": "DELETE",
+    "path": "/v1/installations/ITEM",
+    "status": 428,
+    "code": "http.precondition_required"
+  },
+  {
+    "name": "invalid-ifmatch-W/\"1\"",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "W/\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "invalid-ifmatch-1",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "1"
+      ]
+    ]
+  },
+  {
+    "name": "invalid-ifmatch-\"01\"",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "\"01\""
+      ]
+    ]
+  },
+  {
+    "name": "invalid-ifmatch-\"0\"",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "\"0\""
+      ]
+    ]
+  },
+  {
+    "name": "invalid-ifmatch-*",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "*"
+      ]
+    ]
+  },
+  {
+    "name": "invalid-ifmatch-\"9007199254740992\"",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "\"9007199254740992\""
+      ]
+    ]
+  },
+  {
+    "name": "put-unknown-field",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_json",
+    "body": {
+      "bad": true
+    },
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "put-installation-id-forbidden",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "http.invalid_json",
+    "body": "UPDATE_WITH_ID",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "put-valid",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 200,
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "put-stale",
+    "method": "PUT",
+    "path": "/v1/installations/ITEM",
+    "status": 409,
+    "code": "notifications.installation_conflict",
+    "body": "UPDATE",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "delete-stale",
+    "method": "DELETE",
+    "path": "/v1/installations/ITEM",
+    "status": 409,
+    "code": "notifications.installation_conflict",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "delete-body",
+    "method": "DELETE",
+    "path": "/v1/installations/ITEM",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": {},
+    "headers": [
+      [
+        "If-Match",
+        "\"2\""
+      ]
+    ]
+  },
+  {
+    "name": "create-ifmatch",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "notifications.invalid_input",
+    "body": "CREATE",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "create-unknown",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "{\"bad\":true}"
+  },
+  {
+    "name": "create-array",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "[]"
+  },
+  {
+    "name": "create-null",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "null"
+  },
+  {
+    "name": "create-multiple",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "{} {}"
+  },
+  {
+    "name": "create-wrong-type",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "{\"token\":false}"
+  },
+  {
+    "name": "create-wrong-earlier-type",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "{\"token\":false,\"token\":\"ok\"}"
+  },
+  {
+    "name": "create-invalid-json",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire_body": "{"
+  },
+  {
+    "name": "create-no-content-type",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 415,
+    "code": "http.invalid_content_type",
+    "body": "CREATE",
+    "no_content_type": true
+  },
+  {
+    "name": "create-too-large",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 413,
+    "code": "http.body_too_large",
+    "wire_body": "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "
+  },
+  {
+    "name": "create-invalid-id",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "id.invalid",
+    "body": "CREATE_BAD_ID"
+  },
+  {
+    "name": "create-invalid-route",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 400,
+    "code": "notifications.invalid_installation",
+    "body": "CREATE_BAD_ROUTE"
+  },
+  {
+    "name": "create-ordered-null",
+    "method": "POST",
+    "path": "/v1/installations",
+    "status": 201,
+    "body": "CREATE_ORDERED"
+  }
+]

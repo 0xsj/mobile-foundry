@@ -1,0 +1,287 @@
+[
+  {
+    "name": "requested",
+    "source": "files",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "upload_completed2",
+    "source": "files",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_completed.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "deleted2",
+    "source": "files",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.deleted.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "deleted3",
+    "source": "files",
+    "valid": true,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.deleted.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 3,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 3
+      }
+    }
+  },
+  {
+    "name": "missing-file",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "wrong-producer",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "account",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "wrong-name",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v2",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "wrong-account",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000003",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "missing-account",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "wrong-version",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "wrong-lifecycle-version",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 2,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 2
+      }
+    }
+  },
+  {
+    "name": "private-payload",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "00000000-0000-4000-8000-000000000004",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1,
+        "name": "SECRET"
+      }
+    }
+  },
+  {
+    "name": "bad-file-id",
+    "source": "files",
+    "valid": false,
+    "envelope": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "files.upload_requested.v1",
+      "producer": "files",
+      "account_id": "00000000-0000-4000-8000-000000000002",
+      "actor_id": "00000000-0000-4000-8000-000000000003",
+      "aggregate_version": 1,
+      "occurred_at": "2026-10-18T00:00:00Z",
+      "metadata": {
+        "request_id": "files-test"
+      },
+      "data": {
+        "file_id": "bad",
+        "account_id": "00000000-0000-4000-8000-000000000002",
+        "version": 1
+      }
+    }
+  }
+]

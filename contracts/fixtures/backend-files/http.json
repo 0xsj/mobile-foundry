@@ -1,0 +1,404 @@
+[
+  {
+    "name": "empty",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "slash",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "a/b",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "zero",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 0,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "negative",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": -1,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "declared-large",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 10485761,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "bad-type",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "photo.png",
+      "content_type": "text/plain",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "bad-sha",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_spec",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    }
+  },
+  {
+    "name": "unknown",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"name\": \"photo.png\", \"content_type\": \"image/png\", \"byte_size\": 3, \"sha256\": \"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\", \"unknown\": true}"
+  },
+  {
+    "name": "wrong-earlier",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"name\":1,\"name\":\"ok\"}"
+  },
+  {
+    "name": "float-size",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{\"byte_size\":3.0}"
+  },
+  {
+    "name": "array",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "[]"
+  },
+  {
+    "name": "trailing",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_json",
+    "wire": "{} {}"
+  },
+  {
+    "name": "request-query",
+    "path": "/files/uploads?x=1",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_input",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "request-empty-query",
+    "path": "/files/uploads?",
+    "method": "POST",
+    "status": 400,
+    "code": "files.invalid_input",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  },
+  {
+    "name": "request-if-match",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_precondition",
+    "body": {
+      "name": "photo.png",
+      "content_type": "image/png",
+      "byte_size": 3,
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "missing-json-type",
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 415,
+    "code": "http.invalid_content_type",
+    "wire": "{\"name\": \"photo.png\", \"content_type\": \"image/png\", \"byte_size\": 3, \"sha256\": \"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\"}",
+    "headers": []
+  },
+  {
+    "name": "no-auth",
+    "path": "/files",
+    "method": "GET",
+    "status": 401,
+    "code": "principal.authentication_required",
+    "authenticated": false
+  },
+  {
+    "name": "list-limit-0",
+    "path": "/files?limit=0",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "list-limit-101",
+    "path": "/files?limit=101",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "list-limit-01",
+    "path": "/files?limit=01",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "list-limit-+1",
+    "path": "/files?limit=+1",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "list-limit-",
+    "path": "/files?limit=",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "list-repeat",
+    "path": "/files?limit=1&limit=1",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "list-extra",
+    "path": "/files?extra=x",
+    "method": "GET",
+    "status": 400,
+    "code": "files.invalid_input"
+  },
+  {
+    "name": "pending-content",
+    "path": "/files/FILE/content",
+    "method": "GET",
+    "status": 409,
+    "code": "files.invalid_transition"
+  },
+  {
+    "name": "missing-precondition",
+    "path": "/files/FILE/complete",
+    "method": "POST",
+    "status": 428,
+    "code": "http.precondition_required"
+  },
+  {
+    "name": "missing-object",
+    "path": "/files/FILE/complete",
+    "method": "POST",
+    "status": 503,
+    "code": "files.object_missing",
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "complete-body",
+    "path": "/files/FILE/complete",
+    "method": "POST",
+    "status": 400,
+    "code": "http.invalid_json",
+    "body": {},
+    "headers": [
+      [
+        "If-Match",
+        "\"1\""
+      ]
+    ]
+  },
+  {
+    "name": "put-mismatch",
+    "path": "/files/FILE/content",
+    "method": "PUT",
+    "status": 400,
+    "code": "files.content_mismatch",
+    "raw": "bad",
+    "headers": [
+      [
+        "Content-Type",
+        "image/png"
+      ]
+    ]
+  },
+  {
+    "name": "put-type",
+    "path": "/files/FILE/content",
+    "method": "PUT",
+    "status": 400,
+    "code": "files.content_mismatch",
+    "raw": "abc",
+    "headers": [
+      [
+        "Content-Type",
+        "text/plain"
+      ]
+    ]
+  },
+  {
+    "name": "put-params",
+    "path": "/files/FILE/content",
+    "method": "PUT",
+    "status": 400,
+    "code": "files.content_mismatch",
+    "raw": "abc",
+    "headers": [
+      [
+        "Content-Type",
+        "image/png; charset=utf-8"
+      ]
+    ]
+  },
+  {
+    "name": "put-key",
+    "path": "/files/FILE/content",
+    "method": "PUT",
+    "status": 400,
+    "code": "files.invalid_input",
+    "raw": "abc",
+    "headers": [
+      [
+        "Content-Type",
+        "image/png"
+      ],
+      [
+        "Idempotency-Key",
+        "test"
+      ]
+    ]
+  },
+  {
+    "name": "receipt-missing",
+    "path": "RECEIPT",
+    "method": "GET",
+    "status": 404,
+    "code": "files.receipt_not_found"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 201,
+    "name": "strings-null-no-op",
+    "wire": "{\"name\":\"photo.png\",\"content_type\":\"image/png\",\"byte_size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"name\":null}"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 201,
+    "name": "size-null-no-op",
+    "wire": "{\"name\":\"photo.png\",\"content_type\":\"image/png\",\"byte_size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"byte_size\":null}"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 201,
+    "name": "field-case-folding",
+    "wire": "{\"NAME\": \"photo.png\", \"CONTENT_TYPE\": \"image/png\", \"BYTE_SIZE\": 3, \"SHA256\": \"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\"}"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 201,
+    "name": "valid-string-replacement",
+    "wire": "{\"name\":\"photo.png\",\"content_type\":\"image/png\",\"byte_size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"name\":\"New\"}",
+    "canonical_name": "New"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 201,
+    "name": "valid-integer-replacement",
+    "wire": "{\"name\":\"photo.png\",\"content_type\":\"image/png\",\"byte_size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"byte_size\":4}"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "name": "wrong-earlier-integer",
+    "wire": "{\"name\":\"photo.png\",\"content_type\":\"image/png\",\"byte_size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"byte_size\":true,\"byte_size\":3}",
+    "code": "http.invalid_json"
+  },
+  {
+    "path": "/files/uploads",
+    "method": "POST",
+    "status": 400,
+    "name": "signed-integer-overflow",
+    "wire": "{\"name\":\"photo.png\",\"content_type\":\"image/png\",\"byte_size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\",\"byte_size\":9223372036854775808}",
+    "code": "http.invalid_json"
+  }
+]

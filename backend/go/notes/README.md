@@ -1,5 +1,73 @@
 # Go backend learning notes
 
+Rust installations follow-up, 2026-10-18: repository-only
+[shared corpus](../../../contracts/fixtures/backend-installations/README.md) and
+[real API runner](../../../scripts/installations_parity.py) now verify proof/target
+digests, registration checkpoints, rebind/rotation and all four retirement reasons.
+Disposable PostgreSQL rejects each atomic retirement write, exercises separate
+owner databases and resumes killed pending v1/v2 events across Go/Rust without
+clearing newer bindings. Go production/extraction sources are unchanged. Read
+[the Rust walkthrough](../../rust/notes/modules/internal/notifications/installations.md).
+
+Rust Notifications follow-up, 2026-10-18: the repository-only
+[shared corpus](../../../contracts/fixtures/backend-notifications/README.md) and
+[real API runner](../../../scripts/notifications_parity.py) now check in-app Files
+delivery, first-read/settings, scoped pages and refusal policy in both languages.
+Disposable PostgreSQL verifies late rollback, six databases, killed pending
+delivery and Go/Rust fingerprints for suppressed/delivered sources. Go production
+and extraction code is unchanged. Read
+[the Rust walkthrough](../../rust/notes/modules/internal/notifications/README.md).
+
+Rust Files follow-up, 2026-10-18: repository-only
+[shared corpus](../../../contracts/fixtures/backend-files/README.md) and
+[actual API runner](../../../scripts/files_parity.py) now verify policy, fingerprints,
+wire admission, immutable transfers, lifecycle receipts and Audit in both languages.
+Disposable PostgreSQL continues a killed Rust upload in Go, reads/replays it in
+Rust and replays Rust's deletion in Go using retained private bytes. Go production
+and extraction sources are unchanged. Read
+[the Rust walkthrough](../../rust/notes/modules/internal/files/README.md).
+
+Rust recovery follow-up, 2026-10-18: repository-only
+[policy/event fixtures](../../../contracts/fixtures/backend-recovery/README.md)
+and [real API runner](../../../scripts/recovery_parity.py) now check canonical
+email, verification/reset/change, session revocations and private local SMTP in
+both languages. Disposable PostgreSQL acceptance consumes Rust/Go-created codes
+across a process kill and checks retained Audit evidence. Go production behavior
+is unchanged. Read [the Rust recovery walkthrough](../../rust/notes/modules/internal/identity/recovery.md).
+
+Rust Notes follow-up, 2026-10-18: the repository-only
+[Notes parity checks](../parity/notes_test.go) and
+[process runner](../../../scripts/notes_parity.py) verify shared title policy,
+fingerprint bytes and 47 HTTP cases. Disposable PostgreSQL acceptance also
+replays actual Go/Rust receipts after restart/deletion. Go production behavior
+is unchanged. Read [the Rust walkthrough](../../rust/notes/modules/internal/notes/README.md).
+
+Rust PostgreSQL follow-up, 2026-10-18: the repository-only
+[durability runner](../../../scripts/postgres_parity.py) now verifies Rust→Go→Rust
+core state/session and Audit fingerprint replay in one disposable PostgreSQL 14.24
+database. Exact Account/Identity/Audit migration bytes are checked before execution.
+Go production/extraction sources are unchanged. This does not establish Rust
+generated-product parity; Notifications/Files/recovery have separate evidence
+above. Read
+[the Rust transaction walkthrough](../../rust/notes/modules/pkg/persistence/postgres/README.md).
+
+Rust Audit follow-up, 2026-10-18: the repository-only
+[shared admission checks](../parity/audit_test.go) and
+[Audit process runner](../../../scripts/audit_parity.py) verify expected event,
+access-response and HTTP behavior in both implementations. Rust now has memory
+state/outbox and evidence/inbox commits, stable-ID replay and owned worker drain;
+its PostgreSQL and recovery acceptance now have separate follow-ups above. Read
+[the Rust walkthrough](../../rust/notes/modules/internal/audit/README.md).
+
+Rust Account conformance follow-up, 2026-10-18: the repository-only
+[Account corpus check](../parity/account_test.go) and
+[process runner](../../../scripts/account_parity.py) execute shared name/wire
+expectations plus real bootstrap/CAS concurrency, owner pagination and credential
+renewal/revocation against both APIs. Go production behavior and extraction
+remain unchanged. Read [Rust's Account walkthrough](../../rust/notes/modules/internal/account/README.md)
+for the credential v2 seam; the Audit follow-up above now supplies independent
+memory delivery there.
+
 Connected-foundation follow-up, 2026-10-17: read
 [bounded hints](patterns/bounded-live-hints.md),
 [credential checkpoints](patterns/identity-challenges-and-checkpoints.md),
@@ -194,3 +262,19 @@ generation are implemented. Next: select native live/recovery UI and product pol
 Database failover, role isolation,
 operational replay/retention and actual network-cut commit uncertainty remain
 unverified. Documentation checks validate links and mirrored paths separately.
+
+## Rust runtime conformance follow-up
+
+2026-10-18: [shared fixtures](../../../contracts/fixtures/backend-runtime/README.md)
+now check Go's public projection and actual canonical HTTP behavior alongside
+Rust. Read [the Rust notebook](../../rust/notes/README.md) for ownership choices
+and [scope/gaps](../../rust/PARITY.md). The admission follow-up adds 26 JSON/media,
+27 version/key and 11 identifier cases plus generator-failure privacy checks.
+These stay in the repository-only parity package; no Go production behavior or
+CLI source selection changed.
+
+Core Identity follow-up: [shared fixtures](../../../contracts/fixtures/backend-identity/README.md)
+now compare policy, PHC/token vectors, credential DTO admission and actual
+register/sign-in/me/renew/reuse/sign-out/source-gate behavior with Rust. The Go
+implementation and extracted source closure are unchanged. Rust's retained memory
+facts do not establish its Audit delivery or persistence parity.
