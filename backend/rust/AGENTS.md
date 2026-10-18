@@ -13,7 +13,15 @@ The [Notes slice](../../contracts/behavior/rust-notes.md) owns records/receipts.
 Authorize every operation including replay and lookup; check replay before current
 CAS/existence; preserve scoped command input and exact v1 fingerprint bytes.
 Commit receipt claims/finalization with the record and retain the deferred guard.
-Notes Changes is optional/lossy and no broadcast adapter is currently selected.
+Notes Changes is optional/lossy; process composition now selects the local hub.
+Publish only after confirmed validated results, including exact receipt replay.
+
+The [Realtime slice](../../contracts/behavior/rust-realtime.md) owns native-bearer
+upgrades, exact principal/session/account rechecks and bounded lossy subscriptions.
+Keep AccountAccess/Feed ports consumer-owned. Retain upgraded tasks outside HTTP
+request lifetime; stop and join them before workers/resources/pools close, including
+listener failures and canceled close callers. Hints carry no record data or write
+authority. Process-local fanout, durable delivery and native/CLI readiness stay distinct.
 
 The [Files slice](../../contracts/behavior/rust-files.md) owns metadata/receipts/
 required events separately from Objects. Keep exact v1 fingerprint bytes and
@@ -48,6 +56,33 @@ Late old-session facts must not clear a rebound installation; tombstones must al
 prevent delayed creation after a revocation with no prior binding. No foreign
 calls occur under this guard. Registration has no receipts or automatic replay;
 registered/current_binding metadata does not establish send eligibility.
+
+The [internal dispatch foundation](../../contracts/behavior/rust-push-dispatch.md)
+keeps Identity eligibility behind a consumer-owned capability port. Finish each
+store operation before the foreign query/send, and recheck the exact target after
+the query. Retire only the original enabled owner/revision. Preserve InvalidTarget
+with its nested cleanup Result after cancellation/timeout/uncertainty; cleanup
+errors must not lose known rejection or trigger a resend. Gateway dispositions
+are typed; unknown protocol answers fail at adapter admission. Default runtime
+selects no cloud gateway, send route, durable job or worker.
+
+[Manual providers](../../contracts/behavior/rust-push-providers.md) are explicitly
+selectable through the Notifications facade with owned Identity. Keep fixed
+endpoints, strict invalid-target evidence, bounded verified TLS, disabled transport
+retries and private credentials out of cmd internals/logs/source copies. Close
+owned clients after requests/workers drain. Local protocol acceptance is not live
+cloud delivery; Rust CLI registration remains separate.
+
+[Retained jobs/recovery](../../contracts/behavior/rust-push-jobs.md) are an independent
+explicit PostgreSQL/Identity/provider selection. Keep immutable owner/revision/
+lineage intents, bounded pre-marker backoff and random claim fencing. Only a
+confirmed sending-marker commit authorizes a provider call. Unknown post-marker
+outcomes never automatically resend; cancellation serializes with Begin and
+replacement preserves the source with one direct child and explicit duplicate-risk
+acknowledgement. Stop cooperatively, finish bounded settlement and join workers
+before resources/pools. Keep polling mechanics in jobs and business policy in
+Notifications. Retention, admin/cross-session recovery and live delivery remain
+separate; copied migration bytes stay unchanged.
 
 Follow [backend ownership](../AGENTS.md), the shared contracts, and
 [the current parity inventory](PARITY.md). Go remains the behavioral reference;

@@ -50,6 +50,8 @@ class BackendTests(unittest.TestCase):
                 self.assertIn(self.backend.module + "/", policy)
                 self.assertTrue((project / "contracts/fixtures/account/names.json").is_file())
                 self.assertFalse((project / "backend/go/notes").exists())
+                self.assertFalse((project / "backend/go/internal/notifications/infra/push/parity_test.go").exists())
+                self.assertFalse((project / "backend/go/tests/push_provider_parity_test.go").exists())
                 self.assertTrue((project / "backend/go/migrations/notifications/0003_push_jobs.sql").is_file())
                 self.assertTrue((project / "backend/go/migrations/notifications/0004_push_job_recovery.sql").is_file())
                 self.assertIn("accept_possible_duplicate", (project / "SETUP.md").read_text())

@@ -6,6 +6,7 @@ rust-version.workspace = true
 publish.workspace = true
 [dependencies]
 kernel.workspace = true
+jobs.workspace = true
 principal.workspace = true
 capability.workspace = true
 events.workspace = true
@@ -19,8 +20,15 @@ sha2.workspace = true
 base64.workspace = true
 subtle.workspace = true
 zeroize.workspace = true
-[dev-dependencies]
 tokio.workspace = true
+reqwest.workspace = true
+ring.workspace = true
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }
+tokio-rustls.workspace = true
+hyper = { workspace = true, features = ["http2"] }
+hyper-util.workspace = true
+http-body-util.workspace = true
 [lints]
 workspace = true
 

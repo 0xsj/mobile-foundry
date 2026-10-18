@@ -68,7 +68,10 @@ async fn run_selected(
         Failure::new(Kind::Internal, "server.signal", "signal setup failed").with_cause(cause)
     })?;
     let clock: Arc<dyn kernel::clock::Clock> = Arc::new(kernel::clock::SystemClock);
+    let signals = Arc::new(broadcast::Hub::new(256, 8));
     let ids: Arc<dyn kernel::id::Generator> = Arc::new(kernel::id::RandomIds);
+    // Facade owns provider clients on every startup/shutdown path. No network at load.
+    let push = notifications::load_push_gateway(config.push_config.as_deref(), clock.clone())?;
     let accounts = match pools.get("account") {
         Some(pool) => account::Module::postgres(pool, clock.clone(), ids.clone())?,
         None => account::Module::memory(clock.clone(), ids.clone()),
@@ -123,7 +126,9 @@ async fn run_selected(
         let notes = match pools.get("notes") {
             Some(pool) => notes::Module::postgres(pool, access, principals.clone(), ids.clone()),
             None => notes::Module::memory(access, principals.clone(), ids.clone()),
-        };
+        }
+        .with_local_changes(signals.clone());
+        let realtime = realtime::Module::local(signals.clone(), &registry, principals.clone())?;
         let mut subscriptions = events::Builder::default();
         let access: Arc<dyn files::app::ports::AccountAccess> = Arc::new(
             files::infra::capabilities::Client(Arc::new(registry.client("files")?)),
@@ -144,6 +149,15 @@ async fn run_selected(
             }
             None => notifications::Module::memory(clock.clone(), access, principals.clone()),
         };
+        let notifications = match &push {
+            Some(provider) => notifications.with_push(&registry, provider.gateway())?,
+            None => notifications,
+        };
+        let notifications = if config.push_jobs {
+            notifications.with_push_jobs(ids.clone())?
+        } else {
+            notifications
+        };
         notifications.subscribe(&mut subscriptions)?;
         Ok((
             principals,
@@ -152,9 +166,10 @@ async fn run_selected(
             files,
             notifications,
             subscriptions.freeze(),
+            realtime,
         ))
     })();
-    let (principals, audit, notes, files, notifications, bus) = match assembled {
+    let (principals, audit, notes, files, notifications, bus, realtime) = match assembled {
         Ok(value) => value,
         Err(error) => {
             if let Some(module) = &module {
@@ -194,6 +209,17 @@ async fn run_selected(
             }
         }
     }
+    let mut push_worker = if start_failure.is_none() {
+        match notifications.start_push_jobs() {
+            Ok(worker) => worker,
+            Err(e) => {
+                start_failure = Some(e);
+                None
+            }
+        }
+    } else {
+        None
+    };
     if let Some(error) = start_failure {
         if let Some(module) = &module {
             module.stop();
@@ -214,6 +240,8 @@ async fn run_selected(
         pools: pools.0.iter().map(|(_, pool)| pool.clone()).collect(),
         outboxes,
         workers: workers.iter().map(|w| w.health()).collect(),
+        push: push_worker.as_ref().map(|w| w.health()),
+        realtime: realtime.health(),
     };
     let mut server = server
         .with_probe(Arc::new(probe))
@@ -222,19 +250,27 @@ async fn run_selected(
         .with_routes(audit.routes())
         .with_routes(notes.routes());
     server = server.with_routes(notifications.routes());
+    server = server.with_routes(realtime.routes());
     if let Some(module) = &module {
         server = server.with_routes(module.routes());
     }
     let result = server
         .serve(listener, async {
             tokio::select! { _ = terminate.recv() => {}, _ = interrupt.recv() => {} }
+            realtime.stop();
         })
         .await;
+    // Upgraded sockets are separate tasks; stop and join them even on listener failure.
+    let sockets_closed = realtime.close().await;
+    signals.close();
     // Fence every worker before joining any; no module resources close first.
     if let Some(module) = &module {
         module.stop();
     }
     for worker in &workers {
+        worker.stop();
+    }
+    if let Some(worker) = &push_worker {
         worker.stop();
     }
     let mut worker_failure = None;
@@ -245,14 +281,24 @@ async fn run_selected(
             }
         }
     }
+    if let Some(worker) = &mut push_worker {
+        if let Err(error) = worker.close().await {
+            if worker_failure.is_none() {
+                worker_failure = Some(error);
+            }
+        }
+    }
     if let Some(module) = &module {
         module.close().await?;
     }
     result?;
+    sockets_closed?;
     worker_failure.map_or(Ok(()), Err)
 }
 
 struct DeliveryReady {
+    realtime: realtime::Health,
+    push: Option<jobs::Health>,
     recovery: Option<Arc<identity::infra::reset_queue::ResetQueue>>,
     pools: Vec<sqlx::PgPool>,
     outboxes: Vec<Arc<dyn events::dispatcher::Outbox>>,
@@ -261,6 +307,10 @@ struct DeliveryReady {
 impl health::app::query::Readiness for DeliveryReady {
     fn check(&self) -> health::app::query::ProbeFuture<'_> {
         Box::pin(async {
+            self.realtime.check()?;
+            if let Some(worker) = &self.push {
+                worker.check()?;
+            }
             if let Some(queue) = &self.recovery {
                 queue.ready()?;
             }

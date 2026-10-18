@@ -20,6 +20,13 @@ rollback and killed-upload Go/Rust handoff using a retained private directory.
 In-app Notifications now passes event/fingerprint/HTTP conformance, coherent scoped
 inbox/read/settings behavior and killed pending-delivery handoff across Go/Rust. Rust remains
 a foundation candidate: CLI extraction/native connection are still unregistered.
+Optional Rust APNs/FCM adapters now pass local TLS/JWT/cache tests and guarded
+manual preview in memory/separate PostgreSQL owners; compiled selection stays
+off by default. Retained jobs/recovery now pass shared rules, PostgreSQL rollback,
+SIGKILL and Rust→Go→Rust worker/outcome/lineage handoff. Live delivery remains separate.
+Rust Realtime now passes bounded/coalesced live Notes, native bearer admission,
+credential rechecks, capacity release and owned socket shutdown with memory and
+disposable PostgreSQL stores. This does not register Rust CLI/native selection.
 Daily + go-connected has independent Swift/Kotlin
 CLI 0.18.0 owner workspace create/rename and explicit conflict/uncertainty review,
 alongside registration, scoped caching, verification/reset/change forms and live
@@ -94,7 +101,7 @@ production guarantee for the whole catalog.
 | Go push dispatch/providers | **Foundation candidate**: exact-session dispatch and conditional retirement plus real APNs/FCM adapters and opt-in guarded manual preview. Local TLS, memory/PostgreSQL HTTP and independently extracted checks pass. | Configure private provider credentials and verify cloud acceptance/device delivery. Durable queues, fanout, retry receipts and native remote opens remain separate. |
 | Go queued previews/recovery | **Foundation candidate**: immutable jobs, fenced claims, guarded enqueue/status/cancel/replacement, bounded preflight backoff and retained uncertainty verified in memory/PostgreSQL and an independent copy. | Live provider acceptance, fanout, provider-result retry classification, retention/erasure/cross-session administration and native queue UI remain separate. |
 | Go backend | **Standalone starter ready** through CLI 0.14.0: independently generated API, account-scoped WebSocket hints, core identity lifecycle, existing auth/data/inbox/installation/provider/job seams, race/PostgreSQL recovery and Docker/email/backup/restore acceptance. | Ready to start Go APIs with the tested portable baseline. Configure real hosting/SMTP and chosen product policy. Daily selects native socket/recovery UI through its separate acceptance. Richer roles/auth, multi-replica fanout and external delivery need deliberate extensions. |
-| Rust backend | **Foundation candidate**: eighteen-crate workspace, runtime/admission, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications and installations, private SMTP/objects, scoped receipts/inbox/retirement decisions, explicit migrations and restart/Go handoff acceptance. | Implement remaining product and routing/network slices; register CLI selection and independently verify generated products. Push/providers and live deployment remain separate. See [parity inventory](../backend/rust/PARITY.md). |
+| Rust backend | **Foundation candidate**: twenty-one-crate workspace, runtime/admission, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications/installations, live Notes hints, optional APNs/FCM previews and retained jobs/recovery, private SMTP/objects, scoped receipts/inbox/retirement decisions and restart/Go handoff acceptance. | Implement remaining product and routing/network slices; register CLI selection and independently verify generated products. Live push delivery and deployment remain separate. See [parity inventory](../backend/rust/PARITY.md). |
 | Supabase integration | Local development stack present; native provider adapters/policies unconnected. | Real auth/account/remote Notes adapters and policies, then connected starter verification. |
 | Firebase auth/data integration | Local emulator setup present; native auth/data adapters and rules unconnected. FCM token adapters are assessed separately above. | Real auth/account/remote data adapters and rules, then connected starter verification. |
 

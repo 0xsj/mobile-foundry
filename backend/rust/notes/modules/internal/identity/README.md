@@ -74,3 +74,16 @@ independent CLI/native acceptance remain gaps. Related:
 [owned secret lifetimes](../../../language/owned-secrets-and-scope-adapters.md).
 Next: read how recovery adds v2 revocation reasons while keeping v1 closed in
 [the recovery walkthrough](recovery.md).
+
+Session eligibility follow-up, 2026-10-18: [the query/port](../../../../internal/identity/src/app/query/session_eligibility.rs)
+and [provider](../../../../internal/identity/src/transport/capability/v1/session_eligibility.rs)
+answer only Notifications' trusted principal/session question. The memory and
+PostgreSQL adapters read owned sessions through renewable, using absolute expiry
+rather than access expiry. Missing/wrong/revoked sessions return false; corrupt
+state or dependency failure stays an error. No credentials are accepted or
+renewed by this query. [Shared conformance](../../../../internal/identity/tests/support/eligibility.rs)
+checks six time/ownership cases, renewal, revocation and cancellation in both
+stores. [Capability tests](../../../../internal/identity/tests/eligibility.rs)
+check twenty requests, caller admission, explicit failures and module registration.
+Actual dispatch with separate databases refuses authority revocation before
+Notifications cleanup. Read [the dispatch walkthrough](../notifications/push.md).

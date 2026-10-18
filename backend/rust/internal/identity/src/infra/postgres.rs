@@ -1,5 +1,6 @@
 //! Identity-owned credentials, session checkpoints and required integration facts.
 mod recovery;
+mod session_eligibility;
 use crate::{
     app::{
         self,

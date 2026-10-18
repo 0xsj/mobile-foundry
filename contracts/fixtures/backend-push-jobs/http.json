@@ -1,0 +1,123 @@
+[
+  {
+    "name": "anonymous",
+    "auth": "anonymous",
+    "status": 401
+  },
+  {
+    "name": "foreign_session",
+    "auth": "foreign",
+    "status": 403
+  },
+  {
+    "name": "wrong_proof",
+    "proof": "wrong",
+    "status": 404
+  },
+  {
+    "name": "missing_proof",
+    "proof": "missing",
+    "status": 400
+  },
+  {
+    "name": "duplicate_proof",
+    "headers": [
+      [
+        "X-Installation-Key",
+        "$PROOF$"
+      ]
+    ],
+    "status": 400
+  },
+  {
+    "name": "missing_revision",
+    "if_match": null,
+    "status": 428
+  },
+  {
+    "name": "stale_revision",
+    "if_match": "\"2\"",
+    "status": 409
+  },
+  {
+    "name": "missing_ack",
+    "body": "{\"job_id\":\"$CHILD$\"}",
+    "status": 400
+  },
+  {
+    "name": "null_ack",
+    "body": "{\"job_id\":\"$CHILD$\",\"accept_possible_duplicate\":null}",
+    "status": 400
+  },
+  {
+    "name": "false_uncertainty_ack",
+    "body": "{\"job_id\":\"$CHILD$\",\"accept_possible_duplicate\":false}",
+    "status": 409
+  },
+  {
+    "name": "duplicate_ack",
+    "body": "{\"job_id\":\"$CHILD$\",\"accept_possible_duplicate\":false,\"accept_possible_duplicate\":true}",
+    "status": 400
+  },
+  {
+    "name": "case_variant_ack",
+    "body": "{\"job_id\":\"$CHILD$\",\"ACCEPT_POSSIBLE_DUPLICATE\":true}",
+    "status": 400
+  },
+  {
+    "name": "duplicate_id",
+    "body": "{\"job_id\":\"$CHILD$\",\"job_id\":\"$CHILD$\",\"accept_possible_duplicate\":true}",
+    "status": 400
+  },
+  {
+    "name": "wrong_type_ack",
+    "body": "{\"job_id\":\"$CHILD$\",\"accept_possible_duplicate\":\"true\"}",
+    "status": 400
+  },
+  {
+    "name": "unknown_owner",
+    "body": "{\"job_id\":\"$CHILD$\",\"accept_possible_duplicate\":true,\"session_id\":\"untrusted\"}",
+    "status": 400
+  },
+  {
+    "name": "self_replacement",
+    "body": "{\"job_id\":\"$SOURCE$\",\"accept_possible_duplicate\":true}",
+    "status": 400
+  },
+  {
+    "name": "query",
+    "query": "?retry=true",
+    "status": 400
+  },
+  {
+    "name": "empty_query",
+    "query": "?",
+    "status": 400
+  },
+  {
+    "name": "unsupported_receipt",
+    "headers": [
+      [
+        "Idempotency-Key",
+        "unused"
+      ]
+    ],
+    "status": 400
+  },
+  {
+    "name": "if_none_match",
+    "headers": [
+      [
+        "If-None-Match",
+        "*"
+      ]
+    ],
+    "status": 400
+  },
+  {
+    "name": "method_before_auth",
+    "method": "DELETE",
+    "auth": "anonymous",
+    "status": 405
+  }
+]

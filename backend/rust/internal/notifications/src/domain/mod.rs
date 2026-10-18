@@ -1,5 +1,6 @@
 //! An inbox reference, never a copy of Files content or account authority.
 pub mod installation;
+pub mod push_job;
 use kernel::{Failure, Kind, id::Id};
 pub const MAX_SEQUENCE: u64 = 9_007_199_254_740_991;
 pub const MAX_TIME: u64 = 253_402_300_799_999_999;

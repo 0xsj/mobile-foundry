@@ -95,9 +95,17 @@ store conformance and injected cleanup/tombstone/marker/expiry-claim faults veri
 atomic rollback. Six separate databases exercise registration and retirement
 without co-located Identity tables. Killed pending v1/v2 sources recover across
 Go/Rust; fingerprints replay and newer rebound targets remain intact. Copied
-0003/0004 push DDL preserves history without selecting send/jobs behavior.
+0003/0004 push DDL preserves history without selecting cloud/jobs behavior.
+
+[Internal dispatch](rust-push-dispatch.md) reuses installation state/history for
+exact target reads and guarded retirement. The same attempt/session corpus runs
+for memory and PostgreSQL; cleanup faults preserve token/reservation and corrupt
+Identity state stays a failure. Go's existing database dispatch conformance also
+runs. Separate Identity/Notifications databases verify capability-based dispatch
+and authority revocation before consumer cleanup, without foreign SQL or a real
+gateway. No new applied migration bytes or durable send records are introduced.
 
 Limits: no database failover, killed-server COMMIT ambiguity drill, durable broker,
 retention, backup/deployment profile, live SMTP-provider acceptance,
-cloud object providers, push, WebSockets, generated Rust starter or native-connected Rust
+cloud object/push providers/jobs, WebSockets, generated Rust starter or native-connected Rust
 selection. Migration compatibility for the core subset is not full backend parity.

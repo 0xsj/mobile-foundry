@@ -48,3 +48,4 @@ impl Me {
             .ok_or_else(domain::invalid_state)
     }
 }
+pub mod session_eligibility;

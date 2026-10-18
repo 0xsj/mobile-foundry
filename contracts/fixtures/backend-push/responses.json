@@ -1,0 +1,86 @@
+[
+  {
+    "name": "true",
+    "wire": "{\"eligible\":true}",
+    "valid": true,
+    "eligible": true
+  },
+  {
+    "name": "false",
+    "wire": "{\"eligible\":false}",
+    "valid": true,
+    "eligible": false
+  },
+  {
+    "name": "missing",
+    "wire": "{}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "null",
+    "wire": "{\"eligible\":null}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "number",
+    "wire": "{\"eligible\":0}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "string",
+    "wire": "{\"eligible\":\"false\"}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "unknown-field",
+    "wire": "{\"eligible\":true,\"admin\":true}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "case-fold",
+    "wire": "{\"ELIGIBLE\":true}",
+    "valid": true,
+    "eligible": true
+  },
+  {
+    "name": "last-bool",
+    "wire": "{\"eligible\":true,\"eligible\":false}",
+    "valid": true,
+    "eligible": false
+  },
+  {
+    "name": "last-null",
+    "wire": "{\"eligible\":true,\"eligible\":null}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "earlier-wrong-type",
+    "wire": "{\"eligible\":0,\"eligible\":true}",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "array",
+    "wire": "[]",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "root-null",
+    "wire": "null",
+    "valid": false,
+    "eligible": null
+  },
+  {
+    "name": "trailing",
+    "wire": "{\"eligible\":true} {}",
+    "valid": false,
+    "eligible": null
+  }
+]

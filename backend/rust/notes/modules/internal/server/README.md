@@ -71,6 +71,15 @@ phase registers a target and observes retirement with Identity's tables in anoth
 database. No foreign SQL or additional worker is selected. Read
 [installation ownership](../notifications/installations.md).
 
+Realtime follow-up: Hyper's connection driver now enables upgrades. Realtime,
+separately from the ordinary HTTP JoinSet, owns each handed-off stream task and
+fresh authorization scopes. Signal shutdown stops it immediately; after HTTP
+drain, every exit path closes/joins sockets before delivery workers, Identity,
+provider/filesystem resources and pools close. Its health joins readiness. A
+canceled Realtime close retains the JoinSet for another close; see
+[the socket owner](../realtime/README.md) and
+[owned upgrades](../../../language/owned-upgrades-and-cancel-safe-join.md).
+
 Gotchas: delivery workers/pools are selected explicitly; no generic module
 lifecycle registry exists. Interrupted COMMIT remains uncertain. Rust's network budgets
 are explicitly narrower than Go's. Related:

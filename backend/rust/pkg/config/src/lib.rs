@@ -57,6 +57,8 @@ pub struct Runtime {
     pub authentication: Authentication,
     pub storage: Storage,
     pub mail_config: Option<String>,
+    pub push_config: Option<String>,
+    pub push_jobs: bool,
 }
 impl fmt::Debug for Runtime {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -112,8 +114,12 @@ impl Runtime {
             _ => return Err(invalid()),
         };
         let mail_config = source("IDENTITY_MAIL_CONFIG").filter(|p| !p.is_empty());
-        if mail_config.as_ref().is_some_and(|p| p.contains('\0'))
-            || (mail_config.is_some() && authentication != Authentication::Identity)
+        let push_config = source("PUSH_CONFIG_FILE").filter(|p| !p.is_empty());
+        if [&mail_config, &push_config]
+            .iter()
+            .any(|p| p.as_ref().is_some_and(|p| p.contains('\0')))
+            || ((mail_config.is_some() || push_config.is_some())
+                && authentication != Authentication::Identity)
         {
             return Err(invalid());
         }
@@ -158,13 +164,21 @@ impl Runtime {
             "DEV_PRINCIPAL_ID",
             "METRICS_ADDR",
             "TRUSTED_PROXY_CIDRS",
-            "PUSH_CONFIG_FILE",
         ] {
             if source(key).is_some_and(|v| !v.is_empty()) {
                 return Err(invalid());
             }
         }
-        if value("PUSH_JOBS_ENABLED", "false") != "false" {
+        let push_jobs = match value("PUSH_JOBS_ENABLED", "false").as_str() {
+            "false" => false,
+            "true" => true,
+            _ => return Err(invalid()),
+        };
+        if push_jobs
+            && (authentication != Authentication::Identity
+                || push_config.is_none()
+                || !matches!(storage, Storage::Postgres(_)))
+        {
             return Err(invalid());
         }
         Ok(Self {
@@ -176,6 +190,8 @@ impl Runtime {
             authentication,
             storage,
             mail_config,
+            push_config,
+            push_jobs,
         })
     }
 }
@@ -183,6 +199,63 @@ impl Runtime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn jobs_are_an_independent_explicit_durable_selection() {
+        let selected = |k: &str| match k {
+            "PUSH_JOBS_ENABLED" => Some("true".into()),
+            "STORAGE" => Some("postgres".into()),
+            "AUTH_MODE" => Some("identity".into()),
+            "PUSH_CONFIG_FILE" => Some("/private/push.json".into()),
+            "DATABASE_URL" => Some("postgres://PRIVATE/owned".into()),
+            _ => None,
+        };
+        assert!(Runtime::load(selected).unwrap().push_jobs);
+        for (key, value) in [
+            ("STORAGE", "memory"),
+            ("AUTH_MODE", "deny"),
+            ("PUSH_CONFIG_FILE", ""),
+            ("PUSH_JOBS_ENABLED", ""),
+            ("PUSH_JOBS_ENABLED", "TRUE"),
+        ] {
+            assert!(
+                Runtime::load(|k| if k == key {
+                    Some(value.into())
+                } else {
+                    selected(k)
+                })
+                .is_err()
+            );
+        }
+        assert!(!Runtime::load(|_| None).unwrap().push_jobs);
+    }
+    #[test]
+    fn push_selection_requires_identity_and_remains_private() {
+        let config = Runtime::load(|k| match k {
+            "AUTH_MODE" => Some("identity".into()),
+            "PUSH_CONFIG_FILE" => Some("/private/PUSH-SECRET.json".into()),
+            _ => None,
+        })
+        .unwrap();
+        assert_eq!(
+            config.push_config.as_deref(),
+            Some("/private/PUSH-SECRET.json")
+        );
+        assert!(!format!("{config:?}").contains("PUSH-SECRET"));
+        assert!(
+            Runtime::load(|k| match k {
+                "AUTH_MODE" => Some("identity".into()),
+                "PUSH_CONFIG_FILE" => Some("bad\0path".into()),
+                _ => None,
+            })
+            .is_err()
+        );
+        assert!(
+            Runtime::load(|k| (k == "PUSH_CONFIG_FILE").then(String::new))
+                .unwrap()
+                .push_config
+                .is_none()
+        );
+    }
     #[test]
     fn mail_requires_owned_identity_and_keeps_configuration_private() {
         let selected = |key: &str| match key {

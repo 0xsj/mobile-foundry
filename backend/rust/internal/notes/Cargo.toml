@@ -6,6 +6,7 @@ rust-version.workspace = true
 publish.workspace = true
 [dependencies]
 kernel.workspace = true
+broadcast.workspace = true
 principal.workspace = true
 capability.workspace = true
 httpx.workspace = true

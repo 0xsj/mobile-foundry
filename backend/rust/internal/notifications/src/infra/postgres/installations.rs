@@ -16,7 +16,7 @@ use kernel::{Failure, id::Id};
 use postgres_storage as pg;
 use sqlx::{PgConnection, Row, postgres::PgRow};
 const COLUMNS: &str = "id::text,principal_id::text,session_id::text,registration_id::text,proof_digest,provider,application,environment,token,token_key,version,enabled,created_at,updated_at,expires_at";
-async fn lock(conn: &mut PgConnection) -> Result<(), Failure> {
+pub(super) async fn lock(conn: &mut PgConnection) -> Result<(), Failure> {
     let guard: bool = sqlx::query_scalar(
         "SELECT singleton FROM notifications.installation_guard WHERE singleton FOR UPDATE",
     )
@@ -66,7 +66,10 @@ fn restore(row: PgRow) -> Result<Installation, Failure> {
     }
     Installation::restore(s)
 }
-async fn load(conn: &mut PgConnection, id: &Id) -> Result<Option<Installation>, Failure> {
+pub(super) async fn load(
+    conn: &mut PgConnection,
+    id: &Id,
+) -> Result<Option<Installation>, Failure> {
     sqlx::query(&format!(
         "SELECT {COLUMNS} FROM notifications.installations WHERE id=$1::uuid"
     ))
@@ -81,7 +84,7 @@ fn admit(i: Option<Installation>, proof: &Secret) -> Result<Installation, Failur
     i.filter(|i| records::proof_matches(&i.snapshot().proof_digest, proof))
         .ok_or_else(installations::missing)
 }
-async fn save(conn: &mut PgConnection, i: &Installation) -> Result<(), Failure> {
+pub(super) async fn save(conn: &mut PgConnection, i: &Installation) -> Result<(), Failure> {
     let v = i.snapshot();
     let key = v.enabled.then(|| records::target(&v.spec));
     sqlx::query("INSERT INTO notifications.installations(id,principal_id,session_id,registration_id,proof_digest,provider,application,environment,token,token_key,version,enabled,created_at,updated_at,expires_at)

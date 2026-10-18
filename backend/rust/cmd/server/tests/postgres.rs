@@ -1,4 +1,6 @@
 //! Runs only inside the disposable PostgreSQL acceptance owner; never reads app DSNs.
+#[path = "../../../internal/identity/tests/support/eligibility.rs"]
+mod eligibility_checks;
 #[path = "../../../internal/files/tests/support/mod.rs"]
 mod files_support;
 #[path = "support/installations.rs"]
@@ -7,6 +9,8 @@ mod installations_checks;
 mod notes_support;
 #[path = "support/notifications.rs"]
 mod notifications_checks;
+#[path = "support/push_postgres.rs"]
+mod push_checks;
 #[path = "../../../internal/identity/tests/support/recovery.rs"]
 mod recovery_support;
 use account::{
@@ -103,6 +107,11 @@ async fn durable_transaction_boundaries() {
     files_rollback(&pool).await;
     notifications_checks::check(&pool).await;
     installations_checks::check(&pool).await;
+    eligibility_checks::conformance(Arc::new(
+        identity::infra::postgres::PostgresStore::new(pool.clone(), Arc::new(RandomIds)).unwrap(),
+    ))
+    .await;
+    push_checks::check(&pool).await;
     pool.close().await;
     println!(
         "PostgreSQL: migration history/atomicity, concurrent bootstrap/CAS, rollback, refresh reuse, leases/quarantine, Audit inbox/cursor and cancellation passed"

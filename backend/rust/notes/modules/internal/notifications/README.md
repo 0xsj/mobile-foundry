@@ -60,7 +60,9 @@ a deleted file. Preferences are evaluated at first consumption, so old pending
 events use the current preference. Read/settings have no receipt/CAS, so uncertain
 writes need authoritative readback. All four Go migration files are retained for
 compatibility. [Installations](installations.md) now has separate selected adapters
-and acceptance; push remains unimplemented. Rust native/CLI selection remains
+and acceptance; [internal dispatch](push.md) now has selected ports and injected
+acceptance. [Optional providers](providers.md) have local protocol/HTTP acceptance;
+[retained jobs/recovery](jobs.md) now have separate acceptance. Rust native/CLI selection remains
 unregistered. Related:
 [consumed suppression](../../../patterns/consumed-suppression-and-inbox-snapshots.md),
 [causal delivery fence](../../../techniques/causal-delivery-fences.md),

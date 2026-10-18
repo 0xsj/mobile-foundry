@@ -1,5 +1,38 @@
 # Mobile Foundry learning notes
 
+Rust Realtime follow-up, 2026-10-18: read [the socket owner](../backend/rust/notes/modules/internal/realtime/README.md),
+[subscribe-before-refetch](../backend/rust/notes/patterns/subscribe-before-refetch.md)
+and [upgraded task lifetime](../backend/rust/notes/language/owned-upgrades-and-cancel-safe-join.md).
+Shared hub/HTTP cases and actual Go/Rust Notes flows cover bounded local hints,
+credential rechecks, capacity release and joined shutdown in memory/PostgreSQL.
+Deployment/fanout and Rust CLI/native selection remain separate.
+
+Rust retained-jobs follow-up, 2026-10-18: read [job ownership](../backend/rust/notes/modules/internal/notifications/jobs.md),
+[owned polling](../backend/rust/notes/modules/pkg/jobs/README.md) and
+[send markers/explicit replacement](../backend/rust/notes/patterns/durable-send-markers-and-explicit-replacement.md).
+57 shared transitions, memory/HTTP/fault/lifecycle checks, PostgreSQL rollback/
+capacity/concurrency and owned SIGKILL recovery pass. Compiled Rust→Go→Rust
+workers preserve outcomes/lineage and pass 21 shared HTTP guards without cloud
+requests. Defaults remain off; retention, live delivery and Rust CLI/native
+selection remain separate.
+
+Rust provider follow-up, 2026-10-18: read
+[private APNs/FCM adapters](../backend/rust/notes/modules/internal/notifications/providers.md)
+and [HTTP transport behavior](../backend/rust/notes/substrate/reqwest-provider-boundaries.md).
+32 shared response/21 HTTP cases, local verified TLS/JWT/cache/cancellation tests
+and compiled default-off/explicit-selection checks pass. Real Identity/proof/CAS
+HTTP also passes with separate PostgreSQL owners. No live device delivery or Rust
+CLI/native readiness is claimed; durable jobs remain separate.
+
+Rust push foundation follow-up, 2026-10-18: read
+[dispatch ownership](../backend/rust/notes/modules/internal/notifications/push.md)
+and [known rejection/unconfirmed cleanup](../backend/rust/notes/patterns/known-rejection-and-unconfirmed-cleanup.md).
+Shared Go/Rust attempts/eligibility admission and composed stores now cover
+one-attempt dispatch, mutation races and guarded cleanup. PostgreSQL rollback/
+separate databases and paused-time/lost-ack checks pass with injected gateways.
+Default APIs still select no sender/route; optional provider acceptance is above.
+Durable jobs and native/CLI Rust readiness remain separate.
+
 Rust installations follow-up, 2026-10-18: read
 [registry ownership](../backend/rust/notes/modules/internal/notifications/installations.md)
 and [rebinding/tombstones](../backend/rust/notes/patterns/rebinding-and-retirement-tombstones.md).

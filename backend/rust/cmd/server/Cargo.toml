@@ -23,7 +23,16 @@ audit.workspace = true
 notes.workspace = true
 files.workspace = true
 notifications.workspace = true
+jobs.workspace = true
+broadcast.workspace = true
+realtime.workspace = true
 health.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+axum.workspace = true
+tower.workspace = true
+http-body-util.workspace = true
 
 [[bin]]
 name = "api-server"

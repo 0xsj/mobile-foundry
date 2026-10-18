@@ -165,7 +165,7 @@ impl Server {
                         let mut builder = http1::Builder::new();
                         builder.timer(TokioTimer::new()).header_read_timeout(Duration::from_secs(5))
                             .max_buf_size(16 * 1024);
-                        let connection = builder.serve_connection(TokioIo::new(stream), service);
+                        let connection = builder.serve_connection(TokioIo::new(stream), service).with_upgrades();
                         tokio::pin!(connection);
                         tokio::select! {
                             _ = receiver.changed() => {

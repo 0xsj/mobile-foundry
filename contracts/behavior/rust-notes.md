@@ -48,10 +48,11 @@ any owned pool closes. Shared PostgreSQL rollback/uncertain-COMMIT rules apply;
 there is no automatic command retry or native pending-journal selection here.
 
 The application has an optional Changes port, invoked only after a confirmed,
-validated store result (including matching replay). This process selects no
-broadcast/Realtime adapter for it. Notes does not publish durable integration
-facts or enter Audit. Socket hints and native/CLI Rust connection need their own
-implementation and acceptance.
+validated store result (including matching replay). Process composition now selects
+the module-owned local hub adapter, consumed independently by
+[Realtime](rust-realtime.md). Failed writes publish nothing. Notes does not
+publish durable integration facts or enter Audit. A lost acknowledgement can
+omit a hint; native/CLI Rust connection still needs independent acceptance.
 
 Verification: `make backend-notes-parity-test` checks eleven title cases, four
 fingerprint vectors, 47 real HTTP cases and scoped/concurrent receipt flows

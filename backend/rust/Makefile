@@ -9,6 +9,22 @@
 .PHONY: files-parity-test
 .PHONY: notifications-parity-test
 .PHONY: installations-parity-test
+.PHONY: push-parity-test
+.PHONY: push-providers-parity-test
+.PHONY: push-jobs-parity-test
+.PHONY: realtime-parity-test
+
+realtime-parity-test:
+	python3 -B ../../scripts/realtime_parity.py
+
+push-jobs-parity-test:
+	python3 -B ../../scripts/push_jobs_parity.py
+
+push-providers-parity-test:
+	python3 -B ../../scripts/push_providers_parity.py
+
+push-parity-test:
+	python3 -B ../../scripts/push_parity.py
 
 installations-parity-test:
 	python3 -B ../../scripts/installations_parity.py
@@ -44,6 +60,10 @@ identity-parity-test:
 	python3 -B ../../scripts/identity_parity.py
 
 help:
+	@echo 'make realtime-parity-test Verify Go/Rust live Notes hints and owned WebSockets'
+	@echo 'make push-jobs-parity-test Verify Go/Rust retained jobs and owned recovery'
+	@echo 'make push-providers-parity-test Verify local APNs/FCM protocols and guarded manual HTTP'
+	@echo 'make push-parity-test Verify Go/Rust one-attempt dispatch and session eligibility'
 	@echo 'make installations-parity-test Verify Go/Rust device registry and session retirement'
 	@echo 'make notifications-parity-test Verify Go/Rust in-app delivery, inbox and preferences'
 	@echo 'make files-parity-test Verify Go/Rust files, object bytes, receipts and Audit'

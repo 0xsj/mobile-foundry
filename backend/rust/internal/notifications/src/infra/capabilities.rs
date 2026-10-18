@@ -3,6 +3,7 @@ use kernel::id::Id;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 pub const ACCOUNT_ACCESS: &str = "account.access.v1";
+pub mod sessions;
 pub struct Client(pub Arc<dyn capability::Invoker>);
 impl AccountAccess for Client {
     fn allowed<'a>(

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "current",
+    "offset_micros": 0,
+    "eligible": true
+  },
+  {
+    "name": "access-expired",
+    "offset_micros": 901000000,
+    "eligible": true
+  },
+  {
+    "name": "before-start",
+    "offset_micros": -1,
+    "eligible": false
+  },
+  {
+    "name": "absolute-expiry",
+    "offset_micros": 2592000000000,
+    "eligible": false
+  },
+  {
+    "name": "wrong-principal",
+    "offset_micros": 0,
+    "eligible": false,
+    "wrong_principal": true
+  },
+  {
+    "name": "missing-session",
+    "offset_micros": 0,
+    "eligible": false,
+    "missing_session": true
+  }
+]

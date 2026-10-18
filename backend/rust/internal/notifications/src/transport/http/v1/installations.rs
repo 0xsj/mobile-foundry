@@ -25,6 +25,8 @@ use serde::{
     de::{self, DeserializeSeed, MapAccess, Visitor},
 };
 use std::{fmt, sync::Arc, time::UNIX_EPOCH};
+pub mod jobs;
+mod push;
 #[derive(Clone)]
 pub struct Handlers {
     registry: Registry,
@@ -181,23 +183,21 @@ async fn dispatch(
         Err(e) => problem::response(&e, &c.request_id),
     }
 }
-async fn handle(
+async fn actor(
     h: &Handlers,
     c: &RequestContext,
-    r: Request,
-    create: bool,
-) -> Result<Response, AdmissionError> {
+    headers: &axum::http::HeaderMap,
+    has_query: bool,
+) -> Result<(Actor, Secret), AdmissionError> {
     let p = h
         .principals
-        .resolve(c, httpx::auth::bearer(r.headers())?)
+        .resolve(c, httpx::auth::bearer(headers)?)
         .await?;
-    if r.uri().query().is_some()
-        || r.headers().contains_key("idempotency-key")
-        || r.headers().contains_key("if-none-match")
+    if has_query || headers.contains_key("idempotency-key") || headers.contains_key("if-none-match")
     {
         return Err(app::invalid().into());
     }
-    let mut proofs = r.headers().get_all("x-installation-key").iter();
+    let mut proofs = headers.get_all("x-installation-key").iter();
     let proof = Secret::new(
         proofs
             .next()
@@ -208,17 +208,28 @@ async fn handle(
     if proofs.next().is_some() {
         return Err(app::invalid().into());
     }
-    let actor = Actor {
-        principal: p.id,
-        session: p.session_id,
-        expires_at: p
-            .session_expires_at
-            .duration_since(UNIX_EPOCH)
-            .map_err(|_| app::installations::session_required())?
-            .as_micros()
-            .try_into()
-            .map_err(|_| app::installations::session_required())?,
-    };
+    Ok((
+        Actor {
+            principal: p.id,
+            session: p.session_id,
+            expires_at: p
+                .session_expires_at
+                .duration_since(UNIX_EPOCH)
+                .map_err(|_| app::installations::session_required())?
+                .as_micros()
+                .try_into()
+                .map_err(|_| app::installations::session_required())?,
+        },
+        proof,
+    ))
+}
+async fn handle(
+    h: &Handlers,
+    c: &RequestContext,
+    r: Request,
+    create: bool,
+) -> Result<Response, AdmissionError> {
+    let (actor, proof) = actor(h, c, r.headers(), r.uri().query().is_some()).await?;
     if create || r.method() == Method::PUT {
         let expected = if create {
             if r.headers().contains_key("if-match") {

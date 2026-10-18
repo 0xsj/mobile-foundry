@@ -1,0 +1,191 @@
+[
+  {
+    "name": "accepted",
+    "error_kind": null,
+    "gateway_calls": 1,
+    "disposition": "accepted",
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "invalid",
+    "error_kind": null,
+    "gateway_calls": 1,
+    "disposition": "invalid_target",
+    "retired": true,
+    "enabled": false,
+    "version": 2
+  },
+  {
+    "name": "uncertain",
+    "error_kind": "unavailable",
+    "gateway_calls": 1,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "unknown",
+    "error_kind": "internal",
+    "gateway_calls": 1,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "session_denied",
+    "error_kind": "forbidden",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "session_outage",
+    "error_kind": "unavailable",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "rotation_during_check",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 2
+  },
+  {
+    "name": "expiry_during_check",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "rotation_during_send",
+    "error_kind": null,
+    "gateway_calls": 1,
+    "disposition": "invalid_target",
+    "retired": false,
+    "enabled": true,
+    "version": 2
+  },
+  {
+    "name": "rebind_during_send",
+    "error_kind": null,
+    "gateway_calls": 1,
+    "disposition": "invalid_target",
+    "retired": false,
+    "enabled": true,
+    "version": 2
+  },
+  {
+    "name": "unregister_during_send",
+    "error_kind": null,
+    "gateway_calls": 1,
+    "disposition": "invalid_target",
+    "retired": false,
+    "enabled": false,
+    "version": 2
+  },
+  {
+    "name": "revocation_during_check",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": false,
+    "version": 2
+  },
+  {
+    "name": "canceled",
+    "error_kind": "canceled",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "missing",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "stale",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "wrong_owner",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "wrong_session",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "disabled",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": false,
+    "version": 2
+  },
+  {
+    "name": "expired",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "before_creation",
+    "error_kind": "conflict",
+    "gateway_calls": 0,
+    "disposition": null,
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  },
+  {
+    "name": "cleanup_failure",
+    "error_kind": "unavailable",
+    "gateway_calls": 1,
+    "disposition": "invalid_target",
+    "retired": false,
+    "enabled": true,
+    "version": 1
+  }
+]

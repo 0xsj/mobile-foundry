@@ -64,6 +64,12 @@ Identity now exposes credential v1/v2 through a versioned capability transport.
 The first [Account consumer](rust-account.md) uses v2 trusted session evidence;
 v1 retains its principal-only shape. No store is shared across the boundary.
 
+The separate identity.session.eligible.v1 provider now answers only Notifications'
+trusted session question. It checks ownership, start, revocation and absolute
+expiry without authenticating/renewing access tokens. Missing/mismatched sessions
+are negative; corrupt/dependency states fail. Read
+[dispatch scope/evidence](rust-push-dispatch.md) for store/capability acceptance.
+
 Core lifecycle envelopes now reach [independent memory Audit](rust-audit.md).
 PostgreSQL now has [separate durable acceptance](rust-postgres.md).
 Email/reset/change now have [separate recovery acceptance](rust-recovery.md).

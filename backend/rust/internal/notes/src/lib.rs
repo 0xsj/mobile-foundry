@@ -54,4 +54,11 @@ impl Module {
     pub fn routes(&self) -> axum::Router {
         self.handlers.routes()
     }
+    pub fn with_changes(mut self, changes: Arc<dyn app::ports::Changes>) -> Self {
+        self.handlers = self.handlers.with_changes(changes);
+        self
+    }
+    pub fn with_local_changes(self, hub: Arc<broadcast::Hub>) -> Self {
+        self.with_changes(Arc::new(infra::broadcast::Changes(hub)))
+    }
 }

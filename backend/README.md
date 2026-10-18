@@ -6,7 +6,7 @@ needs without starting every service in the repository.
 | Profile | Current scope | Entry point |
 | --- | --- | --- |
 | Go | Memory/PostgreSQL Identity/Account/Audit/Notes, native HTTP seams and verified standalone CLI extraction | [Go setup](go/README.md), [starter generation](../docs/blueprints/go-starter.md) |
-| Rust | Runtime/Health, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications and installations, private SMTP/objects and shared Go conformance; CLI selection planned | [Rust setup](rust/README.md), [parity inventory](rust/PARITY.md) |
+| Rust | Runtime/Health, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications/installations, live Notes hints, optional APNs/FCM previews and retained jobs, private SMTP/objects and shared Go conformance; CLI selection planned | [Rust setup](rust/README.md), [parity inventory](rust/PARITY.md) |
 | Supabase | Pinned self-hosted stack with PostgreSQL, Auth, Storage, Realtime, functions, Studio, and local mail capture | [Supabase setup](supabase/README.md) |
 | Firebase | Auth, Firestore, and Storage emulators with UI and graceful export/import | [Firebase setup](firebase/README.md) |
 

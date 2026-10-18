@@ -26,7 +26,9 @@ def run(command, cwd):
 
 
 def exchange(port, case):
-    connection = http.client.HTTPConnection("127.0.0.1", port, timeout=2)
+    # Observe the APIs' 15-second request deadline plus transport margin. A two-
+    # second client cutoff can abandon valid debug-build KDF work under CPU load.
+    connection = http.client.HTTPConnection("127.0.0.1", port, timeout=17)
     try:
         connection.putrequest(case["method"], case["path"])
         for name, value in case.get("headers", []):
@@ -43,7 +45,7 @@ def exchange(port, case):
 
 
 @contextmanager
-def owned_server(binary, log_path, authentication="deny", database_url=None, crash=False, module_urls=None, mail_config=None):
+def owned_server(binary, log_path, authentication="deny", database_url=None, crash=False, module_urls=None, mail_config=None, push_config=None, push_jobs=False):
     # Release an ephemeral loopback reservation immediately before process launch.
     # If another process wins that port, the child fails startup; never reuse it.
     with socket.socket() as reservation:
@@ -56,6 +58,10 @@ def owned_server(binary, log_path, authentication="deny", database_url=None, cra
         environment.update(STORAGE="postgres",DATABASE_URL=database_url,FILES_DIRECTORY=str(log_path.parent / "objects"))
     if mail_config is not None:
         environment["IDENTITY_MAIL_CONFIG"]=str(mail_config)
+    if push_config is not None:
+        environment["PUSH_CONFIG_FILE"]=str(push_config)
+    if push_jobs:
+        environment["PUSH_JOBS_ENABLED"]="true"
     if module_urls:
         assert set(module_urls) <= {"ACCOUNT_DATABASE_URL", "AUDIT_DATABASE_URL", "IDENTITY_DATABASE_URL", "NOTES_DATABASE_URL", "FILES_DATABASE_URL", "NOTIFICATIONS_DATABASE_URL"}
         environment.update(module_urls)

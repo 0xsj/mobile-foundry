@@ -25,6 +25,10 @@ pub struct Handlers {
     principals: Arc<dyn principal::Resolver>,
 }
 impl Handlers {
+    pub fn with_changes(mut self, changes: Arc<dyn crate::app::ports::Changes>) -> Self {
+        self.write.0.changes = Some(changes);
+        self
+    }
     pub fn new(d: Dependencies, principals: Arc<dyn principal::Resolver>) -> Self {
         Self {
             write: Write(d.clone()),

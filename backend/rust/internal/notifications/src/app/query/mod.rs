@@ -1,5 +1,6 @@
 use crate::app::{self, Dependencies, ListInput, Page, Target, ports::Scope};
 pub mod installation;
+pub mod push_job;
 use kernel::Failure;
 #[derive(Clone)]
 pub struct ListInbox(pub Dependencies);

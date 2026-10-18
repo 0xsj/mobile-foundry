@@ -12,6 +12,7 @@ use std::{
 };
 #[derive(Default)]
 struct State {
+    push_jobs: BTreeMap<Id, crate::domain::push_job::PushJob>,
     installations: BTreeMap<Id, crate::domain::installation::Installation>,
     revoked: BTreeSet<(Id, Id)>,
     installation_inbox: BTreeMap<Id, String>,
@@ -25,6 +26,8 @@ pub struct MemoryStore {
     state: Mutex<State>,
 }
 mod installations;
+mod push;
+mod push_jobs;
 impl MemoryStore {
     fn lock(&self, s: &dyn Scope) -> Result<MutexGuard<'_, State>, Failure> {
         let state = self.state.lock().map_err(|_| domain::invalid_state())?;

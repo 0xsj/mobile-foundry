@@ -1,6 +1,8 @@
 use super::v2::resolve;
 use crate::app::query::ResolveSession;
 use kernel::context::{PortFuture, Scope};
+#[path = "v1/session_eligibility.rs"]
+pub mod session_eligibility;
 
 pub const NAME: &str = "identity.credential.resolve.v1";
 #[derive(Clone)]

@@ -1,0 +1,262 @@
+[
+  {
+    "name": "scope_and_coalescing",
+    "maximum": 3,
+    "per_owner": 2,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "notes.a",
+        "owner": "one"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "notes.b",
+        "owner": "two"
+      },
+      {
+        "op": "publish",
+        "key": "notes.a",
+        "count": 1000
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "dirty"
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "empty"
+      },
+      {
+        "op": "take",
+        "slot": "b",
+        "expected": "empty"
+      }
+    ]
+  },
+  {
+    "name": "owner_limit_and_reuse",
+    "maximum": 3,
+    "per_owner": 1,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "one"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "b",
+        "owner": "one",
+        "expected": "broadcast.capacity"
+      },
+      {
+        "op": "release",
+        "slot": "a"
+      },
+      {
+        "op": "release",
+        "slot": "a"
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "closed"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "b",
+        "owner": "one"
+      }
+    ]
+  },
+  {
+    "name": "global_limit_and_reuse",
+    "maximum": 1,
+    "per_owner": 3,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "one"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "b",
+        "owner": "two",
+        "expected": "broadcast.capacity"
+      },
+      {
+        "op": "release",
+        "slot": "a"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "b",
+        "owner": "two"
+      }
+    ]
+  },
+  {
+    "name": "close_preserves_at_most_one_dirty",
+    "maximum": 2,
+    "per_owner": 1,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "one"
+      },
+      {
+        "op": "publish",
+        "key": "a",
+        "count": 2
+      },
+      {
+        "op": "close"
+      },
+      {
+        "op": "close"
+      },
+      {
+        "op": "publish",
+        "key": "a",
+        "count": 1000
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "dirty"
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "closed"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "a",
+        "owner": "one",
+        "expected": "broadcast.closed"
+      },
+      {
+        "op": "release",
+        "slot": "a"
+      }
+    ]
+  },
+  {
+    "name": "empty_scope",
+    "maximum": 2,
+    "per_owner": 1,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "",
+        "owner": "one",
+        "expected": "broadcast.capacity"
+      },
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "",
+        "expected": "broadcast.capacity"
+      }
+    ]
+  },
+  {
+    "name": "zero_capacity",
+    "maximum": 0,
+    "per_owner": 1,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "one",
+        "expected": "broadcast.capacity"
+      }
+    ]
+  },
+  {
+    "name": "zero_owner_capacity",
+    "maximum": 2,
+    "per_owner": 0,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "one",
+        "expected": "broadcast.capacity"
+      }
+    ]
+  },
+  {
+    "name": "two_subscribers_same_scope",
+    "maximum": 3,
+    "per_owner": 2,
+    "steps": [
+      {
+        "op": "watch",
+        "slot": "a",
+        "key": "a",
+        "owner": "one"
+      },
+      {
+        "op": "watch",
+        "slot": "b",
+        "key": "a",
+        "owner": "two"
+      },
+      {
+        "op": "publish",
+        "key": "a",
+        "count": 1000
+      },
+      {
+        "op": "release",
+        "slot": "a"
+      },
+      {
+        "op": "publish",
+        "key": "a",
+        "count": 1000
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "dirty"
+      },
+      {
+        "op": "take",
+        "slot": "a",
+        "expected": "closed"
+      },
+      {
+        "op": "take",
+        "slot": "b",
+        "expected": "dirty"
+      },
+      {
+        "op": "take",
+        "slot": "b",
+        "expected": "empty"
+      }
+    ]
+  }
+]

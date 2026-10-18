@@ -18,6 +18,7 @@ pub struct Module {
     reset_queue: Arc<infra::reset_queue::ResetQueue>,
     passwords: Arc<PasswordAdapter>,
     credentials: app::query::ResolveSession,
+    eligibility: app::query::session_eligibility::SessionEligibility,
     outbox: Arc<dyn events::dispatcher::Outbox>,
 }
 impl Module {
@@ -51,7 +52,11 @@ impl Module {
         Self::with_store(clock, ids, store, mail).await
     }
     async fn with_store<
-        T: app::ports::Store + app::recovery::RecoveryStore + events::dispatcher::Outbox + 'static,
+        T: app::ports::Store
+            + app::recovery::RecoveryStore
+            + app::query::session_eligibility::SessionStatus
+            + events::dispatcher::Outbox
+            + 'static,
     >(
         clock: Arc<dyn Clock>,
         ids: Arc<dyn Generator>,
@@ -64,7 +69,7 @@ impl Module {
             passwords: passwords.clone(),
             tokens: Arc::new(TokenAdapter),
             ids,
-            clock,
+            clock: clock.clone(),
         };
         let gate = Arc::new(Gate::default());
         let commands = app::command::recovery::Recovery {
@@ -85,6 +90,10 @@ impl Module {
             recovery,
             reset_queue: queue,
             credentials: app::query::ResolveSession(dependencies.clone()),
+            eligibility: app::query::session_eligibility::SessionEligibility {
+                store: store.clone(),
+                clock,
+            },
             handlers: transport::http::v1::Handlers::new(dependencies, gate),
             passwords,
             outbox: store,
@@ -107,6 +116,11 @@ impl Module {
             v2::NAME,
             &["api"],
             Arc::new(v2::Credential(self.credentials.clone())),
+        )?;
+        registry.register(
+            v1::session_eligibility::NAME,
+            &["notifications"],
+            Arc::new(v1::session_eligibility::Provider(self.eligibility.clone())),
         )
     }
     pub fn stop(&self) {

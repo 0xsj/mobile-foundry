@@ -1,0 +1,17 @@
+[
+  {"name":"anonymous", "auth":"anonymous", "status":401},
+  {"name":"foreign account", "auth":"foreign", "status":403},
+  {"name":"browser origin", "headers":[["Origin","https://example.invalid"]], "status":400},
+  {"name":"empty origin", "headers":[["Origin",""]], "status":400},
+  {"name":"cookie", "headers":[["Cookie","PRIVATE-cookie"]], "status":400},
+  {"name":"empty cookie", "headers":[["Cookie",""]], "status":400},
+  {"name":"query token", "query":"?access_token=PRIVATE-query", "status":400},
+  {"name":"query unknown", "query":"?after=1", "status":400},
+  {"name":"subprotocol is not authentication", "auth":"anonymous", "headers":[["Sec-WebSocket-Protocol","PRIVATE-bearer"]], "status":401},
+  {"name":"duplicate authorization", "headers":[["Authorization","Bearer PRIVATE-extra"]], "status":401},
+  {"name":"malformed account", "account":"invalid", "status":400},
+  {"name":"post", "method":"POST", "status":405, "allow":"GET, HEAD"},
+  {"name":"head", "method":"HEAD", "status":400},
+  {"name":"missing key", "omit":"sec-websocket-key", "status":400},
+  {"name":"invalid key length", "omit":"sec-websocket-key", "headers":[["Sec-WebSocket-Key","YQ=="]], "status":400}
+]

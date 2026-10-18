@@ -1,4 +1,5 @@
 mod recovery;
+mod session_eligibility;
 use crate::{
     app::{
         self,

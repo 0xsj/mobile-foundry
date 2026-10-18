@@ -1,5 +1,38 @@
 # Go backend learning notes
 
+Realtime conformance follow-up, 2026-10-18: Go now shares
+[hub scenarios and HTTP admission cases](../../../contracts/fixtures/backend-realtime/README.md)
+with Rust. Actual APIs verify ready/refetch, committed Notes hints/replays,
+failed-CAS silence, scope isolation, renewal/sign-out, capacity and open-socket
+shutdown; the disposable PostgreSQL runner adds durable-store flows. Go production
+behavior is unchanged. Read [Rust ownership and limits](../../rust/notes/modules/internal/realtime/README.md)
+for the independent implementation and handshake-response differences.
+
+Rust retained-jobs follow-up, 2026-10-18: read [job ownership](../../rust/notes/modules/internal/notifications/jobs.md),
+[owned polling](../../rust/notes/modules/pkg/jobs/README.md) and
+[send markers/explicit replacement](../../rust/notes/patterns/durable-send-markers-and-explicit-replacement.md).
+57 shared transitions, memory/HTTP/fault/lifecycle checks, PostgreSQL rollback/
+capacity/concurrency and owned SIGKILL recovery pass. Compiled Rust→Go→Rust
+workers preserve outcomes/lineage and pass 21 shared HTTP guards without cloud
+requests. Defaults remain off; retention, live delivery and Rust CLI/native
+selection remain separate.
+
+Rust provider follow-up, 2026-10-18: repository-only
+[shared response/HTTP cases](../../../contracts/fixtures/backend-push-providers/README.md)
+and [runner](../../../scripts/push_providers_parity.py) pass local APNs/FCM protocols,
+guarded HTTP and compiled default/selected startup in both languages. PostgreSQL
+HTTP additionally uses separate Rust owners. Go production code is unchanged;
+the CLI excludes the two repository-fixture tests from generated sources. Read
+[the Rust walkthrough](../../rust/notes/modules/internal/notifications/providers.md).
+
+Rust push foundation follow-up, 2026-10-18: repository-only
+[shared cases](../../../contracts/fixtures/backend-push/README.md) and
+[runner](../../../scripts/push_parity.py) now verify dispatch checkpoints, session
+eligibility, mutation races, partial cleanup outcomes and default sending-off
+behavior in both implementations. Go's existing memory/PostgreSQL dispatch tests
+also pass. Go production/extraction sources are unchanged. Read
+[the Rust walkthrough](../../rust/notes/modules/internal/notifications/push.md).
+
 Rust installations follow-up, 2026-10-18: repository-only
 [shared corpus](../../../contracts/fixtures/backend-installations/README.md) and
 [real API runner](../../../scripts/installations_parity.py) now verify proof/target

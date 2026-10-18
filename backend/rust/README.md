@@ -27,6 +27,10 @@ make backend-recovery-parity-test
 make backend-files-parity-test
 make backend-notifications-parity-test
 make backend-installations-parity-test
+make backend-push-parity-test
+make backend-push-providers-parity-test
+make backend-push-jobs-parity-test
+make backend-realtime-parity-test
 HTTP_ADDR=127.0.0.1:8081 make rust-dev
 ```
 
@@ -56,6 +60,8 @@ pkg/httpx/           # Problems, metadata, bounded JSON, version/key admission a
 pkg/capability/      # Immutable assembly, callers, bounded versioned invocation
 pkg/principal/       # Shared trusted credential edge port/adapter
 pkg/events/          # Envelopes, independent bus, outbox port and owned workers
+pkg/jobs/            # Cooperative serial polling, health and join ownership
+pkg/broadcast/       # Bounded one-slot dirty subscriptions; no durable history
 internal/health/     # Application query/port and transport/http/v1 adapter
 internal/identity/   # Domain, commands/query, ports, memory/security and HTTP v1
 internal/account/    # Domain, commands/query, owned state/outbox and access provider
@@ -63,6 +69,7 @@ internal/audit/      # Selected evidence, inbox, scoped queries and receiving ad
 internal/notes/      # Account-scoped records, command receipts and memory/PostgreSQL stores
 internal/files/      # Lifecycle/receipts/outbox and immutable memory/private-directory bytes
 internal/notifications/ # In-app delivery decisions, scoped inbox, read state and preferences
+internal/realtime/   # Account-authorized Feed/query and owned native WebSockets
 internal/server/     # Listener, serving state and owned connection drain
 notes/               # Source walkthroughs and Rust learning notes
 ```
@@ -81,9 +88,10 @@ The supported startup subset matches Go defaults: `APP_ENV=development`,
 `STORAGE=memory`, `AUTH_MODE=deny`. Environment accepts development/test/production;
 logs accept console/json and debug/info/warn/error. Addresses currently require a
 literal IPv4 or bracketed IPv6 address and a nonzero port. Present empty required
-settings fail validation. Development fixture credentials, metrics,
-trusted proxies and push selections fail startup rather than selecting an
-unimplemented adapter. `AUTH_MODE=deny` does not supply an Identity implementation;
+settings fail validation. Development fixture credentials, metrics and
+trusted proxies fail startup rather than selecting an unimplemented adapter.
+Manual providers and durable jobs have the explicit selections below.
+`AUTH_MODE=deny` does not supply an Identity implementation;
 the default Rust API exposes public Health and mounts Account/Audit/Notes with deny authentication.
 
 Select the memory Identity core explicitly:
@@ -187,10 +195,25 @@ original strong ETag. Matching replay returns the historical receipt before
 current-state checks, including after deletion. Notes owns records/receipts and
 authorizes through account.access.v1; it has no Account/Identity store dependency.
 In PostgreSQL mode run the explicit migrator before startup to apply the new
-Notes history. The process selects no Notes broadcast/socket adapter. Read
+Notes history. The process selects local lossy Changes/Realtime adapters. Read
 [Notes scope](../../contracts/behavior/rust-notes.md) and
 [the walkthrough](notes/modules/internal/notes/README.md); run
 `make backend-notes-parity-test` for shared Go/Rust HTTP/receipt acceptance.
+
+Native bearer WebSockets are mounted at `/v1/accounts/{account}/realtime`.
+Supply Authorization headers from an owned Identity session; Origin/Cookie and
+nonempty queries are refused. Subscribe, receive ready, then refetch Notes over
+HTTP. Four-field ready/changed messages contain no record data. The local hub
+coalesces one dirty signal per watcher, bounded to 256 total/eight per principal.
+Confirmed Notes writes/replays publish; failed writes do not. Renewal/revocation
+or account refusal closes the original connection; reconnect with the new lease.
+Sockets have independent ten-minute lifetimes, periodic authorization/Pong checks,
+and are explicitly closed/joined before pools. Run
+`make backend-realtime-parity-test`; PostgreSQL acceptance has its own runner.
+Read [scope/limits](../../contracts/behavior/rust-realtime.md) and
+[the walkthrough](notes/modules/internal/realtime/README.md). This is single-process
+recoverable invalidation; TLS proxy/deployment, cross-process fanout and generated
+Rust/native selection remain separate.
 
 Files exposes account-scoped upload requests, immutable PUT content, completion,
 download, deletion, listing and historical receipt lookup. Account authorization
@@ -222,8 +245,75 @@ new bindings intact. Read current state after an uncertain mutation. Run
 `make backend-installations-parity-test`; read
 [scope](../../contracts/behavior/rust-installations.md) and
 [learning notes](notes/modules/internal/notifications/installations.md).
-Private tokens are plaintext at rest. No provider-issued token, send eligibility,
-external push/jobs or native/CLI Rust profile is selected.
+Private tokens are plaintext at rest. Provider-issued tokens and native/CLI Rust
+selection need separate acceptance.
+
+Optional internal dispatch now supplies PushTargets, SessionEligibility and
+PushGateway ports plus SendPushPreview. Compose through new_push_preview with an
+explicit gateway and frozen Identity capability registry. It reads the exact
+target twice around the authority check and conditionally retires only a rejected
+owner/revision. Known rejection retains a separate fallible cleanup outcome;
+uncertainty never triggers a resend. Default configuration adds no send route,
+cloud gateway or worker. Run `make backend-push-parity-test`; read
+[scope](../../contracts/behavior/rust-push-dispatch.md) and
+[learning notes](notes/modules/internal/notifications/push.md).
+
+### Optional APNs/FCM manual preview
+
+Select `AUTH_MODE=identity` and `PUSH_CONFIG_FILE=/private/path/push.json` to mount
+`POST /v1/installations/{id}/push-preview`. Keep that file and its provider keys
+outside the repository and generated copies. Example configuration (replace the
+route/key identifiers with your own; credential paths resolve beside this file):
+
+```json
+{"routes":[{"provider":"apns","application":"dev.example.app","environment":"sandbox","team_id":"TEAMID0001","key_id":"KEYID00001","key_file":"apns.p8"},{"provider":"fcm","application":"dev.example.app","environment":"production","project_id":"example-project","service_account_file":"service-account.json"}]}
+```
+
+APNs requires PKCS8 P-256 PEM; FCM requires a matching Google service account with
+an admitted PKCS8 RSA key and standard OAuth token URI. Endpoints and TLS trust
+cannot be overridden. Configuration loads without contacting providers. An empty
+or absent setting leaves the route off. Durable jobs require the additional selection below.
+
+Use current Identity bearer credentials, one X-Installation-Key and the current
+strong If-Match. The body is `{"preview_id":"<fresh-canonical-uuid>"}`. Responses
+contain preview_id, disposition and retired. There are no receipts: submitting
+the same ID again can send again. Uncertainty needs reconciliation, never automatic
+resend. Only definitive invalid-address evidence permits exact-version retirement.
+
+Run `make backend-push-providers-parity-test` for local verified TLS/protocol,
+shared HTTP and compiled selection checks, and `make backend-postgres-parity-test`
+for separate-database HTTP acceptance. No live cloud/device delivery is claimed.
+Read [scope and configuration limits](../../contracts/behavior/rust-push-providers.md),
+[provider walkthrough](notes/modules/internal/notifications/providers.md) and
+[HTTP library behavior](notes/substrate/reqwest-provider-boundaries.md).
+
+### Optional retained jobs and explicit recovery
+
+Add `PUSH_JOBS_ENABLED=true` to the PostgreSQL/Identity/private-provider selection
+to mount job enqueue/status/cancel/replacement routes and start the serial worker.
+Provider selection alone leaves jobs off. Apply/check the existing Notifications
+0003/0004 histories explicitly before startup; no migration bytes change here.
+
+POST `/v1/installations/{id}/push-jobs` with current bearer credentials,
+X-Installation-Key, strong If-Match and `{"job_id":"<canonical-uuid>"}`. GET the
+`/{job_id}` resource to read retained status. POST `/{job_id}/cancel` without a
+body or If-Match to cancel queued/leased work. POST `/{job_id}/replacement` with
+If-Match and `{"job_id":"<new-uuid>","accept_possible_duplicate":true}` only when
+explicitly accepting an uncertain source's duplicate risk. Known-unsent terminal
+sources instead require false. GET that replacement path to recover its direct
+child after an unconfirmed request.
+
+Exact intent replay returns retained state. Pre-marker failures have bounded
+backoff; committed sending/uncertain outcomes never automatically resend. Jobs
+expire for execution after fifteen minutes but terminal rows remain retained,
+with a ten-thousand-row admission cap. There is no default pruning or admin
+redrive policy. Cancellation cannot retract sending; replacement is a new intent.
+
+Run `make backend-push-jobs-parity-test` and `make backend-postgres-parity-test`.
+Read [behavior/limits](../../contracts/behavior/rust-push-jobs.md),
+[module walkthrough](notes/modules/internal/notifications/jobs.md) and
+[polling ownership](notes/modules/pkg/jobs/README.md). Local crash/handoff evidence
+does not establish live cloud delivery or a generated Rust starter.
 
 Start learning at [the Rust reading order](notes/README.md). The reusable failure
 type uses ordinary `Result<T, Failure>`; HTTP serialization and runtime ownership

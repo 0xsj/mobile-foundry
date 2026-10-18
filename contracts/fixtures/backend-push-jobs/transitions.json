@@ -1,0 +1,470 @@
+[
+  {
+    "name": "queued_claim",
+    "state": "queued",
+    "operation": "claim",
+    "expected": "leased",
+    "attempts": 1,
+    "claimed": true
+  },
+  {
+    "name": "queued_not_due",
+    "state": "queued",
+    "operation": "claim",
+    "expected": "queued",
+    "next_offset": 1,
+    "attempts": 0,
+    "claimed": false
+  },
+  {
+    "name": "queued_execution_expired",
+    "state": "queued",
+    "operation": "claim",
+    "expected": "expired",
+    "at": 900000000,
+    "attempts": 0,
+    "code": "expired",
+    "claimed": false
+  },
+  {
+    "name": "leased_not_due",
+    "state": "leased",
+    "operation": "claim",
+    "expected": "leased",
+    "at": 29999999,
+    "attempts": 1,
+    "claimed": false
+  },
+  {
+    "name": "leased_reclaimed",
+    "state": "leased",
+    "operation": "claim",
+    "expected": "leased",
+    "at": 30000000,
+    "attempts": 2,
+    "claimed": true
+  },
+  {
+    "name": "sending_not_due",
+    "state": "sending",
+    "operation": "claim",
+    "expected": "sending",
+    "at": 29999999,
+    "attempts": 1,
+    "claimed": false
+  },
+  {
+    "name": "sending_worker_lost",
+    "state": "sending",
+    "operation": "claim",
+    "expected": "uncertain",
+    "at": 30000000,
+    "attempts": 1,
+    "code": "worker_lost",
+    "claimed": false
+  },
+  {
+    "name": "terminal_not_reclaimed",
+    "state": "accepted",
+    "operation": "claim",
+    "expected": "accepted",
+    "at": 30000000,
+    "attempts": 1,
+    "claimed": false
+  },
+  {
+    "name": "begin_confirmed",
+    "state": "leased",
+    "operation": "begin",
+    "expected": "sending",
+    "attempts": 1
+  },
+  {
+    "name": "begin_stale_token",
+    "state": "leased",
+    "operation": "begin",
+    "expected": "conflict",
+    "wrong_token": true
+  },
+  {
+    "name": "begin_expired_lease",
+    "state": "leased",
+    "operation": "begin",
+    "expected": "conflict",
+    "at": 30000000
+  },
+  {
+    "name": "begin_expired_execution",
+    "state": "leased",
+    "operation": "begin",
+    "expected": "conflict",
+    "at": 900000000,
+    "lease_offset": 1000000000
+  },
+  {
+    "name": "finish_requires_marker",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "conflict",
+    "started": true,
+    "status": "accepted"
+  },
+  {
+    "name": "sending_never_requeued",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "conflict",
+    "started": false,
+    "status": "queued",
+    "result_code": "preflight_unavailable"
+  },
+  {
+    "name": "accepted_settlement",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "accepted",
+    "started": true,
+    "status": "accepted",
+    "attempts": 1
+  },
+  {
+    "name": "uncertain_settlement",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "uncertain",
+    "started": true,
+    "status": "uncertain",
+    "result_code": "provider_unconfirmed",
+    "code": "provider_unconfirmed",
+    "attempts": 1
+  },
+  {
+    "name": "rejected_settlement",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "invalid_target",
+    "started": true,
+    "status": "invalid_target",
+    "retired": true,
+    "attempts": 1
+  },
+  {
+    "name": "cleanup_uncertain",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "invalid_target",
+    "started": true,
+    "status": "invalid_target",
+    "result_code": "cleanup_unconfirmed",
+    "code": "cleanup_unconfirmed",
+    "attempts": 1
+  },
+  {
+    "name": "blocked_settlement",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "blocked",
+    "status": "blocked",
+    "result_code": "target_ineligible",
+    "code": "target_ineligible",
+    "attempts": 1
+  },
+  {
+    "name": "preflight_attempt_1",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "queued",
+    "initial_attempts": 1,
+    "status": "queued",
+    "result_code": "preflight_unavailable",
+    "code": "preflight_unavailable",
+    "attempts": 1,
+    "next_after": 1000000
+  },
+  {
+    "name": "preflight_attempt_2",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "queued",
+    "initial_attempts": 2,
+    "status": "queued",
+    "result_code": "preflight_unavailable",
+    "code": "preflight_unavailable",
+    "attempts": 2,
+    "next_after": 2000000
+  },
+  {
+    "name": "preflight_attempt_3",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "queued",
+    "initial_attempts": 3,
+    "status": "queued",
+    "result_code": "preflight_unavailable",
+    "code": "preflight_unavailable",
+    "attempts": 3,
+    "next_after": 4000000
+  },
+  {
+    "name": "preflight_attempt_4",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "queued",
+    "initial_attempts": 4,
+    "status": "queued",
+    "result_code": "preflight_unavailable",
+    "code": "preflight_unavailable",
+    "attempts": 4,
+    "next_after": 8000000
+  },
+  {
+    "name": "preflight_attempt_5",
+    "state": "leased",
+    "operation": "finish",
+    "expected": "failed",
+    "initial_attempts": 5,
+    "status": "queued",
+    "result_code": "preflight_unavailable",
+    "code": "attempts_exhausted",
+    "attempts": 5,
+    "next_after": 0
+  },
+  {
+    "name": "settlement_stale_token",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "conflict",
+    "started": true,
+    "status": "accepted",
+    "wrong_token": true
+  },
+  {
+    "name": "settlement_expired_claim",
+    "state": "sending",
+    "operation": "finish",
+    "expected": "conflict",
+    "started": true,
+    "status": "accepted",
+    "at": 30000000
+  },
+  {
+    "name": "cancel_queued",
+    "state": "queued",
+    "operation": "cancel",
+    "expected": "canceled",
+    "attempts": 0,
+    "code": "user_canceled"
+  },
+  {
+    "name": "cancel_leased",
+    "state": "leased",
+    "operation": "cancel",
+    "expected": "canceled",
+    "attempts": 1,
+    "code": "user_canceled"
+  },
+  {
+    "name": "cancel_canceled",
+    "state": "canceled",
+    "operation": "cancel",
+    "expected": "canceled",
+    "attempts": 0,
+    "code": "user_canceled"
+  },
+  {
+    "name": "cancel_expired_unsent_lease",
+    "state": "leased",
+    "operation": "cancel",
+    "expected": "canceled",
+    "at": 30000000,
+    "attempts": 1,
+    "code": "user_canceled"
+  },
+  {
+    "name": "cancel_refused_sending",
+    "state": "sending",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "cancel_refused_accepted",
+    "state": "accepted",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "cancel_refused_invalid_target",
+    "state": "invalid_target",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "cancel_refused_uncertain",
+    "state": "uncertain",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "cancel_refused_expired",
+    "state": "expired",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "cancel_refused_blocked",
+    "state": "blocked",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "cancel_refused_failed",
+    "state": "failed",
+    "operation": "cancel",
+    "expected": "conflict"
+  },
+  {
+    "name": "replace_failed_false",
+    "state": "failed",
+    "operation": "replace",
+    "expected": "queued",
+    "ack": false,
+    "attempts": 0
+  },
+  {
+    "name": "replace_failed_true",
+    "state": "failed",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_blocked_false",
+    "state": "blocked",
+    "operation": "replace",
+    "expected": "queued",
+    "ack": false,
+    "attempts": 0
+  },
+  {
+    "name": "replace_blocked_true",
+    "state": "blocked",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_expired_false",
+    "state": "expired",
+    "operation": "replace",
+    "expected": "queued",
+    "ack": false,
+    "attempts": 0
+  },
+  {
+    "name": "replace_expired_true",
+    "state": "expired",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_canceled_false",
+    "state": "canceled",
+    "operation": "replace",
+    "expected": "queued",
+    "ack": false,
+    "attempts": 0
+  },
+  {
+    "name": "replace_canceled_true",
+    "state": "canceled",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_uncertain_false",
+    "state": "uncertain",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": false
+  },
+  {
+    "name": "replace_uncertain_true",
+    "state": "uncertain",
+    "operation": "replace",
+    "expected": "queued",
+    "ack": true,
+    "attempts": 0
+  },
+  {
+    "name": "replace_queued_false",
+    "state": "queued",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": false
+  },
+  {
+    "name": "replace_queued_true",
+    "state": "queued",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_leased_false",
+    "state": "leased",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": false
+  },
+  {
+    "name": "replace_leased_true",
+    "state": "leased",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_sending_false",
+    "state": "sending",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": false
+  },
+  {
+    "name": "replace_sending_true",
+    "state": "sending",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_accepted_false",
+    "state": "accepted",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": false
+  },
+  {
+    "name": "replace_accepted_true",
+    "state": "accepted",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  },
+  {
+    "name": "replace_invalid_target_false",
+    "state": "invalid_target",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": false
+  },
+  {
+    "name": "replace_invalid_target_true",
+    "state": "invalid_target",
+    "operation": "replace",
+    "expected": "conflict",
+    "ack": true
+  }
+]

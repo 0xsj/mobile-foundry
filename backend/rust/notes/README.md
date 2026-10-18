@@ -1,8 +1,45 @@
 # Rust backend learning notes
 
-Observed 2026-10-18. Rust now has an eighteen-crate workspace with runtime/Health,
+Realtime follow-up, 2026-10-18: read [the socket owner](modules/internal/realtime/README.md),
+[the bounded hub](modules/pkg/broadcast/README.md),
+[subscribe before refetch](patterns/subscribe-before-refetch.md) and
+[owned upgrades](language/owned-upgrades-and-cancel-safe-join.md).
+Eight shared hub scenarios/38 operations and fifteen HTTP admissions complement
+actual Go/Rust Notes hints, renewal/sign-out, 16-second connections, capacity and
+open-socket shutdown. PostgreSQL has the same committed-write/lifecycle phase.
+These are local recoverable hints; deployment/fanout and Rust CLI/native selection
+remain separate.
+
+Rust retained-jobs follow-up, 2026-10-18: read [job ownership](modules/internal/notifications/jobs.md),
+[owned polling](modules/pkg/jobs/README.md) and
+[send markers/explicit replacement](patterns/durable-send-markers-and-explicit-replacement.md).
+57 shared transitions, memory/HTTP/fault/lifecycle checks, PostgreSQL rollback/
+capacity/concurrency and owned SIGKILL recovery pass. Compiled Rust→Go→Rust
+workers preserve outcomes/lineage and pass 21 shared HTTP guards without cloud
+requests. Defaults remain off; retention, live delivery and Rust CLI/native
+selection remain separate.
+
+Observed 2026-10-18. Rust now has a twenty-one-crate workspace with runtime/Health,
 shared HTTP admission, memory/PostgreSQL Identity/Account/Audit/Notes/Files/Notifications, capabilities and committed delivery. CLI extraction and
 native connected Rust selection remain unregistered.
+
+Provider follow-up, 2026-10-18: read [private providers](modules/internal/notifications/providers.md)
+and [HTTP transport defaults](substrate/reqwest-provider-boundaries.md).
+APNs/FCM adapters and guarded manual preview now pass 32 shared response/21 HTTP
+cases, local TLS/JWT/cache/cancellation checks and explicit compiled selection.
+The HTTP suite also passes with separate PostgreSQL Identity/Notifications owners.
+Default is off; live delivery and native/CLI Rust selection remain separate.
+Retained jobs have their own acceptance above. Run make backend-push-providers-parity-test.
+
+Push foundation follow-up, 2026-10-18: read [the dispatch walkthrough](modules/internal/notifications/push.md)
+and [known rejection with unconfirmed cleanup](patterns/known-rejection-and-unconfirmed-cleanup.md).
+Optional target/session/gateway ports and Identity's eligibility capability now
+pass twenty-one attempt/twenty request/fourteen response/six session shared cases.
+Paused deadlines preserve partial outcomes without detached futures; memory/
+PostgreSQL races, cleanup rollback, corrupt-state refusal and separate owner
+databases pass. Compiled defaults keep sending off. Explicit providers have
+separate acceptance above; durable jobs and native/CLI Rust selection remain
+separate. Run make backend-push-parity-test.
 
 Installations follow-up, 2026-10-18: read [the registry walkthrough](modules/internal/notifications/installations.md),
 then [rebinding and retirement tombstones](patterns/rebinding-and-retirement-tombstones.md).
@@ -10,7 +47,8 @@ Shared ten-proof/twenty-spec/twenty-one-event/forty-two-HTTP checks and real API
 rotation/rebind/renewal/unregister plus all four session retirement reasons pass.
 Memory/PostgreSQL conformance, cleanup/tombstone/marker/reclamation rollback,
 six separate databases and killed v1/v2 producer handoff preserve current bindings.
-External push, eligibility/providers/jobs and native/CLI Rust products remain separate.
+Eligibility/conditional dispatch has separate acceptance above. Cloud providers/
+jobs and native/CLI Rust products remain separate.
 
 Notifications follow-up, 2026-10-18: read [the inbox walkthrough](modules/internal/notifications/README.md),
 [consumed suppression and snapshots](patterns/consumed-suppression-and-inbox-snapshots.md)
@@ -46,7 +84,8 @@ Notes follow-up, 2026-10-18: read [Notes ownership](modules/internal/notes/READM
 then [Go JSON fingerprint bytes](substrate/go-json-command-fingerprints.md).
 Memory/PostgreSQL Notes now passes shared policy/digest/47-HTTP conformance,
 concurrent replay/CAS and cross-language restart/historical receipt recovery.
-Notes remains an example domain, with no selected broadcast or native/CLI Rust connection.
+Notes remains an example domain; local broadcast now has separate acceptance
+above. Native/CLI Rust connection remains unregistered.
 
 PostgreSQL follow-up, 2026-10-18: read [shared mechanics](modules/pkg/persistence/postgres/README.md),
 [explicit migrations](modules/cmd/migrate/README.md), [artifact provenance](modules/migrations/README.md),

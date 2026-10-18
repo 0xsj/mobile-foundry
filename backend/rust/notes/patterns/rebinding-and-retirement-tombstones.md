@@ -48,5 +48,6 @@ a source replay horizon and delayed-command policy. The simple singleton guard
 trades throughput for a clear initial serialization boundary. Related:
 [module walkthrough](../modules/internal/notifications/installations.md),
 [state/outbox/inbox boundaries](state-outbox-and-inbox-boundaries.md).
-Next: what eligibility check and conditional retirement does an external sender
-need once its network call runs outside the registry transaction?
+Next: read [dispatch ownership](../modules/internal/notifications/push.md) and
+[partial cleanup outcomes](known-rejection-and-unconfirmed-cleanup.md) for checks
+around a network call outside the registry transaction.

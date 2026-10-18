@@ -60,7 +60,9 @@ historical Go/Rust receipt replay and separate Notes database selection.
 Gotchas: a receipt is evidence of one historical commit, not current record
 state or present account authority. Missing receipt observation cannot settle an
 in-flight write. Optional change signals are not durable events; this runtime
-selects no Notes broadcast adapter. No native/CLI Rust selection is registered.
+now selects the [local Changes adapter](../../../../internal/notes/src/infra/broadcast.rs)
+and [Realtime Feed](../realtime/README.md). A lost acknowledgement can omit a hint.
+No native/CLI Rust selection is registered.
 Related: [historical receipts](../../../patterns/historical-receipts-before-current-state.md),
 [stable JSON fingerprints](../../../substrate/go-json-command-fingerprints.md) and
 [transaction lifetime](../../../substrate/sqlx-transactions-and-pool-lifetime.md).

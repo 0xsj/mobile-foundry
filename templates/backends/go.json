@@ -16,7 +16,9 @@
     "realtime"
   ],
   "exclude": [
-    "**/.gitkeep"
+    "**/.gitkeep",
+    "backend/go/internal/notifications/infra/push/parity_test.go",
+    "backend/go/tests/push_provider_parity_test.go"
   ],
   "sources": [
     "backend/go/go.mod",

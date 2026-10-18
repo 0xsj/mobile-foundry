@@ -62,9 +62,10 @@ Gotchas: current_binding is ownership, registered is stored enablement; neither
 is a send authorization. Absolute session expiry differs from access-token expiry.
 There are no registration receipts or automatic mutation retry. Raw target tokens
 remain plaintext in private PostgreSQL; disabled rows/proofs/tombstones/markers
-have no pruning policy. No external provider, send eligibility, native Rust or CLI
-selection is established. [In-app state](README.md) and push selection have separate
+have no pruning policy. [Dispatch](push.md) now verifies session eligibility and
+conditional retirement. No cloud provider, native Rust or CLI selection is
+established. [In-app state](README.md) and push selection have separate
 owners. Related: [owned secrets](../../../language/owned-secrets-and-scope-adapters.md),
 [transaction lifetime](../../../substrate/sqlx-transactions-and-pool-lifetime.md).
-Next: how should a sender recheck session eligibility without holding this registry
-guard across a foreign call or clearing a token that has since rotated?
+Next: read [the dispatch walkthrough](push.md) for foreign eligibility checks
+outside this guard and safe cleanup after token rotation.

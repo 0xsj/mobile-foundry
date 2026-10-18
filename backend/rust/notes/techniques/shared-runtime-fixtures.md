@@ -32,6 +32,14 @@ temporary output. Diagnostic conditions stay inside tests, so the production
 APIs gain no failure injection endpoint. Private fixture input must not appear in
 captured runtime logs.
 
+Dispatch follow-up, 2026-10-18: repeated Files acceptance runs hit the client's
+two-second cutoff during Rust debug-build password hashing. The shared client now
+allows seventeen seconds, covering the APIs' fifteen-second request budget plus
+transport margin. Expected statuses and runtime deadlines still decide success;
+this harness is not a two-second latency benchmark. Requests are not retried
+automatically. Dispatch's five-second attempt and two-second capability budgets
+have separate paused-time tests in [the dispatch slice](../modules/internal/notifications/push.md).
+
 Gotchas: ephemeral port reservation is released before launch; a bind race must
 fail the child rather than fall back to a different server. Startup markers plus
 a live child guard ownership. The runner is local Unix acceptance, not a hostile

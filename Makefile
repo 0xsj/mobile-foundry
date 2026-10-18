@@ -19,6 +19,22 @@ CLI_PREFIX ?= $(HOME)/.local
 .PHONY: backend-files-parity-test
 .PHONY: backend-notifications-parity-test
 .PHONY: backend-installations-parity-test
+.PHONY: backend-push-parity-test
+.PHONY: backend-push-providers-parity-test
+.PHONY: backend-push-jobs-parity-test
+.PHONY: backend-realtime-parity-test
+
+backend-realtime-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/realtime_parity.py
+
+backend-push-jobs-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/push_jobs_parity.py
+
+backend-push-providers-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/push_providers_parity.py
+
+backend-push-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/push_parity.py
 
 backend-installations-parity-test:
 	$(FOUNDRY_PYTHON) -B scripts/installations_parity.py
@@ -124,6 +140,9 @@ cli-install:
 .PHONY: help kernel-build kernel-test http-test query-test data-test data-ui-test pending-notes-ui-test observation-test observation-ui-test session-test session-ui-test account-test account-ui-test shell-ui-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
 
 help:
+	@echo 'make backend-realtime-parity-test Verify Go/Rust live Notes hints and owned WebSockets'
+	@echo 'make backend-push-jobs-parity-test Verify Go/Rust retained job and recovery behavior'
+	@echo 'make backend-push-providers-parity-test Verify local Go/Rust APNs/FCM and guarded HTTP'
 	@echo 'make backend-identity-parity-test Verify Go/Rust memory Identity flows'
 	@echo 'make backend-account-parity-test Verify Go/Rust memory Account flows'
 	@echo 'make backend-audit-parity-test Verify Go/Rust memory event/Audit flows'
@@ -132,6 +151,7 @@ help:
 	@echo 'make backend-files-parity-test Verify Go/Rust file bytes, lifecycle, receipts and Audit'
 	@echo 'make backend-notifications-parity-test Verify Go/Rust in-app inbox, reads and preferences'
 	@echo 'make backend-installations-parity-test Verify Go/Rust device registry and session retirement'
+	@echo 'make backend-push-parity-test Verify Go/Rust one-attempt dispatch and session eligibility'
 	@echo 'make backend-postgres-parity-test Verify disposable database/restart and Go core handoff'
 	@echo 'make rust-dev        Run the Rust runtime and health endpoints'
 	@echo 'make rust-check      Check Rust formatting, Clippy and build'

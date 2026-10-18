@@ -1,5 +1,5 @@
 [workspace]
-members = ["cmd/server", "cmd/migrate", "migrations", "pkg/kernel", "pkg/config", "pkg/httpx", "pkg/capability", "pkg/principal", "pkg/events", "pkg/persistence/postgres", "internal/health", "internal/server", "internal/identity", "internal/account", "internal/audit", "internal/notes", "internal/files", "internal/notifications"]
+members = ["pkg/broadcast", "internal/realtime", "pkg/jobs", "cmd/server", "cmd/migrate", "migrations", "pkg/kernel", "pkg/config", "pkg/httpx", "pkg/capability", "pkg/principal", "pkg/events", "pkg/persistence/postgres", "internal/health", "internal/server", "internal/identity", "internal/account", "internal/audit", "internal/notes", "internal/files", "internal/notifications"]
 resolver = "3"
 
 [workspace.package]
@@ -10,6 +10,9 @@ publish = false
 
 [workspace.dependencies]
 kernel = { path = "pkg/kernel" }
+jobs = { path = "pkg/jobs" }
+broadcast = { path = "pkg/broadcast" }
+realtime = { path = "internal/realtime" }
 postgres-storage = { path = "pkg/persistence/postgres" }
 migration-catalog = { path = "migrations" }
 capability = { path = "pkg/capability" }
@@ -36,7 +39,7 @@ uuid = "1"
 getrandom = { version = "0.4", features = ["std"] }
 mime = "0.3"
 serde_ignored = "0.1"
-futures-util = { version = "0.3", default-features = false, features = ["std", "async-await"] }
+futures-util = { version = "0.3", default-features = false, features = ["std", "async-await", "sink"] }
 tower = { version = "0.5", features = ["util"] }
 argon2 = { version = "0.5.3", default-features = false, features = ["alloc", "zeroize"] }
 base64 = "0.22"
@@ -48,6 +51,9 @@ sqlx = { version = "=0.8.6", default-features = false, features = ["runtime-toki
 
 tokio-rustls = { version = "=0.26.6", default-features = false, features = ["ring", "tls12"] }
 rustls-native-certs = "=0.8.5"
+ring = "=0.17.14"
+tokio-tungstenite = { version = "=0.28.0", default-features = false, features = ["handshake"] }
+reqwest = { version = "=0.12.28", default-features = false, features = ["http2", "rustls-tls-native-roots"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

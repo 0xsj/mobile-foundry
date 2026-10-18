@@ -294,6 +294,13 @@ historical receipts and independent Audit. PostgreSQL retains private bytes in
 suppression, first-read acknowledgements and account-scoped preferences/paging.
 `make backend-installations-parity-test` checks proof/checkpoint registration,
 explicit rebinding, token rotation and independent Identity v1/v2 retirement.
+`make backend-push-parity-test` checks optional internal dispatch, session eligibility
+and conditional cleanup with injected gateways. `make backend-push-providers-parity-test`
+checks opt-in APNs/FCM adapters, local TLS/signatures/caches and guarded manual
+preview HTTP. `make backend-push-jobs-parity-test` checks retained jobs, fenced
+execution and explicit cancellation/replacement. Live cloud delivery remains separate.
+`make backend-realtime-parity-test` checks bounded live Notes hints, native bearer
+WebSocket admission, credential rechecks and owned socket shutdown in both APIs.
 `make backend-postgres-parity-test` adds isolated database/restart and Go core handoff checks.
 Its [parity inventory](backend/rust/PARITY.md)
 records remaining domains, operational/runtime gaps and CLI generation.

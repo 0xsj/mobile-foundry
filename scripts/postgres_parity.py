@@ -19,6 +19,8 @@ from recovery_parity import durable as recovery_durable
 from files_parity import durable as files_durable
 from files_parity import spec as file_spec, binary as file_binary, DATA as FILE_DATA
 from notifications_parity import durable as notifications_durable, inbox as notification_inbox
+from push_jobs_parity import durable as jobs_durable
+from realtime_parity import durable as realtime_durable
 from installations_parity import (durable as installations_durable, registration as installation_input,
     proof as installation_proof, register as register_installation, view as installation_view,
     retire_read as retired_installation)
@@ -62,9 +64,13 @@ def main():
             check = subprocess.run([str(migrate),"--check"],env=env,capture_output=True,text=True,timeout=20)
             assert check.returncode == 1 and "postgres.schema" in check.stderr and url not in check.stderr
             subprocess.run(["cargo","test","--locked","-p","api-server","--test","postgres","--","--ignored","--nocapture"],cwd=rust,env=env,check=True)
+            subprocess.run(["cargo","test","--locked","-p","api-server","--test","jobs","postgres_jobs","--","--ignored","--nocapture"],cwd=rust,env=env,check=True)
+            subprocess.run(["go","test","./tests","-run","^Test(PushProviders|PushPreviewHTTPProofScopeVersionAndOutcomes|SharedPushPreviewHTTP)$","-count=1"],cwd=ROOT/"backend/go",env=env,check=True)
             subprocess.run([str(migrate),"--check"],env=env,check=True)
             # Go needs its other selected modules migrated too; core owner histories are identical.
             subprocess.run([str(go_migrate)],env=env,cwd=ROOT/"backend/go",check=True)
+            jobs_durable(owned,url,go_binary,rust_binary)
+            realtime_durable(owned,url,go_binary,rust_binary)
             secrets = [PASSWORD,url]
             with owned_server(rust_binary,owned/"rust-core.log","identity",url) as port:
                 secrets += audit_core(port)
@@ -147,6 +153,10 @@ def main():
                 execute("CREATE DATABASE "+database_name)
                 module_urls[owner_name.upper()+"_DATABASE_URL"]=url.replace("/mobile_foundry?","/"+database_name+"?")
             subprocess.run([str(migrate)],env={**env,**module_urls},check=True)
+            subprocess.run(["cargo","test","--locked","-p","api-server","--test","push_dispatch","separate_database_dispatch","--","--ignored","--nocapture"],cwd=rust,
+                env={**env,"TEST_IDENTITY_DATABASE_URL":module_urls["IDENTITY_DATABASE_URL"],"TEST_NOTIFICATIONS_DATABASE_URL":module_urls["NOTIFICATIONS_DATABASE_URL"]},check=True)
+            subprocess.run(["cargo","test","--locked","-p","api-server","--test","push_http","separate_database_preview_http","--","--ignored","--nocapture"],cwd=rust,
+                env={**env,"TEST_IDENTITY_DATABASE_URL":module_urls["IDENTITY_DATABASE_URL"],"TEST_NOTIFICATIONS_DATABASE_URL":module_urls["NOTIFICATIONS_DATABASE_URL"]},check=True)
             with owned_server(rust_binary,owned/"rust-separate.log","identity",url,module_urls=module_urls) as port:
                 _,separate=identity(port,"postgres.separate")
                 secrets += [separate["access_token"],separate["refresh_token"]]

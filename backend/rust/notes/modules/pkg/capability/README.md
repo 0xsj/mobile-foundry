@@ -47,3 +47,10 @@ Used by [Account's credential adapter](../../internal/account/README.md) and
 [Identity](../../internal/identity/README.md). Related:
 [immutable assembly mechanics](../../../language/consuming-builders-and-immutable-registries.md).
 Next: how will a remote adapter prove the same caller and failure rules?
+
+Dispatch follow-up: identity.session.eligible.v1 is admitted only for Notifications,
+including when Identity and Notifications use separate databases. An API caller
+cannot invoke it. Twenty request and fourteen response cases preserve ordered
+DTO behavior and required boolean answers; a paused provider test observes the
+two-second deadline and dropped future before any gateway call. Read
+[the dispatch walkthrough](../../internal/notifications/push.md).
