@@ -19,7 +19,7 @@ def main():
     try:
         if args.profile:
             profile = json.loads(args.profile.read_text())
-            errors = validate_backend(profile, ROOT) if profile.get("id") == "go" else validate_profile(profile, ROOT)
+            errors = validate_backend(profile, ROOT) if profile.get("id") in {"go","rust"} else validate_profile(profile, ROOT)
         else:
             profiles, _ = discover(ROOT)
             discover_combinations(ROOT, profiles)

@@ -3,6 +3,7 @@ pub mod admission;
 pub mod auth;
 pub mod logger;
 pub mod problem;
+pub mod proxy;
 pub mod query;
 
 use axum::{
@@ -21,7 +22,7 @@ use logger::Logger;
 use std::{panic::AssertUnwindSafe, sync::Arc, time::Duration};
 use tokio::time::Instant;
 
-/// Selected only from the accepted socket, never forwarded/request headers.
+/// Effective client address, initially accepted socket and optionally an admitted proxy value.
 #[derive(Clone, Copy)]
 pub struct PeerAddress(pub std::net::IpAddr);
 
@@ -86,10 +87,19 @@ pub async fn deadline<T>(
 pub struct BoundaryState {
     log: Logger,
     ids: Arc<dyn Generator>,
+    trusted_proxies: runtime_config::TrustedProxies,
 }
 impl BoundaryState {
     pub fn new(log: Logger, ids: Arc<dyn Generator>) -> Self {
-        Self { log, ids }
+        Self {
+            log,
+            ids,
+            trusted_proxies: Default::default(),
+        }
+    }
+    pub fn with_trusted_proxies(mut self, trusted: runtime_config::TrustedProxies) -> Self {
+        self.trusted_proxies = trusted;
+        self
     }
 }
 impl From<Logger> for BoundaryState {
@@ -154,15 +164,18 @@ pub async fn boundary(
                 request_id.clone(),
                 correlation_id.clone(),
             ));
-            match AssertUnwindSafe(next.run(request)).catch_unwind().await {
-                Ok(response) => response,
-                Err(_) => {
-                    log.panic(&request_id);
-                    problem::response(
-                        &Failure::new(Kind::Internal, "http.panic", "request panic"),
-                        &request_id,
-                    )
-                }
+            match proxy::admit(&mut request, &state.trusted_proxies) {
+                Err(error) => problem::response(&error, &request_id),
+                Ok(()) => match AssertUnwindSafe(next.run(request)).catch_unwind().await {
+                    Ok(response) => response,
+                    Err(_) => {
+                        log.panic(&request_id);
+                        problem::response(
+                            &Failure::new(Kind::Internal, "http.panic", "request panic"),
+                            &request_id,
+                        )
+                    }
+                },
             }
         }
     };

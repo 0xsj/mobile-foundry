@@ -24,7 +24,8 @@ def admit_go_module(value):
 class BackendSelection:
     profile: dict
     manifest: str
-    module: str
+    module: str = ""
+    package: str = ""
 
 
 def read_backend(root, registration):
@@ -37,7 +38,11 @@ def read_backend(root, registration):
     return profile
 
 
-def select_backend(root, registrations, identity, module, name):
+def select_backend(root, registrations, identity, module, name, rust_package=None):
+    if rust_package is not None and identity != "rust":
+        raise ProfileError("--rust-package requires --backend rust.")
+    if module is not None and identity != "go":
+        raise ProfileError("--go-module requires --backend go.")
     if identity == "none":
         if module is not None:
             raise ProfileError("--go-module requires --backend go.")
@@ -48,10 +53,16 @@ def select_backend(root, registrations, identity, module, name):
     if registration["status"] == "planned":
         raise ProfileError(f"Backend {identity!r} is planned and not yet available.")
     profile = read_backend(root, registration)
+    if identity == "rust":
+        from .rust_backend import admit_package
+        return BackendSelection(profile, registration["manifest"], package=admit_package(rust_package if rust_package is not None else name + "-api", profile, root))
     return BackendSelection(profile, registration["manifest"], admit_go_module(module if module is not None else f"example.com/{name}/backend"))
 
 
 def validate_backend(profile, root):
+    if isinstance(profile, dict) and profile.get("id") == "rust":
+        from .rust_backend import validate_inventory
+        return validate_inventory(profile, root)
     """Validate the declared Go closure; real compiler/runtime acceptance is separate."""
     errors = []
     try:

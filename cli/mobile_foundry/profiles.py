@@ -106,10 +106,14 @@ def validate_profile(profile, root):
         if profile["shell"] not in {"daily", "workspace", "browse"}:
             raise ProfileError("Supported generated shells are daily, workspace and browse.")
         capabilities = profile.get("capabilities")
-        if capabilities not in (["ui"], ["ui", "local-data"], ["ui", "go-connected"]):
-            raise ProfileError("Supported inventories select UI, UI + local-data or UI + go-connected.")
-        if "go-connected" in capabilities and (profile["shell"] != "daily" or profile.get("requiresBackend") != "go"):
-            raise ProfileError("go-connected requires the Daily shell and the Go backend.")
+        if capabilities not in (["ui"], ["ui", "local-data"], ["ui", "go-connected"], ["ui", "rust-connected"],
+                                ["ui", "go-connected", "inbox"], ["ui", "inbox", "rust-connected"],
+                                ["ui", "files", "go-connected"], ["ui", "files", "rust-connected"],
+                                ["ui", "files", "go-connected", "inbox"], ["ui", "files", "inbox", "rust-connected"]):
+            raise ProfileError("Supported inventories select UI, UI + local-data, or one connected capability with optional inbox and/or files.")
+        connected = next((item for item in capabilities if item in {"go-connected", "rust-connected"}), None)
+        if connected and (profile["shell"] != "daily" or profile.get("requiresBackend") != connected.removesuffix("-connected")):
+            raise ProfileError(f"{connected} requires the Daily shell and the {connected.removesuffix('-connected').title()} backend.")
         if not isinstance(profile.get("exclude"), list) or not all(isinstance(item, str) for item in profile["exclude"]):
             errors.append("Profile exclusions must be strings.")
         shared = profile["sharedSources"]
@@ -158,13 +162,17 @@ def validate_profile(profile, root):
                 effective(value)
                 if not covered(value):
                     errors.append(f"{name}: required capability file absent from inventory: {value}")
-            if "go-connected" in capabilities:
+            if connected:
                 value = platform.get("connectionFile")
                 if not covered(value):
                     errors.append(f"{name}: missing product connection configuration")
             fixtures = ("kernel", "query", "ui") + (("local-notes",) if "local-data" in capabilities else ())
-            if "go-connected" in capabilities:
+            if connected:
                 fixtures += ("http", "session", "account-access", "go-session", "remote-notes", "pending-notes")
+            if "inbox" in capabilities:
+                fixtures += ("notifications",)
+            if "files" in capabilities:
+                fixtures += ("files", "notifications", "pending-files")
             for fixture in fixtures:
                 if f"contracts/fixtures/{fixture}" not in shared:
                     errors.append(f"{name}: missing {fixture} test fixtures")

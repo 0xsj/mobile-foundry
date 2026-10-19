@@ -3,7 +3,42 @@
 The user requested an explicit handoff when a project/profile becomes a good
 foundation for a new product. Assess each selected native/backend profile
 independently and report milestone changes during development handoffs.
-Last assessment: 2026-10-18. Rust adds an independently running runtime/Health
+CLI 0.26.0 adds **scoped inbox file destinations** to the ready local Files + Inbox
+starters. Fresh Go and Rust both-platform copies each pass 52 iOS cases, 67 Kotlin
+host cases, 11 device storage cases and both media process stages. Open resolves
+current authorized metadata and explicit verified preview without marking read;
+a target deleted by an independent client yields its real backend 404. Every
+exact-lease rebind clears the route. Read [the current evidence and limits](blueprints/connected-media.md#cli-0260-notice-destination-verification--2026-10-19).
+CLI 0.25.0 adds **durable manual Files recovery** to the ready local Files-only
+and combined starters. Final generated Swift/Kotlin workflows pass against Go
+and Rust: 45/49 focused iOS cases; 62 host, 11 device storage cases and six killed-
+process Files stages per Kotlin backend. Accepted uploads/deletes now persist
+before HTTP and restore without replay. Unreadable state is preserved and blocks
+new changes. Read [the exact matrix and host limits](blueprints/connected-files.md#cli-0250-durable-recovery-verification--2026-10-19).
+CLI 0.24.0 maintains that local readiness and adds explicit Files recovery
+review. Focused generated workflows pass on Swift/Kotlin against Go/Rust:
+40 Go Files-only / 44 Rust combined iOS cases; 56 host, seven storage and two
+Files screen stages per Kotlin backend. The canonical feature sources are
+shared across Files-only/combined inventories. Keep preserves intent; Forget
+releases local bytes/key without proving rollback/cleanup, then requires a
+fresh read. Read [current evidence and startup limits](blueprints/connected-files.md#cli-0240-recovery-verification--2026-10-19).
+CLI 0.23.0 adds **connected starter ready** Files + Inbox combinations for Swift
+and Kotlin with either Go or Rust. Independent generated upload-to-notice,
+preference uncertainty, account isolation and restoration pass. Go additionally
+passes the full combined iOS/Android regression suites. Read
+[the combined guide](blueprints/connected-media.md).
+CLI 0.22.0 adds **connected starter ready** Daily Files selections for Swift and
+Kotlin with either backend. Independent native gallery import, receipt recovery,
+verified preview, account isolation and process restoration pass; pending transfer
+bytes remain explicitly ephemeral. Go also passes the full iOS and Android
+connected workflows. Read [Files construction/evidence](blueprints/connected-files.md).
+CLI 0.21.0 adds **connected starter ready** inbox selections for Swift/Kotlin
+with either Go or Rust. Fresh generated products pass actual account inbox
+interaction, committed lost-reply readback and process restoration; Rust also
+passes the full existing connected suite with the added capability. Read
+[inbox construction/evidence](blueprints/connected-inbox.md).
+
+Last assessment: 2026-10-19. Rust adds an independently running runtime/Health
 foundation, injectable clock/IDs and bounded JSON/version/key helpers with shared
 Go conformance checks. The explicit core memory Identity profile now passes its
 own Go/Rust session acceptance. Account now passes bootstrap, owner pages/selection
@@ -18,15 +53,24 @@ Private SMTP is explicit; anonymous reset admission is bounded and ephemeral.
 Files now passes scoped metadata/receipts/bytes/Audit conformance, PostgreSQL
 rollback and killed-upload Go/Rust handoff using a retained private directory.
 In-app Notifications now passes event/fingerprint/HTTP conformance, coherent scoped
-inbox/read/settings behavior and killed pending-delivery handoff across Go/Rust. Rust remains
-a foundation candidate: CLI extraction/native connection are still unregistered.
+inbox/read/settings behavior and killed pending-delivery handoff across Go/Rust.
+Rust now passes standalone CLI extraction through 0.19.0. CLI 0.20.0 adds an
+explicit rust-connected selection, sharing native composition with Go-connected.
+Independent Swift/Kotlin host and actual screen/process acceptance pass; both
+Daily profiles are connected starter ready for the tested local baseline.
 Optional Rust APNs/FCM adapters now pass local TLS/JWT/cache tests and guarded
 manual preview in memory/separate PostgreSQL owners; compiled selection stays
 off by default. Retained jobs/recovery now pass shared rules, PostgreSQL rollback,
 SIGKILL and Rust→Go→Rust worker/outcome/lineage handoff. Live delivery remains separate.
 Rust Realtime now passes bounded/coalesced live Notes, native bearer admission,
 credential rechecks, capacity release and owned socket shutdown with memory and
-disposable PostgreSQL stores. This does not register Rust CLI/native selection.
+disposable PostgreSQL stores. Rust CLI has separate independent acceptance below;
+connected native Rust selection remains separate.
+Rust operations now has explicit proxy/private metrics, a non-root/read-only
+release image and actual local Caddy/WebSocket/SMTP plus paired backup/restore
+acceptance. CLI 0.19.0 now repeats these checks in renamed generated output.
+Public TLS/hosting remains separate. Rust-connected native evidence is recorded
+in [its own construction guide](blueprints/rust-connected-starter.md).
 Daily + go-connected has independent Swift/Kotlin
 CLI 0.18.0 owner workspace create/rename and explicit conflict/uncertainty review,
 alongside registration, scoped caching, verification/reset/change forms and live
@@ -81,6 +125,10 @@ production guarantee for the whole catalog.
 
 | Profile | Current state | What remains before recommending generated products |
 | --- | --- | --- |
+| Swift Daily + connected + Files + Inbox (Go/Rust) | **Connected starter ready** through CLI 0.26.0. Each backend passes 52 focused iOS cases, including current file lookup, verified preview and actual removed-target handling from inbox navigation. Earlier full/durable recovery evidence remains versioned. | Manual Files recovery and in-app notice destinations are ready for the tested local baseline. OS notification routing, deep links, background transfers, retention and public release remain separate. Read [current evidence](blueprints/connected-media.md#cli-0260-notice-destination-verification--2026-10-19). |
+| Kotlin Daily + connected + Files + Inbox (Go/Rust) | **Connected starter ready** through CLI 0.26.0: 67 host, 11 storage cases and both media process stages per backend, including read-only notice destinations. Earlier six-stage Files recovery remains historical evidence. | Accepted Files input survives app force-stop with explicit retry/review. OS push/deep links, background sync, native workflows across backend PostgreSQL restarts and public release remain separate. Read [evidence](blueprints/connected-media.md#cli-0260-notice-destination-verification--2026-10-19). |
+| Swift Daily + connected + Files (Go/Rust) | **Connected starter ready** through CLI 0.25.0. Go Files-only passes 45 iOS cases; identical feature sources pass Rust combined recovery. Explicit Files-only Go/Rust closures remain copy-checked. | Durable manual recovery is ready for the tested local media pattern. Add background/OS transfers, retention/orphan sweep and release deployment deliberately. Read [the exact matrix](blueprints/connected-files.md#cli-0250-durable-recovery-verification--2026-10-19). |
+| Kotlin Daily + connected + Files (Go/Rust) | **Connected starter ready** through CLI 0.25.0. The canonical feature passes 62 host, 11 storage and six process stages per backend in combined copies; explicit Files-only closures remain copy-checked. | Process restoration now recovers accepted transfer bytes/commands, with no automatic resend. Background/OS transfer, queues, retention and public release remain separate. Read [the exact matrix](blueprints/connected-files.md#cli-0250-durable-recovery-verification--2026-10-19). |
 | Swift local UI / Daily | **Standalone starter ready** through mobile-foundry 0.1.0; product-owned configuration/screens and UI → Query → Kernel closure. | Ready for local UI products. Add deliberate feature capabilities and release branding/signing as needed. |
 | Kotlin local UI / Daily | **Standalone starter ready** through mobile-foundry 0.1.0; product-owned resources/screens and product-only module settings. | Ready for local UI products. Add deliberate feature capabilities and release branding/signing as needed. |
 | Swift Daily + local-data | **Standalone starter ready** through mobile-foundry 0.2.0; local Services/Data and injected CRUD/live-reader exemplar. | Ready for local stored-data products. Replace the Notes domain and supply release branding/signing as needed. |
@@ -91,9 +139,13 @@ production guarantee for the whole catalog.
 | Kotlin Browse | **Standalone starter ready** through mobile-foundry 0.3.0; saveable search/detail and native Back. | Ready for UI products; collection persistence/provider operations are separate capabilities. |
 | Swift Daily + go-connected + Go | **Connected starter ready** through CLI 0.18.0: independent native sign-in/accounts, Notes/receipts, renewal, Keychain/process and pending-journal recovery, verification/reset/change forms, foreground live reads, read-only saved first pages, native registration/explicit sign-in and owner workspace create/rename with explicit recovery. | Ready to start connected Notes-shaped products. Add contact-change/invitation policy, offline startup/automatic sync, deployment/signing and selected additional native features deliberately. |
 | Kotlin Daily + go-connected + Go | **Connected starter ready** through CLI 0.18.0: independent sign-in/account isolation/Notes, renewal, recreation, killed-process Keystore/pending recovery, verification/reset/change forms, foreground live reads, read-only saved first pages, native registration/explicit sign-in and owner workspace create/rename with explicit recovery. | Ready to start connected Notes-shaped products. Native queues/background sync, other provider adapters, release/device checks and additional features remain separate. |
+| Swift Daily + rust-connected + Rust | **Connected starter ready** through CLI 0.20.0: shared native ports/composition, real Rust-backed host workflows and 36 generated iOS tests with secure/pending/cache relaunch recovery, identity/live forms and workspace conflict/uncertainty review. | Ready to start the tested session/accounts/Notes-shaped products. Connected PostgreSQL restart, public deployment/release devices, additional native features and automatic sync remain separate. Read [evidence](blueprints/rust-connected-starter.md). |
+| Kotlin Daily + rust-connected + Rust | **Connected starter ready** through CLI 0.20.0: shared native ports/composition, 41 selected host tests, seven native storage tests and ten actual screen stages, including killed-process Keystore/pending/cache recovery and identity/workspace uncertainty flows. | Ready to start the tested session/accounts/Notes-shaped products. Connected PostgreSQL restart, deployment/release devices, native Files/inbox/push/queues and automatic sync remain separate. Read [evidence](blueprints/rust-connected-starter.md). |
+| Swift Daily + connected + inbox (Go/Rust) | **Connected starter ready** through CLI 0.21.0: exact-lease Activity inbox, server unread count, filter/paging, read/settings uncertainty and app relaunch. Fresh Go inbox and Rust full suites pass 36/41 iOS cases. | Ready for the selected local account inbox pattern. Generated native Files, OS push, offline inbox, richer types and connected database restart remain separate. Read [evidence](blueprints/connected-inbox.md). |
+| Kotlin Daily + connected + inbox (Go/Rust) | **Connected starter ready** through CLI 0.21.0: 47 host cases per backend, seven storage cases and two Go/twelve Rust screen stages, including uncertainty readback, Activity recreation and killed-process restore. | Ready for the selected local account inbox pattern. Add Files/push/background work and product retention deliberately. Read [evidence](blueprints/connected-inbox.md). |
 | Swift/Kotlin Physics | **Catalog capability verified**: pure 2D modules, native court/control consumers, five numeric cases per platform and five total native interactions. | Register a deliberate CLI feature combination and independently verify generated output before recommending physics-enabled starters. |
 | Swift/Kotlin Go session | **Catalog integration verified**: deployment-bound authority, real HTTP/account scope, rotation checkpoints, discovery/switching and actual native-vault workflows. | Daily + go-connected supplies independent generated acceptance separately below. Other shells and providers remain separate selections; route restoration alone still does not establish process recovery. |
-| Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, Files and Notifications verified against Go through URLSession/OkHttp; catalog owners build and pass recovery/replacement tests. Inbox read/settings recover through authoritative refresh. | Daily + go-connected selects remote Notes. Generated native Files/inbox, multi-item queues and system push remain separate; catalog host/state tests do not establish those product workflows. |
+| Swift/Kotlin Go remote data | **Connected foundation candidate**: account-scoped Notes, Files and Notifications verified against Go through URLSession/OkHttp; catalog owners build and pass recovery/replacement tests. Inbox read/settings recover through authoritative refresh. | Daily + go-connected selects remote Notes. Optional Files and inbox now have separate generated acceptance above. Multi-item queues and system push remain separate; catalog host/state tests do not establish those product workflows. |
 | Swift/Kotlin system notifications | **Catalog capability verified**: explicit OS permission/settings, local previews and bounded app-owned open navigation. iOS warm/cold opens and Android real content PendingIntent/recreation checks pass. | Live provider integration/sending, remote scoped destinations, Android cold process acceptance and independent CLI selection remain separate. |
 | Swift/Kotlin remote previews | **Catalog capability verified**: strict provider-payload admission, foreground receipt without navigation and generic tap routing; Apple simulator warm/cold opens and Android actual PendingIntent/launcher/recreation checks pass. | Verify live signed-device APNs/FCM delivery and Android killed-process FCM entry. Account-scoped destinations and independently generated connected profiles remain separate. Read [construction/evidence](blueprints/remote-notifications.md). |
 | Swift/Kotlin provider tokens | **Catalog foundation candidate**: swappable collection ports, app-only APNs/FCM adapters, process-local rotation and explicit registry handoff; host/native adapter and default missing-setup UI checks pass. | Configure signing/Firebase and verify actual issued tokens on devices. Sending, remote opens, FID sender semantics and generated connected CLI selection remain separate. Read [setup/evidence](blueprints/push-tokens.md). |
@@ -101,7 +153,7 @@ production guarantee for the whole catalog.
 | Go push dispatch/providers | **Foundation candidate**: exact-session dispatch and conditional retirement plus real APNs/FCM adapters and opt-in guarded manual preview. Local TLS, memory/PostgreSQL HTTP and independently extracted checks pass. | Configure private provider credentials and verify cloud acceptance/device delivery. Durable queues, fanout, retry receipts and native remote opens remain separate. |
 | Go queued previews/recovery | **Foundation candidate**: immutable jobs, fenced claims, guarded enqueue/status/cancel/replacement, bounded preflight backoff and retained uncertainty verified in memory/PostgreSQL and an independent copy. | Live provider acceptance, fanout, provider-result retry classification, retention/erasure/cross-session administration and native queue UI remain separate. |
 | Go backend | **Standalone starter ready** through CLI 0.14.0: independently generated API, account-scoped WebSocket hints, core identity lifecycle, existing auth/data/inbox/installation/provider/job seams, race/PostgreSQL recovery and Docker/email/backup/restore acceptance. | Ready to start Go APIs with the tested portable baseline. Configure real hosting/SMTP and chosen product policy. Daily selects native socket/recovery UI through its separate acceptance. Richer roles/auth, multi-replica fanout and external delivery need deliberate extensions. |
-| Rust backend | **Foundation candidate**: twenty-one-crate workspace, runtime/admission, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications/installations, live Notes hints, optional APNs/FCM previews and retained jobs/recovery, private SMTP/objects, scoped receipts/inbox/retirement decisions and restart/Go handoff acceptance. | Implement remaining product and routing/network slices; register CLI selection and independently verify generated products. Live push delivery and deployment remain separate. See [parity inventory](../backend/rust/PARITY.md). |
+| Rust backend | **Standalone starter ready** through CLI 0.19.0: independent renamed package/lock, 24 crates/30 fixtures, memory APIs, PostgreSQL rollback/SIGKILL/restart and freshly built Docker/Caddy/SMTP/metrics/backup recovery. | Ready to start standalone Rust APIs with the tested local baseline. Connected native Rust has its own row/acceptance; public TLS/hosting, external delivery, product policy and explicit routing/network gaps remain separate. Read [construction/evidence](blueprints/rust-starter.md). |
 | Supabase integration | Local development stack present; native provider adapters/policies unconnected. | Real auth/account/remote Notes adapters and policies, then connected starter verification. |
 | Firebase auth/data integration | Local emulator setup present; native auth/data adapters and rules unconnected. FCM token adapters are assessed separately above. | Real auth/account/remote data adapters and rules, then connected starter verification. |
 

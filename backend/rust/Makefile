@@ -13,6 +13,34 @@
 .PHONY: push-providers-parity-test
 .PHONY: push-jobs-parity-test
 .PHONY: realtime-parity-test
+.PHONY: operations-test prod-config prod-build prod-db prod-migrate prod-up prod-down prod-maintenance prod-backup prod-restore
+
+PROD_ENV_FILE ?= infra/production/.env.production
+PROD_PROJECT ?= mobile-foundry-rust-prod
+PROD_COMPOSE = docker compose --project-name $(PROD_PROJECT) --env-file $(PROD_ENV_FILE) -f infra/production/compose.yaml
+
+operations-test:
+	python3 -B scripts/operations_acceptance.py
+prod-config:
+	$(PROD_COMPOSE) config --quiet
+prod-build:
+	$(PROD_COMPOSE) build api
+prod-db:
+	$(PROD_COMPOSE) up -d --wait postgres
+prod-migrate:
+	$(PROD_COMPOSE) run --rm -T migrate
+prod-up:
+	$(PROD_COMPOSE) up -d --wait api edge
+prod-down:
+	$(PROD_COMPOSE) down
+prod-maintenance:
+	$(PROD_COMPOSE) run --rm -T maintenance --limit 128
+prod-backup:
+	@test -n "$(BACKUP_DIRECTORY)" || (echo "Set BACKUP_DIRECTORY"; exit 1)
+	python3 -B scripts/backup.py create "$(BACKUP_DIRECTORY)" --project "$(PROD_PROJECT)" --env-file "$(PROD_ENV_FILE)"
+prod-restore:
+	@test -n "$(BACKUP_DIRECTORY)" -a -n "$(RESTORE_PROJECT)" || (echo "Set BACKUP_DIRECTORY and an unused RESTORE_PROJECT"; exit 1)
+	python3 -B scripts/backup.py restore "$(BACKUP_DIRECTORY)" --project "$(RESTORE_PROJECT)" --env-file "$(PROD_ENV_FILE)"
 
 realtime-parity-test:
 	python3 -B ../../scripts/realtime_parity.py
@@ -60,6 +88,8 @@ identity-parity-test:
 	python3 -B ../../scripts/identity_parity.py
 
 help:
+	@echo 'make operations-test Verify an owned Docker image, local edge/mail and backup/restore'
+	@echo 'make prod-config Check the selected private portable deployment configuration'
 	@echo 'make realtime-parity-test Verify Go/Rust live Notes hints and owned WebSockets'
 	@echo 'make push-jobs-parity-test Verify Go/Rust retained jobs and owned recovery'
 	@echo 'make push-providers-parity-test Verify local APNs/FCM protocols and guarded manual HTTP'

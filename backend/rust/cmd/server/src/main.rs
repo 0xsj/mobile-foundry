@@ -68,6 +68,25 @@ async fn run_selected(
         Failure::new(Kind::Internal, "server.signal", "signal setup failed").with_cause(cause)
     })?;
     let clock: Arc<dyn kernel::clock::Clock> = Arc::new(kernel::clock::SystemClock);
+    // Bind the optional private monitor before allocating module workers.
+    let metrics =
+        match config.metrics_address {
+            Some(address) => Some(tokio::net::TcpListener::bind(address).await.map_err(
+                |cause| {
+                    Failure::new(
+                        Kind::Unavailable,
+                        "server.metrics_bind",
+                        "metrics bind failed",
+                    )
+                    .with_cause(cause)
+                },
+            )?),
+            None => None,
+        };
+    let mut server = server.with_trusted_proxies(config.trusted_proxies.clone());
+    if let Some(listener) = metrics {
+        server = server.with_metrics(listener);
+    }
     let signals = Arc::new(broadcast::Hub::new(256, 8));
     let ids: Arc<dyn kernel::id::Generator> = Arc::new(kernel::id::RandomIds);
     // Facade owns provider clients on every startup/shutdown path. No network at load.

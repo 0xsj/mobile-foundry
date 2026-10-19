@@ -40,8 +40,18 @@ candidate inventory in `templates` when its selected source/dependency closure
 changes; static inventory checks do not establish independent starter readiness.
 Local source-copy generation implements [project CLI behavior](contracts/behavior/project-cli.md).
 Keep registration explicit, copying independent, output ownership exclusive and
-source unchanged. Go extraction is verified and registered; preserve its owned
+source unchanged. Go and Rust extraction are verified and registered; preserve Go's owned
 module rewrite/import ordering, fixtures/migrations and Compose namespace.
+Rust follows [its starter contract](contracts/behavior/rust-starter.md): preserve
+effective Cargo/include closure, package/lock identity, stable binary/crate names,
+private-state exclusions and independent memory/PostgreSQL/Docker acceptance.
+Rust native co-location does not select a connected native profile.
+Daily's [rust-connected selection](contracts/behavior/rust-connected-starter.md)
+reuses the existing native wire adapters/composition with the Rust API. Preserve
+native source equality, exact-lease/storage policies and matching backend admission;
+the copied acceptance driver must build the selected product backend. Backend
+compatibility tests and historical Go adapter names do not establish native
+connected readiness without independent generated screen/process acceptance.
 Generated native shells and Go remain independently composed until a connected
 capability passes its own acceptance. Daily's explicit
 [go-connected selection](contracts/behavior/go-connected-starter.md) composes
@@ -53,6 +63,12 @@ new writes and guard terminal replacement by original command ID. Never infer
 Files/inbox/push/sync selection from backend co-location; independently exercise
 generated screens and process restoration before promoting readiness.
 Follow [CLI usage](cli/README.md).
+Daily's optional [connected inbox](contracts/behavior/connected-inbox.md) requires
+one explicit Go/Rust connection. Keep Activity's InboxStore app-owned, bind its
+port to every exact lease and clear data on detach. Read/settings writes have no
+receipt/CAS: block changes after uncertainty until a full successful read; never
+invent automatic replay. Preserve the narrow decoder-helper/fixture closure and
+independently verify generated screens against both selected backend processes.
 Optional product data implements [local-data starter behavior](contracts/behavior/local-data-starter.md).
 Keep capability combinations explicit, validate effective overlaid build files,
 and preserve the UI-only default. Local-data selection includes guest SQLite
@@ -240,3 +256,26 @@ Preserve original outcomes, one direct child per source and immutable duplicate-
 acknowledgement. Never reset uncertain work or silently affect descendants. Keep
 current installation/session proof at the edge, exact acknowledgement admission
 and atomic memory/PostgreSQL rules; this is not cross-session administration.
+
+Daily's optional [connected Files](contracts/behavior/connected-files.md) fills Today
+through the existing exact-lease RemoteFilesRepository. Generated Files products
+select [durable manual recovery](contracts/behavior/pending-files.md): stage exact
+scope/key/specification/bytes atomically before HTTP, restore by reads only, and
+acknowledge exact journal removal before releasing pending work. Keep one bounded
+global intent, retain photo drafts above explicit acceptance, read completion
+receipts before PUT and repeat original deletes for cleanup. Never reset an
+unreadable journal or infer automatic sync/background transfer from disk recovery.
+Catalog retry owners remain ephemeral.
+Explicit Files review may abandon local recovery only for the original scope,
+intent key and current binding while idle. Preserve the consequence warning:
+forgetting does not roll back a server action or finish byte cleanup. Require a
+fresh page before new changes; do not silently replace versions/commands.
+
+Daily also has an explicit [Files + Inbox composition](contracts/behavior/connected-media.md).
+Keep the feature owners selected verbatim and their recovery independent. A Files
+receipt is not delivery proof; Activity reads backend-created notices. Preserve
+exact shared leases, read-only entry refresh and independent generated acceptance.
+The combined [notice destination](contracts/behavior/notice-destinations.md) uses
+current metadata through a read-only port. Admit opens from the current inbox
+and exact lease, keep mark-read/account selection explicit, and clear routes on
+every rebind. Never treat a notice or historical receipt as current file access.

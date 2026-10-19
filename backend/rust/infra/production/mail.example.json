@@ -1,0 +1,7 @@
+{
+  "Address": "smtp.example.com:587",
+  "From": "security@example.com",
+  "Username": "replace-with-your-smtp-user",
+  "Password": "replace-with-your-private-smtp-password",
+  "Mode": "starttls"
+}

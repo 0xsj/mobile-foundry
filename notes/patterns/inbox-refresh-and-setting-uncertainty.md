@@ -8,6 +8,11 @@ fixtures and real URLSession/OkHttp checks are linked in
 [construction and acceptance](../../docs/blueprints/notifications.md). Backend
 semantics are in [Notifications behavior](../../contracts/behavior/notifications.md).
 
+Connected-product follow-up, 2026-10-19: the same recovery policy is selected by
+the optional Daily inbox for either backend. Read [independent execution](../../docs/blueprints/connected-inbox.md).
+Fresh product source, actual screens and a proxy that loses committed replies
+are separate evidence from the earlier catalog/port tests.
+
 ## What and why
 
 Mark-read preserves the first server read timestamp. Preference PUT assigns a

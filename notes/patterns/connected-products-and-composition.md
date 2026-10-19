@@ -10,6 +10,13 @@ that composition gap without turning every backend selection into remote UI.
 Evidence comes from source inventories, CLI refusal/copy checks and the independent
 acceptance recorded in [construction](../../docs/blueprints/go-connected-starter.md).
 
+Rust follow-up, 2026-10-19: an explicit backend selection can reuse those native
+ports and the same product composition when it implements the same admitted
+wire contract. Keep backend identity in generation/acceptance instead of forking
+native lifecycle policy. Read [Rust execution evidence](../../docs/blueprints/rust-connected-starter.md);
+native source equality is a useful guard, but only executing the selected API
+establishes compatibility for the tested workflows.
+
 ## What and why
 
 A service port makes provider substitution possible. It does not select an
@@ -38,6 +45,9 @@ recovering. A successful refresh is a read; it is not permission to resend C.
   is incomplete. Run the copied build/test targets outside the source checkout.
 - A server copied beside an app still requires an explicit reachable base URL.
   A phone's loopback addresses that phone, not its development computer.
+- Historical adapter/test names can outlive their first provider. Assert the
+  actual built package and selected process; a method named Go is not evidence
+  that a Go backend ran, and it does not prove the complete Rust wire surface.
 - Durable server receipts do not retain a native command that existed only in
   memory. The [pending follow-up](persist-intent-before-external-effect.md) supplies
   a scoped disk journal; scheduling and multi-item ordering remain separate.
@@ -47,7 +57,8 @@ recovering. A successful refresh is a read; it is not permission to resend C.
 Read [Swift composition](../../templates/overlays/go-connected/swift/ConnectedSessionModel.swift),
 [Kotlin composition](../../templates/overlays/go-connected/kotlin/ConnectedSessionModel.kt),
 [the registered selection](../../templates/profiles/native-daily-go-connected.json)
-and [the driver](../../scripts/connected_acceptance.py).
+and [Rust selection](../../templates/profiles/native-daily-rust-connected.json),
+then [the driver](../../scripts/connected_acceptance.py).
 Continue with [deployment authorities/checkpoints](deployment-authorities-and-rotation-checkpoints.md),
 [product extraction ownership](product-entry-and-extraction-closure.md) and
 [readiness](../../docs/STARTER-READINESS.md).

@@ -10,6 +10,7 @@ kernel.workspace = true
 runtime-config.workspace = true
 httpx.workspace = true
 health.workspace = true
+telemetry.workspace = true
 axum.workspace = true
 tokio.workspace = true
 hyper.workspace = true

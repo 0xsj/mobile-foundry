@@ -20,6 +20,43 @@ pub enum Authentication {
     Deny,
     Identity,
 }
+/// Only configured socket peers may replace the client address; never inferred.
+#[derive(Clone, Default)]
+pub struct TrustedProxies(Vec<ipnet::IpNet>);
+impl TrustedProxies {
+    pub fn parse(value: &str) -> Result<Self, Failure> {
+        if value.is_empty() {
+            return Ok(Self::default());
+        }
+        let networks = value
+            .split(',')
+            .map(|s| {
+                let network: ipnet::IpNet = s.parse().map_err(|_| invalid())?;
+                // Go's net.IPNet treats IPv4-mapped CIDRs with >=96 prefix bits as IPv4.
+                Ok(match network {
+                    ipnet::IpNet::V6(n) if n.prefix_len() >= 96 => {
+                        match n.addr().to_ipv4_mapped() {
+                            Some(ip) => ipnet::IpNet::V4(
+                                ipnet::Ipv4Net::new(ip, n.prefix_len() - 96)
+                                    .map_err(|_| invalid())?,
+                            ),
+                            None => network,
+                        }
+                    }
+                    _ => network,
+                })
+            })
+            .collect::<Result<Vec<_>, Failure>>()?;
+        Ok(Self(networks))
+    }
+    pub fn contains(&self, peer: std::net::IpAddr) -> bool {
+        let peer = match peer {
+            std::net::IpAddr::V6(ip) => ip.to_ipv4_mapped().map_or(peer, Into::into),
+            _ => peer,
+        };
+        self.0.iter().any(|n| n.contains(&peer))
+    }
+}
 #[derive(Clone)]
 pub enum Storage {
     Memory,
@@ -59,6 +96,8 @@ pub struct Runtime {
     pub mail_config: Option<String>,
     pub push_config: Option<String>,
     pub push_jobs: bool,
+    pub metrics_address: Option<SocketAddr>,
+    pub trusted_proxies: TrustedProxies,
 }
 impl fmt::Debug for Runtime {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -159,16 +198,19 @@ impl Runtime {
             _ => return Err(invalid()),
         };
         // Fail closed for selections not implemented by this Rust profile.
-        for key in [
-            "DEV_AUTH_TOKEN",
-            "DEV_PRINCIPAL_ID",
-            "METRICS_ADDR",
-            "TRUSTED_PROXY_CIDRS",
-        ] {
+        for key in ["DEV_AUTH_TOKEN", "DEV_PRINCIPAL_ID"] {
             if source(key).is_some_and(|v| !v.is_empty()) {
                 return Err(invalid());
             }
         }
+        let metrics_address = source("METRICS_ADDR")
+            .filter(|v| !v.is_empty())
+            .map(|v| v.parse::<SocketAddr>().map_err(|_| invalid()))
+            .transpose()?;
+        if metrics_address.is_some_and(|a| a.port() == 0) {
+            return Err(invalid());
+        }
+        let trusted_proxies = TrustedProxies::parse(&value("TRUSTED_PROXY_CIDRS", ""))?;
         let push_jobs = match value("PUSH_JOBS_ENABLED", "false").as_str() {
             "false" => false,
             "true" => true,
@@ -192,6 +234,8 @@ impl Runtime {
             mail_config,
             push_config,
             push_jobs,
+            metrics_address,
+            trusted_proxies,
         })
     }
 }
@@ -199,6 +243,33 @@ impl Runtime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn explicit_private_operations_selection_is_validated() {
+        let default = Runtime::load(|_| None).unwrap();
+        assert!(default.metrics_address.is_none());
+        assert!(
+            !default
+                .trusted_proxies
+                .contains("127.0.0.1".parse().unwrap())
+        );
+        for (key, value) in [
+            ("METRICS_ADDR", "localhost:9090"),
+            ("METRICS_ADDR", "127.0.0.1:0"),
+            ("TRUSTED_PROXY_CIDRS", "127.0.0.1"),
+            ("TRUSTED_PROXY_CIDRS", "127.0.0.1/33"),
+            ("TRUSTED_PROXY_CIDRS", "127.0.0.0/8, ::1/128"),
+        ] {
+            assert!(Runtime::load(|k| (k == key).then(|| value.into())).is_err());
+        }
+        let c = Runtime::load(|k| match k {
+            "METRICS_ADDR" => Some("127.0.0.1:9090".into()),
+            "TRUSTED_PROXY_CIDRS" => Some("127.0.0.0/8,::1/128".into()),
+            _ => None,
+        })
+        .unwrap();
+        assert!(c.trusted_proxies.contains("::1".parse().unwrap()));
+        assert!(c.metrics_address.is_some());
+    }
     #[test]
     fn jobs_are_an_independent_explicit_durable_selection() {
         let selected = |k: &str| match k {

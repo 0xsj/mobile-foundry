@@ -6,9 +6,15 @@ needs without starting every service in the repository.
 | Profile | Current scope | Entry point |
 | --- | --- | --- |
 | Go | Memory/PostgreSQL Identity/Account/Audit/Notes, native HTTP seams and verified standalone CLI extraction | [Go setup](go/README.md), [starter generation](../docs/blueprints/go-starter.md) |
-| Rust | Runtime/Health, memory/PostgreSQL Identity recovery/Account/Audit/Notes/Files/Notifications/installations, live Notes hints, optional APNs/FCM previews and retained jobs, private SMTP/objects and shared Go conformance; CLI selection planned | [Rust setup](rust/README.md), [parity inventory](rust/PARITY.md) |
+| Rust | Independently verified standalone CLI backend: runtime, memory/PostgreSQL modules, Realtime, optional push/jobs and portable operations | [Rust setup](rust/README.md), [starter generation](../docs/blueprints/rust-starter.md), [parity inventory](rust/PARITY.md) |
 | Supabase | Pinned self-hosted stack with PostgreSQL, Auth, Storage, Realtime, functions, Studio, and local mail capture | [Supabase setup](supabase/README.md) |
 | Firebase | Auth, Firestore, and Storage emulators with UI and graceful export/import | [Firebase setup](firebase/README.md) |
+
+Rust's [portable operations profile](../contracts/behavior/rust-operations.md) now
+has local Docker/SMTP/Caddy/backup acceptance, including independent CLI output.
+Daily's [explicit Rust connection](../docs/blueprints/rust-connected-starter.md)
+reuses the native session/accounts/Notes composition with separate acceptance.
+Public hosting remains a separate milestone.
 
 The Go profile follows Bento's module conventions and will expose contracts
 from the root `contracts/http` directory. Supabase and Firebase own their

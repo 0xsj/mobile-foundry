@@ -1,5 +1,38 @@
 # Mobile Foundry learning notes
 
+Notice destinations, 2026-10-19: CLI 0.26.0 adds current authorized file details to Files + Inbox. Start with [the pattern](patterns/notice-targets-and-current-authority.md), then [construction and execution](../docs/blueprints/connected-media.md). Open and Mark read stay separate; every exact-lease rebind clears the route.
+
+Connected inbox, 2026-10-19: start with [construction/execution](../docs/blueprints/connected-inbox.md),
+then [current-state recovery](patterns/inbox-refresh-and-setting-uncertainty.md)
+and [CLI extraction](modules/cli/README.md#optional-account-inbox--2026-10-19).
+The capability is explicit for either connected backend; Activity owns the
+inbox UI while exact-lease ports and server readback retain their separate roles.
+Fresh Go and Rust copies pass both native platforms, including lost committed
+replies and process restoration. Optional inbox profiles are connected starter ready.
+
+Rust native connection, 2026-10-19: CLI 0.20.0 adds an explicit Rust-connected
+Daily selection while reusing the existing native ports and lifecycle policy.
+Read [construction/execution](../docs/blueprints/rust-connected-starter.md),
+[the CLI walkthrough](modules/cli/README.md#rust-native-connection--2026-10-19)
+and [composition ownership](patterns/connected-products-and-composition.md).
+Both real native transport suites and generated iOS/Android screen/process-recovery
+checks pass against the copied Rust API. Both selected native profiles are
+connected starter ready; detailed evidence and limits are in the construction guide.
+
+Rust CLI handoff, 2026-10-18: CLI 0.19.0 now supplies an independently verified
+standalone backend. Read [construction/evidence](../docs/blueprints/rust-starter.md)
+and [Cargo closure reasoning](techniques/cargo-closure-and-independent-starters.md).
+Renamed generated source passes memory, PostgreSQL rollback/process-loss and fresh
+Docker/edge/mail/backup acceptance. Earlier candidate/CLI-pending notes are
+superseded for standalone extraction; connected Rust native apps remain separate.
+
+Rust operations follow-up, 2026-10-18: read [portable runtime](../backend/rust/notes/modules/infra/production/README.md),
+[paired backups](../backend/rust/notes/patterns/quiesced-database-and-object-backups.md)
+and [address allocation](../backend/rust/notes/substrate/compose-address-allocation.md).
+Explicit proxy/private metrics and the release image now have local process/
+Docker evidence, including Caddy native upgrades, SMTP and fresh-project recovery.
+Public TLS/hosting and Rust CLI/native extraction remain separate.
+
 Rust Realtime follow-up, 2026-10-18: read [the socket owner](../backend/rust/notes/modules/internal/realtime/README.md),
 [subscribe-before-refetch](../backend/rust/notes/patterns/subscribe-before-refetch.md)
 and [upgraded task lifetime](../backend/rust/notes/language/owned-upgrades-and-cancel-safe-join.md).
@@ -1185,3 +1218,13 @@ foundation reservations remain outside the selected UI scope.
 Documentation checks: `make notes-check` passes 194 documents, 2265 local links
 and 132 native example labels with zero failures. `git diff --check` passes.
 These are structural checks, not execution of the labeled conceptual excerpts.
+
+Connected Files follow-up: read [file receipt/byte recovery](patterns/file-receipts-and-byte-recovery.md),
+then [CLI construction and verification](../docs/blueprints/connected-files.md).
+
+For combined products, read [producer receipts and consumer views](patterns/producer-receipts-and-consumer-views.md),
+then [Files + Inbox construction](../docs/blueprints/connected-media.md).
+
+Files recovery follow-up (CLI 0.24.0): read [explicit abandonment versus settlement](patterns/explicit-abandonment-is-not-settlement.md), then [the generated-app evidence](../docs/blueprints/connected-files.md). Review names the original operation; Keep preserves it, while Forget local recovery releases only local bytes/command. Old dialogs and active work cannot discard a newer intent. Durable transfers remain a separate slice.
+
+Durable Files follow-up (CLI 0.25.0): read [atomic byte staging before transport](patterns/atomic-byte-staging-before-transport.md), then [the exact generated-app evidence](../docs/blueprints/connected-files.md). Accepted intent now survives process exit through a separate journal; drafts remain view-owned, restore never resends, and unreadable journals block changes. Next questions: cleanup responsibility, quota/retention and background transfer ownership.

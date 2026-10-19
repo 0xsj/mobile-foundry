@@ -71,9 +71,9 @@ Run make backend-installations-parity-test, make rust-check rust-test and
 make backend-postgres-parity-test. The observed database is disposable local
 PostgreSQL 14.24; no retained Compose data, real OS tokens or cloud provider is
 used. Full Unicode/MIME/path equivalence, COMMIT-wire-loss/failover,
-cloud push/providers/jobs, retention, native Rust connection and
-independent CLI extraction remain separate. Rust remains a foundation candidate;
-session eligibility/conditional retirement now has its own
+cloud push/providers/jobs, retention and native Rust connection remain separate
+from these checks. Independent extraction is verified by the
+[Rust starter contract](rust-starter.md); session eligibility/conditional retirement has its own
 [dispatch acceptance](rust-push-dispatch.md).
 See [parity inventory](../../backend/rust/PARITY.md) and
 [learning walkthrough](../../backend/rust/notes/modules/internal/notifications/installations.md).

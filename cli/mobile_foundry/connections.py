@@ -7,14 +7,21 @@ from .profiles import ProfileError
 DEFAULT_API_BASE = "http://127.0.0.1:8080/v1"
 
 
+def connection_capability(profile):
+    if profile is None:
+        return None
+    return next((item for item in profile["capabilities"] if item in {"go-connected", "rust-connected"}), None)
+
+
 def connection_base(profile, backend, requested=None):
-    connected = profile is not None and "go-connected" in profile["capabilities"]
+    connected = connection_capability(profile)
     if not connected:
         if requested is not None:
-            raise ProfileError("--api-base-url requires --with go-connected.")
+            raise ProfileError("--api-base-url requires --with go-connected or --with rust-connected.")
         return None
-    if backend is None or backend.profile["id"] != "go":
-        raise ProfileError("--with go-connected requires --backend go.")
+    required = profile["requiresBackend"]
+    if backend is None or backend.profile["id"] != required:
+        raise ProfileError(f"--with {connected} requires --backend {required}.")
     value = DEFAULT_API_BASE if requested is None else requested
     try:
         if not isinstance(value, str) or not 1 <= len(value) <= 2048 or not value.isascii() or any(ord(c) <= 32 or ord(c) == 127 for c in value):

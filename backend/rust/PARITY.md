@@ -1,11 +1,13 @@
 # Go / Rust backend parity
 
-Assessment: 2026-10-18. Rust is a memory/PostgreSQL foundation candidate, not a replacement
-for the current Go API or a registered CLI starter.
+Assessment: 2026-10-19. Rust is a registered standalone backend starter through
+CLI 0.19.0, with independent generated memory/PostgreSQL/Docker acceptance.
+The Go API remains the behavioral reference; full wire parity remains separate.
+Connected native Rust has its own [generated acceptance](../../docs/blueprints/rust-connected-starter.md).
 
 | Capability | Rust status | Evidence / next boundary |
 | --- | --- | --- |
-| Workspace and process composition | Implemented | Twenty-one crates; Rust 1.86, locked builds, format/Clippy checks |
+| Workspace and process composition | Implemented | Twenty-four crates; Rust 1.86, locked builds, format/Clippy checks |
 | Expected failures and public problems | Implemented for individual classified failures | Eleven shared projection fixtures across all ten kinds; internal diagnostics/code/fields/causes stripped |
 | Health and canonical fallback routing | Implemented | Shared HTTP corpus runs against actual compiled Go/Rust processes |
 | Request/correlation metadata, HEAD/method errors, private-input logging | Implemented for admitted requests | Shared corpus plus Rust panic/log checks |
@@ -28,10 +30,17 @@ for the current Go API or a registered CLI starter.
 | Outbox/inbox delivery | Memory/PostgreSQL subset verified | Account/Identity state plus envelope commits; stable IDs, independent consumers, bounded retry, exhaustion/readiness, lost acknowledgment and owned shutdown |
 | Broadcast and WebSockets | Local subset verified | Bounded/coalesced Notes hints, native bearer/account admission, exact lease rechecks and owned upgraded tasks; memory/PostgreSQL Go/Rust acceptance below |
 | PostgreSQL and explicit migrations | Core subset verified | Owned pools/state/outbox/inbox, history checks, restart/replay and Go core handoff; see acceptance below |
-| Metrics, deployment and backup | Planned | No Rust operational product profile |
-| Native connected profile and CLI extraction | Planned | Requires explicit inventory/selection and independently generated product acceptance |
+| Metrics, proxy and portable operations | Local Docker subset verified | Explicit private metrics/proxy trust, non-root/read-only image, actual Caddy upgrades, local SMTP and paired backup/fresh-project restore; public hosting remains separate |
+| Standalone CLI extraction | Verified/registered | Renamed package/lock, 24 crates/30 fixtures, owned copies and independent build/memory/PostgreSQL/Docker acceptance |
+| Native connected Rust profile | Verified/registered for Daily | CLI 0.20.0 rust-connected shares native ports/composition; real host workflows, 36 iOS tests and ten Android screen stages/seven storage tests pass with process recovery |
+| Optional native inbox | Verified/registered for Daily | CLI 0.21.0 inbox shares native ports/state with Go; fresh Rust full 41-case iOS and twelve-stage Android acceptance includes committed lost-reply readback and process restore. Read [evidence](../../docs/blueprints/connected-inbox.md). |
 
 ## Scope of shared checks
+
+[Rust starter extraction](../../contracts/behavior/rust-starter.md) has its own
+[construction/evidence](../../docs/blueprints/rust-starter.md). Its registered
+standalone baseline is verified separately from the individual backend checks
+below; those checks alone do not establish connected native readiness.
 
 [Fixtures](../../contracts/fixtures/backend-runtime/README.md) cover canonical,
 well-formed HTTP paths, individual classified failures, JSON/header admission and
@@ -108,8 +117,33 @@ cross-process adapter or multi-replica fanout. Go's library writes handshake/101
 responses directly; Rust applies its boundary headers and normalizes malformed
 handshakes to owned 400. Missing Upgrade/unsupported version can be 426 in Go;
 these are explicit uncaptured differences, not full parser/protocol equivalence.
-Trusted TLS ingress/metrics/deployment and generated Rust/native products remain
-separate work. Rust is still an unregistered foundation candidate.
+Portable proxy/metrics/deployment has separate acceptance below. Public TLS
+issuance and connected native Rust products remain separate work.
+
+## Portable operations scope
+
+[Operations](../../contracts/behavior/rust-operations.md) now selects trusted peer
+CIDRs and a separate private metrics listener explicitly. Seventeen shared proxy
+cases and actual Go/Rust source gates, bounded labels, privacy, monitor bind refusal
+and joined shutdown pass through backend-operations-parity-test. Rust also tests
+monitor failure and cancellation without detached listener tasks.
+
+The Rust 1.86.0 release image runs as 65532:65532 on Debian bookworm-slim with
+system roots. Its disposable Docker acceptance passes read-only/non-root health,
+actual Caddy native upgrades with hostile forwarding input overwritten, local SMTP
+verification/reset, private metrics, quiesced common-DB/private-object backup,
+unused-project restore, retained receipts/bytes/contact/challenge, existing-target
+and damaged-checksum refusal, pruning and private logs. Dynamic addresses stay
+outside the edge's fixed IP; the actual edge check exposed an allocation collision
+that a syntax-only check missed. Migrations and maintenance remain explicit tools.
+
+The acceptance edge uses loopback HTTP and separately validates the public Caddyfile;
+no public DNS/certificate or live mailbox/device delivery is claimed. Rust HTTP
+metrics settle at upgrade admission, while Go's hijacked handler remains active
+until socket close. Private metrics use a two-second header/three-second total
+connection budget and 8 KiB Hyper read buffer; Go's write/idle limits differ.
+Main API routing/network gaps remain above. Split-database/cloud backups, PITR/
+failover, hosted rollout and connected native Rust products remain separate.
 
 ## Identity scope
 
@@ -132,7 +166,7 @@ HTTP-only ten-second budget.
 Rust has no general module lifecycle registry or selected maintenance/retention
 tooling. Recovery now has the separate acceptance below. Selected delivery/reset
 probes now extend serving readiness. Memory Audit is not durable evidence;
-native/CLI Rust selection is still unregistered.
+connected native Rust selection remains separate.
 
 ## Account and synchronous credential scope
 
@@ -173,8 +207,8 @@ replay/concurrency, timeout/cancellation, dependency failure, exhausted readines
 and cancellation-safe joining. Generic envelope time is a canonical typed
 microsecond value; arbitrary non-UTC/submicrosecond wire admission is not added.
 Go joined-error chains are not reproduced. No general dynamic module lifecycle
-framework, broker, retention or native/CLI
-selection is implied. PostgreSQL claims/restart recovery have separate acceptance below.
+framework, broker, retention or connected native selection is implied.
+PostgreSQL claims/restart recovery have separate acceptance below.
 
 ## PostgreSQL core acceptance
 
@@ -196,7 +230,7 @@ overrides have a separate real six-database acceptance phase including Files/Not
 Existing memory runtime/Identity/Account/Audit conformance remains separate and
 passes unchanged. Default workspace tests ignore the owned database test; run
 the explicit runner for durable evidence. PostgreSQL failover/COMMIT-wire-loss,
-backup/deployment, unsupported business modules and CLI/native starter selection
+hosted deployment/failover, unsupported business modules and connected native selection
 remain unverified/unimplemented. Recovery challenge handoff has additional
 acceptance below. Rust-backed native connection needs independent acceptance.
 
@@ -220,9 +254,8 @@ survives later deletion; changed input never becomes another successful command.
 Separate Notes database selection also passes a real authorized write/read.
 
 Notes now selects local lossy Changes/Realtime, with separate acceptance below.
-It has no Audit facts, durable native outbox/sync or selected
-native/CLI Rust product profile. Backend wire compatibility does not establish
-those independently generated or connected-product workflows.
+It has no Audit facts, durable native outbox/sync or selected connected native
+Rust profile. Backend wire compatibility does not establish connected-product workflows.
 
 ## Identity recovery and private SMTP
 
@@ -253,7 +286,7 @@ store operation, without a selected CLI/schedule.
 Limits: no live mail-provider acceptance, durable mail queue, contact replacement,
 MFA/passkeys/OIDC or distributed abuse controls. Notifications retirement now has
 its own consumer and acceptance below.
-Native/CLI Rust products remain unregistered; this is still a foundation candidate.
+Connected native Rust Daily has its own acceptance linked above.
 
 ## Files lifecycle, immutable bytes and durable handoff
 
@@ -282,7 +315,7 @@ at four, tracked across cancellation and joined before pools close. Memory
 delivery preserves per-file order; PostgreSQL uses existing leased stream guards.
 Audit retains optional file_id, omitting it from old fingerprints when absent.
 Notifications now consumes completion independently. Cloud objects, processing,
-orphan sweeping, retention, automatic sync and native/CLI Rust products remain separate.
+orphan sweeping, retention, automatic sync and connected native Rust products remain separate.
 
 ## Notifications inbox and committed suppression
 
@@ -309,8 +342,8 @@ All four Go migration files are retained unchanged; installations now uses 0002
 through the separate acceptance below. Push DDL alone adds no sender/jobs.
 Existing producer workers own in-app delivery. Optional providers/jobs have their
 separate acceptance below. Remaining scope includes retention/admin replay, richer
-audiences, live hints and
-native/CLI Rust acceptance. Rust times use the admitted 1970–9999 UTC microsecond
+audiences, live hints and connected native Rust acceptance.
+Rust times use the admitted 1970–9999 UTC microsecond
 range rather than every arbitrary Go domain time.Time value.
 
 ## Installation registry and session retirement
@@ -343,9 +376,8 @@ SIGKILL and Go↔Rust handoff; marker replay preserves newly rebound registratio
 
 Tokens remain plaintext in the private store. Disabled rows/proofs/tombstones/
 markers have no pruning policy. Eligibility/conditional dispatch now has separate
-acceptance below, as do explicit providers/jobs. No provider-issued token, native
-Rust connection or generated CLI profile is included.
-Rust remains a foundation candidate.
+acceptance below, as do explicit providers/jobs. Provider-issued tokens and
+connected native Rust workflows remain outside the standalone starter acceptance.
 
 ## One-attempt dispatch and Identity eligibility
 
@@ -379,7 +411,7 @@ guarded cleanup rollback and corrupt-session failure. Separate Identity and
 Notifications databases exercise dispatch/races and authority revocation while
 the target remains enabled. Existing installation SQL is unchanged. There is no
 durable attempt/job, retry receipt, fanout,
-exactly-once guarantee or native/CLI Rust readiness. Query/check/send races and
+exactly-once guarantee or connected native Rust readiness. Query/check/send races and
 external effects after a dropped caller remain explicit limits.
 
 ## Optional providers and guarded preview
@@ -403,8 +435,8 @@ Private configuration uses exact lowercase fields with duplicate refusal; provid
 response DTOs likewise reject ambiguous duplicate fields. This is a narrower JSON
 admission subset than Go's decoder. FCM admits conservative bare ASCII email and
 Ring-supported RSA private keys (2048–4096 bits and its key constraints), while Go
-admits a wider subset. Live provider credentials/device delivery, native/CLI Rust
-registration and deployment verification remain separate. Queued jobs have their
+admits a wider subset. Live provider credentials/device delivery, connected native
+Rust registration and public deployment verification remain separate. Queued jobs have their
 own acceptance below.
 
 
@@ -433,4 +465,5 @@ without dropping the runner or its join handle. Main joins workers before
 Identity/provider/pool closure. The HTTP-only drain budget does not bound total
 worker shutdown. A dropped future does not undo a committed marker or external
 send. No exactly-once, provider-result automatic retry, fanout, retention/erasure,
-admin/cross-session recovery, native queue UI or generated Rust starter is claimed.
+admin/cross-session recovery or native queue UI is claimed. Generated Rust starter
+acceptance is recorded separately above.

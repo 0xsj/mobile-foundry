@@ -6,8 +6,27 @@ Files/Media, in-app Notifications and session-bound installations in memory or
 PostgreSQL. Go remains the reference implementation.
 Read the
 [parity inventory](PARITY.md) for the exact implemented scope and remaining gaps.
-This profile is a foundation candidate. Identity/Account run through versioned
-credential capabilities and durable event delivery. CLI generation remains future work.
+This is a registered **standalone backend starter** through CLI 0.19.0.
+Identity/Account run through versioned credential capabilities and durable events.
+[Independent generated acceptance](../../docs/blueprints/rust-starter.md) covers
+locked build/tests, memory APIs, PostgreSQL recovery and fresh Docker operations.
+
+CLI 0.20.0 adds [explicit Rust-connected Daily](../../docs/blueprints/rust-connected-starter.md)
+for Swift/Kotlin. It reuses native session/accounts/Notes ports and has its own
+generated screen/process acceptance. Backend co-location alone stays unconnected.
+
+```sh
+mobile-foundry init canopy --platform none --backend rust
+cd canopy
+make rust-check rust-test rust-smoke
+make rust-dev
+```
+
+The optional --rust-package changes the API package; binary/reusable crate names
+stay stable. Native co-location is independent; rust-connected has separate
+generated acceptance above. Earlier slice-local CLI/native-pending limits below
+are superseded by the corresponding registered profile's evidence; public hosting
+and full Go parity remain separate.
 
 Requires Rust/Cargo 1.86 or later on macOS/Linux. The workspace uses edition
 2024, resolver 3 and an included dependency lock. No database or external service
@@ -31,6 +50,7 @@ make backend-push-parity-test
 make backend-push-providers-parity-test
 make backend-push-jobs-parity-test
 make backend-realtime-parity-test
+make backend-operations-parity-test
 HTTP_ADDR=127.0.0.1:8081 make rust-dev
 ```
 
@@ -61,6 +81,7 @@ pkg/capability/      # Immutable assembly, callers, bounded versioned invocation
 pkg/principal/       # Shared trusted credential edge port/adapter
 pkg/events/          # Envelopes, independent bus, outbox port and owned workers
 pkg/jobs/            # Cooperative serial polling, health and join ownership
+pkg/telemetry/       # Bounded method/status observations and private metric routes
 pkg/broadcast/       # Bounded one-slot dirty subscriptions; no durable history
 internal/health/     # Application query/port and transport/http/v1 adapter
 internal/identity/   # Domain, commands/query, ports, memory/security and HTTP v1
@@ -88,8 +109,8 @@ The supported startup subset matches Go defaults: `APP_ENV=development`,
 `STORAGE=memory`, `AUTH_MODE=deny`. Environment accepts development/test/production;
 logs accept console/json and debug/info/warn/error. Addresses currently require a
 literal IPv4 or bracketed IPv6 address and a nonzero port. Present empty required
-settings fail validation. Development fixture credentials, metrics and
-trusted proxies fail startup rather than selecting an unimplemented adapter.
+settings fail validation. Development fixture credentials remain unsupported.
+Private metrics and trusted proxies are explicit selections described below.
 Manual providers and durable jobs have the explicit selections below.
 `AUTH_MODE=deny` does not supply an Identity implementation;
 the default Rust API exposes public Health and mounts Account/Audit/Notes with deny authentication.
@@ -212,7 +233,7 @@ and are explicitly closed/joined before pools. Run
 `make backend-realtime-parity-test`; PostgreSQL acceptance has its own runner.
 Read [scope/limits](../../contracts/behavior/rust-realtime.md) and
 [the walkthrough](notes/modules/internal/realtime/README.md). This is single-process
-recoverable invalidation; TLS proxy/deployment, cross-process fanout and generated
+recoverable invalidation; public TLS/deployment, cross-process fanout and generated
 Rust/native selection remain separate.
 
 Files exposes account-scoped upload requests, immutable PUT content, completion,
@@ -314,6 +335,54 @@ Read [behavior/limits](../../contracts/behavior/rust-push-jobs.md),
 [module walkthrough](notes/modules/internal/notifications/jobs.md) and
 [polling ownership](notes/modules/pkg/jobs/README.md). Local crash/handoff evidence
 does not establish live cloud delivery or a generated Rust starter.
+
+### Portable operations
+
+Optional `METRICS_ADDR=127.0.0.1:9090` enables a separate private GET /metrics
+listener with bounded method/status classes, active handlers and duration sum/count.
+The API has no metrics route. Bind failure refuses startup; monitor failure drains
+the API, and both owners join on shutdown. Rust's 101 completes the HTTP observation;
+separately owned socket lifetime is not an HTTP active/duration sample.
+
+`TRUSTED_PROXY_CIDRS` defaults empty. Only matching accepted peers may supply one
+IP in X-Forwarded-For. Lists, duplicates, missing values, ports and hostnames are
+refused for trusted peers; untrusted claims are ignored. Identity gates use the
+admitted address. Keep the API private behind an edge that overwrites the header.
+
+[Dockerfile](Dockerfile) builds four release binaries under Rust 1.86.0, with a
+Debian bookworm-slim/non-root runtime and system TLS roots.
+[The Compose profile](infra/production/compose.yaml) selects read-only root,
+bounded tmpfs, private PostgreSQL/files/metrics and one API replica behind Caddy.
+Copy [the env example](infra/production/.env.example) and supply a private database
+password, actual domain and external private SMTP configuration. Keep an absolute
+PROD_ENV_FILE outside tracked source. If changing addresses, update PRIVATE_SUBNET,
+PRIVATE_IP_RANGE, EDGE_IP and TRUSTED_PROXY_CIDRS together; the fixed edge must
+stay outside automatic allocation.
+
+From backend/rust, after configuring that private file:
+
+```sh
+make prod-config prod-build prod-db prod-migrate prod-up
+make prod-maintenance
+```
+
+Pass `PROD_ENV_FILE=/absolute/private/rust.env` to each invocation and choose a
+distinct PROD_PROJECT when needed. Migrations remain explicit; startup checks
+histories. Maintenance prunes expired Identity challenges only, with bounded
+--limit/deadline and without starting API/mail/crypto workers.
+`make prod-backup BACKUP_DIRECTORY=/absolute/private/backup` quiesces the API and
+captures common database/private objects. `make prod-restore` also requires an
+unused RESTORE_PROJECT and leaves its API stopped. Protect bundles as credential-
+bearing data; restore only trusted owned backups.
+
+`make operations-test` owns a fresh image and disposable Docker projects. For an
+already built owned image, run
+`python3 -B scripts/operations_acceptance.py --image <owned-image>`.
+Observed acceptance exercises actual loopback Caddy/WebSockets, local SMTP,
+metrics, paired backup/restore, retained state and explicit maintenance. Public
+DNS/certificates, external delivery, split-database/cloud backups and Rust CLI/
+native products remain separate. Read [scope](../../contracts/behavior/rust-operations.md)
+and [the walkthrough](notes/modules/infra/production/README.md).
 
 Start learning at [the Rust reading order](notes/README.md). The reusable failure
 type uses ordinary `Result<T, Failure>`; HTTP serialization and runtime ownership

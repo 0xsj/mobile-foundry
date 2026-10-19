@@ -80,6 +80,6 @@ Run make backend-push-parity-test, make rust-check rust-test and
 make backend-postgres-parity-test. These checks use injected gateways only.
 No real provider keys, live cloud/device acceptance, dispatch receipts, durable
 attempts/queue, fanout, preference policy, retention, exactly-once guarantee or
-independent native/CLI Rust selection is included. Rust remains a foundation
-candidate; see [parity inventory](../../backend/rust/PARITY.md) and
+connected native Rust selection is included in these checks. Standalone extraction
+has separate [starter acceptance](rust-starter.md); see [parity inventory](../../backend/rust/PARITY.md) and
 [learning notes](../../backend/rust/notes/modules/internal/notifications/push.md).

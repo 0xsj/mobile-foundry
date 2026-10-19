@@ -1,0 +1,13 @@
+**
+!Cargo.toml
+!Cargo.lock
+!pkg/**
+!internal/**
+!cmd/**
+!migrations/**
+**/.env*
+**/.env.production
+**/*.private.json
+**/*.p8
+**/*.pem
+**/*.p12

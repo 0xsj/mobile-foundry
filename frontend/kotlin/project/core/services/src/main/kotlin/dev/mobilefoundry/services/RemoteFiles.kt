@@ -37,6 +37,11 @@ interface RemoteFilesReader {
     suspend fun download(file: RemoteFile): AppResult<ByteArray>
     suspend fun receipt(key: String): AppResult<FileReceipt>
 }
+/** Current metadata and verified bytes, without command or receipt authority. */
+interface RemoteFileDetailReader {
+    suspend fun get(id: String): AppResult<RemoteFile>
+    suspend fun download(file: RemoteFile): AppResult<ByteArray>
+}
 interface RemoteFilesWriter {
     suspend fun requestUpload(spec: UploadSpec, key: String): AppResult<FileReceipt>
     suspend fun uploadContent(file: RemoteFile, bytes: ByteArray): AppResult<Unit>

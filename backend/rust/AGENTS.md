@@ -84,6 +84,16 @@ before resources/pools. Keep polling mechanics in jobs and business policy in
 Notifications. Retention, admin/cross-session recovery and live delivery remain
 separate; copied migration bytes stay unchanged.
 
+The [portable operations slice](../../contracts/behavior/rust-operations.md) selects
+private metrics and exact trusted socket peers explicitly. Never label metrics
+with URI/identity/credential values or accept forwarding claims from untrusted
+peers. Own and join monitor/API tasks before resources/pools. Migrations/Identity
+pruning remain explicit tools. Pair database/private objects only while the
+selected API is quiescent; restore into unused namespaces and leave API stopped
+for review. Keep private configuration outside build/source copies and dynamic
+IP allocation outside the fixed edge. Local Docker does not establish public TLS,
+hosted recovery or Rust CLI/native readiness.
+
 Follow [backend ownership](../AGENTS.md), the shared contracts, and
 [the current parity inventory](PARITY.md). Go remains the behavioral reference;
 keep Rust ownership, `Result<T, Failure>`, trait ports and async task lifetime
@@ -115,5 +125,12 @@ Run `make check`, `make test`, and repository `make backend-parity-test` for
 runtime changes. Add shared cases when public behavior grows; distinguish shared
 corpus acceptance from full backend parity. Follow [notes](../../docs/NOTES.md)
 each slice, including first-use Rust mechanics and mirrored module walkthroughs.
-Register CLI generation and independently verify its output before promoting
-[starter readiness](../../docs/STARTER-READINESS.md).
+The [CLI 0.19.0 starter](../../contracts/behavior/rust-starter.md) is registered
+after independent generated memory/PostgreSQL/Docker acceptance. Preserve its
+explicit Cargo/resource closure, stable binary/reusable crate names and API
+package/lock rewrite, scoped Compose identity and private-state exclusions.
+New extraction/connection selections still require independent acceptance before
+promoting [starter readiness](../../docs/STARTER-READINESS.md). Native Rust
+connection follows [its separate contract](../../contracts/behavior/rust-connected-starter.md);
+earlier module-specific CLI-pending statements refer
+to their pre-extraction evidence and are superseded by this standalone baseline.

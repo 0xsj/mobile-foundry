@@ -23,6 +23,13 @@ CLI_PREFIX ?= $(HOME)/.local
 .PHONY: backend-push-providers-parity-test
 .PHONY: backend-push-jobs-parity-test
 .PHONY: backend-realtime-parity-test
+.PHONY: backend-operations-parity-test rust-operations-test
+
+backend-operations-parity-test:
+	$(FOUNDRY_PYTHON) -B scripts/operations_parity.py
+
+rust-operations-test:
+	$(MAKE) -C backend/rust operations-test
 
 backend-realtime-parity-test:
 	$(FOUNDRY_PYTHON) -B scripts/realtime_parity.py
@@ -140,6 +147,8 @@ cli-install:
 .PHONY: help kernel-build kernel-test http-test query-test data-test data-ui-test pending-notes-ui-test observation-test observation-ui-test session-test session-ui-test account-test account-ui-test shell-ui-test ui-test graphics-test assets-sync assets-check ios-generate ios-build ios-test android-build android-test android-ui-test notes-check
 
 help:
+	@echo 'make backend-operations-parity-test Verify Go/Rust proxy trust and private metrics'
+	@echo 'make rust-operations-test Verify disposable Rust Docker/Caddy/SMTP/backup recovery'
 	@echo 'make backend-realtime-parity-test Verify Go/Rust live Notes hints and owned WebSockets'
 	@echo 'make backend-push-jobs-parity-test Verify Go/Rust retained job and recovery behavior'
 	@echo 'make backend-push-providers-parity-test Verify local Go/Rust APNs/FCM and guarded HTTP'

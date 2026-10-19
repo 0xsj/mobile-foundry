@@ -136,3 +136,9 @@ The cache marker/schema refuses unknown or corrupt stores, including a journal f
 Gotchas: the 24-hour window controls usability with lazy cleanup, not scheduled erasure. Private backup-excluded storage is not an offline authentication grant. Later pages/cursors and automatic write replay remain outside this capability.
 
 Actual verification and versions are tracked in [construction/evidence](../../../../../../docs/blueprints/notes-read-cache.md). Continue with [checkpoint reasoning](../../../../../../notes/patterns/cached-content-and-command-checkpoints.md). Next: what product requirement would justify offline startup or a multi-page synchronization cursor?
+
+## Atomic Files journal — 2026-10-19
+
+[SQLitePendingFilesStore](../../../../packages/FoundryData/Sources/FoundryData/SQLitePendingFilesStore.swift) persists one metadata/blob row in a separate marked SQLite database. Each short transaction owns compare/stage/remove; none contains HTTP. The adapter preserves future/foreign/corrupt stores, uses FULL synchronous rollback commits and private backup-excluded storage. Removal compares exact input and cannot clear a newer intent.
+
+SQLite3 reads the bounded blob directly. Actor isolation serializes one instance; SQLite transactions serialize independent instances. Four disk tests cover full-limit reopen/delete CAS, competing instances, failed-removal rollback and schema/corruption refusal. Row removal is not secure erasure of free pages, and the byte limit is not a total heap/file-size promise. Read [the shared reasoning](../../../../../../notes/patterns/atomic-byte-staging-before-transport.md) and [actual verification](../../../../../../docs/blueprints/connected-files.md).

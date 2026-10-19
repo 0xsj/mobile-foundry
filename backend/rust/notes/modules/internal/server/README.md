@@ -80,6 +80,17 @@ canceled Realtime close retains the JoinSet for another close; see
 [the socket owner](../realtime/README.md) and
 [owned upgrades](../../../language/owned-upgrades-and-cancel-safe-join.md).
 
+Operations follow-up: [configuration](../../../../pkg/config/src/lib.rs) now admits
+explicit private metrics and trusted peer CIDRs. Process composition binds the
+monitor before module workers. Server installs fixed-label observation outside
+the boundary and supervises a separate listener in a retained JoinSet. Monitor
+failure triggers API drain; both listener owners join before module resources.
+Unexpectedly dropping the server future aborts the set rather than detaching a
+JoinHandle. Tests cover this cancellation and an injected monitor failure. The
+monitor uses two-second headers/three-second connection lifetime; no metrics
+route is mounted on the API. Read [telemetry](../../pkg/telemetry/README.md) and
+[the portable profile](../../infra/production/README.md).
+
 Gotchas: delivery workers/pools are selected explicitly; no generic module
 lifecycle registry exists. Interrupted COMMIT remains uncertain. Rust's network budgets
 are explicitly narrower than Go's. Related:

@@ -1,5 +1,20 @@
 # Swift learning notes
 
+Notice destinations, 2026-10-19: read [target versus current authority](../../../notes/patterns/notice-targets-and-current-authority.md), then the ProductApp/Services walkthroughs and [generated execution](../../../docs/blueprints/connected-media.md). CLI 0.26.0 adds an app-owned modal detail with generation fencing and explicit verified download; OS push/deep links remain separate.
+
+Connected inbox follow-up, 2026-10-19: CLI 0.21.0 explicitly adds Activity inbox
+to either connected backend. Read [construction/execution](../../../docs/blueprints/connected-inbox.md),
+the ProductApp/Services walkthroughs and [readback policy](../../../notes/patterns/inbox-refresh-and-setting-uncertainty.md).
+The state owner is temporary; current server state and exact session leases
+govern reads and recovery, without adding receipt or replay guarantees.
+
+Rust-connected follow-up, 2026-10-19: CLI 0.20.0 reuses the existing Session,
+Services, Data and product composition against Rust's shared HTTP contract.
+Read [actual generated acceptance](../../../docs/blueprints/rust-connected-starter.md)
+and [composition ownership](../../../notes/patterns/connected-products-and-composition.md).
+The native adapters keep their source names; backend selection is explicit in
+the CLI and acceptance process, without a second copy of session/recovery policy.
+
 Workspace follow-up, 2026-10-17: start with [construction/evidence](../../../docs/blueprints/native-workspaces.md), then the linked current-state/receipt pattern and Session/product walkthroughs. CLI 0.18.0 adds owner create/rename with explicit uncertainty review.
 
 Registration follow-up, 2026-10-17: start with [construction/evidence](../../../docs/blueprints/native-registration.md), then its linked profile/session separation pattern and Session/product walkthroughs. The port confirms a profile; explicit sign-in separately opens Personal.
@@ -780,3 +795,14 @@ device cases pass with zero failures/skips. They exercise real drag, alternate
 launch controls, pause/resume/scoring/reset, and Android target/slider changes.
 Module walkthroughs record the test-clock/compiler corrections and evidence
 limits. Physics remains a catalog capability rather than an accepted CLI feature.
+
+The optional Files product selection is covered by the [ProductApp walkthrough](modules/apps/ProductApp/README.md)
+and [shared recovery lesson](../../../notes/patterns/file-receipts-and-byte-recovery.md).
+
+Files + Inbox now has a deliberate combined composition; continue with the
+[ProductApp notes](modules/apps/ProductApp/README.md) and
+[producer/consumer lesson](../../../notes/patterns/producer-receipts-and-consumer-views.md).
+
+Files recovery follow-up (CLI 0.24.0): read [explicit abandonment versus settlement](../../../notes/patterns/explicit-abandonment-is-not-settlement.md), then [the generated-app evidence](../../../docs/blueprints/connected-files.md). Review names the original operation; Keep preserves it, while Forget local recovery releases only local bytes/command. Old dialogs and active work cannot discard a newer intent. Durable transfers remain a separate slice.
+
+Durable Files follow-up (CLI 0.25.0): read [atomic byte staging before transport](../../../notes/patterns/atomic-byte-staging-before-transport.md), then [the exact generated-app evidence](../../../docs/blueprints/connected-files.md). Accepted intent now survives process exit through a separate journal; drafts remain view-owned, restore never resends, and unreadable journals block changes. Next questions: cleanup responsibility, quota/retention and background transfer ownership.

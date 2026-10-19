@@ -19,10 +19,13 @@ Identity/accounts/remote Notes composition; it requires the Go backend.
 | `--profile native-daily\|native-workspace\|native-browse` | Select a registered inventory; Daily remains the default. Workspace/Browse select UI-only placeholder navigation with their own tests. |
 | `--with local-data` | Select the registered Daily/UI/local-data combination. Omission keeps the UI-only starter. Unknown, repeated, planned or unregistered combinations are refused before output creation. |
 | `--with go-connected --backend go` | Select Daily with native Go sign-in, accounts and remote Notes, including device credential storage and copied acceptance. Refuses local-data/other shells. |
-| `--api-base-url URL` | Public deployment endpoint for go-connected only. Defaults to Debug loopback 8080/v1; HTTPS or explicit loopback HTTP, with strict admission. |
-| `--backend none\|go` | Default frontend-only mode or a separately configured Go API. Planned/unknown backends are refused before writing output. |
-| `--platform none --backend go` | Backend-only output; refuses native profile/capability/app-ID/signing inputs. |
+| `--with rust-connected --backend rust` | Select Daily with the same native ports and Rust API; requires independent connected acceptance. Refuses mixed backends, local-data/other shells. |
+| `--with inbox` | Add the registered account inbox to Daily with one matching Go/Rust connected capability. Selects Activity state/UI and narrow service/fixture closure; other combinations are refused. |
+| `--api-base-url URL` | Public deployment endpoint for an explicit connected selection. Defaults to Debug loopback 8080/v1; HTTPS or explicit loopback HTTP, with strict admission. |
+| `--backend none\|go\|rust` | Default frontend-only mode or an independently configured Go/Rust API. Planned/unknown backends are refused before writing output. |
+| `--platform none --backend go\|rust` | Backend-only output; refuses native profile/capability/app-ID/signing inputs. |
 | `--go-module DOMAIN/PATH` | Go module identity; requires --backend go. Default example.com/NAME/backend; conservative lowercase path admission. |
+| `--rust-package NAME` | Rust API package identity; requires --backend rust. Default NAME-api; bounded lowercase/hyphen admission and workspace/dependency collision refusal. |
 | `--display-name TEXT` | Optional product label; otherwise title-case the project name. Limited to a single line, 1–60 characters; xcconfig comment/substitution syntax is refused. Android XML/Android string escaping is applied. |
 | `--app-id ID` | Optional installed identity for selected apps; default `dev.example.` plus the project's alphanumeric name. Valid shared Swift/Android identifier segments; source module/R/component names stay unchanged. |
 | `--ios-team ID` | Optional deliberate ten-character Apple team input, valid only when Swift is selected. Default blank. No secrets or signing keys are copied. |
@@ -32,7 +35,7 @@ Identity/accounts/remote Notes composition; it requires the Go backend.
 CLI source discovery is anchored to the executable, not the caller's working
 directory. A local install links that executable into a chosen `bin` directory;
 the install refuses to overwrite another executable. Initialization requires no
-Xcode, Android SDK, network, Go runtime or package-manager installation.
+Xcode, Android SDK, network, Go/Rust toolchain or package-manager installation.
 
 ## Admission and copy ordering
 
@@ -81,4 +84,13 @@ preservation and cleanup on failure. Starter readiness additionally requires
 actual renamed output built/run outside the checkout, included capability tests
 and a small app-owned service/query/mutation feature. Static inventory or toolchain
 checks alone do not promote readiness. Go extraction has passed its independent
-gate; generated connected native profiles remain deferred to their own acceptance.
+gate; [Rust extraction](rust-starter.md) now passes its own independent gate too.
+Generated connected native profiles require their separate selected acceptance.
+
+CLI 0.22.0 registers optional Daily files with either matching connected backend.
+Its explicit manifests select the existing binary Files service ports/adapters,
+app-owned FilesStore/Today screen and photo-picker acceptance. They select no
+GPU/editor or inbox UI. Pending transfer input is bounded and ephemeral;
+server-page process restoration must not be described as durable transfer
+recovery. CLI 0.23.0 adds the explicit Files + Inbox combination with separate native
+acceptance; existing single-feature selections retain their own source closure.

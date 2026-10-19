@@ -37,6 +37,16 @@ def inspect(platforms, environ=None, backend="none"):
     if backend == "go":
         results.append(probe("go", ["version"], (1, 27, 1), r"go(\d+)\.(\d+)\.(\d+)"))
         results.append(Observation("Go persistence", True, "memory needs no external service; PostgreSQL/Compose setup is separate"))
+    if backend == "rust":
+        rust_env=dict(env,RUSTUP_AUTO_INSTALL="0")
+        clippy=probe("cargo", ["clippy","--version"], (0,1,86), r"clippy (\d+)\.(\d+)\.(\d+)", env=rust_env)
+        results += [probe("rustc", ["--version"], (1,86,0), r"rustc (\d+)\.(\d+)\.(\d+)", env=rust_env),
+                    probe("cargo", ["--version"], (1,86,0), r"cargo (\d+)\.(\d+)\.(\d+)", env=rust_env),
+                    probe("rustfmt", ["--version"], (1,0,0), r"rustfmt (\d+)\.(\d+)\.(\d+)", env=rust_env),
+                    Observation("Clippy", clippy.ok, clippy.detail),
+                    probe("openssl", ["version"], (1,0,0), r"(?:OpenSSL|LibreSSL) (\d+)\.(\d+)\.(\d+)", env=rust_env),
+                    Observation("Rust host", sys.platform in {"darwin","linux"}, "native runner/checks require macOS/Linux; Docker Linux builds are separate"),
+                    Observation("Rust persistence", True, "memory needs no service; PostgreSQL/Docker and OpenSSL for TLS tests are separate prerequisites")]
     if "swift" in platforms:
         results += [probe("xcodebuild", ["-version"], (26, 2), r"Xcode (\d+)\.(\d+)"),
                     probe("swift", ["--version"], (6, 2), r"Swift version (\d+)\.(\d+)"),

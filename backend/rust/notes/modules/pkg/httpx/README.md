@@ -34,8 +34,12 @@ domain code strings do not select them.
 Identity now consumes the shared bounded byte reader with an endpoint-owned
 ordered string decoder, rather than silently inheriting generic Value
 normalization. Its credential routes preserve Go duplicate/type/null/case rules
-for the shared corpus. PeerAddress is selected only from accepted sockets by
-the server. It is not sourced from an HTTP forwarding header.
+for the shared corpus. PeerAddress initially comes from the accepted socket.
+An explicit [proxy policy](../../../../pkg/httpx/src/proxy.rs) now admits exactly
+one IP only for configured trusted peers. Untrusted claims are ignored; malformed,
+missing or duplicate trusted values become owned problems. Identity gates use
+the effective address. Seventeen shared cases and actual source-gate process
+checks cover this; no IP echo diagnostic route is added.
 
 The follow-up executes 26 JSON and 27 header fixtures in both languages. Rust's
 fault tests separate a stalled stream, broken stream, serialization failure and

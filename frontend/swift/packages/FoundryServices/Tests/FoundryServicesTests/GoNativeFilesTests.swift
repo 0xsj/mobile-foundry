@@ -4,6 +4,45 @@ import FoundryHTTP
 import FoundryKernel
 import FoundryServices
 
+@Test func fileDetailAdmissionRejectsUnrelatedDeletedAndUnversionedMetadata() async throws {
+    actor Wire: HTTPTransport {
+        let body: JSONValue; let etag: String?
+        var requests: [PreparedRequest] = []
+        init(_ body: JSONValue, _ etag: String?) { self.body = body; self.etag = etag }
+        func send(_ request: PreparedRequest) async throws -> AppResult<WireResponse> {
+            requests.append(request)
+            return .success(WireResponse(status: 200, headers: etag.map { ["etag": $0] } ?? [:], body: try JSONEncoder().encode(body)))
+        }
+    }
+    let account = "00000000-0000-4000-8000-000000000002", principal = "00000000-0000-4000-8000-000000000003", id = "00000000-0000-4000-8000-000000000004"
+    let base: [String: JSONValue] = ["id": .string(id), "account_id": .string(account), "owner_id": .string(principal), "name": .string("File.png"), "content_type": .string("image/png"), "byte_size": .number(3), "sha256": .string(String(repeating: "a", count: 64)), "status": .string("available"), "version": .number(2)]
+    for scenario in ["available", "pending", "wrong-id", "wrong-account", "deleted", "wrong-etag", "missing-etag"] {
+        var body = base; var etag: String? = "\"2\""
+        switch scenario {
+        case "pending": body["status"] = .string("pending_upload"); body["version"] = .number(1); etag = "\"1\""
+        case "wrong-id": body["id"] = .string(principal)
+        case "wrong-account": body["account_id"] = .string(principal)
+        case "deleted": body["status"] = .string("deleted"); body["version"] = .number(3); etag = "\"3\""
+        case "wrong-etag": etag = "\"1\""
+        case "missing-etag": etag = nil
+        default: break
+        }
+        let wire = Wire(.object(body), etag)
+        let client = try DefaultHTTPClient.create(baseURL: "https://example.invalid/v1", transport: wire).get()
+        let repo = HTTPRemoteFilesRepository(client: client, accountID: account, principalID: principal)
+        let result = try await repo.get(id: id)
+        if ["available", "pending"].contains(scenario) { #expect(try result.get().id == id) }
+        else if case .failure(let error) = result { #expect(error.meta.code == "files.invalid_remote_response") }
+        else { Issue.record("Admitted \(scenario)") }
+        for invalid in ["../escape", id + "\n", String(repeating: "0", count: 36)] {
+            if case .success = try await repo.get(id: invalid) { Issue.record("Admitted invalid target") }
+        }
+        let requests = await wire.requests; #expect(requests.count == 1)
+        #expect(requests[0].method == .GET && requests[0].url.path == "/v1/accounts/\(account)/files/\(id)")
+        #expect(requests[0].headers["idempotency-key"] == nil && requests[0].headers["if-match"] == nil)
+    }
+}
+
 private struct BearerFilesHTTP: HTTPClient {
     let client: any HTTPClient; let token: String
     private func options(_ o: RequestOptions) -> RequestOptions { .init(query: o.query, headers: ["authorization": "Bearer \(token)"], body: o.body, ifMatch: o.ifMatch, idempotencyKey: o.idempotencyKey, binaryBody: o.binaryBody) }
@@ -37,12 +76,14 @@ func nativeGoFilesBinaryTransferAndReceiptRecovery() async throws {
     let lost = HTTPRemoteFilesRepository(client: LoseFileAcknowledgement(bearer, suffix: "/uploads"), accountID: accountID, principalID: principal)
     if case .success = try await lost.requestUpload(spec, key: key + ".request") { Issue.record("Acknowledgement was not dropped") }
     let requested = try await repo.receipt(key: key + ".request").get()
+    #expect(try await repo.get(id: requested.file.id).get() == requested.file)
     #expect(try await repo.requestUpload(spec, key: key + ".request").get().file == requested.file)
     #expect(try await repo.page().get().files.count == 1)
     _ = try await repo.uploadContent(requested.file, bytes: bytes).get()
     let droppedComplete = HTTPRemoteFilesRepository(client: LoseFileAcknowledgement(bearer, suffix: "/complete"), accountID: accountID, principalID: principal)
     if case .success = try await droppedComplete.complete(requested.file, key: key + ".complete") { Issue.record("Completion acknowledgement was not dropped") }
     let available = try await repo.receipt(key: key + ".complete").get().file
+    #expect(try await repo.get(id: available.id).get() == available)
     #expect(available.status == .available && available.version == 2)
     #expect(try await repo.complete(requested.file, key: key + ".complete").get().file == available)
     #expect(try await repo.download(available).get() == bytes)
@@ -70,6 +111,7 @@ func nativeGoFilesBinaryTransferAndReceiptRecovery() async throws {
     #expect(try await otherInbox.mediaEnabled().get())
     _ = try await repo.delete(available, key: key + ".delete").get()
     #expect(try await repo.page().get().files.isEmpty)
+    if case .failure(let value) = try await repo.get(id: available.id) { #expect(value.kind == .notFound) } else { Issue.record("Deleted metadata was returned") }
     #expect(try await repo.complete(requested.file, key: key + ".complete").get().file == available)
     if case .failure(let value) = try await repo.download(available) { #expect(value.kind == .notFound) } else { Issue.record("Deleted bytes were downloaded") }
     let refresh = try #require(grant.body.object?["refresh_token"]?.string)

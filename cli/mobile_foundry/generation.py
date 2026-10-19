@@ -20,7 +20,7 @@ from .profiles import ProfileError, admitted_path, relative_path
 EXCLUDED_NAMES = {
     ".git", ".hg", ".svn", ".idea", ".vscode", ".cache", ".build", "build",
     "DerivedData", ".gradle", ".kotlin", "xcuserdata", "node_modules", ".venv",
-    "__pycache__", ".pytest_cache", ".DS_Store", "local.properties", ".push-private",
+    "__pycache__", ".pytest_cache", ".DS_Store", "local.properties", ".push-private", "target", ".data", ".cargo",
 }
 EXCLUDED_SUFFIXES = {".xcuserstate", ".pyc", ".log", ".jks", ".keystore", ".p12", ".pfx", ".mobileprovision", ".pem", ".key", ".cer", ".p8"}
 
@@ -65,7 +65,7 @@ def excluded(relative, patterns):
     if any(part in EXCLUDED_NAMES for part in path.parts) or path.suffix.lower() in EXCLUDED_SUFFIXES:
         return True
     name = path.name
-    if name.lower().endswith((".private.json", ".private.yaml", ".private.yml")):
+    if name.lower().endswith((".private.json", ".private.yaml", ".private.yml", ".private.toml")):
         return True
     if name.lower() in {"push.local.json", "service-account.json", "serviceaccountkey.json"} or name.lower().endswith(".service-account.json"):
         return True
@@ -180,6 +180,10 @@ def plan_backend_sources(root, selection, inputs):
 
 
 def configure_backend(destination, selection, inputs, files):
+    if selection.profile["id"] == "rust":
+        from .rust_backend import configure
+        configure(destination, selection, inputs)
+        return
     old, new = selection.profile["sourceModule"], selection.module
     mod = destination / "backend/go/go.mod"
     text, count = re.subn(r"(?m)^module " + re.escape(old) + r"$", lambda _: "module " + new, mod.read_text())
@@ -268,12 +272,13 @@ def create_project(root, profile, manifest_path, inputs, output, backend=None, a
         metadata = {
             "schemaVersion": 1, "generatorVersion": VERSION, "name": inputs.name,
             "displayName": inputs.display_name, "appId": inputs.app_id or None, "iosTeam": inputs.ios_team,
-            "profile": profile["id"] if profile else None, "platforms": list(inputs.platforms), "backend": "go" if backend else "none",
+            "profile": profile["id"] if profile else None, "platforms": list(inputs.platforms), "backend": backend.profile["id"] if backend else "none",
             "shell": profile["shell"] if profile else None, "capabilities": profile["capabilities"] if profile else [],
             "createdAt": datetime.now(timezone.utc).isoformat(), "source": provenance,
         }
         if backend:
-            metadata.update(goModule=backend.module, backendModules=backend.profile["modules"], nativeBackendConnection="go-connected" if base else "unconnected" if profile else None)
+            metadata.update(backendModules=backend.profile["modules"], nativeBackendConnection=backend.profile["id"] + "-connected" if base else "unconnected" if profile else None)
+            metadata["goModule" if backend.profile["id"] == "go" else "rustPackage"] = backend.module if backend.profile["id"] == "go" else backend.package
         if base:
             metadata["apiBaseURL"] = base
         (destination / "mobile-foundry.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")

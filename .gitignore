@@ -27,6 +27,7 @@ local.properties
 
 # Local file-object storage
 backend/go/.data/
+backend/rust/.data/
 
 # Shared generated output
 .cache/

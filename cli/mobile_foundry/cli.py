@@ -6,13 +6,14 @@ import sys
 from . import VERSION
 from .capabilities import discover_combinations, select_combination
 from .backends import select_backend
+from .connections import connection_capability
 from .doctor import inspect
 from .generation import ProductInputs, create_project
 from .profiles import DEFAULT_SOURCE, ProfileError, discover, source_root
 
 
 def parser():
-    root = argparse.ArgumentParser(prog="mobile-foundry", description="Copy independent native products and Go APIs from registered local profiles.")
+    root = argparse.ArgumentParser(prog="mobile-foundry", description="Copy independent native products and Go/Rust APIs from registered local profiles.")
     root.add_argument("--version", action="version", version=VERSION)
     commands = root.add_subparsers(dest="command")
     listing = commands.add_parser("list", help="List native profiles and planned backend combinations")
@@ -24,7 +25,8 @@ def parser():
     init.add_argument("--with", dest="capabilities", action="append", default=[], metavar="CAPABILITY", help="Add a registered capability (for example local-data)")
     init.add_argument("--backend", default="none")
     init.add_argument("--go-module", help="Go domain/path module identity; requires --backend go")
-    init.add_argument("--api-base-url", help="Public API base for go-connected; defaults to Debug loopback http://127.0.0.1:8080/v1")
+    init.add_argument("--rust-package", help="Rust API package identity; requires --backend rust")
+    init.add_argument("--api-base-url", help="Public API base for a connected profile; defaults to Debug loopback http://127.0.0.1:8080/v1")
     init.add_argument("--output", default=".", help="Existing parent directory; output is PARENT/NAME")
     init.add_argument("--source", default=str(DEFAULT_SOURCE))
     init.add_argument("--display-name")
@@ -32,7 +34,7 @@ def parser():
     init.add_argument("--ios-team")
     doctor = commands.add_parser("doctor", help="Report selected local toolchains without installing or building")
     doctor.add_argument("--platform", choices=("swift", "kotlin", "both", "none"), default="both")
-    doctor.add_argument("--backend", choices=("none", "go"), default="none")
+    doctor.add_argument("--backend", choices=("none", "go", "rust"), default="none")
     return root
 
 
@@ -67,7 +69,7 @@ def main(argv=None):
         if args.command == "doctor":
             platforms = ("swift", "kotlin") if args.platform == "both" else () if args.platform == "none" else (args.platform,)
             if not platforms and args.backend == "none":
-                raise ProfileError("--platform none requires --backend go.")
+                raise ProfileError("--platform none requires --backend go or --backend rust.")
             observations = inspect(platforms, backend=args.backend)
             for observation in observations:
                 print(f"{'OK' if observation.ok else 'MISSING'}  {observation.name}: {observation.detail}")
@@ -89,12 +91,12 @@ def main(argv=None):
             for backend in backends:
                 print(f"  {backend['id']}: {backend['status']}")
             return 0
-        backend = select_backend(root, backends, args.backend, args.go_module, args.name)
+        backend = select_backend(root, backends, args.backend, args.go_module, args.name, args.rust_package)
         if args.platform == "none":
             if args.profile or args.capabilities:
                 raise ProfileError("--platform none does not select a native profile or --with capabilities.")
             if backend is None:
-                raise ProfileError("--platform none requires --backend go.")
+                raise ProfileError("--platform none requires --backend go or --backend rust.")
             identity, profile, manifest_path, platform = None, None, None, "none"
         else:
             identity = choose(args.profile or "native-daily", sorted(profiles), "profile")
@@ -105,9 +107,10 @@ def main(argv=None):
         destination = create_project(root, profile, manifest_path, inputs, args.output, backend=backend, api_base_url=args.api_base_url)
         print(f"Created {destination}\nProfile: {identity or 'backend only'}\nPlatforms: {', '.join(inputs.platforms) or 'none'}\nCapabilities: {', '.join(profile['capabilities']) if profile else 'backend modules'}\nBackend: {args.backend}\nApp ID: {inputs.app_id or 'none'}")
         if backend:
-            print(f"Go module: {backend.module}\nModules: {', '.join(backend.profile['modules'])}")
-            if profile and "go-connected" in profile["capabilities"]:
-                print("Native sign-in, accounts and remote Notes are connected to Go. Read SETUP.md for the API endpoint and device workflow.")
+            print((f"Go module: {backend.module}" if backend.profile["id"] == "go" else f"Rust API package: {backend.package}")+f"\nModules: {', '.join(backend.profile['modules'])}")
+            if connection_capability(profile):
+                label = "Go" if backend.profile["id"] == "go" else "Rust"
+                print(f"Native sign-in, accounts and remote Notes are connected to {label}. Read SETUP.md for the API endpoint and device workflow.")
             elif profile:
                 print("Native shells and API are independent; session/data UI wiring is not selected.")
         print("Read SETUP.md for build/test/run commands. Dependencies are not installed automatically.")

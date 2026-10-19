@@ -1,5 +1,9 @@
 # Connected Daily starter
 
+CLI 0.20.0 also exposes [Rust-connected Daily](rust-connected-starter.md) through
+the same native ports/composition and a separate backend selection/acceptance.
+The Go-connected capability continues to require Go; co-location remains separate.
+
 CLI 0.18.0 selects [native owner workspace management](native-workspaces.md):
 create without switching, strong-version rename and explicit current-state
 read/review after uncertainty. Account writes have no receipt/replay contract.
@@ -20,7 +24,7 @@ combinations are refused before output creation.
 
 ## Configuration and boundaries
 
-The CLI admits `--api-base-url` only for this capability. Its default is
+The CLI admits `--api-base-url` only for an explicit connected capability. Its default is
 `http://127.0.0.1:8080/v1`. Inputs are bounded ASCII HTTPS URLs or loopback HTTP;
 credentials, query, fragment, invalid ports, escaped/empty/dot path segments and
 whitespace are refused. Canonical host/default-port/trailing-slash normalization

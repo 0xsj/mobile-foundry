@@ -1,5 +1,15 @@
 # Services walkthrough
 
+## Narrow inbox extraction — 2026-10-19
+
+Optional connected inbox copies the existing reader/writer/HTTP types and
+RemoteServiceAdmission helper without Files or provider APIs. The overlaid JVM
+module selects its own notifications fixture property; the catalog's broader
+Gradle setup is not a generated dependency. Same-module helper declarations
+remain required even though no import names their source file. Read
+[generated execution](../../../../../../../docs/blueprints/connected-inbox.md)
+and [CLI reasoning](../../../../../../../notes/modules/cli/README.md#optional-account-inbox--2026-10-19).
+
 ## Remote notification values — 2026-10-17
 
 Claim: foreground receipt and an open are distinct UI-dispatcher transitions;
@@ -387,3 +397,25 @@ The immutable snapshot admits distinct IDs, a saved timestamp and the journal co
 Gotchas: the 24-hour window controls usability with lazy cleanup, not scheduled erasure. Private backup-excluded storage is not an offline authentication grant. Later pages/cursors and automatic write replay remain outside this capability.
 
 Actual verification and versions are tracked in [construction/evidence](../../../../../../../docs/blueprints/notes-read-cache.md). Continue with [checkpoint reasoning](../../../../../../../notes/patterns/cached-content-and-command-checkpoints.md). Next: what product requirement would justify offline startup or a multi-page synchronization cursor?
+
+## Connected Files selection (2026-10-19)
+
+The optional Files source closure selects RemoteFiles and its HTTP repository,
+plus the existing real binary transfer/receipt test. That test also observes
+Notifications delivery, so Notifications decoder/helper/fixtures are selected
+without selecting the Activity inbox screen. The exact-lease HTTP client stays
+one-attempt; app-owned recovery performs completion receipt lookup before bytes
+and repeats original deletion for external cleanup. See the product module's
+Files section for selected sources, independent execution and ephemeral limits.
+
+## Durable Files input and port — 2026-10-19
+
+[PendingFiles](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/PendingFiles.kt) admits a separate original scope/key/action/specification and immutable payload, without importing Session. Metadata encodes an owned strict envelope; upload bytes verify size/hash, while delete records retain the observed nondeleted file/version and no bytes. Exact encoded metadata avoids Unicode semantic equality replacing input. The global memory adapter and disk seam expose load/stage/remove with exact compare semantics.
+
+Read [staging reasoning](../../../../../../../notes/patterns/atomic-byte-staging-before-transport.md) and [the behavior contract](../../../../../../../contracts/behavior/pending-files.md). Shared fourteen-case fixtures and the global-slot/stale-remove checks exercise both implementations. Current generated execution and limits live in [construction evidence](../../../../../../../docs/blueprints/connected-files.md).
+
+## Current file lookup — 2026-10-19
+
+Claim: a read-only destination must resolve current metadata rather than reuse a receipt or scan a bounded first page. CLI 0.26.0 adds RemoteFileDetailReader in [RemoteFiles](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/RemoteFiles.kt) and implements it in [HTTPRemoteFilesRepository](../../../../../project/core/services/src/main/kotlin/dev/mobilefoundry/services/HTTPRemoteFilesRepository.kt). It adds no command or receipt authority to the destination. GET validates canonical ID before transport, then requested identity, account, nondeleted status and strong version ETag; existing download verification remains intact.
+
+[Adapter tests](../../../../../project/core/services/src/test/kotlin/dev/mobilefoundry/services/GoNativeFilesTest.kt) exercise seven response scenarios and malformed targets with no outgoing request. The real API flow now reads pending and available metadata and verifies deleted metadata returns not-found against each selected backend. Read [the pattern](../../../../../../../notes/patterns/notice-targets-and-current-authority.md) and [generated evidence](../../../../../../../docs/blueprints/connected-media.md). A notice alone is never current access evidence.

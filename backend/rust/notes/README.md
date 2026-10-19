@@ -1,5 +1,34 @@
 # Rust backend learning notes
 
+Native connection follow-up, 2026-10-19: CLI 0.20.0 explicitly selects this API
+for Daily through rust-connected. Read [generated execution evidence](../../../docs/blueprints/rust-connected-starter.md)
+and [the CLI walkthrough](../../../notes/modules/cli/README.md#rust-native-connection--2026-10-19).
+Native ports, lease policy and SQLite recovery remain shared with Go-connected.
+This follow-up supersedes earlier native-unregistered statements for that
+selected capability; other shells/features and full wire equivalence remain separate.
+
+CLI handoff, 2026-10-18: Rust is a **standalone backend starter** through 0.19.0.
+Read [construction/evidence](../../../docs/blueprints/rust-starter.md),
+[the CLI walkthrough](../../../notes/modules/cli/README.md) and
+[Cargo closure reasoning](../../../notes/techniques/cargo-closure-and-independent-starters.md).
+A renamed independent output passes locked checks/tests/smoke, its actual Make
+runner, disposable PostgreSQL fault/process-loss/restart and a freshly built
+Docker/Caddy/mail/backup flow. Earlier follow-ups below describe the pre-extraction
+candidate; this handoff supersedes their CLI-unregistered statements. Native
+connected Rust selection, public TLS/hosting and external delivery remain separate.
+
+Operations follow-up, 2026-10-18: read [portable ingress/runtime](modules/infra/production/README.md),
+[fixed-label metrics](modules/pkg/telemetry/README.md),
+[operational drivers](modules/scripts/README.md),
+[paired backups](patterns/quiesced-database-and-object-backups.md) and
+[Compose allocation](substrate/compose-address-allocation.md).
+Seventeen shared proxy cases and actual Go/Rust metrics/source-gate processes
+pass. Rust image/disposable Docker checks exercise actual edge/WebSockets, local
+SMTP, private metrics, quiesced DB/object backup and unused-project restore.
+Read [healthcheck](modules/cmd/healthcheck/README.md) and
+[explicit pruning](modules/cmd/maintenance/README.md) for the tools. Public TLS/
+hosting, external delivery and Rust CLI/native selection remain separate.
+
 Realtime follow-up, 2026-10-18: read [the socket owner](modules/internal/realtime/README.md),
 [the bounded hub](modules/pkg/broadcast/README.md),
 [subscribe before refetch](patterns/subscribe-before-refetch.md) and
@@ -19,7 +48,7 @@ workers preserve outcomes/lineage and pass 21 shared HTTP guards without cloud
 requests. Defaults remain off; retention, live delivery and Rust CLI/native
 selection remain separate.
 
-Observed 2026-10-18. Rust now has a twenty-one-crate workspace with runtime/Health,
+Observed 2026-10-18. Rust now has a twenty-four-crate workspace with runtime/Health,
 shared HTTP admission, memory/PostgreSQL Identity/Account/Audit/Notes/Files/Notifications, capabilities and committed delivery. CLI extraction and
 native connected Rust selection remain unregistered.
 

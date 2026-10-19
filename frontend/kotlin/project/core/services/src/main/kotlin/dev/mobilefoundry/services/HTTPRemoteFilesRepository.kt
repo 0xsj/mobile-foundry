@@ -7,9 +7,17 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.serialization.json.*
 
 /** Account-bound, one attempt. Inject a client bound to the exact session lease. */
-class HTTPRemoteFilesRepository(private val client: HTTPClient, val accountId: String, val principalId: String) : RemoteFilesRepository {
+class HTTPRemoteFilesRepository(private val client: HTTPClient, val accountId: String, val principalId: String) : RemoteFilesRepository, RemoteFileDetailReader {
     private val admitted get() = FilesAdmission.uuid(accountId) && FilesAdmission.uuid(principalId)
     private val path get() = "accounts/$accountId/files"
+    override suspend fun get(id: String): AppResult<RemoteFile> {
+        if (!admitted || !FilesAdmission.uuid(id)) return Outcome.Err(FilesAdmission.invalid)
+        return request(HTTPMethod.GET, "$path/$id").flatMap { e ->
+            val file = decode(e.body)
+            if (e.metadata.status != 200 || file == null || file.id != id || file.status == FileStatus.DELETED || e.metadata.etag != "\"${file.version}\"") Outcome.Err(invalidResponse)
+            else Outcome.Ok(file)
+        }
+    }
     override suspend fun page(cursor: String?, limit: Int): AppResult<FilesPage> {
         if (!admitted || limit !in 1..100 || cursor != null && (cursor.isEmpty() || cursor.length > 512)) return Outcome.Err(FilesAdmission.invalid)
         val query = listOf(QueryItem("limit", limit.toString())) + (cursor?.let { listOf(QueryItem("cursor", it)) } ?: emptyList())

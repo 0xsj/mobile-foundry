@@ -1,5 +1,87 @@
 # Local project CLI
 
+CLI 0.26.0 adds read-only file destinations to Files + Inbox: Open file resolves current authorized metadata, with explicit verified preview and unavailable-target handling. Opening leaves read state unchanged. Read [behavior](../contracts/behavior/notice-destinations.md) and [execution evidence](../docs/blueprints/connected-media.md).
+
+CLI 0.25.0 adds durable manual Files recovery to Files-only and Files + Inbox: one private journal stages original metadata/bytes before HTTP and restores them across process exit. Restore never resends. Read [behavior and evidence](../docs/blueprints/connected-files.md).
+
+CLI 0.24.0 adds explicit Files recovery review to Files-only and Files + Inbox selections. Keep preserves the original command; Forget local recovery releases local bytes/key and requires a fresh read without claiming rollback or cleanup. Read [behavior, evidence and limits](../docs/blueprints/connected-files.md).
+
+CLI 0.23.0 adds an explicit [Files + Inbox selection](../docs/blueprints/connected-media.md):
+
+```sh
+mobile-foundry init canopy --platform both --with files --with inbox --with go-connected --backend go
+```
+
+Use rust-connected and --backend rust for Rust. Today uploads through Files;
+Activity reads backend-created notices and refreshes on entry. Each feature keeps
+its own recovery rules; Files now uses durable manual storage. Both native/backend combinations
+are ready for the tested local baseline; read the guide for evidence and limits.
+
+CLI 0.22.0 adds an optional [account Files](../docs/blueprints/connected-files.md)
+selection for either matching connected Daily backend:
+
+```sh
+mobile-foundry init media --platform both --with files --with go-connected --backend go
+```
+
+Use rust-connected and --backend rust for Rust. Today selects gallery imports,
+explicit uploads, verified download previews and confirmed deletion. Pending
+Files recovery is now bounded and durable in CLI 0.25.0; restore never resends intent.
+Files and Inbox can be selected together in CLI 0.23.0; see the combined guide
+below for current independent verification and limits.
+
+CLI 0.21.0 adds an optional [account inbox](../docs/blueprints/connected-inbox.md)
+to Daily with either connected backend:
+
+```sh
+mobile-foundry init canopy --platform both --with go-connected --with inbox --backend go
+```
+
+For Rust, use --with rust-connected --with inbox --backend rust. Activity selects
+the scoped inbox; omitting inbox preserves the placeholder. Read SETUP.md for
+unread/filter/paging, media settings, uncertainty/readback and owned acceptance.
+
+CLI 0.20.0 adds explicit [Rust-connected Daily](../docs/blueprints/rust-connected-starter.md):
+the same native session/accounts/Notes composition, with a copied Rust API.
+
+```sh
+mobile-foundry init canopy --platform both --with rust-connected --backend rust \
+  --app-id com.example.canopy --rust-package canopy-api
+cd canopy
+make rust-dev
+```
+
+Choose swift or kotlin for one native app. Generated SETUP.md includes connected
+acceptance, Rust persistence/operations and device networking. Backend selection
+alone remains co-location. Go-connected still requires Go; Rust-connected requires
+Rust. Other shells and local-data combinations are not inferred.
+
+CLI 0.19.0 registers the [standalone Rust backend](../docs/blueprints/rust-starter.md).
+It copies 24 local crates, locked dependencies, migrations, portable drivers and
+30 shared fixtures, with independent memory/PostgreSQL/Docker acceptance.
+
+```sh
+mobile-foundry doctor --platform none --backend rust
+mobile-foundry init canopy --platform none --backend rust
+cd canopy
+make rust-check rust-test rust-smoke
+make rust-dev
+```
+
+`--rust-package` optionally changes the API package (default NAME-api); use 1–64
+lowercase letters/digits with single internal hyphens, starting with a letter.
+Workspace/dependency collisions are refused. The api-server binary and reusable
+crate names stay stable. `--go-module` belongs to Go; `--rust-package` belongs to
+Rust. Native commands require macOS/Linux, Rust/Cargo 1.86+, rustfmt/Clippy and
+OpenSSL for TLS tests. Initialization still needs only Python 3.11+; doctor disables
+Rustup auto-install. Docker and optional local PostgreSQL are separate prerequisites.
+
+Rust can also be co-located with native shells via `--backend rust`; native
+connection requires the explicit rust-connected capability above.
+The generated root includes rust-integration-test, rust-operations-test and explicit
+database/production wrappers. Each output owns its package/lock/Compose defaults;
+private Cargo state, keys and retained app data are excluded.
+
 CLI 0.18.0 selects workspace create/rename forms behind AccountManagement, strong
 version checks and explicit read/review after uncertainty. See [setup and evidence](../docs/blueprints/native-workspaces.md).
 
@@ -102,8 +184,8 @@ SQLite persistence, CRUD state and live observation. All three platforms above
 support that combination. Backend `none` is the default;
 Go is available through `--backend go`, selecting Health, Identity, Account,
 Audit, Notes, Files and Notifications with memory/PostgreSQL stores. Notifications
-adds the upload-ready inbox, read state and media preferences; native inbox wiring
-and cloud push remain separate. Files uses memory
+adds the upload-ready inbox, read state and media preferences; the native inbox
+is an explicit optional selection, and cloud push remains separate. Files uses memory
 bytes or a private local directory; cloud storage adapters remain separate. Generate an API on its own:
 
 ```sh

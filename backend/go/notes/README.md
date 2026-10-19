@@ -1,5 +1,13 @@
 # Go backend learning notes
 
+Operational conformance follow-up, 2026-10-18: seventeen
+[shared proxy cases](../../../contracts/fixtures/backend-operations/README.md)
+and actual Go/Rust processes now compare trusted/untrusted source gates, bounded
+private metrics, bind refusal and shutdown. Go production files remain unchanged.
+Rust's [portable profile](../../rust/notes/modules/infra/production/README.md)
+additionally exercises the actual edge and separates static/dynamic addresses;
+local acceptance does not imply public TLS issuance or Rust CLI readiness.
+
 Realtime conformance follow-up, 2026-10-18: Go now shares
 [hub scenarios and HTTP admission cases](../../../contracts/fixtures/backend-realtime/README.md)
 with Rust. Actual APIs verify ready/refetch, committed Notes hints/replays,

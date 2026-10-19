@@ -1,11 +1,13 @@
 """Portable selected-platform guides; no source-checkout or machine SDK paths."""
 from pathlib import Path
+from .connections import connection_capability
 
 
 def write_documents(destination, profile, inputs, backend=None):
     if profile is None:
-        (destination / "Makefile").write_text(".DEFAULT_GOAL := help\n.PHONY: help\nhelp:\n\t@echo 'Read SETUP.md for the selected Go API.'\n")
-        (destination / "README.md").write_text(f"# {inputs.display_name}\n\nIndependent Go API. Read [SETUP](SETUP.md).\n")
+        label = "Rust" if backend.profile["id"] == "rust" else "Go"
+        (destination / "Makefile").write_text(f".DEFAULT_GOAL := help\n.PHONY: help\nhelp:\n\t@echo 'Read SETUP.md for the selected {label} API.'\n")
+        (destination / "README.md").write_text(f"# {inputs.display_name}\n\nIndependent {label} API. Read [SETUP](SETUP.md).\n")
         (destination / "SETUP.md").write_text(f"# {inputs.display_name} setup\n\nThis project contains independent backend source copies. No generator or source checkout is required.\n")
         (destination / ".gitignore").write_text(".cache/\nbin/\n.env\n.env.*\n!.env.example\n*.pem\n*.key\n*.p12\n.DS_Store\n__pycache__/\n")
         append_backend_documents(destination, inputs, backend, native=False)
@@ -13,7 +15,7 @@ def write_documents(destination, profile, inputs, backend=None):
     swift = "swift" in inputs.platforms
     kotlin = "kotlin" in inputs.platforms
     local_data = "local-data" in profile["capabilities"]
-    connected = "go-connected" in profile["capabilities"]
+    connected = connection_capability(profile) is not None
     shell = profile["shell"]
     shell_scope = {
         "daily": "The Daily shell contains Today, Library, Activity and Account and a Solid/Glass\nswitch. Library is a placeholder unless local-data was selected.",
@@ -162,7 +164,7 @@ then regenerate. Kotlin apps can declare direct core:query/core:kernel dependenc
 when using their APIs. Import dev.mobilefoundry.product.R explicitly in screens;
 the installed application ID does not rename the source resource namespace.
 
-Go APIs have a separate explicit generator selection. `mobile-foundry.json`
+Go and Rust APIs have separate explicit generator selections. `mobile-foundry.json`
 records selected inputs and source provenance. Generation does not initialize Git,
 install dependencies, set up secrets or configure remote services.
 """]
@@ -175,7 +177,7 @@ install dependencies, set up secrets or configure remote services.
     for platform in inputs.platforms:
         path = destination / Path(profile["platforms"][platform]["entry"]).parent / "README.md"
         if connected:
-            path.write_text("# Connected Daily product\n\nAccount provides native registration, explicit Go sign-in, renewal, restore, owned workspace selection, create/rename forms and sign-out.\nLibrary provides account-bound remote Notes CRUD, paging, explicit receipt recovery and read-only saved first pages.\nComposition uses SessionAuthority/CredentialVault and RemoteNotesRepository ports.\nDevice refresh credentials are deployment-bound; pending commands use a private SQLite journal. Account security selects verification/reset/change forms; Library selects scoped live refetch hints.\n\nRead [project setup](../../../../SETUP.md) for the API endpoint, local registration,\nbuilds and independently runnable connected acceptance.\n", encoding="utf-8")
+            path.write_text("# Connected Daily product\n\nAccount provides native registration, explicit sign-in, renewal, restore, owned workspace selection, create/rename forms and sign-out.\nLibrary provides account-bound remote Notes CRUD, paging, explicit receipt recovery and read-only saved first pages.\nComposition uses SessionAuthority/CredentialVault and RemoteNotesRepository ports.\nDevice refresh credentials are deployment-bound; pending commands use a private SQLite journal. Account security selects verification/reset/change forms; Library selects scoped live refetch hints.\n\nRead [project setup](../../../../SETUP.md) for the API endpoint, local registration,\nbuilds and independently runnable connected acceptance.\n", encoding="utf-8")
             continue
         if shell != "daily":
             path.write_text(f"# {shell.title()} product\n\n{shell_scope}\n\nThe app owns configuration, ProductState, native navigation and screen content.\nState lives above material/layout branches. Swift keeps it for the window lifetime;\nAndroid restores it through Activity recreation. A fresh launch starts at defaults.\nThese are UI placeholders: no domain provider, disk storage or network is selected.\n\nRead [project setup](../../../../SETUP.md) for branding, native checks and build/run\ncommands. Selected libraries are UI, Query and Kernel with local tests/fixtures.\nAdd deliberate release signing/icons before distribution.\n", encoding="utf-8")
@@ -192,10 +194,19 @@ install dependencies, set up secrets or configure remote services.
     if backend:
         append_backend_documents(destination, inputs, backend, native=True, connected=connected)
     if connected:
-        append_connected_documents(destination)
+        append_connected_documents(destination, backend.profile["id"])
+        if "inbox" in profile["capabilities"]:
+            append_inbox_documents(destination)
+        if "files" in profile["capabilities"]:
+            append_files_documents(destination)
+        if {"files", "inbox"} <= set(profile["capabilities"]):
+            append_media_documents(destination)
 
 
 def append_backend_documents(destination, inputs, backend, native, connected=False):
+    if backend.profile["id"] == "rust":
+        from .rust_documents import append_documents
+        return append_documents(destination, inputs, backend, native, connected=connected)
     ignore = destination / ".gitignore"
     ignore.write_text(ignore.read_text() + "\n# Private local object bytes and push provider credentials\nbackend/go/.data/\n.push-private/\n*.p8\npush.local.json\n*service-account*.json\nserviceAccountKey.json\n")
     tasks = {
@@ -440,9 +451,9 @@ It does not obtain public certificates or establish live SMTP/APNs/FCM delivery.
     (destination / "backend/go/README.md").write_text(f"# {inputs.display_name} API\n\nGo module `{backend.module}`; Health, Identity, Account, Audit, Notes, Files and Notifications.\n\nRead [project setup](../../SETUP.md#go-api) for runtime, credentials, persistence,\nmigrations and isolated tests. Modules own domain/application ports and adapters;\ncmd/server owns composition. This copy builds without the source checkout.\n", encoding="utf-8")
 
 
-def append_connected_documents(destination):
+def append_connected_documents(destination, backend_id="go"):
     makefile = destination / "Makefile"
-    makefile.write_text(makefile.read_text() + "\nCONNECTED_PLATFORM ?= both\n.PHONY: connected-test\nhelp: connected-help\n.PHONY: connected-help\nconnected-help:\n\t@echo 'make connected-test CONNECTED_PLATFORM=both|swift|kotlin|host'\nconnected-test:\n\tpython3 -B scripts/connected_acceptance.py --platform $(CONNECTED_PLATFORM)\n")
+    makefile.write_text(makefile.read_text() + "\nCONNECTED_PLATFORM ?= both\nCONNECTED_SCENARIO ?= full\n.PHONY: connected-test\nhelp: connected-help\n.PHONY: connected-help\nconnected-help:\n\t@echo 'make connected-test CONNECTED_PLATFORM=both|swift|kotlin|host [CONNECTED_SCENARIO=full|inbox|files|media]'\nconnected-test:\n\tpython3 -B scripts/connected_acceptance.py --platform $(CONNECTED_PLATFORM) --scenario $(CONNECTED_SCENARIO)\n")
     setup = destination / "SETUP.md"
     setup.write_text(setup.read_text() + """
 ## Connected native workflow
@@ -459,7 +470,7 @@ remain product placeholders and all four outline tabs keep Solid/Glass selection
 The public API base is recorded in mobile-foundry.json and in each app's
 ConnectionConfiguration source. Change those app-owned constants for a deployment.
 The default is http://127.0.0.1:8080/v1 for Debug. If you selected a different port,
-set HTTP_ADDR=127.0.0.1:PORT when starting Go; registration examples must follow it.
+set HTTP_ADDR=127.0.0.1:PORT when starting the API; registration examples must follow it.
 For Android emulator/USB use `adb reverse tcp:8080 tcp:8080` (substitute your port),
 and remove only your own mapping afterward. Loopback on a physical iPhone is that
 phone: use a reachable HTTPS API. Release rejects HTTP; Android's loopback cleartext
@@ -467,7 +478,8 @@ exceptions exist only in its Debug resource/manifest. No arbitrary LAN cleartext
 disabled certificate checks or native provider keys are selected.
 
 GoSessionAuthority/HTTPAccountDirectory and HTTPRemoteNotesRepository are selected
-at app composition. Replace implementations through their existing ports. The
+at app composition. GoSessionAuthority names the shared HTTP wire adapter; both
+Go and Rust implement that contract. Replace implementations through their existing ports. The
 credential vault uses Keychain on iOS and Keystore-encrypted private storage on
 Android, partitioned by deployment and installed app. Restoration renews credentials
 and validates the saved account; it never silently selects another account.
@@ -578,4 +590,165 @@ UI acceptance is opt-in and skipped by ordinary native tests without
 this owned API; connected-test requires every selected scenario to execute with
 zero failures/skips. This validates local Debug workflows, not release signing,
 cloud delivery, offline sync or physical-device performance.
-""")
+""".replace("make go-dev", f"make {backend_id}-dev"))
+
+
+def append_inbox_documents(destination):
+    setup = destination / "SETUP.md"
+    text = setup.read_text().replace("Today/Activity\nremain product placeholders", "Today remains a product placeholder; Activity selects the account inbox")
+    text = text.replace("Files/inbox screens and live push remain separate", "Files screens and live push remain separate")
+    text += """
+
+## Account inbox
+
+The explicit inbox capability fills Activity with account/principal-scoped notices,
+server unread count, unread filtering, pages of 20 (at most 200 retained) and media
+preferences. Only completed uploads currently produce Upload ready notices.
+Extend backend event mapping and native DTO admission together for another type.
+This product does not select a Files upload screen; notices can come from another
+authorized client. New activity requires Refresh or a foreground/session rebind.
+
+InboxStore is app-owned and injects NotificationInboxRepository. Composition binds
+HTTPNotificationInboxRepository to the exact current session lease, including
+same-account renewal. Account changes/background detach clear rows/count/settings;
+late completions cannot populate a replacement owner. No inbox data is cached.
+
+Mark read and media settings wait for acknowledgement and a fresh authoritative
+read. An interrupted write may have committed: controls remain blocked until
+Refresh succeeds. No mutation receipt, CAS, optimistic badge update, durable
+pending command or automatic replay is added. A new lease reloads current state
+through reads. Native OS notifications and live push remain separate capabilities.
+
+With booted test devices and an unused generated Debug loopback endpoint:
+
+```sh
+make connected-test CONNECTED_PLATFORM=host
+make connected-test CONNECTED_PLATFORM=both CONNECTED_SCENARIO=inbox
+```
+
+The copied driver creates only owned temporary users, completes 25 tiny uploads
+through the real API and waits for committed in-app delivery. The actual apps
+exercise paging/filtering, read/settings replies lost after commit, explicit
+readback, account isolation, renewal and process restoration without replay.
+The full scenario additionally runs the existing connected workflows.
+This local memory acceptance does not establish public hosting, release signing,
+OS delivery, offline inbox or automatic synchronization.
+"""
+    setup.write_text(text)
+    readme = destination / "README.md"
+    readme.write_text(readme.read_text() + "\nActivity selects the account inbox through NotificationInboxRepository. Read SETUP.md for recovery and acceptance.\n")
+
+
+def append_files_documents(destination):
+    setup = destination / "SETUP.md"
+    text = setup.read_text().replace("Today/Activity\nremain product placeholders", "Today selects account Files; Activity remains a product placeholder")
+    text = text.replace("Files/inbox screens and live push remain separate", "Inbox screens and live push remain separate")
+    text += """
+
+## Account files
+
+The explicit files capability fills Today with account Files through the existing
+RemoteFilesRepository port. Go and Rust select identical native sources. The
+native photo picker reads your gallery, stages a draft, then Upload photo accepts
+the current account/lease. No broad photo-library permission is requested.
+The screen pages 20 at a time (200 maximum), verifies downloaded bytes and displays
+a thumbnail (1600-pixel bound), and confirms account-wide deletion.
+
+At most one original upload/delete is retained per installation, across all accounts.
+The separate PendingFilesStore port stages metadata and bytes atomically in SQLite
+before HTTP. Restore reads only; Retry or Review remains explicit. Accepted recovery
+survives process exit in private backup-excluded storage, without storing credentials.
+An upload retains its exact specification, command and bytes (10 MiB maximum).
+Detach hides lists/previews and invalidates old completions. Renewal/account
+changes perform reads only; return to the original account and retry explicitly.
+Recovery checks the completion receipt before uploading bytes again. Delete
+repeats the same command because a receipt read cannot prove physical cleanup.
+Review pending operation offers Keep pending operation or Forget local recovery.
+Forgetting explicitly discards local bytes/retry information, never rolls back a
+server action or proves byte cleanup, and requires a fresh page before new edits.
+Review confirmations are fenced to the original operation and current binding;
+renewal, scope changes or a newer intent invalidate an old dialog. This is an
+escape from terminal conflicts, not automatic conflict resolution or cancellation.
+Unreadable/foreign/future journals are kept and block new changes until reload.
+An unacknowledged save sends no HTTP; failed journal removal retains recovery.
+This capability does not select a multi-item transfer queue, GPU editor,
+camera capture, background upload, scanning, or retention. Other accounts can be
+browsed while an intent is pending, but cannot accept another file mutation.
+
+With owned booted test devices and an unused Debug loopback endpoint:
+
+```sh
+make connected-test CONNECTED_PLATFORM=both CONNECTED_SCENARIO=files
+```
+
+The copied acceptance driver owns temporary users, seeds 25 tiny image uploads,
+stages the owned photo fixture in the device gallery and drives the system picker.
+It loses completion/delete replies after commit, verifies receipt settlement
+without reupload, repeats the original delete, and checks paging, preview,
+an actual competing delete/404, keep-versus-forget review with no replay,
+account isolation, renewal and process restoration of server state. It also runs
+the native binary protocol and state-owner tests. Actual app termination/force-stop
+restores lost completion, original deletion and an upload whose first content PUT
+never reached the backend. The latter reuses the exact staged bytes/key/specification
+without choosing the gallery photo again. The full scenario adds base workflows.
+Files and Inbox can also be selected together through the explicit combined profile.
+
+If a build host cannot evaluate SwiftPM manifests inside its nested sandbox,
+explicitly opt in with CONNECTED_SWIFT_DISABLE_SANDBOX=1 for connected-test.
+Normal manifest sandboxing remains the default; this affects host package tests,
+not app sandboxing or signing. The driver allows 30 seconds for owned API startup
+and keeps pre-fixture startup failure logs in .cache/connected-runtime.
+"""
+    setup.write_text(text)
+    readme = destination / "README.md"
+    readme.write_text(readme.read_text() + "\nToday selects account Files through RemoteFilesRepository. Read SETUP.md for bounded recovery and acceptance.\n")
+
+
+def append_media_documents(destination):
+    setup = destination / "SETUP.md"
+    text = setup.read_text().replace("Today remains a product placeholder; Activity selects the account inbox",
+        "Today selects account Files; Activity selects the account inbox")
+    text = text.replace("Files screens and live push remain separate", "Live push remains separate")
+    text += """
+
+## Files and Inbox together
+
+Today uploads gallery photos through RemoteFilesRepository; Activity reads the
+resulting notices through NotificationInboxRepository. Both owners bind to the
+same exact current lease and detach independently. Opening Activity requests a
+fresh inbox read; its Refresh action remains available. There is no native
+optimistic notice insertion, implicit mark-read, mutation replay or shared cache.
+Backend Files commits an upload-completed fact, and Notifications independently
+applies the account/principal media preference and delivery rules. An upload
+receipt confirms completion, not notification delivery. Delivery can be delayed;
+refresh Activity to read the server's current result. Muting affects future
+decisions; re-enabling does not resurrect previously suppressed notices.
+
+Open file reads current authorized metadata through RemoteFileDetailReader, with
+an explicit verified download preview. It does not mark the notice read. A removed
+target shows an unavailable detail, while denied access remains a permission
+failure. Every exact-lease rebind closes the detail; no automatic account switch
+or persisted navigation follows from a notice.
+
+The combined selection preserves durable manual Files recovery and readback-only
+inbox recovery. Process restoration reloads server pages and pending file input;
+retry remains explicit. Background transfers, sync and OS push remain separate.
+
+```sh
+make connected-test CONNECTED_PLATFORM=both CONNECTED_SCENARIO=media
+```
+
+The copied driver seeds an empty account and a gallery fixture. Actual screens
+perform three uploads, recover a lost completion response, read the first notice,
+recover uncertain read/preferences through GET, mute the second delivery, then
+re-enable the third without resurrecting the suppressed notice. It checks both
+features through account switching, renewal, recreation/process restoration and
+sign-out. The proxy checks three distinct uploads with one PUT/completion each,
+receipt settlement, and no read/preference replay. It also opens a real file from
+its notice, verifies its download without marking it read, and opens a target
+removed by an independent client into a real backend 404. The full scenario additionally
+includes the base connected suite and the separate Files and Inbox workflows.
+"""
+    setup.write_text(text)
+    readme = destination / "README.md"
+    readme.write_text(readme.read_text() + "\nFiles and Inbox are composed together. Backend delivery produces Activity notices; opening Activity refreshes its scoped server view.\n")

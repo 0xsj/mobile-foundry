@@ -57,6 +57,95 @@ async fn actual_listener_health_and_clean_shutdown() {
 }
 
 #[tokio::test]
+async fn separate_metrics_listener_counts_only_api_and_joins_shutdown() {
+    let metrics = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let metric_address = metrics.local_addr().unwrap();
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let server = server(Duration::from_secs(1)).with_metrics(metrics);
+    let (stop, stopped) = oneshot::channel();
+    let task = tokio::spawn(server.serve(listener, async {
+        let _ = stopped.await;
+    }));
+    assert!(
+        request(address, "/v1/health/ready")
+            .await
+            .starts_with("HTTP/1.1 200")
+    );
+    assert!(
+        request(address, "/metrics")
+            .await
+            .starts_with("HTTP/1.1 404")
+    );
+    let text = request(metric_address, "/metrics").await;
+    assert!(text.starts_with("HTTP/1.1 200"));
+    assert!(text.contains("api_http_requests_total{method=\"GET\",status=\"2xx\"} 1"));
+    assert!(text.contains("api_http_active 0"));
+    stop.send(()).unwrap();
+    task.await.unwrap().unwrap();
+    assert!(TcpStream::connect(metric_address).await.is_err());
+    assert!(TcpStream::connect(address).await.is_err());
+}
+
+#[tokio::test]
+async fn monitor_failure_stops_api_and_preserves_error() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let server = server(Duration::from_secs(1));
+    let serving = server.serving();
+    let (stop, _) = watch::channel(false);
+    let result = server
+        .serve_monitored(
+            listener,
+            std::future::pending(),
+            Router::new(),
+            async {
+                Err(Failure::new(
+                    Kind::Unavailable,
+                    "fixture.monitor",
+                    "PRIVATE",
+                ))
+            },
+            stop,
+        )
+        .await
+        .unwrap_err();
+    assert_eq!(result.kind(), Kind::Unavailable);
+    assert!(!serving.is_ready());
+    assert!(TcpStream::connect(address).await.is_err());
+}
+
+#[tokio::test]
+async fn canceled_server_does_not_detach_private_listener() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let metrics = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let metric_address = metrics.local_addr().unwrap();
+    let task = tokio::spawn(
+        server(Duration::from_secs(1))
+            .with_metrics(metrics)
+            .serve(listener, std::future::pending()),
+    );
+    assert!(
+        request(address, "/v1/health/ready")
+            .await
+            .starts_with("HTTP/1.1 200")
+    );
+    task.abort();
+    assert!(task.await.unwrap_err().is_cancelled());
+    tokio::time::timeout(Duration::from_secs(1), async {
+        loop {
+            if TcpListener::bind(metric_address).await.is_ok() {
+                break;
+            }
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
+}
+
+#[tokio::test]
 async fn selected_dependency_probe_fails_readiness_while_liveness_still_succeeds() {
     struct Failed;
     impl Readiness for Failed {

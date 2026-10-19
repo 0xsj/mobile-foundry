@@ -31,7 +31,7 @@ mobile-foundry/
     kotlin/project/  # Android catalog, clean product and reusable modules
   backend/
     go/              # Owned API using Bento's Go architecture
-    rust/            # Independent Go-contract implementation candidate
+    rust/            # Independent Rust backend and source-copy starter
     supabase/        # Local self-hosted Supabase stack
     firebase/        # Local Firebase Emulator Suite
   contracts/
@@ -276,6 +276,47 @@ Use [Setup](docs/SETUP.md) for IDE paths and individual build commands.
 
 ## Local backends
 
+Rust is now a standalone backend starter through CLI 0.19.0:
+
+```sh
+mobile-foundry init canopy --platform none --backend rust
+cd canopy
+make rust-dev
+```
+
+Its independent output passes locked checks/tests, memory APIs, disposable
+PostgreSQL recovery and a fresh Docker/edge/mail/backup flow. Read
+[setup/evidence](docs/blueprints/rust-starter.md). CLI 0.20.0 also offers explicit
+[native Rust connection](docs/blueprints/rust-connected-starter.md):
+
+```sh
+mobile-foundry init canopy --platform both --with rust-connected --backend rust \
+  --app-id com.example.canopy
+```
+
+This selects the same native session/accounts/Notes ports and lifecycle as Go,
+with Rust as the copied API. Backend selection alone keeps native shells independent.
+
+CLI 0.26.0 adds [inbox file destinations](docs/blueprints/connected-media.md): Open file resolves current authorized metadata with explicit verified preview and removed-target handling. Opening leaves read state unchanged; every account/session rebind closes the detail. Fresh Swift/Kotlin products pass against both Go and Rust.
+
+CLI 0.25.0 adds [durable manual Files recovery](docs/blueprints/connected-files.md): original uploads/deletes survive app restarts in a separate private journal. Retry/review stays explicit; this does not add background transfers or automatic sync.
+
+CLI 0.24.0 adds explicit Files recovery review: keep the original operation or deliberately forget local bytes/retry information, then refresh before new changes. See [Files behavior and evidence](docs/blueprints/connected-files.md).
+
+CLI 0.23.0 adds an explicit [Files + Inbox combination](docs/blueprints/connected-media.md):
+select `--with files --with inbox` alongside either matching connected backend.
+Today uploads gallery photos; Activity reads backend-created notices. Read the
+combined guide for acceptance and recovery limits.
+
+CLI 0.22.0 adds optional [account Files](docs/blueprints/connected-files.md):
+append `--with files` to a matching connected command for a gallery draft/upload,
+paged files, verified preview and confirmed deletion in Today. Pending transfer
+recovery is now durable and manual in CLI 0.25.0; see the guide for verification and limits.
+
+CLI 0.21.0 adds an optional [account inbox](docs/blueprints/connected-inbox.md):
+append `--with inbox` to either matching connected command to populate Activity
+with unread/filter/paging, mark-read and media settings through the existing ports.
+
 A [Rust backend](backend/rust/README.md) now mirrors runtime/Health, memory/PostgreSQL
 Identity/Account, independent Audit, account-scoped Notes, Files/Media, in-app
 Notifications and session-bound installations.
@@ -301,6 +342,8 @@ preview HTTP. `make backend-push-jobs-parity-test` checks retained jobs, fenced
 execution and explicit cancellation/replacement. Live cloud delivery remains separate.
 `make backend-realtime-parity-test` checks bounded live Notes hints, native bearer
 WebSocket admission, credential rechecks and owned socket shutdown in both APIs.
+`make backend-operations-parity-test` checks explicit proxy trust and private metrics.
+`make rust-operations-test` runs Rust's disposable Docker/Caddy/SMTP/backup acceptance.
 `make backend-postgres-parity-test` adds isolated database/restart and Go core handoff checks.
 Its [parity inventory](backend/rust/PARITY.md)
 records remaining domains, operational/runtime gaps and CLI generation.

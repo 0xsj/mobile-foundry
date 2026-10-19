@@ -70,6 +70,6 @@ make backend-postgres-parity-test. Dates use the existing Rust admitted UTC
 microsecond range 1970–9999; this does not reproduce every arbitrary Go time.Time
 domain value. Remaining in-app/push scope: push providers/
 jobs, read-all/delete, richer audiences/types, retention/erasure, live hints and
-independently generated native/CLI Rust acceptance. Rust remains a foundation
-candidate; read [the parity inventory](../../backend/rust/PARITY.md).
+connected native Rust acceptance. Standalone extraction has separate
+[starter acceptance](rust-starter.md); read [the parity inventory](../../backend/rust/PARITY.md).
 

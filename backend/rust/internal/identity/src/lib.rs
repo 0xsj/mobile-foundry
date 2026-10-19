@@ -12,6 +12,27 @@ use infra::{
 use kernel::{Failure, clock::Clock, id::Generator};
 use std::sync::Arc;
 
+/// Explicit maintenance facade; no HTTP, crypto worker or mail selection is started.
+pub async fn prune_expired(
+    scope: &dyn kernel::context::Scope,
+    pool: sqlx::PgPool,
+    now: std::time::SystemTime,
+    limit: usize,
+) -> Result<usize, Failure> {
+    use app::recovery::RecoveryStore;
+    if !(1..=1000).contains(&limit) {
+        return Err(Failure::new(
+            kernel::Kind::Invalid,
+            "maintenance.limit",
+            "invalid maintenance limit",
+        ));
+    }
+    let store = infra::postgres::PostgresStore::new(pool, Arc::new(kernel::id::RandomIds))?;
+    store
+        .prune_challenges(scope, domain::Timestamp::from_system_time(now)?, limit)
+        .await
+}
+
 pub struct Module {
     handlers: transport::http::v1::Handlers,
     recovery: transport::http::v1::recovery::Handlers,

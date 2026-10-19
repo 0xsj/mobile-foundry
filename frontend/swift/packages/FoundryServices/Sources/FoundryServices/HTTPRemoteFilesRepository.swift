@@ -3,13 +3,21 @@ import FoundryHTTP
 import FoundryKernel
 
 /// Account-bound, one-attempt file operations. Compose with an exact session lease.
-public struct HTTPRemoteFilesRepository: RemoteFilesRepository {
+public struct HTTPRemoteFilesRepository: RemoteFilesRepository, RemoteFileDetailReader {
     private let client: any HTTPClient
     public let accountID: String
     public let principalID: String
     public init(client: any HTTPClient, accountID: String, principalID: String) { self.client = client; self.accountID = accountID; self.principalID = principalID }
     private var admitted: Bool { FilesAdmission.uuid(accountID) && FilesAdmission.uuid(principalID) }
     private var path: String { "accounts/\(accountID)/files" }
+    public func get(id: String) async throws -> AppResult<RemoteFile> {
+        guard admitted, id.count == 36, FilesAdmission.uuid(id) else { return .failure(FilesAdmission.invalid) }
+        return try await request(.GET, path: path + "/\(id)", options: .init()).flatMap { entity in
+            guard entity.metadata.status == 200, let file = decode(entity.body), file.id == id,
+                  file.status != .deleted, entity.metadata.etag == "\"\(file.version)\"" else { return .failure(invalidResponse) }
+            return .success(file)
+        }
+    }
     public func page(cursor: String? = nil, limit: Int = 20) async throws -> AppResult<FilesPage> {
         guard admitted, (1...100).contains(limit), cursor == nil || (!cursor!.isEmpty && cursor!.count <= 512) else { return .failure(FilesAdmission.invalid) }
         var query = [QueryItem("limit", String(limit))]; if let cursor { query.append(QueryItem("cursor", cursor)) }

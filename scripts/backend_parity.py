@@ -45,7 +45,7 @@ def exchange(port, case):
 
 
 @contextmanager
-def owned_server(binary, log_path, authentication="deny", database_url=None, crash=False, module_urls=None, mail_config=None, push_config=None, push_jobs=False):
+def owned_server(binary, log_path, authentication="deny", database_url=None, crash=False, module_urls=None, mail_config=None, push_config=None, push_jobs=False, metrics_addr=None, proxy_cidrs=None):
     # Release an ephemeral loopback reservation immediately before process launch.
     # If another process wins that port, the child fails startup; never reuse it.
     with socket.socket() as reservation:
@@ -62,6 +62,10 @@ def owned_server(binary, log_path, authentication="deny", database_url=None, cra
         environment["PUSH_CONFIG_FILE"]=str(push_config)
     if push_jobs:
         environment["PUSH_JOBS_ENABLED"]="true"
+    if metrics_addr is not None:
+        environment["METRICS_ADDR"]=metrics_addr
+    if proxy_cidrs is not None:
+        environment["TRUSTED_PROXY_CIDRS"]=proxy_cidrs
     if module_urls:
         assert set(module_urls) <= {"ACCOUNT_DATABASE_URL", "AUDIT_DATABASE_URL", "IDENTITY_DATABASE_URL", "NOTES_DATABASE_URL", "FILES_DATABASE_URL", "NOTIFICATIONS_DATABASE_URL"}
         environment.update(module_urls)
@@ -76,7 +80,7 @@ def owned_server(binary, log_path, authentication="deny", database_url=None, cra
                 startup = log_path.read_bytes()
                 if b"server serving" in startup or b"server listening" in startup:
                     try:
-                        status, _, _ = exchange(port, {"method": "GET", "path": "/v1/health/ready"})
+                        status, _, _ = exchange(port, {"method": "GET", "path": "/v1/health/ready", "headers": [("X-Forwarded-For","127.0.0.1")] if proxy_cidrs else []})
                         if status == 200 and process.poll() is None:
                             break
                     except (OSError, http.client.HTTPException):

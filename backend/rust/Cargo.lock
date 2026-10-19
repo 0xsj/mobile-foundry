@@ -38,6 +38,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "api-healthcheck"
+version = "0.1.0"
+dependencies = [
+ "tokio",
+]
+
+[[package]]
+name = "api-maintenance"
+version = "0.1.0"
+dependencies = [
+ "identity",
+ "kernel",
+ "migration-catalog",
+ "postgres-storage",
+ "runtime-config",
+ "tokio",
+]
+
+[[package]]
 name = "api-server"
 version = "0.1.0"
 dependencies = [
@@ -1739,6 +1758,7 @@ dependencies = [
 name = "runtime-config"
 version = "0.1.0"
 dependencies = [
+ "ipnet",
  "kernel",
 ]
 
@@ -1753,6 +1773,7 @@ dependencies = [
  "hyper-util",
  "kernel",
  "runtime-config",
+ "telemetry",
  "tokio",
 ]
 
@@ -2284,6 +2305,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.6",
+]
+
+[[package]]
+name = "telemetry"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "http-body-util",
+ "tokio",
+ "tower",
 ]
 
 [[package]]

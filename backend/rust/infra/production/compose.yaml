@@ -1,0 +1,99 @@
+x-runtime: &runtime
+  build: {context: ../..}
+  image: ${API_IMAGE:-mobile-foundry-rust-api:local}
+  environment: &environment
+    APP_ENV: production
+    HTTP_ADDR: 0.0.0.0:8080
+    AUTH_MODE: identity
+    STORAGE: postgres
+    LOG_FORMAT: json
+    LOG_LEVEL: info
+    DATABASE_URL: postgres://mobile:${POSTGRES_PASSWORD:?Set a private alphanumeric database password}@postgres:5432/mobile?sslmode=disable
+    FILES_DIRECTORY: /data/files
+    IDENTITY_MAIL_CONFIG: /run/secrets/mail.json
+    METRICS_ADDR: 0.0.0.0:9090
+    POSTGRES_POOL_MAX_CONNS: ${POSTGRES_POOL_MAX_CONNS:-8}
+    TRUSTED_PROXY_CIDRS: ${TRUSTED_PROXY_CIDRS:-10.203.241.2/32}
+    PUSH_CONFIG_FILE: ""
+    PUSH_JOBS_ENABLED: "false"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:size=16m,mode=1777"]
+  secrets:
+    - source: identity-mail
+      target: mail.json
+  networks: [private]
+services:
+  postgres:
+    image: postgres:18.6-alpine
+    environment:
+      POSTGRES_DB: mobile
+      POSTGRES_USER: mobile
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a private alphanumeric database password}
+    volumes: [postgres-data:/var/lib/postgresql]
+    networks: [private]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U mobile -d mobile]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  api:
+    <<: *runtime
+    volumes: [files-data:/data/files]
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, /healthcheck]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 30s
+    restart: unless-stopped
+  migrate:
+    <<: *runtime
+    entrypoint: [/migrate]
+    profiles: [tools]
+    depends_on:
+      postgres: {condition: service_healthy}
+  maintenance:
+    <<: *runtime
+    entrypoint: [/maintenance]
+    profiles: [tools]
+    depends_on:
+      postgres: {condition: service_healthy}
+  edge:
+    image: caddy:2.10.2-alpine
+    environment:
+      PUBLIC_DOMAIN: ${PUBLIC_DOMAIN:?Set the API domain}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    ports: ["${HTTP_BIND:-0.0.0.0:80}:80", "${HTTPS_BIND:-0.0.0.0:443}:443"]
+    networks:
+      private: {ipv4_address: "${EDGE_IP:-10.203.241.2}"}
+    depends_on:
+      api: {condition: service_healthy}
+    restart: unless-stopped
+  archive:
+    image: postgres:18.6-alpine
+    profiles: [tools]
+    entrypoint: [tar]
+    volumes: [files-data:/objects]
+    network_mode: none
+secrets:
+  identity-mail:
+    file: ${MAIL_CONFIG_FILE:?Set a private SMTP configuration file}
+networks:
+  private:
+    ipam:
+      # Automatic addresses stay outside the explicitly assigned edge address.
+      config: [{subnet: "${PRIVATE_SUBNET:-10.203.241.0/24}", ip_range: "${PRIVATE_IP_RANGE:-10.203.241.128/25}"}]
+volumes:
+  postgres-data:
+  files-data:
+  caddy-data:
+  caddy-config:

@@ -1,0 +1,331 @@
+[
+  {
+    "name": "upload",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": true
+  },
+  {
+    "name": "delete",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "delete",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": {
+        "id": "00000000-0000-4000-8000-000000000004",
+        "status": "available",
+        "version": 2
+      }
+    },
+    "content": "",
+    "valid": true
+  },
+  {
+    "name": "unknown-format",
+    "metadata": {
+      "format": "pending-files.v2",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "unknown-action",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "replace",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "invalid-key",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "not-a-uuid",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "extra-field",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null,
+      "unexpected": true
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "wrong-bytes",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "YmFk",
+    "valid": false
+  },
+  {
+    "name": "delete-has-bytes",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "delete",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": {
+        "id": "00000000-0000-4000-8000-000000000004",
+        "status": "available",
+        "version": 2
+      }
+    },
+    "content": "YQ==",
+    "valid": false
+  },
+  {
+    "name": "already-deleted",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "delete",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": {
+        "id": "00000000-0000-4000-8000-000000000004",
+        "status": "deleted",
+        "version": 3
+      }
+    },
+    "content": "",
+    "valid": false
+  },
+  {
+    "name": "invalid-scope",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "upload",
+      "scope": {
+        "authority_id": "bad authority",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "trailing-authority-newline",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test\n",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "trailing-key-newline",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001\n",
+      "action": "upload",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": null
+    },
+    "content": "AP8B",
+    "valid": false
+  },
+  {
+    "name": "trailing-file-id-newline",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "delete",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123"
+      },
+      "file": {
+        "id": "00000000-0000-4000-8000-000000000004\n",
+        "status": "available",
+        "version": 2
+      }
+    },
+    "content": "",
+    "valid": false
+  },
+  {
+    "name": "trailing-digest-newline",
+    "metadata": {
+      "format": "pending-files.v1",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "action": "delete",
+      "scope": {
+        "authority_id": "go.test",
+        "principal_id": "00000000-0000-4000-8000-000000000003",
+        "account_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "spec": {
+        "name": "Photo.png",
+        "content_type": "image/png",
+        "byte_size": 3,
+        "sha256": "47ffa3ea45a70b8a41c2c0825df323c00a8b7a01c1ea06083cc41dddcc001123\n"
+      },
+      "file": {
+        "id": "00000000-0000-4000-8000-000000000004",
+        "status": "available",
+        "version": 2
+      }
+    },
+    "content": "",
+    "valid": false
+  }
+]

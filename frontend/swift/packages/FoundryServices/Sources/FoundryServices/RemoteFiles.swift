@@ -49,6 +49,11 @@ public protocol RemoteFilesReader: Sendable {
     func download(_ file: RemoteFile) async throws -> AppResult<Data>
     func receipt(key: String) async throws -> AppResult<FileReceipt>
 }
+/// Current metadata and verified bytes, without command or receipt authority.
+public protocol RemoteFileDetailReader: Sendable {
+    func get(id: String) async throws -> AppResult<RemoteFile>
+    func download(_ file: RemoteFile) async throws -> AppResult<Data>
+}
 public protocol RemoteFilesWriter: Sendable {
     func requestUpload(_ spec: UploadSpec, key: String) async throws -> AppResult<FileReceipt>
     func uploadContent(_ file: RemoteFile, bytes: Data) async throws -> AppResult<Void>

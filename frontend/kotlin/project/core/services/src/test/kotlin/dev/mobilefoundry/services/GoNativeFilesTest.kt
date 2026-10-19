@@ -10,6 +10,32 @@ import org.junit.Test
 import java.util.UUID
 
 class GoNativeFilesTest {
+    @Test fun fileDetailAdmissionRejectsUnrelatedDeletedAndUnversionedMetadata() = runBlocking {
+        val account = "00000000-0000-4000-8000-000000000002"; val principal = "00000000-0000-4000-8000-000000000003"; val id = "00000000-0000-4000-8000-000000000004"
+        val base = buildJsonObject { put("id", id); put("account_id", account); put("owner_id", principal); put("name", "File.png"); put("content_type", "image/png"); put("byte_size", 3); put("sha256", "a".repeat(64)); put("status", "available"); put("version", 2) }
+        for (scenario in listOf("available", "pending", "wrong-id", "wrong-account", "deleted", "wrong-etag", "missing-etag")) {
+            val fields = base.toMutableMap(); var etag: String? = "\"2\""
+            when (scenario) {
+                "pending" -> { fields["status"] = JsonPrimitive("pending_upload"); fields["version"] = JsonPrimitive(1); etag = "\"1\"" }
+                "wrong-id" -> fields["id"] = JsonPrimitive(principal)
+                "wrong-account" -> fields["account_id"] = JsonPrimitive(principal)
+                "deleted" -> { fields["status"] = JsonPrimitive("deleted"); fields["version"] = JsonPrimitive(3); etag = "\"3\"" }
+                "wrong-etag" -> etag = "\"1\""
+                "missing-etag" -> etag = null
+            }
+            val requests = ArrayList<PreparedRequest>()
+            val client = (DefaultHTTPClient.create("https://example.invalid/v1", HTTPTransport {
+                requests += it; Outcome.Ok(WireResponse(200, etag?.let { value -> mapOf("etag" to value) } ?: emptyMap(), JsonObject(fields).toString().toByteArray()))
+            }) as Outcome.Ok).value
+            val repo = HTTPRemoteFilesRepository(client, account, principal); val result = repo.get(id)
+            if (scenario in listOf("available", "pending")) assertEquals(id, (result as Outcome.Ok).value.id)
+            else assertEquals("files.invalid_remote_response", (result as Outcome.Err).error.meta.code)
+            for (invalid in listOf("../escape", "$id\n", "0".repeat(36))) assertTrue(repo.get(invalid) is Outcome.Err)
+            assertEquals(1, requests.size); assertEquals(HTTPMethod.GET, requests.single().method)
+            assertEquals("/v1/accounts/$account/files/$id", requests.single().url.encodedPath)
+            assertNull(requests.single().headers["idempotency-key"]); assertNull(requests.single().headers["if-match"])
+        }
+    }
     @Test fun realGoBinaryTransferAndReceiptRecovery(): Unit = runBlocking {
         val base = System.getProperty("go.notes.test.base"); assumeTrue("Owned Go runner supplies endpoint", base != null)
         fun <T> AppResult<T>.value(): T = (this as Outcome.Ok).value
@@ -35,11 +61,13 @@ class GoNativeFilesTest {
         val spec = UploadSpec.prepare("opaque.bin", "application/octet-stream", bytes).value(); val key = UUID.randomUUID().toString()
         assertTrue(HTTPRemoteFilesRepository(drop("/uploads"), account, principal).requestUpload(spec, "$key.request") is Outcome.Err)
         val requested = repo.receipt("$key.request").value().file
+        assertEquals(requested, repo.get(requested.id).value())
         assertEquals(requested, repo.requestUpload(spec, "$key.request").value().file)
         assertEquals(1, repo.page().value().files.size)
         repo.uploadContent(requested, bytes).value()
         assertTrue(HTTPRemoteFilesRepository(drop("/complete"), account, principal).complete(requested, "$key.complete") is Outcome.Err)
         val available = repo.receipt("$key.complete").value().file
+        assertEquals(available, repo.get(available.id).value())
         assertEquals(FileStatus.AVAILABLE, available.status); assertEquals(2L, available.version)
         assertEquals(available, repo.complete(requested, "$key.complete").value().file)
         assertArrayEquals(bytes, repo.download(available).value())
@@ -61,6 +89,7 @@ class GoNativeFilesTest {
         val otherInbox = HTTPNotificationInboxRepository(bearer,other,principal)
         assertTrue(otherInbox.page().value().items.isEmpty());assertTrue(otherInbox.mediaEnabled().value())
         repo.delete(available, "$key.delete").value(); assertTrue(repo.page().value().files.isEmpty())
+        assertEquals(FailureKind.NOT_FOUND, (repo.get(available.id) as Outcome.Err).error.kind)
         assertEquals(available, repo.complete(requested, "$key.complete").value().file)
         assertEquals(FailureKind.NOT_FOUND, (repo.download(available) as Outcome.Err).error.kind)
         raw.requestEntity(HTTPMethod.POST, "identity/sign-out", RequestOptions(body = buildJsonObject { put("refresh_token", grant.getValue("refresh_token")) }))

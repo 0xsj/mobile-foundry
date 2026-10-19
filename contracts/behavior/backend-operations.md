@@ -2,6 +2,8 @@
 
 The Go profile supplies an explicit Docker deployment baseline, not a provisioned
 host. Runtime remains configuration-driven and defaults to local development.
+The independent [Rust profile](rust-operations.md) now has its own explicit local
+Docker/metrics/proxy/recovery acceptance and records its runtime differences.
 
 ## Runtime and edge
 

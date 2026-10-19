@@ -11,6 +11,7 @@ tasks.test {
     systemProperty("notes.read.cache.fixtures", rootProject.file("../../../contracts/fixtures/notes-read-cache").absolutePath)
     inputs.file(rootProject.file("../../../contracts/fixtures/pending-notes/records.json"))
     systemProperty("foundry.pending.notes.fixtures", rootProject.file("../../../contracts/fixtures/pending-notes").absolutePath)
+    systemProperty("foundry.pending.files.fixtures", rootProject.file("../../../contracts/fixtures/pending-files").absolutePath)
     inputs.file(rootProject.file("../../../contracts/fixtures/system-notifications/remote-payloads.json"))
     inputs.file(rootProject.file("../../../contracts/fixtures/system-notifications/payloads.json"))
     systemProperty("system.notification.fixtures", rootProject.file("../../../contracts/fixtures/system-notifications").absolutePath)

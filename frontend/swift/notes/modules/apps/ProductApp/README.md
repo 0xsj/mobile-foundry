@@ -1,5 +1,24 @@
 # Swift ProductApp walkthrough
 
+## Optional connected inbox — 2026-10-19
+
+The default source entry still has an Activity placeholder. CLI inbox selection
+uses [Activity UI](../../../../../../templates/overlays/inbox/swift/ActivityScreen.swift),
+[InboxStore](../../../../../../templates/overlays/inbox/swift/InboxStore.swift) and
+[composition](../../../../../../templates/overlays/inbox/swift/ConnectedSessionModel.swift)
+only with a matching Go/Rust connected profile. The HTTP port is bound to the
+current exact lease; every detach invalidates old tasks and clears the display.
+The observable store owns temporary rows/paging and uncertainty gates, rather
+than making a view or shared passive component own remote effects.
+
+Read [owner checks](../../../../../../templates/overlays/inbox/swift/InboxStoreTests.swift)
+for late completion, lost read/settings replies and duplicate paging. The
+[actual screen](../../../../../../templates/overlays/inbox/swift/InboxUITests.swift)
+uses server unread count, explicit readback, account changes/renewal and app
+termination/relaunch. Its evidence comes from the generated copy, separately
+from source inspection; follow [construction](../../../../../../docs/blueprints/connected-inbox.md).
+No disk inbox, receipt journal or automatic mutation replay is inferred.
+
 Claim: the product app owns window navigation/configuration and imports shared
 UI without importing catalog examples.
 
@@ -287,3 +306,49 @@ and actual Go port tests establish their separate guarantees; device evidence an
 limits are recorded in the construction guide. See
 [current state versus command receipts](../../../../../../notes/patterns/current-state-is-not-a-command-receipt.md). Next: should this product
 require durable Account command receipts or membership/invitation policy?
+
+## Optional account Files (2026-10-19)
+
+The CLI selects [FilesStore](../../../../../../templates/overlays/files/swift/FilesStore.swift),
+[Today screen](../../../../../../templates/overlays/files/swift/TodayScreen.swift) and
+[twelve owner tests](../../../../../../templates/overlays/files/swift/FilesStoreTests.swift).
+The MainActor/Observable owner keeps async generation checks and exact scope
+above the view. PhotosPicker stages Data/spec before explicit upload acceptance;
+.id(scope) replaces view drafts on account changes. ImageIO creates a transformed
+1600-pixel thumbnail off the main actor instead of decoding full-size UI images.
+The retained product intent now survives process exit through the separate journal described below.
+Read [receipt reasoning](../../../../../../notes/patterns/file-receipts-and-byte-recovery.md)
+and [actual generated acceptance](../../../../../../docs/blueprints/connected-files.md).
+Protected staged-byte persistence and explicit terminal review are described below.
+
+## Files and Inbox composition (CLI 0.23.0)
+
+[The combined session model](../../../../../../templates/overlays/files-inbox/swift/ConnectedSessionModel.swift)
+binds both unchanged feature owners to one exact lease. [Navigation](../../../../../../templates/overlays/files-inbox/swift/ProductRootView.swift)
+uses onChange of the selected tab for read-only Activity refresh. The existing
+MainActor guards preserve busy work and reject old completions; no feature owner
+imports the other. [The actual screen flow](../../../../../../templates/overlays/files-inbox/swift/MediaUITests.swift)
+uses gallery uploads and server delivery instead of local notice insertion.
+Read [the pattern](../../../../../../notes/patterns/producer-receipts-and-consumer-views.md)
+and [actual execution](../../../../../../docs/blueprints/connected-media.md).
+Durable staged bytes and explicit terminal review are described below.
+
+## Explicit Files recovery review — 2026-10-19
+
+[FilesStore](../../../../../../templates/overlays/files/swift/FilesStore.swift) now returns a small review snapshot containing the original action/name and an opaque command/generation fence. The view owns dialog presentation; dismiss/Keep never mutates the owner. Forget is accepted only while idle in the original binding and for the exact retained command. It releases memory, invalidates old tickets, clears preview/failure and refreshes before new edits. It sends no mutation and does not imply server rollback or completed byte cleanup.
+
+Read [the shared reasoning](../../../../../../notes/patterns/explicit-abandonment-is-not-settlement.md) and [the behavior contract](../../../../../../contracts/behavior/connected-files.md). The three additional owner cases exercise terminal CAS conflict/new command identity, renewal/scope/busy exclusion and old-upload review versus a newer delete. The generated Files UI workflow additionally creates a real competing delete/404, keeps the operation once, then deliberately forgets it and reads the authoritative page. Follow [construction and actual execution](../../../../../../docs/blueprints/connected-files.md) for verification and limits. Next question: what durable transfer record and cleanup responsibility should survive process exit?
+
+## Durable manual Files recovery — CLI 0.25.0
+
+[FilesStore](../../../../../../templates/overlays/files/swift/FilesStore.swift) now injects PendingFilesStore. Bind/refresh restore original input without dispatch. Every explicit retry first acknowledges an idempotent disk stage, checks cancellation before HTTP handoffs, and removes the original record only after known server completion. Failed stage sends no HTTP; failed settlement/Forget removal retains pending state. A successful journal load and fresh page gate new edits. Other scopes can browse but cannot inspect or mutate retained input.
+
+Production composition injects the separate SQLite adapter, while owner tests inject memory/fault ports. Twelve owner tests include cold restoration, lost stage acknowledgement, failed removal, unreadable load and a cancelled noncooperative disk stage. Native Files workflows terminate/force-stop with lost completion, unfinished delete acknowledgement and unsent content; retry must reuse the exact input without a new gallery selection. Read [the storage/transport boundary](../../../../../../notes/patterns/atomic-byte-staging-before-transport.md) and [actual execution and host limits](../../../../../../docs/blueprints/connected-files.md).
+
+## Scoped notice destinations — 2026-10-19
+
+Claim: a modal destination can resolve a notice without granting navigation any write authority. CLI 0.26.0 selects [FileDestinationStore](../../../../../../templates/overlays/files-inbox/swift/FileDestinationStore.swift), [its screen](../../../../../../templates/overlays/files-inbox/swift/FileDestinationScreen.swift) and [composition](../../../../../../templates/overlays/files-inbox/swift/ConnectedSessionModel.swift) only in Files + Inbox. Composition checks current lease and current inbox membership; the owner checks account/principal, then calls the read-only detail port. Every bind/close invalidates generation and cancels owned work, including renewal of the same scope.
+
+Metadata is fetched first. Download remains explicit and size/digest checked; pending metadata has no download action. Open never calls markRead, Files mutation or journal APIs. Canonical Inbox Activity accepts an optional Open callback, so Inbox-only has no destination dependency. Swift presents a sheet; Compose observes StateFlow in a dialog. Dismissal clears the route; app restoration does not reopen it.
+
+[Four owner cases](../../../../../../templates/overlays/files-inbox/swift/FileDestinationStoreTests.swift) cover scope rejection, same-scope renewal with noncooperative reads, missing/denied/mismatched results, and late/corrupt bytes. [Generated media acceptance](../../../../../../templates/overlays/files-inbox/swift/MediaUITests.swift) opens a real backend notice, verifies its download without read mutation, then opens a target deleted by an independent client. Read [the exact execution matrix](../../../../../../docs/blueprints/connected-media.md) and [the transferable pattern](../../../../../../notes/patterns/notice-targets-and-current-authority.md). This does not select OS push entry, persistent navigation or implicit account switching.

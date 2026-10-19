@@ -1,0 +1,19 @@
+[
+ {"name":"off ignores spoof", "cidrs":"", "peer":"127.0.0.1", "headers":["203.0.113.9"], "status":200, "ip":"127.0.0.1"},
+ {"name":"untrusted ignores malformed", "cidrs":"10.0.0.0/8", "peer":"127.0.0.1", "headers":["PRIVATE, bad"], "status":200, "ip":"127.0.0.1"},
+ {"name":"untrusted ignores duplicates", "cidrs":"10.0.0.0/8", "peer":"192.0.2.1", "headers":["PRIVATE","203.0.113.1"], "status":200, "ip":"192.0.2.1"},
+ {"name":"trusted v4", "cidrs":"127.0.0.1/32", "peer":"127.0.0.1", "headers":["203.0.113.9"], "status":200, "ip":"203.0.113.9"},
+ {"name":"trusted v6", "cidrs":"::1/128", "peer":"::1", "headers":["2001:db8:0:0::9"], "status":200, "ip":"2001:db8::9"},
+ {"name":"multiple networks", "cidrs":"10.0.0.0/8,127.0.0.0/8", "peer":"127.0.0.2", "headers":["203.0.113.9"], "status":200, "ip":"203.0.113.9"},
+ {"name":"host bits", "cidrs":"127.0.0.99/24", "peer":"127.0.0.2", "headers":["203.0.113.9"], "status":200, "ip":"203.0.113.9"},
+ {"name":"missing forwarded", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":[], "status":400},
+ {"name":"empty forwarded", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":[""], "status":400},
+ {"name":"forwarded chain", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":["203.0.113.9, 192.0.2.8"], "status":400},
+ {"name":"duplicate forwarded", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":["203.0.113.9","203.0.113.10"], "status":400},
+ {"name":"forwarded port", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":["203.0.113.9:443"], "status":400},
+ {"name":"forwarded hostname", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":["PRIVATE.example"], "status":400},
+ {"name":"forwarded zone", "cidrs":"127.0.0.0/8", "peer":"127.0.0.1", "headers":["fe80::1%en0"], "status":400},
+ {"name":"mapped peer", "cidrs":"127.0.0.0/8", "peer":"::ffff:127.0.0.1", "headers":["::ffff:203.0.113.9"], "status":200, "ip":"203.0.113.9"},
+ {"name":"mapped CIDR", "cidrs":"::ffff:127.0.0.0/104", "peer":"127.0.0.1", "headers":["203.0.113.9"], "status":200, "ip":"203.0.113.9"},
+ {"name":"v6 wildcard excludes v4", "cidrs":"::/0", "peer":"127.0.0.1", "headers":["203.0.113.9"], "status":200, "ip":"127.0.0.1"}
+]
